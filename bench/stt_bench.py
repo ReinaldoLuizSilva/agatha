@@ -1,26 +1,29 @@
-"""Benchmark de STT (faster-whisper) em PT-BR na CPU.
+"""Benchmark de STT (faster-whisper) em PT-BR, na CPU ou na GPU.
 
 Mede, para cada modelo:
 - tempo de carga do modelo;
 - latência de transcrição e RTF em frases completas do FLEURS (pt_br);
 - WER contra a transcrição de referência (texto normalizado);
 - latência em recortes curtos (padrão 3 s), simulando um comando de voz;
-- pico de RAM do processo.
+- pico de RAM do processo e, na GPU, a VRAM usada.
 
 Cada modelo roda num processo próprio, para que RAM e tempo de carga não se misturem.
 
 Uso:
     .venv/bin/python bench/stt_bench.py --models tiny,base,small
+    .venv/bin/python bench/stt_bench.py --device cuda --models small,medium
 """
 
 import argparse
 import csv
 import json
+import os
 import platform
 import random
 import re
 import resource
 import statistics
+import subprocess
 import time
 import unicodedata
 from concurrent.futures import ProcessPoolExecutor
@@ -102,6 +105,23 @@ def _stats(values: list[float]) -> dict:
     }
 
 
+def _vram_used_mb() -> float | None:
+    """VRAM usada por este processo, segundo o nvidia-smi.
+
+    O alocador do CTranslate2 mantém a memória em cache, então o valor lido ao fim
+    das transcrições se aproxima do pico.
+    """
+    out = subprocess.run(
+        ["nvidia-smi", "--query-compute-apps=pid,used_memory", "--format=csv,noheader,nounits"],
+        capture_output=True, text=True, check=False,
+    ).stdout
+    for line in out.splitlines():
+        pid, used = (x.strip() for x in line.split(","))
+        if int(pid) == os.getpid():
+            return float(used)
+    return None
+
+
 def run_model(cfg: dict) -> dict:
     import jiwer
     import soundfile as sf
@@ -113,7 +133,7 @@ def run_model(cfg: dict) -> dict:
     t0 = time.perf_counter()
     model = WhisperModel(
         cfg["model"],
-        device="cpu",
+        device=cfg["device"],
         compute_type=cfg["compute_type"],
         cpu_threads=cfg["threads"],
         download_root=cfg["models_dir"],
@@ -144,16 +164,20 @@ def run_model(cfg: dict) -> dict:
         _transcribe(model, audio[:short_len], cfg["beam_size"])
         short_latencies.append(time.perf_counter() - t0)
 
+    vram_mb = _vram_used_mb() if cfg["device"] == "cuda" else None
+
     wer = jiwer.wer(
         [normalize(r["reference"]) for r in full],
         [normalize(r["hypothesis"]) for r in full],
     )
     return {
         "model": cfg["model"],
+        "device": cfg["device"],
         "compute_type": cfg["compute_type"],
         "beam_size": cfg["beam_size"],
         "load_s": load_s,
         "peak_rss_mb": resource.getrusage(resource.RUSAGE_SELF).ru_maxrss / 1024,
+        "vram_mb": vram_mb,
         "wer": wer,
         "full_latency_s": _stats([r["latency_s"] for r in full]),
         "full_rtf": _stats([r["rtf"] for r in full]),
@@ -171,9 +195,32 @@ def _cpu_model() -> str:
     return platform.processor()
 
 
+def _use_venv_cuda_libs() -> None:
+    """Expõe o cuBLAS/cuDNN instalados via pip (requirements-gpu.txt) aos workers.
+
+    O CTranslate2 carrega essas bibliotecas com dlopen, que só lê o LD_LIBRARY_PATH
+    na partida do processo; como cada modelo roda num processo filho, basta ajustá-lo aqui.
+    """
+    import nvidia.cublas
+    import nvidia.cudnn
+
+    dirs = [str(Path(m.__path__[0]) / "lib") for m in (nvidia.cublas, nvidia.cudnn)]
+    current = os.environ.get("LD_LIBRARY_PATH")
+    os.environ["LD_LIBRARY_PATH"] = ":".join(dirs + ([current] if current else []))
+
+
+def _gpu_name() -> str | None:
+    out = subprocess.run(
+        ["nvidia-smi", "--query-gpu=name,driver_version", "--format=csv,noheader"],
+        capture_output=True, text=True, check=False,
+    ).stdout.strip()
+    return out or None
+
+
 def main() -> None:
     parser = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     parser.add_argument("--models", default="tiny,base,small,medium,large-v3-turbo")
+    parser.add_argument("--device", choices=["cpu", "cuda"], default="cpu")
     parser.add_argument("--n", type=int, default=30, help="número de frases do FLEURS")
     parser.add_argument("--seed", type=int, default=42)
     parser.add_argument("--beam-size", type=int, default=1)
@@ -187,6 +234,9 @@ def main() -> None:
     import faster_whisper
     import ctranslate2
 
+    if args.device == "cuda":
+        _use_venv_cuda_libs()
+
     samples = load_samples(args.dataset_dir, args.n, args.seed)
     audio_total = sum(Path(s["path"]).stat().st_size for s in samples)
     print(f"{len(samples)} frases do FLEURS pt_br dev ({audio_total / 1e6:.1f} MB de WAV)\n")
@@ -196,6 +246,7 @@ def main() -> None:
     for name in args.models.split(","):
         cfg = {
             "model": name.strip(),
+            "device": args.device,
             "compute_type": args.compute_type,
             "beam_size": args.beam_size,
             "threads": args.threads,
@@ -206,33 +257,35 @@ def main() -> None:
         print(f"→ {cfg['model']} ...", flush=True)
         with ProcessPoolExecutor(max_workers=1, mp_context=ctx) as pool:
             r = pool.submit(run_model, cfg).result()
+        vram = f" | VRAM {r['vram_mb']:.0f} MB" if r["vram_mb"] is not None else ""
         print(
             f"  WER {r['wer']:.1%} | frase completa p50 {r['full_latency_s']['p50']:.2f}s "
             f"(RTF {r['full_rtf']['p50']:.2f}) | comando {args.short_seconds:.0f}s p50 "
-            f"{r['short_latency_s']['p50']:.2f}s | RAM {r['peak_rss_mb']:.0f} MB",
+            f"{r['short_latency_s']['p50']:.2f}s | RAM {r['peak_rss_mb']:.0f} MB{vram}",
             flush=True,
         )
         results.append(r)
 
     RESULTS_DIR.mkdir(exist_ok=True)
-    out = RESULTS_DIR / f"stt-{datetime.now():%Y%m%d-%H%M}.json"
+    out = RESULTS_DIR / f"stt-{args.device}-{datetime.now():%Y%m%d-%H%M%S}.json"
     out.write_text(json.dumps({
         "date": datetime.now().isoformat(timespec="seconds"),
         "host": platform.node(),
         "cpu": _cpu_model(),
+        "gpu": _gpu_name() if args.device == "cuda" else None,
         "faster_whisper": faster_whisper.__version__,
         "ctranslate2": ctranslate2.__version__,
         "args": {k: str(v) for k, v in vars(args).items()},
         "results": results,
     }, ensure_ascii=False, indent=2))
 
-    print(f"\n| modelo | WER | frase p50 (s) | RTF p50 | comando {args.short_seconds:.0f}s p50 (s) | p90 (s) | carga (s) | RAM (MB) |")
-    print("|---|---|---|---|---|---|---|---|")
+    print(f"\n| modelo | WER | frase p50 (s) | RTF p50 | comando {args.short_seconds:.0f}s p50 (s) | p90 (s) | carga (s) | RAM (MB) | VRAM (MB) |")
+    print("|---|---|---|---|---|---|---|---|---|")
     for r in results:
         print(
             f"| {r['model']} | {r['wer']:.1%} | {r['full_latency_s']['p50']:.2f} | {r['full_rtf']['p50']:.2f} "
             f"| {r['short_latency_s']['p50']:.2f} | {r['short_latency_s']['p90']:.2f} "
-            f"| {r['load_s']:.1f} | {r['peak_rss_mb']:.0f} |"
+            f"| {r['load_s']:.1f} | {r['peak_rss_mb']:.0f} | {r['vram_mb'] or '-'} |"
         )
     print(f"\nResultados completos: {out}")
 

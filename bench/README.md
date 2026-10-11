@@ -5,7 +5,7 @@ início da resposta. Cada etapa do pipeline é medida aqui antes de qualquer esc
 
 Os resultados brutos ficam em `results/` (JSON, versionados) para comparar rodadas ao longo do tempo.
 
-## stt_bench.py: STT (faster-whisper) na CPU
+## stt_bench.py: STT (faster-whisper) na CPU ou na GPU
 
 Compara tamanhos de modelo Whisper em PT-BR e mede:
 
@@ -15,7 +15,7 @@ Compara tamanhos de modelo Whisper em PT-BR e mede:
 - **latência em comandos curtos**: recortes de 3 s, o caso típico de um comando de voz. O encoder
   do Whisper sempre processa uma janela de 30 s, então frases curtas não ficam proporcionalmente
   mais rápidas;
-- tempo de carga e pico de RAM, com cada modelo rodando num processo separado.
+- tempo de carga, pico de RAM e, na GPU, VRAM usada, com cada modelo rodando num processo separado.
 
 ### Preparação (uma vez)
 
@@ -33,11 +33,20 @@ tar -xzf dev.tar.gz && rm dev.tar.gz
 
 Os modelos são baixados sob demanda para `/dados/agatha/models/whisper/`.
 
+Para rodar na GPU, instale também as bibliotecas CUDA 12 (cuBLAS e cuDNN 9) que a NVIDIA publica
+no PyPI. Elas ficam só no venv: o host continua apenas com o driver (branch 580). O script ajusta
+o `LD_LIBRARY_PATH` sozinho.
+
+```bash
+.venv/bin/pip install -r bench/requirements-gpu.txt
+```
+
 ### Execução
 
 ```bash
 .venv/bin/python bench/stt_bench.py                       # todos os modelos, 30 frases
 .venv/bin/python bench/stt_bench.py --models small --n 10 # rodada rápida
+.venv/bin/python bench/stt_bench.py --device cuda         # na GPU
 .venv/bin/python bench/stt_bench.py --help
 ```
 
