@@ -1,0 +1,291 @@
+{
+  "date": "2026-10-11T17:50:59",
+  "host": "agatha-srv",
+  "cpu_count": 4,
+  "runs": [
+    {
+      "voice": "piper-dii",
+      "load_s": 2.1182856539999193,
+      "first_short_ms": 34.14327499922365,
+      "rtf_median": 0.039411277251761447,
+      "results": [
+        {
+          "label": "curta",
+          "text": "Oi, Rei. Tudo certo por aqui.",
+          "synth_s": 0.08924318100071105,
+          "first_audio_s": 0.03414327499922365,
+          "audio_s": 2.2755555555555556,
+          "rtf": 0.0392181947757031,
+          "sample_rate": 22050
+        },
+        {
+          "label": "oracle",
+          "text": "Claro. Uma tablespace é um espaço lógico de armazenamento no Oracle, que agrupa tabelas e índices.",
+          "synth_s": 0.24925175099997432,
+          "first_audio_s": 0.026835722999749123,
+          "audio_s": 6.280997732426304,
+          "rtf": 0.03968346457334099,
+          "sample_rate": 22050
+        },
+        {
+          "label": "zabbix",
+          "text": "O trigger do Zabbix disparou às quatorze e trinta, indicando uso de CPU acima de noventa por cento no servidor de banco.",
+          "synth_s": 0.2774307959989528,
+          "first_audio_s": 0.2773905220001325,
+          "audio_s": 6.849886621315193,
+          "rtf": 0.04050151649746365,
+          "sample_rate": 22050
+        },
+        {
+          "label": "conta",
+          "text": "Quinze por cento de duzentos e quarenta é trinta e seis.",
+          "synth_s": 0.12994818600054714,
+          "first_audio_s": 0.12992013999974006,
+          "audio_s": 3.297233560090703,
+          "rtf": 0.039411277251761447,
+          "sample_rate": 22050
+        },
+        {
+          "label": "diagnóstico",
+          "text": "Vamos investigar isso juntos. Primeiro, verifique se o serviço do agente está rodando, depois confira os logs.",
+          "synth_s": 0.2696559520009032,
+          "first_audio_s": 0.07827892299974337,
+          "audio_s": 7.082086167800454,
+          "rtf": 0.038075779595414416,
+          "sample_rate": 22050
+        },
+        {
+          "label": "honestidade",
+          "text": "Não tenho acesso à hora atual, mas posso te ajudar com outra coisa.",
+          "synth_s": 0.1652124129996082,
+          "first_audio_s": 0.16518115199869499,
+          "audio_s": 4.365351473922902,
+          "rtf": 0.03784630263714845,
+          "sample_rate": 22050
+        },
+        {
+          "label": "texto cru",
+          "text": "O servidor 192.168.1.25 está com 85% de disco usado e o Podman 5.8 rodando.",
+          "synth_s": 0.35205532100007986,
+          "first_audio_s": 0.35200605299905874,
+          "audio_s": 8.811972789115647,
+          "rtf": 0.0399519301097855,
+          "sample_rate": 22050
+        }
+      ]
+    },
+    {
+      "voice": "kokoro-dora",
+      "load_s": 0.9611920219995227,
+      "first_short_ms": 685.5739729999186,
+      "rtf_median": 0.37629554381589836,
+      "results": [
+        {
+          "label": "curta",
+          "text": "Oi, Rei. Tudo certo por aqui.",
+          "synth_s": 0.6855754169991997,
+          "first_audio_s": 0.6855739729999186,
+          "audio_s": 1.7493333333333334,
+          "rtf": 0.3919066789248474,
+          "sample_rate": 24000
+        },
+        {
+          "label": "oracle",
+          "text": "Claro. Uma tablespace é um espaço lógico de armazenamento no Oracle, que agrupa tabelas e índices.",
+          "synth_s": 2.155470879999484,
+          "first_audio_s": 2.1554687780007953,
+          "audio_s": 5.717333333333333,
+          "rtf": 0.37700633395513367,
+          "sample_rate": 24000
+        },
+        {
+          "label": "zabbix",
+          "text": "O trigger do Zabbix disparou às quatorze e trinta, indicando uso de CPU acima de noventa por cento no servidor de banco.",
+          "synth_s": 2.665175905000069,
+          "first_audio_s": 2.665174110999942,
+          "audio_s": 7.082666666666666,
+          "rtf": 0.37629554381589836,
+          "sample_rate": 24000
+        },
+        {
+          "label": "conta",
+          "text": "Quinze por cento de duzentos e quarenta é trinta e seis.",
+          "synth_s": 1.2733374029994593,
+          "first_audio_s": 1.2733357260003686,
+          "audio_s": 3.392,
+          "rtf": 0.37539428154465193,
+          "sample_rate": 24000
+        },
+        {
+          "label": "diagnóstico",
+          "text": "Vamos investigar isso juntos. Primeiro, verifique se o serviço do agente está rodando, depois confira os logs.",
+          "synth_s": 2.3975989959999424,
+          "first_audio_s": 2.3975972270000057,
+          "audio_s": 6.421333333333333,
+          "rtf": 0.3733802423172668,
+          "sample_rate": 24000
+        },
+        {
+          "label": "honestidade",
+          "text": "Não tenho acesso à hora atual, mas posso te ajudar com outra coisa.",
+          "synth_s": 1.4100774719991023,
+          "first_audio_s": 1.4100758249987848,
+          "audio_s": 3.7333333333333334,
+          "rtf": 0.3776993228569024,
+          "sample_rate": 24000
+        },
+        {
+          "label": "texto cru",
+          "text": "O servidor 192.168.1.25 está com 85% de disco usado e o Podman 5.8 rodando.",
+          "synth_s": 3.2888332349994016,
+          "first_audio_s": 3.28883106000103,
+          "audio_s": 8.832,
+          "rtf": 0.37237695142656263,
+          "sample_rate": 24000
+        }
+      ]
+    },
+    {
+      "voice": "kokoro-dora-int8",
+      "load_s": 0.762953549001395,
+      "first_short_ms": 659.9521369989816,
+      "rtf_median": 0.3940232772728016,
+      "results": [
+        {
+          "label": "curta",
+          "text": "Oi, Rei. Tudo certo por aqui.",
+          "synth_s": 0.659953456999574,
+          "first_audio_s": 0.6599521369989816,
+          "audio_s": 1.7066666666666668,
+          "rtf": 0.3866914787106879,
+          "sample_rate": 24000
+        },
+        {
+          "label": "oracle",
+          "text": "Claro. Uma tablespace é um espaço lógico de armazenamento no Oracle, que agrupa tabelas e índices.",
+          "synth_s": 2.2437162029982574,
+          "first_audio_s": 2.243713806999949,
+          "audio_s": 5.738666666666667,
+          "rtf": 0.39098214503919443,
+          "sample_rate": 24000
+        },
+        {
+          "label": "zabbix",
+          "text": "O trigger do Zabbix disparou às quatorze e trinta, indicando uso de CPU acima de noventa por cento no servidor de banco.",
+          "synth_s": 2.7739238720005233,
+          "first_audio_s": 2.773921658999825,
+          "audio_s": 7.04,
+          "rtf": 0.3940232772728016,
+          "sample_rate": 24000
+        },
+        {
+          "label": "conta",
+          "text": "Quinze por cento de duzentos e quarenta é trinta e seis.",
+          "synth_s": 1.3340021289986908,
+          "first_audio_s": 1.3340001260003191,
+          "audio_s": 3.4133333333333336,
+          "rtf": 0.3908209362300852,
+          "sample_rate": 24000
+        },
+        {
+          "label": "diagnóstico",
+          "text": "Vamos investigar isso juntos. Primeiro, verifique se o serviço do agente está rodando, depois confira os logs.",
+          "synth_s": 2.5250448360002338,
+          "first_audio_s": 2.5250428169983934,
+          "audio_s": 6.4,
+          "rtf": 0.3945382556250365,
+          "sample_rate": 24000
+        },
+        {
+          "label": "honestidade",
+          "text": "Não tenho acesso à hora atual, mas posso te ajudar com outra coisa.",
+          "synth_s": 1.5025284419989475,
+          "first_audio_s": 1.502526520000174,
+          "audio_s": 3.712,
+          "rtf": 0.40477598114195784,
+          "sample_rate": 24000
+        },
+        {
+          "label": "texto cru",
+          "text": "O servidor 192.168.1.25 está com 85% de disco usado e o Podman 5.8 rodando.",
+          "synth_s": 3.475726818000112,
+          "first_audio_s": 3.475724137000725,
+          "audio_s": 8.725333333333333,
+          "rtf": 0.3983488865372989,
+          "sample_rate": 24000
+        }
+      ]
+    },
+    {
+      "voice": "piper-faber",
+      "load_s": 1.9237456800001382,
+      "first_short_ms": 30.236274000344565,
+      "rtf_median": 0.040028610377031204,
+      "results": [
+        {
+          "label": "curta",
+          "text": "Oi, Rei. Tudo certo por aqui.",
+          "synth_s": 0.07576859899927513,
+          "first_audio_s": 0.030236274000344565,
+          "audio_s": 1.8808163265306121,
+          "rtf": 0.0402849538950139,
+          "sample_rate": 22050
+        },
+        {
+          "label": "oracle",
+          "text": "Claro. Uma tablespace é um espaço lógico de armazenamento no Oracle, que agrupa tabelas e índices.",
+          "synth_s": 0.22446519799996167,
+          "first_audio_s": 0.026526719999310444,
+          "audio_s": 5.607619047619048,
+          "rtf": 0.040028610377031204,
+          "sample_rate": 22050
+        },
+        {
+          "label": "zabbix",
+          "text": "O trigger do Zabbix disparou às quatorze e trinta, indicando uso de CPU acima de noventa por cento no servidor de banco.",
+          "synth_s": 0.25622480399943015,
+          "first_audio_s": 0.2561870879999333,
+          "audio_s": 6.280997732426304,
+          "rtf": 0.04079364695144578,
+          "sample_rate": 22050
+        },
+        {
+          "label": "conta",
+          "text": "Quinze por cento de duzentos e quarenta é trinta e seis.",
+          "synth_s": 0.11927565099904314,
+          "first_audio_s": 0.11925016100030916,
+          "audio_s": 3.053424036281179,
+          "rtf": 0.039062917427057114,
+          "sample_rate": 22050
+        },
+        {
+          "label": "diagnóstico",
+          "text": "Vamos investigar isso juntos. Primeiro, verifique se o serviço do agente está rodando, depois confira os logs.",
+          "synth_s": 0.2370591679991776,
+          "first_audio_s": 0.06872621900038212,
+          "audio_s": 6.048798185941043,
+          "rtf": 0.03919111874986404,
+          "sample_rate": 22050
+        },
+        {
+          "label": "honestidade",
+          "text": "Não tenho acesso à hora atual, mas posso te ajudar com outra coisa.",
+          "synth_s": 0.13666896799986716,
+          "first_audio_s": 0.13664162900022347,
+          "audio_s": 3.4713832199546486,
+          "rtf": 0.03937017590401692,
+          "sample_rate": 22050
+        },
+        {
+          "label": "texto cru",
+          "text": "O servidor 192.168.1.25 está com 85% de disco usado e o Podman 5.8 rodando.",
+          "synth_s": 0.32116708799912885,
+          "first_audio_s": 0.32111673000144947,
+          "audio_s": 7.894784580498866,
+          "rtf": 0.04068091848794113,
+          "sample_rate": 22050
+        }
+      ]
+    }
+  ]
+}

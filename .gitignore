@@ -33,6 +33,7 @@ logs/
 
 # --- Ambientes virtuais Python ---
 .venv/
+.venv-*/
 venv/
 env/
 .python-version
