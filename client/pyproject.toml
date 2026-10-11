@@ -4,8 +4,8 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "agatha-client"
-version = "0.1.0"
-description = "Cliente da Agatha: captura o microfone e conversa com o servidor"
+version = "0.2.0"
+description = "Cliente da Agatha: conversa por voz com o servidor (microfone e alto-falante)"
 requires-python = ">=3.11"
 dependencies = [
     "numpy>=1.26",
@@ -16,6 +16,10 @@ dependencies = [
 [project.optional-dependencies]
 # Para --wav (enviar um arquivo em vez do microfone)
 wav = ["soundfile==0.14.0"]
+dev = ["pytest==9.1.1"]
 
 [tool.setuptools.packages.find]
 include = ["agatha_client*"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
