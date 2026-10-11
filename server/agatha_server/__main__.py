@@ -7,7 +7,9 @@ import time
 
 from .app import run
 from .config import ConfigError, load_config
+from .llm import LLMClient
 from .stt import Transcriber
+from .tts import Synthesizer
 
 
 def main() -> int:
@@ -22,6 +24,7 @@ def main() -> int:
         format="%(asctime)s %(levelname)s %(name)s: %(message)s",
     )
     logging.getLogger("faster_whisper").setLevel(logging.WARNING)  # uma linha por transcrição
+    logging.getLogger("httpx").setLevel(logging.WARNING)  # uma linha por chamada ao LLM
     log = logging.getLogger("agatha_server")
 
     stt = config.stt
@@ -31,7 +34,13 @@ def main() -> int:
     transcriber.warmup()
     log.info("STT pronto em %.1f s", time.perf_counter() - t0)
 
-    asyncio.run(run(config, transcriber))
+    log.info("carregando TTS: %s", config.tts.voice)
+    t0 = time.perf_counter()
+    synthesizer = Synthesizer(config.tts)
+    synthesizer.warmup()
+    log.info("TTS pronto em %.1f s (%d Hz)", time.perf_counter() - t0, synthesizer.sample_rate)
+
+    asyncio.run(run(config, transcriber, LLMClient(config.llm), synthesizer))
     return 0
 
 

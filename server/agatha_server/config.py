@@ -4,7 +4,10 @@ import os
 from dataclasses import dataclass
 from pathlib import Path
 
+from .conversation import ConversationConfig
+from .llm import LLMConfig
 from .stt import STTConfig
+from .tts import TTSConfig
 from .vad import VADConfig
 
 
@@ -20,6 +23,9 @@ class ServerConfig:
     log_level: str
     stt: STTConfig
     vad: VADConfig
+    llm: LLMConfig
+    tts: TTSConfig
+    conversation: ConversationConfig
 
 
 def load_env_file(path: Path, env: dict) -> None:
@@ -57,6 +63,9 @@ def load_config(env: dict | None = None) -> ServerConfig:
 
     stt_defaults = STTConfig()
     vad_defaults = VADConfig()
+    llm_defaults = LLMConfig()
+    tts_defaults = TTSConfig()
+    conv_defaults = ConversationConfig()
     return ServerConfig(
         host=get("HOST", "0.0.0.0"),
         port=get("PORT", 8765, int),
@@ -78,5 +87,17 @@ def load_config(env: dict | None = None) -> ServerConfig:
             pre_roll_ms=get("VAD_PRE_ROLL_MS", vad_defaults.pre_roll_ms, int),
             min_speech_ms=get("VAD_MIN_SPEECH_MS", vad_defaults.min_speech_ms, int),
             max_segment_s=get("VAD_MAX_SEGMENT_S", vad_defaults.max_segment_s, float),
+        ),
+        llm=LLMConfig(
+            url=get("LLM_URL", llm_defaults.url),
+            temperature=get("LLM_TEMPERATURE", llm_defaults.temperature, float),
+            max_tokens=get("LLM_MAX_TOKENS", llm_defaults.max_tokens, int),
+        ),
+        tts=TTSConfig(
+            voice=get("TTS_VOICE", tts_defaults.voice),
+            length_scale=get("TTS_LENGTH_SCALE", tts_defaults.length_scale, float),
+        ),
+        conversation=ConversationConfig(
+            history_turns=get("HISTORY_TURNS", conv_defaults.history_turns, int),
         ),
     )

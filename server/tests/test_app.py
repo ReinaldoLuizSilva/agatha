@@ -1,4 +1,4 @@
-"""Testes do servidor WebSocket com VAD e STT falsos (sem GPU)."""
+"""Testes do servidor WebSocket (protocolo v2) com VAD, STT e conversa falsos (sem GPU)."""
 
 import asyncio
 import json
@@ -11,14 +11,20 @@ from websockets.exceptions import ConnectionClosed
 
 from agatha_server.app import AgathaServer
 from agatha_server.config import ServerConfig
+from agatha_server.conversation import Audio, ConversationConfig, Done, TextChunk
+from agatha_server.llm import LLMConfig
 from agatha_server.protocol import AUDIO_FORMAT
 from agatha_server.stt import STTConfig
-from agatha_server.vad import FRAME_SAMPLES, VADConfig
+from agatha_server.tts import TTSConfig
+from agatha_server.vad import FRAME_MS, FRAME_SAMPLES, VADConfig
 
 TOKEN = "segredo-de-teste"
 CONFIG = ServerConfig(
-    host="127.0.0.1", port=0, token=TOKEN, log_level="DEBUG", stt=STTConfig(), vad=VADConfig()
+    host="127.0.0.1", port=0, token=TOKEN, log_level="DEBUG", stt=STTConfig(), vad=VADConfig(),
+    llm=LLMConfig(), tts=TTSConfig(), conversation=ConversationConfig(),
 )
+RATE = 22050
+REPLY_AUDIO = [b"\x01\x00" * 5000, b"\x02\x00" * 100]  # 1º trecho vira 2 frames (> 4096 amostras)
 
 
 class EnergyVAD:
@@ -29,12 +35,24 @@ class EnergyVAD:
 
 
 class FakeTranscriber:
+    def __init__(self, text: str):
+        self.text = text
+
     def transcribe(self, audio: np.ndarray) -> str:
-        return f"{len(audio)} amostras"
+        return self.text
+
+
+class FakeConversation:
+    async def respond(self, user_text, t_ref):
+        yield TextChunk("Oi, Rei.")
+        yield Audio(REPLY_AUDIO[0])
+        yield TextChunk("Tudo bem.")
+        yield Audio(REPLY_AUDIO[1])
+        yield Done("done", "Oi, Rei. Tudo bem.", {"llm_first_token_ms": 1, "first_chunk_ms": 2, "tts_first_ms": 3})
 
 
 def hello(**overrides) -> str:
-    msg = {"type": "hello", "protocol": 1, "client": "teste", "token": TOKEN, "audio": AUDIO_FORMAT}
+    msg = {"type": "hello", "protocol": 2, "client": "teste", "token": TOKEN, "audio": AUDIO_FORMAT}
     msg.update(overrides)
     return json.dumps(msg)
 
@@ -43,11 +61,19 @@ def pcm(frames: int, amplitude: int) -> bytes:
     return np.full(frames * FRAME_SAMPLES, amplitude, dtype="<i2").tobytes()
 
 
-def with_server(scenario, hello_timeout: float = 5.0):
+def utterance() -> list[bytes]:
+    """5 blocos de silêncio, 20 de "fala" e 20 de silêncio, bloco a bloco (45 blocos)."""
+    return [pcm(1, a) for a, n in ((0, 5), (1000, 20), (0, 20)) for _ in range(n)]
+
+
+def with_server(scenario, transcript: str = "olá agatha", hello_timeout: float = 5.0, grace: float = 15.0):
     """Sobe o servidor numa porta livre, roda o cenário do cliente e devolve o resultado."""
 
     async def main():
-        app = AgathaServer(CONFIG, FakeTranscriber(), vad_factory=EnergyVAD, hello_timeout=hello_timeout)
+        app = AgathaServer(
+            CONFIG, FakeTranscriber(transcript), FakeConversation, RATE,
+            vad_factory=EnergyVAD, hello_timeout=hello_timeout, playback_grace_s=grace,
+        )
         async with serve(app.handler, "127.0.0.1", 0) as server:
             port = server.sockets[0].getsockname()[1]
             async with connect(f"ws://127.0.0.1:{port}/") as ws:
@@ -56,26 +82,50 @@ def with_server(scenario, hello_timeout: float = 5.0):
     return asyncio.run(main())
 
 
-async def recv_json(ws) -> dict:
-    return json.loads(await ws.recv())
+async def recv(ws) -> dict | bytes:
+    msg = await ws.recv()
+    return msg if isinstance(msg, bytes) else json.loads(msg)
+
+
+async def recv_until(ws, msg_type: str) -> list[dict | bytes]:
+    msgs = []
+    while True:
+        msg = await recv(ws)
+        msgs.append(msg)
+        if isinstance(msg, dict) and msg["type"] == msg_type:
+            return msgs
+
+
+async def start(ws) -> dict:
+    await ws.send(hello())
+    return await recv(ws)
+
+
+async def send_all(ws, frames: list[bytes]) -> None:
+    for frame in frames:
+        await ws.send(frame)
+
+
+def kinds(msgs: list) -> list[str]:
+    return ["<audio>" if isinstance(m, bytes) else (f"vad:{m['event']}" if m["type"] == "vad" else m["type"])
+            for m in msgs]
+
+
+# --- Handshake --------------------------------------------------------------------------
+
+def test_handshake():
+    ready = with_server(start)
+    assert ready["type"] == "ready"
+    assert ready["protocol"] == 2
+    assert ready["output_audio"] == {"encoding": "pcm_s16le", "sample_rate": RATE, "channels": 1}
+    assert ready["vad"]["min_silence_ms"] == 500
 
 
 async def expect_rejection(ws) -> tuple[dict, int]:
-    error = await recv_json(ws)
+    error = await recv(ws)
     with pytest.raises(ConnectionClosed) as closed:
         await ws.recv()
     return error, closed.value.rcvd.code
-
-
-def test_handshake():
-    async def scenario(ws):
-        await ws.send(hello())
-        return await recv_json(ws)
-
-    ready = with_server(scenario)
-    assert ready["type"] == "ready"
-    assert ready["protocol"] == 1
-    assert ready["vad"]["min_silence_ms"] == 500
 
 
 @pytest.mark.parametrize(
@@ -83,7 +133,7 @@ def test_handshake():
     [
         (hello(token="errado"), "unauthorized", 1008),
         (hello(token=None), "unauthorized", 1008),
-        (hello(protocol=2), "unsupported_protocol", 1002),
+        (hello(protocol=1), "unsupported_protocol", 1002),
         (hello(audio={"encoding": "pcm_f32le", "sample_rate": 16000, "channels": 1}), "unsupported_audio", 1003),
         ("não é json", "bad_message", 1002),
         (json.dumps({"type": "outra"}), "bad_message", 1002),
@@ -108,38 +158,104 @@ def test_hello_timeout():
 
 def test_erros_que_nao_fecham_conexao():
     async def scenario(ws):
-        await ws.send(hello())
-        await recv_json(ws)  # ready
+        await start(ws)
         await ws.send(b"\x00\x00\x00")  # número ímpar de bytes
-        bad_audio = await recv_json(ws)
+        bad_audio = await recv(ws)
         await ws.send(json.dumps({"type": "ping"}))
-        bad_message = await recv_json(ws)
-        # a conexão continua funcionando
-        await ws.send(pcm(10, 1000) + pcm(20, 0))
-        return bad_audio, bad_message, await recv_json(ws)
+        bad_message = await recv(ws)
+        await ws.send(json.dumps({"type": "playback_end"}))  # sem 'response'
+        bad_playback = await recv(ws)
+        await send_all(ws, utterance())  # a conexão continua funcionando
+        return bad_audio, bad_message, bad_playback, await recv(ws)
 
-    bad_audio, bad_message, vad = with_server(scenario)
+    bad_audio, bad_message, bad_playback, vad = with_server(scenario)
     assert bad_audio["code"] == "bad_audio"
     assert bad_message["code"] == "bad_message"
+    assert bad_playback["code"] == "bad_message"
     assert vad["type"] == "vad"
 
 
-def test_frase_completa():
-    async def scenario(ws):
-        await ws.send(hello())
-        await recv_json(ws)  # ready
-        # 5 blocos de silêncio, 20 de "fala", 20 de silêncio, enviados bloco a bloco
-        for amplitude, frames in ((0, 5), (1000, 20), (0, 20)):
-            for _ in range(frames):
-                await ws.send(pcm(1, amplitude))
-        return [await recv_json(ws) for _ in range(3)]
+# --- Conversa ---------------------------------------------------------------------------
 
-    start, end, transcript = with_server(scenario)
-    assert start == {"type": "vad", "event": "start", "segment": 1, "audio_ms": 5 * 32}
-    assert end == {"type": "vad", "event": "end", "segment": 1, "audio_ms": (5 + 20 + 16) * 32, "reason": "silence"}
-    assert transcript["type"] == "transcript"
-    assert transcript["segment"] == 1
-    # pre-roll de 5 blocos (só havia 5 antes da fala) + 20 de fala + 16 de silêncio
-    assert transcript["text"] == f"{(5 + 20 + 16) * FRAME_SAMPLES} amostras"
-    assert set(transcript["timings"]) == {"speech_ms", "endpoint_ms", "queue_ms", "stt_ms", "total_ms"}
-    assert transcript["timings"]["speech_ms"] == 20 * 32
+def test_conversa_completa():
+    async def scenario(ws):
+        await start(ws)
+        await send_all(ws, utterance())
+        return await recv_until(ws, "response_end")
+
+    msgs = with_server(scenario)
+    assert kinds(msgs) == [
+        "vad:start", "vad:end", "transcript",
+        "response_start", "response_text", "audio_start", "<audio>", "<audio>",
+        "response_text", "<audio>", "audio_end", "response_end",
+    ]
+    vad_end, transcript, response_start = msgs[1], msgs[2], msgs[3]
+    assert vad_end["speech_end_ms"] == (5 + 20) * FRAME_MS
+    assert vad_end["audio_ms"] == (5 + 20 + 16) * FRAME_MS
+    assert transcript["text"] == "olá agatha"
+    assert response_start == {"type": "response_start", "response": 1, "segment": 1}
+    assert msgs[5] == {"type": "audio_start", "response": 1, "encoding": "pcm_s16le", "sample_rate": RATE, "channels": 1}
+    assert b"".join(m for m in msgs if isinstance(m, bytes)) == b"".join(REPLY_AUDIO)
+    end = msgs[-1]
+    assert end["reason"] == "done"
+    assert end["text"] == "Oi, Rei. Tudo bem."
+    assert end["timings"]["audio_ms"] == round(5100 / RATE * 1000)
+    assert {"stt_ms", "llm_first_token_ms", "first_chunk_ms", "tts_first_ms", "first_audio_ms"} <= set(end["timings"])
+
+
+def test_half_duplex_ignora_microfone_ate_playback_end():
+    async def scenario(ws):
+        await start(ws)
+        await send_all(ws, utterance())  # 45 blocos
+        await recv_until(ws, "response_end")
+        await send_all(ws, utterance()[:30])  # fala durante a resposta: 30 blocos ignorados
+        await ws.send(json.dumps({"type": "playback_end", "response": 1, "e2e_ms": 1650}))
+        await send_all(ws, utterance())  # nova fala, depois do playback_end
+        return await recv(ws)
+
+    first_after = with_server(scenario)
+    # nenhum evento da fala ignorada; a posição conta os blocos ignorados
+    assert first_after == {"type": "vad", "event": "start", "segment": 2, "audio_ms": (45 + 30 + 5) * FRAME_MS}
+
+
+def test_playback_end_de_outra_resposta_e_ignorado():
+    async def scenario(ws):
+        await start(ws)
+        await send_all(ws, utterance())
+        await recv_until(ws, "response_end")
+        await ws.send(json.dumps({"type": "playback_end", "response": 99, "e2e_ms": None}))
+        await send_all(ws, utterance())  # ainda respondendo: ignorado
+        await ws.send(json.dumps({"type": "playback_end", "response": 1, "e2e_ms": None}))
+        await send_all(ws, utterance())
+        return await recv(ws)
+
+    first_after = with_server(scenario)
+    assert first_after["type"] == "vad"
+    assert first_after["audio_ms"] == (45 + 45 + 5) * FRAME_MS
+
+
+def test_transcricao_vazia_nao_gera_resposta():
+    async def scenario(ws):
+        await start(ws)
+        await send_all(ws, utterance())
+        msgs = await recv_until(ws, "transcript")
+        await send_all(ws, utterance())  # continua ouvindo
+        msgs.append(await recv(ws))
+        return msgs
+
+    msgs = with_server(scenario, transcript="")
+    assert kinds(msgs) == ["vad:start", "vad:end", "transcript", "vad:start"]
+
+
+def test_volta_a_ouvir_se_playback_end_nao_chega():
+    async def scenario(ws):
+        await start(ws)
+        await send_all(ws, utterance())
+        await recv_until(ws, "response_end")
+        await asyncio.sleep(0.6)  # áudio de ~0,23 s + prazo de 0,2 s
+        await send_all(ws, utterance())
+        return await recv(ws)
+
+    first_after = with_server(scenario, grace=0.2)
+    assert first_after["type"] == "vad"
+    assert first_after["event"] == "start"

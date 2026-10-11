@@ -1,4 +1,4 @@
-"""Mensagens do protocolo cliente ↔ servidor, versão 1 (ver docs/protocol.md)."""
+"""Mensagens do protocolo cliente ↔ servidor, versão 2 (ver docs/protocol.md e ADR-006)."""
 
 import hmac
 import json
@@ -7,8 +7,9 @@ import numpy as np
 
 from .vad import SpeechEnd, SpeechStart, VADConfig
 
-PROTOCOL_VERSION = 1
+PROTOCOL_VERSION = 2
 AUDIO_FORMAT = {"encoding": "pcm_s16le", "sample_rate": 16000, "channels": 1}
+OUTPUT_FRAME_SAMPLES = 4096  # tamanho máximo de cada frame de áudio da resposta
 
 # Códigos de fechamento WebSocket (RFC 6455)
 CLOSE_PROTOCOL_ERROR = 1002
@@ -75,11 +76,16 @@ def _dump(msg: dict) -> str:
     return json.dumps(msg, ensure_ascii=False)
 
 
-def ready(session: str, vad: VADConfig) -> str:
+def output_audio_format(sample_rate: int) -> dict:
+    return {"encoding": "pcm_s16le", "sample_rate": sample_rate, "channels": 1}
+
+
+def ready(session: str, vad: VADConfig, output_sample_rate: int) -> str:
     return _dump({
         "type": "ready",
         "protocol": PROTOCOL_VERSION,
         "session": session,
+        "output_audio": output_audio_format(output_sample_rate),
         "vad": {
             "threshold": vad.threshold,
             "min_silence_ms": vad.min_silence_ms,
@@ -98,12 +104,47 @@ def vad_event(event: SpeechStart | SpeechEnd) -> str:
         "event": "end",
         "segment": event.segment,
         "audio_ms": event.audio_ms,
+        "speech_end_ms": event.speech_end_ms,
         "reason": event.reason,
     })
 
 
 def transcript(segment: int, text: str, timings: dict) -> str:
     return _dump({"type": "transcript", "segment": segment, "text": text, "timings": timings})
+
+
+def response_start(response: int, segment: int) -> str:
+    return _dump({"type": "response_start", "response": response, "segment": segment})
+
+
+def response_text(response: int, text: str) -> str:
+    return _dump({"type": "response_text", "response": response, "text": text})
+
+
+def audio_start(response: int, sample_rate: int) -> str:
+    return _dump({"type": "audio_start", "response": response, **output_audio_format(sample_rate)})
+
+
+def audio_end(response: int) -> str:
+    return _dump({"type": "audio_end", "response": response})
+
+
+def response_end(response: int, reason: str, text: str, timings: dict) -> str:
+    return _dump({"type": "response_end", "response": response, "reason": reason, "text": text, "timings": timings})
+
+
+def audio_frames(pcm: bytes) -> list[bytes]:
+    """Divide o PCM da resposta em frames de até OUTPUT_FRAME_SAMPLES amostras."""
+    step = 2 * OUTPUT_FRAME_SAMPLES
+    return [pcm[i : i + step] for i in range(0, len(pcm), step)]
+
+
+def parse_playback_end(msg: dict) -> tuple[int, float | None]:
+    response = msg.get("response")
+    e2e = msg.get("e2e_ms")
+    if not isinstance(response, int) or (e2e is not None and not isinstance(e2e, (int, float))):
+        raise ProtocolError("bad_message", "playback_end requer 'response' inteiro e 'e2e_ms' numérico ou null")
+    return response, e2e
 
 
 def error(code: str, message: str) -> str:

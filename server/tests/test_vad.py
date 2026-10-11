@@ -107,6 +107,27 @@ def test_corte_por_tamanho_maximo():
     assert ends[1].segment == 2
 
 
+def test_speech_end_ms():
+    events = run([0.0] * 10 + [0.9] * 20 + [0.0] * 20)
+    assert events[1].speech_end_ms == (10 + 20) * FRAME_MS
+
+
+def test_discard_e_reset_avancam_a_posicao():
+    seg = Segmenter(VADConfig(), ScriptedVAD([0.9] * 5 + [0.0] * 3 + [0.9] * 20 + [0.0] * 20), clock=FakeClock())
+    silence = np.zeros(FRAME_SAMPLES, dtype=np.float32)
+    # começa uma frase (5 blocos de fala) e é interrompida por uma resposta
+    assert seg.feed(np.zeros(5 * FRAME_SAMPLES + 100, dtype=np.float32)) == []
+    seg.reset()  # descarta a frase e os 100 amostras pendentes
+    seg.discard(16000)  # 1 s ignorado durante a resposta
+    events = []
+    for _ in range(3 + 20 + 20):
+        events += seg.feed(silence)
+    start = events[0]
+    # 5 blocos processados + 100 pendentes + 16000 descartadas + 3 blocos de silêncio
+    expected = (5 * FRAME_SAMPLES + 100 + 16000 + 3 * FRAME_SAMPLES) * 1000 // 16000
+    assert start == SpeechStart(segment=1, audio_ms=expected)
+
+
 @pytest.mark.parametrize("chunk", [100, 512, 1000, 4096])
 def test_tamanho_do_pedaco_nao_muda_resultado(chunk):
     probs = [0.0] * 10 + [0.9] * 20 + [0.0] * 20

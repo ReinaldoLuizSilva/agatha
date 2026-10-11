@@ -75,6 +75,7 @@ class SpeechStart:
 class SpeechEnd:
     segment: int
     audio_ms: int  # onde o fim foi detectado
+    speech_end_ms: int  # fim do último bloco com fala ("fim da fala" da medição de ponta a ponta)
     reason: str  # "silence" | "max_length"
     audio: np.ndarray  # float32, pre-roll + fala + silêncio final
     speech_ms: int
@@ -92,6 +93,9 @@ class Segmenter:
     Aceita áudio em pedaços de qualquer tamanho; internamente processa blocos de 512 amostras.
     Uma frase só é confirmada (e `SpeechStart` emitido) após `min_speech_ms` de fala; trechos
     mais curtos são descartados em silêncio.
+
+    As posições (`audio_ms`) contam todas as amostras recebidas na sessão, inclusive as
+    descartadas com `discard`/`reset` durante uma resposta (half-duplex, ADR-006).
     """
 
     def __init__(
@@ -105,11 +109,29 @@ class Segmenter:
         self._clock = clock
         self._pending = np.zeros(0, dtype=np.float32)
         self._frame_index = 0
+        self._offset_samples = 0  # amostras descartadas, que contam na posição mas não passam pelo VAD
         self._segment_count = 0
         self._pre_roll: deque[np.ndarray] = deque(maxlen=config.pre_roll_ms // FRAME_MS)
         self._silence_limit = -(-config.min_silence_ms // FRAME_MS)  # arredonda para cima
         self._max_frames = int(config.max_segment_s * 1000) // FRAME_MS
         self._in_speech = False
+
+    def discard(self, n_samples: int) -> None:
+        """Conta amostras recebidas que não serão analisadas (microfone ignorado)."""
+        self._offset_samples += n_samples
+
+    def reset(self) -> None:
+        """Descarta a frase em andamento e o estado do VAD, mantendo a contagem de posição."""
+        self._offset_samples += len(self._pending)
+        self._pending = np.zeros(0, dtype=np.float32)
+        self._in_speech = False
+        self._frames = []
+        self._pre_roll.clear()
+        if hasattr(self._vad, "reset"):
+            self._vad.reset()
+
+    def _ms(self, frame_index: int) -> int:
+        return (self._offset_samples + frame_index * FRAME_SAMPLES) * 1000 // SAMPLE_RATE
 
     def feed(self, samples: np.ndarray) -> list[SpeechStart | SpeechEnd]:
         """Processa áudio float32 mono 16 kHz e devolve os eventos gerados."""
@@ -148,7 +170,7 @@ class Segmenter:
         if not self._confirmed and speech_frames * FRAME_MS >= self.config.min_speech_ms:
             self._confirmed = True
             self._segment_count += 1
-            return SpeechStart(self._segment_count, self._start_index * FRAME_MS)
+            return SpeechStart(self._segment_count, self._ms(self._start_index))
 
         if self._silence >= self._silence_limit:
             return self._close("silence", index, now)
@@ -173,7 +195,8 @@ class Segmenter:
             return None
         return SpeechEnd(
             segment=self._segment_count,
-            audio_ms=(index + 1) * FRAME_MS,
+            audio_ms=self._ms(index + 1),
+            speech_end_ms=self._ms(self._last_speech_index + 1),
             reason=reason,
             audio=np.concatenate(frames),
             speech_ms=(self._last_speech_index - self._start_index + 1) * FRAME_MS,
