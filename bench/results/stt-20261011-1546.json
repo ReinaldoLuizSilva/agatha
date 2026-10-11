@@ -1,0 +1,1360 @@
+{
+  "date": "2026-10-11T15:46:13",
+  "host": "agatha-srv",
+  "cpu": "Intel(R) Core(TM) i5-7400 CPU @ 3.00GHz",
+  "faster_whisper": "1.2.1",
+  "ctranslate2": "4.8.2",
+  "args": {
+    "models": "tiny,base,small,medium,large-v3-turbo",
+    "n": "30",
+    "seed": "42",
+    "beam_size": "1",
+    "compute_type": "int8",
+    "threads": "4",
+    "short_seconds": "3.0",
+    "dataset_dir": "/dados/agatha/data/fleurs/pt_br",
+    "models_dir": "/dados/agatha/models/whisper"
+  },
+  "results": [
+    {
+      "model": "tiny",
+      "compute_type": "int8",
+      "beam_size": 1,
+      "load_s": 0.5413421160001235,
+      "peak_rss_mb": 522.1015625,
+      "wer": 0.2422360248447205,
+      "full_latency_s": {
+        "mean": 0.33500997903333884,
+        "p50": 0.3413482590001422,
+        "p90": 0.36808462099997996,
+        "max": 0.3854747209998095
+      },
+      "full_rtf": {
+        "mean": 0.03104171694957299,
+        "p50": 0.027459425615814045,
+        "p90": 0.04332970817896284,
+        "max": 0.05409271938410844
+      },
+      "short_latency_s": {
+        "mean": 0.352065517300025,
+        "p50": 0.2740809029999127,
+        "p90": 0.5171110230003251,
+        "max": 0.8531919960000778
+      },
+      "samples": [
+        {
+          "file": "13221766043673296259.wav",
+          "duration_s": 7.44,
+          "latency_s": 0.3050795869999092,
+          "rtf": 0.04100532083332113,
+          "reference": "Eles ainda estão tentando determinar o tamanho do acidente e como a terra será afetada.",
+          "hypothesis": "Eles ainda estão tentando determinar o tamanho do acidente e combatar a será afetada."
+        },
+        {
+          "file": "10408390450801752955.wav",
+          "duration_s": 14.1,
+          "latency_s": 0.3854747209998095,
+          "rtf": 0.02733863269502195,
+          "reference": "O inverno pode ser decepcionantemente frio: as temperaturas raramente ficam abaixo do congelante, mas o vento e a umidade combinadas tornam a sensação mais fria que o que o termômetro mostra.",
+          "hypothesis": "O enverno pode ser decepcionatemente frio, as temperaturas, raramente, ficam abaixo do congelante. Mas o vento e o midad combinada a s Tor na licençação mais fria, que o que o termômetro mostra."
+        },
+        {
+          "file": "17715481015254381646.wav",
+          "duration_s": 6.48,
+          "latency_s": 0.2807765089996792,
+          "rtf": 0.04332970817896284,
+          "reference": "Vale a pena caminhar meia hora pela intrigante vila.",
+          "hypothesis": "Vale a pena caminhar meia hora pela intrigante vila."
+        },
+        {
+          "file": "16655615501947115357.wav",
+          "duration_s": 9.18,
+          "latency_s": 0.3112881590000143,
+          "rtf": 0.03390938551198413,
+          "reference": "A população original não mudou em nada, eles ainda precisam das mesmas adaptações de antes.",
+          "hypothesis": "A população original não mudou em nada. Eles ainda precisam das mesmas adaptações de antes."
+        },
+        {
+          "file": "16378273986139646510.wav",
+          "duration_s": 14.82,
+          "latency_s": 0.3607177409999167,
+          "rtf": 0.0243399285425045,
+          "reference": "Anteriormente, o CEO da Ring, Jamie Siminoff, comentou que a empresa surgiu quando sua campainha não podia ser ouvida de sua loja em sua garagem.",
+          "hypothesis": "A anteriormente, o CEO da Reng, James Minof, comentou que, em presa surgiu, quando sua campanha não podia ser ouvida de sua loja, em sua garagem."
+        },
+        {
+          "file": "14042294750736263832.wav",
+          "duration_s": 5.64,
+          "latency_s": 0.2897982170002251,
+          "rtf": 0.0513826625886924,
+          "reference": "A maior parte da vida familiar hebraica acontecia ao ar livre.",
+          "hypothesis": "A maior parte da vida familiar é Brec, acontecia o ar livre."
+        },
+        {
+          "file": "13092883766962544808.wav",
+          "duration_s": 12.24,
+          "latency_s": 0.32446290600000793,
+          "rtf": 0.026508407352941823,
+          "reference": "NHK também disse que a usina nuclear de Kashiwazaki Kariwa, da prefeitura de Niigata, estava funcionando de forma normal.",
+          "hypothesis": "ele é gacata, me disse que a ausina nuclear acaba saco, cariou a prefeitura de negata estava funcionando de forma normal."
+        },
+        {
+          "file": "9529495412281962161.wav",
+          "duration_s": 6.6,
+          "latency_s": 0.3047656859998824,
+          "rtf": 0.046176619090891276,
+          "reference": "Mais três bombas explodiram perto dos prédios do governo em um período de duas horas.",
+          "hypothesis": "Mas três bombas explodiram perto dos prédios do governo em um período de duas horas."
+        },
+        {
+          "file": "12649617510059681669.wav",
+          "duration_s": 16.56,
+          "latency_s": 0.38489887200012163,
+          "rtf": 0.023242685507253724,
+          "reference": "Empresas transportadoras são bem pagas para entregar coisas rapidamente. Frequentemente, o tempo é muito importante no envio de documentos comerciais, mercadorias ou peças sobressalentes para um reparo urgente.",
+          "hypothesis": "Em prezes transportadoras são bem pagas para entregar coisas rapidamente. Frequentemente, o tempo é muito importante no invídeo de documentos como esse ás. Mercadorias ou peças sobre salentes para um repar urgente."
+        },
+        {
+          "file": "571132148497651365.wav",
+          "duration_s": 12.3,
+          "latency_s": 0.3392366880002555,
+          "rtf": 0.027580218536606138,
+          "reference": "Ainda assim, oitenta por cento dos nossos produtos foram taxados com tarifas em países da América Central. Nós tratamos vocês.",
+          "hypothesis": "ainda assim 80% dos nossos produtos foram taxados com tarifas em países da América Central. Nosso lá temos vocês."
+        },
+        {
+          "file": "10772221179495683943.wav",
+          "duration_s": 15.9,
+          "latency_s": 0.3692562779997388,
+          "rtf": 0.023223665283002442,
+          "reference": "O Parque Nacional Kruger fica no nordeste da África do Sul, ao longo da fronteira de Moçambique ao leste, do Zimbábue ao norte, e o Crocodile River na fronteira sul.",
+          "hypothesis": "O Parque Nacional Krugge fica no nordeste da África do Sul. Alguns da Fronteira de Mossambique ao Leste dos Embabo é a Onorte e ao Crocodile River na Fronteira Sul."
+        },
+        {
+          "file": "10588000562732328309.wav",
+          "duration_s": 9.48,
+          "latency_s": 0.3351833399997304,
+          "rtf": 0.03535689240503485,
+          "reference": "O placar final foi uma vitória por um ponto, 21 a 20, encerrando a sequência de 15 vitórias consecutivas dos All Blacks.",
+          "hypothesis": "Um paraar final foi uma vitória por um ponto. Pente uma vinte e encerra da sequência de quivi vitórias consecutivas do Zool Blacks."
+        },
+        {
+          "file": "12682472689138541212.wav",
+          "duration_s": 14.64,
+          "latency_s": 0.3450572709998596,
+          "rtf": 0.023569485724034125,
+          "reference": "O relatório é iniciado com um apelo por um debate aberto e pela formação de um consenso no Estados Unidos sobre a política relacionada ao Oriente Médio.",
+          "hypothesis": "O relatório iniciado com a pelo por um debate aberto e pela formação de um consenso no Estados Unidos sobre política relacionada ao Oriente Médio."
+        },
+        {
+          "file": "16289878480453063156.wav",
+          "duration_s": 10.74,
+          "latency_s": 0.3074237340001673,
+          "rtf": 0.02862418379889826,
+          "reference": "O Natal é um dos feriados mais importantes do cristianismo e é celebrado como o aniversário de Jesus.",
+          "hypothesis": "O Natal é um dos feriados mais importantes de cristianismo, e é celebrado como o Universário Jesus."
+        },
+        {
+          "file": "16531068642759102861.wav",
+          "duration_s": 7.26,
+          "latency_s": 0.3060610299999098,
+          "rtf": 0.04215716666665424,
+          "reference": "Além disso, não existia autoridade para revogar as leis fiscais e tarifas entre os estados.",
+          "hypothesis": "Além disso, não existe autoridade para divulgar as leis fiscais e tarifas entre os estados."
+        },
+        {
+          "file": "8363463989661215730.wav",
+          "duration_s": 15.72,
+          "latency_s": 0.34418452999989313,
+          "rtf": 0.021894690203555542,
+          "reference": "Ao pedirem um comentário seu, Miller disse, \"Mike fala muito durantes a audiência... eu estava me preparando, então não estava prestando muita atenção no que ele estava dizendo\".",
+          "hypothesis": "Ao pedir em um comentário seu, Miller disse, Mike fala muito durante a audiência. Eu estava me preparando, então não estava prestando muita atenção no que ele estava dizendo."
+        },
+        {
+          "file": "995364916917181840.wav",
+          "duration_s": 12.36,
+          "latency_s": 0.3366044639997199,
+          "rtf": 0.027233370873763745,
+          "reference": "O Japão possui cerca de 7.000 ilhas (a maior sendo Honshu), tornando o Japão a 7ª maior ilha do mundo!",
+          "hypothesis": "O Japão possui cerca de 7 milírias, a maior sendo um romptu. Tornamos a Japão a 7 maior e o do mundo."
+        },
+        {
+          "file": "15838979793707947248.wav",
+          "duration_s": 11.28,
+          "latency_s": 0.35093491599991467,
+          "rtf": 0.031111251418432153,
+          "reference": "A ciência aponta hoje que essa economia baseada no carbono deslocou a biosfera do estado estável que havia permitido a evolução humana ao longo dos últimos dois milhões de anos.",
+          "hypothesis": "A ciência aponta hoje que é a economia baseada no carbono deslocou a biosfera do estado que havia permitido a evolução humana ao longo dos últimos dois milhões de anos."
+        },
+        {
+          "file": "5581036766732116626.wav",
+          "duration_s": 12.48,
+          "latency_s": 0.35324405200026376,
+          "rtf": 0.028304811858995492,
+          "reference": "Os pesquisadores sugeriram que, apesar do rabo ser de um dinossauro jovem, a amostra revela uma plumagem adulta, não uma penugem.",
+          "hypothesis": "Os pesquisadores suggeriram que, apesar do rabo ser de um de nosso aljovem, a mostra revela uma plomagem adulta, não é uma penuginha."
+        },
+        {
+          "file": "1629340988999780235.wav",
+          "duration_s": 9.0,
+          "latency_s": 0.3018309839999347,
+          "rtf": 0.033536775999992746,
+          "reference": "O presidente norte-americano, George W. Bush, recebeu bem o anúncio.",
+          "hypothesis": "O presidente norte-americano George W. Bush recebeu bem o Anuncio."
+        },
+        {
+          "file": "9785454123552928776.wav",
+          "duration_s": 13.08,
+          "latency_s": 0.3434598300000289,
+          "rtf": 0.026258396788993034,
+          "reference": "Quando você foi para o exterior pela primeira vez, as pessoas provavelmente foram pacientes e compreensivas, sabendo que viajantes em um novo país precisam se adaptar.",
+          "hypothesis": "Quando você foi para o estidor pela primeira vez as pessoas provavelmente foram pacientes e compreensivas, sabendo que viajante em um novo país precisam se adaptar."
+        },
+        {
+          "file": "18059640891474996759.wav",
+          "duration_s": 14.28,
+          "latency_s": 0.3541796700001214,
+          "rtf": 0.024802497899168167,
+          "reference": "Os membros de uma subcultura frequentemente sinalizam sua filiação por meio de um uso distinto e simbólico de estilo, que inclui modas, maneirismos e jargões.",
+          "hypothesis": "Os membros de uma assodicultura frequentemente sinaliza um sua afiliação para vender um uso distinto e esse bólico destino que inclui modas maneirismo seja argões."
+        },
+        {
+          "file": "9776935321561977831.wav",
+          "duration_s": 5.52,
+          "latency_s": 0.29859181100027854,
+          "rtf": 0.05409271938410844,
+          "reference": "Aquilo não pareceu fazer sentido para mim; certamente não foi justo.",
+          "hypothesis": "Aqui no não pareceu fazer sentido para mim, certamente não foi justo."
+        },
+        {
+          "file": "5103851611728544118.wav",
+          "duration_s": 13.08,
+          "latency_s": 0.3498651230001997,
+          "rtf": 0.02674809808870028,
+          "reference": "Mas as florestas não contam só com pântanos de mangue - elas têm algumas das últimas grandes selvas que já cobriram a superfície gangética restantes.",
+          "hypothesis": "Mas as florestas não contam só com pãtanos de manga. Elas têm algumas das últimas grandes selvas que já cobriram a superfície. Gangeética restantes."
+        },
+        {
+          "file": "6314416073878600155.wav",
+          "duration_s": 16.8,
+          "latency_s": 0.36108777700019346,
+          "rtf": 0.021493320059535324,
+          "reference": "Seu 1.000º selo foi o magnífico \"Os Grandes Feitos dos Reis Suecos\", de David Klöcker Ehrenstrahl, em 2000, que está listado no Livro Guinness dos Recordes.",
+          "hypothesis": "O 10º primeiro celo foi o magnífico, os grandes feitos dos reis soécos, de David Clocker era enstral, em 2000 que está listado no livro Guinness dos Records."
+        },
+        {
+          "file": "10021311324523185658.wav",
+          "duration_s": 11.82,
+          "latency_s": 0.32661992100020143,
+          "rtf": 0.027632819035550035,
+          "reference": "O objetivo principal da ciência é entender como o mundo funciona através do método científico. É esse método que orienta as pesquisas científicas.",
+          "hypothesis": "Obvisso o principal da sim e sentir ver como o mundo funciona através do método científico, e se método que orita e pesquisa científica."
+        },
+        {
+          "file": "3663138061544035381.wav",
+          "duration_s": 14.34,
+          "latency_s": 0.34745061300009183,
+          "rtf": 0.024229470920508495,
+          "reference": "Acidentes aéreos são comuns no Irã, que tem uma frota envelhecida e mal conservada tanto para operações civis quanto militares.",
+          "hypothesis": "As cidades aéreos são comuns noira que em tem uma frota emvelhecida e mal conservada tanto para operações civis quanto militares."
+        },
+        {
+          "file": "7503316393114322388.wav",
+          "duration_s": 7.38,
+          "latency_s": 0.308177015000183,
+          "rtf": 0.041758403116555966,
+          "reference": "Alguns festivais têm áreas especiais de acampamento para famílias com crianças pequenas.",
+          "hypothesis": "Alguns festivais têm áreas especiais que deacampamento para famílias com crianças pequenas."
+        },
+        {
+          "file": "1203413407386234720.wav",
+          "duration_s": 16.74,
+          "latency_s": 0.36808462099997996,
+          "rtf": 0.021988328614096775,
+          "reference": "Os Artigos necessitavam do consentimento unânime entre todos os estados antes que pudessem ser emendados e os estados deram tão pouca importância ao governo central que os representantes deles quase nunca estavam presentes.",
+          "hypothesis": "Os artigos necessitavam do consentimento nânime entre todos os estados, antes que pudessem ser imendados, e os estados deram tão pouco importância ao governo central que os representantes deles quase nunca estavam presentes."
+        },
+        {
+          "file": "3198007100466734105.wav",
+          "duration_s": 15.9,
+          "latency_s": 0.3565033049999329,
+          "rtf": 0.02242159150942974,
+          "reference": "Esse  novo ambiente tem recursos diferentes e novos competidores, então a nova população precisará adquirir características diferentes das que já possui e adaptar-se para se tornar uma forte competidora.",
+          "hypothesis": "Esse novo ambiente tem recursos diferentes e novos competidores. Então, a nova população precisará de querer características diferentes das que já possuí e adaptar-se para se tornar uma forte competadora."
+        }
+      ]
+    },
+    {
+      "model": "base",
+      "compute_type": "int8",
+      "beam_size": 1,
+      "load_s": 17.532879025000057,
+      "peak_rss_mb": 814.38671875,
+      "wer": 0.14906832298136646,
+      "full_latency_s": {
+        "mean": 0.5911961352666518,
+        "p50": 0.5965052529998047,
+        "p90": 0.6495956580001803,
+        "max": 0.6770031050000398
+      },
+      "full_rtf": {
+        "mean": 0.05488566966545548,
+        "p50": 0.04861107561291613,
+        "p90": 0.07949073765429501,
+        "max": 0.09397608514493938
+      },
+      "short_latency_s": {
+        "mean": 0.5489982013333096,
+        "p50": 0.48848813999984486,
+        "p90": 0.504244190999998,
+        "max": 1.4994056949999504
+      },
+      "samples": [
+        {
+          "file": "13221766043673296259.wav",
+          "duration_s": 7.44,
+          "latency_s": 0.5433531669996228,
+          "rtf": 0.07303133965048693,
+          "reference": "Eles ainda estão tentando determinar o tamanho do acidente e como a terra será afetada.",
+          "hypothesis": "Eles ainda estão tentando determinar o tamanho do acidente e como até a ser afetada."
+        },
+        {
+          "file": "10408390450801752955.wav",
+          "duration_s": 14.1,
+          "latency_s": 0.6770031050000398,
+          "rtf": 0.0480144046099319,
+          "reference": "O inverno pode ser decepcionantemente frio: as temperaturas raramente ficam abaixo do congelante, mas o vento e a umidade combinadas tornam a sensação mais fria que o que o termômetro mostra.",
+          "hypothesis": "O inverno pode ser decepcionatemente frio, as temperaturas raramente ficam abaixo do congelante, mas o vento e a umidade combinadas tornam a sensação mais fria que o que o termômetro mostra."
+        },
+        {
+          "file": "17715481015254381646.wav",
+          "duration_s": 6.48,
+          "latency_s": 0.5150999799998317,
+          "rtf": 0.07949073765429501,
+          "reference": "Vale a pena caminhar meia hora pela intrigante vila.",
+          "hypothesis": "Vale a pena caminhar meia hora pela intrigante vila."
+        },
+        {
+          "file": "16655615501947115357.wav",
+          "duration_s": 9.18,
+          "latency_s": 0.54028104300005,
+          "rtf": 0.0588541441176525,
+          "reference": "A população original não mudou em nada, eles ainda precisam das mesmas adaptações de antes.",
+          "hypothesis": "A população original não mudou em nada, eles ainda precisam das mesmas adaptações de antes."
+        },
+        {
+          "file": "16378273986139646510.wav",
+          "duration_s": 14.82,
+          "latency_s": 0.592044156999691,
+          "rtf": 0.039948998448022334,
+          "reference": "Anteriormente, o CEO da Ring, Jamie Siminoff, comentou que a empresa surgiu quando sua campainha não podia ser ouvida de sua loja em sua garagem.",
+          "hypothesis": "anteriormente o CEO da Ring, James Siminoff, comentou que a empresa surgiu quando sua campanha não podia ser ouvida de sua loja em sua garagem"
+        },
+        {
+          "file": "14042294750736263832.wav",
+          "duration_s": 5.64,
+          "latency_s": 0.5214912010001171,
+          "rtf": 0.09246297890072999,
+          "reference": "A maior parte da vida familiar hebraica acontecia ao ar livre.",
+          "hypothesis": "A maior parte da vida familiar é Braica, aconteceu ao Arliure."
+        },
+        {
+          "file": "13092883766962544808.wav",
+          "duration_s": 12.24,
+          "latency_s": 0.6201573319999625,
+          "rtf": 0.05066644869280739,
+          "reference": "NHK também disse que a usina nuclear de Kashiwazaki Kariwa, da prefeitura de Niigata, estava funcionando de forma normal.",
+          "hypothesis": "Ele é gacata, me disse, que a unzina no criado, cavazaki, cariwa, da prefeitura de negata, estava funcionando de forma normal."
+        },
+        {
+          "file": "9529495412281962161.wav",
+          "duration_s": 6.6,
+          "latency_s": 0.5379588239998156,
+          "rtf": 0.0815089127272448,
+          "reference": "Mais três bombas explodiram perto dos prédios do governo em um período de duas horas.",
+          "hypothesis": "Mais três bombas explodiram perto dos prédios do governo em um período de duas horas."
+        },
+        {
+          "file": "12649617510059681669.wav",
+          "duration_s": 16.56,
+          "latency_s": 0.6544558470000084,
+          "rtf": 0.03952028061594254,
+          "reference": "Empresas transportadoras são bem pagas para entregar coisas rapidamente. Frequentemente, o tempo é muito importante no envio de documentos comerciais, mercadorias ou peças sobressalentes para um reparo urgente.",
+          "hypothesis": "Empresas transportadoras são bem pagas para entregar coisas rapidamente. Frequentemente, o tempo é muito importante no envio de documentos comerciais, mercadorias ou peças sobre salentes para um repar urgente."
+        },
+        {
+          "file": "571132148497651365.wav",
+          "duration_s": 12.3,
+          "latency_s": 0.565773702000115,
+          "rtf": 0.04599786195122886,
+          "reference": "Ainda assim, oitenta por cento dos nossos produtos foram taxados com tarifas em países da América Central. Nós tratamos vocês.",
+          "hypothesis": "Ainda assim, 80% dos nossos produtos foram tachados com tarifas em países da América Central. Nós tratamos vocês."
+        },
+        {
+          "file": "10772221179495683943.wav",
+          "duration_s": 15.9,
+          "latency_s": 0.6744351420002204,
+          "rtf": 0.04241730452831575,
+          "reference": "O Parque Nacional Kruger fica no nordeste da África do Sul, ao longo da fronteira de Moçambique ao leste, do Zimbábue ao norte, e o Crocodile River na fronteira sul.",
+          "hypothesis": "O Parque Nacional Crugue fica no Ordeixe da África do Sul. Ao longo da fronteira de Moçambique, a Ueste, do Zimbabbo, a Unorte e ao Crocodile River, na fronteira Sul."
+        },
+        {
+          "file": "10588000562732328309.wav",
+          "duration_s": 9.48,
+          "latency_s": 0.5764181599997755,
+          "rtf": 0.060803603375503744,
+          "reference": "O placar final foi uma vitória por um ponto, 21 a 20, encerrando a sequência de 15 vitórias consecutivas dos All Blacks.",
+          "hypothesis": "O placar final foi uma vitória por um ponto, 21 à 20 e ser na nossa coisa de 15 vitórias consecutivas dos All Blacks."
+        },
+        {
+          "file": "12682472689138541212.wav",
+          "duration_s": 14.64,
+          "latency_s": 0.6009663489999184,
+          "rtf": 0.041049614002726664,
+          "reference": "O relatório é iniciado com um apelo por um debate aberto e pela formação de um consenso no Estados Unidos sobre a política relacionada ao Oriente Médio.",
+          "hypothesis": "O relatório é iniciado com o apelo por um debate aberto e pela formação de um consenso no Estados Unidos sobre a política relacionada ao Oriente Médio."
+        },
+        {
+          "file": "16289878480453063156.wav",
+          "duration_s": 10.74,
+          "latency_s": 0.5529381510000348,
+          "rtf": 0.05148399916201442,
+          "reference": "O Natal é um dos feriados mais importantes do cristianismo e é celebrado como o aniversário de Jesus.",
+          "hypothesis": "O Natal é um dos periados mais importantes do cristianismo, ele é celebrado como aniversário Jesus."
+        },
+        {
+          "file": "16531068642759102861.wav",
+          "duration_s": 7.26,
+          "latency_s": 0.5559916450001765,
+          "rtf": 0.07658287121214552,
+          "reference": "Além disso, não existia autoridade para revogar as leis fiscais e tarifas entre os estados.",
+          "hypothesis": "Além disso, não existe autoridade para revolgar as leis fiscais e tarifas entre os estados."
+        },
+        {
+          "file": "8363463989661215730.wav",
+          "duration_s": 15.72,
+          "latency_s": 0.6152792970001428,
+          "rtf": 0.039139904389322064,
+          "reference": "Ao pedirem um comentário seu, Miller disse, \"Mike fala muito durantes a audiência... eu estava me preparando, então não estava prestando muita atenção no que ele estava dizendo\".",
+          "hypothesis": "Ao pedirem em um comentário seu, Miller disse, Mike fala muito durante a audiência. Eu estava me preparando, então não estava prestando muita atenção no que ele estava dizendo."
+        },
+        {
+          "file": "995364916917181840.wav",
+          "duration_s": 12.36,
+          "latency_s": 0.5803072249996148,
+          "rtf": 0.046950422734596674,
+          "reference": "O Japão possui cerca de 7.000 ilhas (a maior sendo Honshu), tornando o Japão a 7ª maior ilha do mundo!",
+          "hypothesis": "O Japão possui cerca de 7 mil ilhas a maior sendo Ronshu. Tornamos Japão a 7 maior ilha do mundo."
+        },
+        {
+          "file": "15838979793707947248.wav",
+          "duration_s": 11.28,
+          "latency_s": 0.611420611000085,
+          "rtf": 0.054203954875894064,
+          "reference": "A ciência aponta hoje que essa economia baseada no carbono deslocou a biosfera do estado estável que havia permitido a evolução humana ao longo dos últimos dois milhões de anos.",
+          "hypothesis": "A ciência aponta hoje que essa economia baseada no carbono deslocou a biosfera do Estado Estável que havia permitida evolução humana ao longo dos últimos dois milhões de anos."
+        },
+        {
+          "file": "5581036766732116626.wav",
+          "duration_s": 12.48,
+          "latency_s": 0.6185694229998262,
+          "rtf": 0.04956485761216556,
+          "reference": "Os pesquisadores sugeriram que, apesar do rabo ser de um dinossauro jovem, a amostra revela uma plumagem adulta, não uma penugem.",
+          "hypothesis": "Os pesquisadores sugeriram que, apesar do rabo ser de um dinossauro jovem, a monstra revela uma plumagem adulta, não uma penúgeno."
+        },
+        {
+          "file": "1629340988999780235.wav",
+          "duration_s": 9.0,
+          "latency_s": 0.5329715769998984,
+          "rtf": 0.05921906411109982,
+          "reference": "O presidente norte-americano, George W. Bush, recebeu bem o anúncio.",
+          "hypothesis": "O presidente norte-americano, George W. Bush, recebeu bem o anúncio."
+        },
+        {
+          "file": "9785454123552928776.wav",
+          "duration_s": 13.08,
+          "latency_s": 0.6111771470000349,
+          "rtf": 0.04672608157492621,
+          "reference": "Quando você foi para o exterior pela primeira vez, as pessoas provavelmente foram pacientes e compreensivas, sabendo que viajantes em um novo país precisam se adaptar.",
+          "hypothesis": "Quando você foi para o estúdio, pela primeira vez, as pessoas provavelmente foram pacientes e compreensivas, sabendo que viajantes em um novo país precisam se adaptar."
+        },
+        {
+          "file": "18059640891474996759.wav",
+          "duration_s": 14.28,
+          "latency_s": 0.6418984470001305,
+          "rtf": 0.044950871638664604,
+          "reference": "Os membros de uma subcultura frequentemente sinalizam sua filiação por meio de um uso distinto e simbólico de estilo, que inclui modas, maneirismos e jargões.",
+          "hypothesis": "Os membros de uma subcultura frequentemente sinalizam sua afiliação por meio de um uso distinto esse imólico de estilo, que incluímodas, maneirismos e jargonhos."
+        },
+        {
+          "file": "9776935321561977831.wav",
+          "duration_s": 5.52,
+          "latency_s": 0.5187479900000653,
+          "rtf": 0.09397608514493938,
+          "reference": "Aquilo não pareceu fazer sentido para mim; certamente não foi justo.",
+          "hypothesis": "Aqui eu não não pareceu fazer sentido para mim, certamente não foi justo."
+        },
+        {
+          "file": "5103851611728544118.wav",
+          "duration_s": 13.08,
+          "latency_s": 0.6145017260000714,
+          "rtf": 0.04698025428135102,
+          "reference": "Mas as florestas não contam só com pântanos de mangue - elas têm algumas das últimas grandes selvas que já cobriram a superfície gangética restantes.",
+          "hypothesis": "Mas as florestas não contam só com pântanos de manga. Elas têm algumas das últimas grandes selvas que já cobriram a superfície gângética restantes."
+        },
+        {
+          "file": "6314416073878600155.wav",
+          "duration_s": 16.8,
+          "latency_s": 0.6424598479998167,
+          "rtf": 0.03824165761903671,
+          "reference": "Seu 1.000º selo foi o magnífico \"Os Grandes Feitos dos Reis Suecos\", de David Klöcker Ehrenstrahl, em 2000, que está listado no Livro Guinness dos Recordes.",
+          "hypothesis": "O 10º Celo foi o magnífico, os grandes feitos dos reis e oécos, de David Cloker, era em Stral, em 2000 que está listado no livro Guinness dos Records."
+        },
+        {
+          "file": "10021311324523185658.wav",
+          "duration_s": 11.82,
+          "latency_s": 0.5816355649999423,
+          "rtf": 0.04920774661590036,
+          "reference": "O objetivo principal da ciência é entender como o mundo funciona através do método científico. É esse método que orienta as pesquisas científicas.",
+          "hypothesis": "O bichou principal da ciência e entender como o mundo funciona através do método científico, esse método que orienta e pesquisa científicas."
+        },
+        {
+          "file": "3663138061544035381.wav",
+          "duration_s": 14.34,
+          "latency_s": 0.6074457320000874,
+          "rtf": 0.04236023235704933,
+          "reference": "Acidentes aéreos são comuns no Irã, que tem uma frota envelhecida e mal conservada tanto para operações civis quanto militares.",
+          "hypothesis": "As cidades aéreos são comuns do irã, quem tem uma frota emvelhecida e mal conservada tanto para operações civis quanto militares."
+        },
+        {
+          "file": "7503316393114322388.wav",
+          "duration_s": 7.38,
+          "latency_s": 0.5523049120001815,
+          "rtf": 0.07483806395666416,
+          "reference": "Alguns festivais têm áreas especiais de acampamento para famílias com crianças pequenas.",
+          "hypothesis": "Alguns festivais tem áreas especiais que deia a campamento para famílias com crianças pequenas."
+        },
+        {
+          "file": "1203413407386234720.wav",
+          "duration_s": 16.74,
+          "latency_s": 0.6495956580001803,
+          "rtf": 0.0388049974910502,
+          "reference": "Os Artigos necessitavam do consentimento unânime entre todos os estados antes que pudessem ser emendados e os estados deram tão pouca importância ao governo central que os representantes deles quase nunca estavam presentes.",
+          "hypothesis": "Os artigos necessitavam do consentimento unânime entre todos os estados antes que pudessem ser imendados e os estados deram tão pouco importância ao governo central que os representantes deles quase nunca estavam presentes."
+        },
+        {
+          "file": "3198007100466734105.wav",
+          "duration_s": 15.9,
+          "latency_s": 0.6292010950000986,
+          "rtf": 0.03957239591195588,
+          "reference": "Esse  novo ambiente tem recursos diferentes e novos competidores, então a nova população precisará adquirir características diferentes das que já possui e adaptar-se para se tornar uma forte competidora.",
+          "hypothesis": "Esse novo ambiente tem recursos diferentes e novos competidores. Então a nova população precisará adquirir características diferentes das que já possuírem e adaptar-se para se tornar uma forte competidora."
+        }
+      ]
+    },
+    {
+      "model": "small",
+      "compute_type": "int8",
+      "beam_size": 1,
+      "load_s": 53.69353871699968,
+      "peak_rss_mb": 1894.3125,
+      "wer": 0.07608695652173914,
+      "full_latency_s": {
+        "mean": 1.6730718214333138,
+        "p50": 1.6894517160001215,
+        "p90": 1.8327677410002252,
+        "max": 1.9089492210000572
+      },
+      "full_rtf": {
+        "mean": 0.15540351838413205,
+        "p50": 0.13783404678039815,
+        "p90": 0.2253309861111047,
+        "max": 0.2662972344202662
+      },
+      "short_latency_s": {
+        "mean": 1.4794269312666377,
+        "p50": 1.3921985775000394,
+        "p90": 1.4483127569997123,
+        "max": 3.9512850959999923
+      },
+      "samples": [
+        {
+          "file": "13221766043673296259.wav",
+          "duration_s": 7.44,
+          "latency_s": 1.5107207070000186,
+          "rtf": 0.20305385846774443,
+          "reference": "Eles ainda estão tentando determinar o tamanho do acidente e como a terra será afetada.",
+          "hypothesis": "Eles ainda estão tentando determinar o tamanho do acidente e como até será afetada."
+        },
+        {
+          "file": "10408390450801752955.wav",
+          "duration_s": 14.1,
+          "latency_s": 1.9089492210000572,
+          "rtf": 0.13538646957447215,
+          "reference": "O inverno pode ser decepcionantemente frio: as temperaturas raramente ficam abaixo do congelante, mas o vento e a umidade combinadas tornam a sensação mais fria que o que o termômetro mostra.",
+          "hypothesis": "O inverno pode ser decepcionantemente frio, as temperaturas raramente ficam abaixo do congelante, mas o vento e a umidade combinadas torna uma sensação mais fria que o que o termômetro mostra."
+        },
+        {
+          "file": "17715481015254381646.wav",
+          "duration_s": 6.48,
+          "latency_s": 1.4601447899999584,
+          "rtf": 0.2253309861111047,
+          "reference": "Vale a pena caminhar meia hora pela intrigante vila.",
+          "hypothesis": "Vale a pena caminhar meia hora pela intrigante vila."
+        },
+        {
+          "file": "16655615501947115357.wav",
+          "duration_s": 9.18,
+          "latency_s": 1.543163851999907,
+          "rtf": 0.16810063747275675,
+          "reference": "A população original não mudou em nada, eles ainda precisam das mesmas adaptações de antes.",
+          "hypothesis": "A população original não mudou em nada. Eles ainda precisam das mesmas adaptações de antes."
+        },
+        {
+          "file": "16378273986139646510.wav",
+          "duration_s": 14.82,
+          "latency_s": 1.6863322610001887,
+          "rtf": 0.11378760195682784,
+          "reference": "Anteriormente, o CEO da Ring, Jamie Siminoff, comentou que a empresa surgiu quando sua campainha não podia ser ouvida de sua loja em sua garagem.",
+          "hypothesis": "anteriormente o CEO da ring james minowth comentou que a empresa surgiu quando sua campainha não podia ser ouvida de sua loja em sua garagem"
+        },
+        {
+          "file": "14042294750736263832.wav",
+          "duration_s": 5.64,
+          "latency_s": 1.457120864999979,
+          "rtf": 0.2583547632978686,
+          "reference": "A maior parte da vida familiar hebraica acontecia ao ar livre.",
+          "hypothesis": "A maior parte da vida familiar hebraica acontecia ao ar livre."
+        },
+        {
+          "file": "13092883766962544808.wav",
+          "duration_s": 12.24,
+          "latency_s": 1.6980390239996268,
+          "rtf": 0.13872867843134207,
+          "reference": "NHK também disse que a usina nuclear de Kashiwazaki Kariwa, da prefeitura de Niigata, estava funcionando de forma normal.",
+          "hypothesis": "Ele agacata me disse que a usina localada, Kavazaki Karioa da Prefeitura de Niigata estava funcionando de forma normal."
+        },
+        {
+          "file": "9529495412281962161.wav",
+          "duration_s": 6.6,
+          "latency_s": 1.5413783730000432,
+          "rtf": 0.23354217772727928,
+          "reference": "Mais três bombas explodiram perto dos prédios do governo em um período de duas horas.",
+          "hypothesis": "Mais três bombas explodiram perto dos prédios do governo em um período de duas horas."
+        },
+        {
+          "file": "12649617510059681669.wav",
+          "duration_s": 16.56,
+          "latency_s": 1.8591605860001437,
+          "rtf": 0.1122681513285111,
+          "reference": "Empresas transportadoras são bem pagas para entregar coisas rapidamente. Frequentemente, o tempo é muito importante no envio de documentos comerciais, mercadorias ou peças sobressalentes para um reparo urgente.",
+          "hypothesis": "Empresas transportadoras são bem pagas para entregar coisas rapidamente. Frequentemente, o tempo é muito importante no envio de documentos comerciais, mercadorias ou peças sobressalentes para um reparo urgente."
+        },
+        {
+          "file": "571132148497651365.wav",
+          "duration_s": 12.3,
+          "latency_s": 1.6108768449998934,
+          "rtf": 0.13096559715446288,
+          "reference": "Ainda assim, oitenta por cento dos nossos produtos foram taxados com tarifas em países da América Central. Nós tratamos vocês.",
+          "hypothesis": "Ainda assim, 80% dos nossos produtos foram tachados com tarifas em países da América Central. Nós tratamos vocês."
+        },
+        {
+          "file": "10772221179495683943.wav",
+          "duration_s": 15.9,
+          "latency_s": 1.8559818009998708,
+          "rtf": 0.11672841515722457,
+          "reference": "O Parque Nacional Kruger fica no nordeste da África do Sul, ao longo da fronteira de Moçambique ao leste, do Zimbábue ao norte, e o Crocodile River na fronteira sul.",
+          "hypothesis": "O Parque Nacional Krug fica no nordeste da África do Sul. Ao longo da fronteira de Moçambique ao leste, do Zimbabwe ao norte e ao Crocodile River na fronteira sul."
+        },
+        {
+          "file": "10588000562732328309.wav",
+          "duration_s": 9.48,
+          "latency_s": 1.6439774089999446,
+          "rtf": 0.17341533850210386,
+          "reference": "O placar final foi uma vitória por um ponto, 21 a 20, encerrando a sequência de 15 vitórias consecutivas dos All Blacks.",
+          "hypothesis": "O placar final foi uma vitória por um ponto, 21-20 encerrando a sequência de 15 vitórias consecutivas dos All Blacks."
+        },
+        {
+          "file": "12682472689138541212.wav",
+          "duration_s": 14.64,
+          "latency_s": 1.701312623999911,
+          "rtf": 0.11620987868851851,
+          "reference": "O relatório é iniciado com um apelo por um debate aberto e pela formação de um consenso no Estados Unidos sobre a política relacionada ao Oriente Médio.",
+          "hypothesis": "O relatório é iniciado com apelo por um debate aberto e pela formação de um consenso nos Estados Unidos sobre a política relacionada ao Oriente Médio."
+        },
+        {
+          "file": "16289878480453063156.wav",
+          "duration_s": 10.74,
+          "latency_s": 1.5756463249999797,
+          "rtf": 0.1467082239292346,
+          "reference": "O Natal é um dos feriados mais importantes do cristianismo e é celebrado como o aniversário de Jesus.",
+          "hypothesis": "O Natal é um dos feriados mais importantes do cristianismo. Ele é celebrado como aniversário Jesus."
+        },
+        {
+          "file": "16531068642759102861.wav",
+          "duration_s": 7.26,
+          "latency_s": 1.5797678100002486,
+          "rtf": 0.2175988719008607,
+          "reference": "Além disso, não existia autoridade para revogar as leis fiscais e tarifas entre os estados.",
+          "hypothesis": "Além disso, não existe autoridade para revulgar as leis fiscais e tarifas entre os estados."
+        },
+        {
+          "file": "8363463989661215730.wav",
+          "duration_s": 15.72,
+          "latency_s": 1.731815964999896,
+          "rtf": 0.11016640998727074,
+          "reference": "Ao pedirem um comentário seu, Miller disse, \"Mike fala muito durantes a audiência... eu estava me preparando, então não estava prestando muita atenção no que ele estava dizendo\".",
+          "hypothesis": "Ao pedirem um comentário seu, Miller disse, Mike, fala muito durante a audiência. Eu estava me preparando, então não estava prestando muita atenção no que ele estava dizendo."
+        },
+        {
+          "file": "995364916917181840.wav",
+          "duration_s": 12.36,
+          "latency_s": 1.6925711710000542,
+          "rtf": 0.13693941512945423,
+          "reference": "O Japão possui cerca de 7.000 ilhas (a maior sendo Honshu), tornando o Japão a 7ª maior ilha do mundo!",
+          "hypothesis": "O Japão possui cerca de 7 mil ilhas, a maior sendo Honshu. Tornamos o Japão a sétima maior ilha do mundo."
+        },
+        {
+          "file": "15838979793707947248.wav",
+          "duration_s": 11.28,
+          "latency_s": 1.8008597879997978,
+          "rtf": 0.159650690425514,
+          "reference": "A ciência aponta hoje que essa economia baseada no carbono deslocou a biosfera do estado estável que havia permitido a evolução humana ao longo dos últimos dois milhões de anos.",
+          "hypothesis": "A ciência aponta hoje que essa economia baseada no carbono deslocou a biosfera do estado-estavo que havia permitido a evolução humana ao longo dos últimos 2 milhões de anos."
+        },
+        {
+          "file": "5581036766732116626.wav",
+          "duration_s": 12.48,
+          "latency_s": 1.7360769289998643,
+          "rtf": 0.13910872828524554,
+          "reference": "Os pesquisadores sugeriram que, apesar do rabo ser de um dinossauro jovem, a amostra revela uma plumagem adulta, não uma penugem.",
+          "hypothesis": "Os pesquisadores sugeriram que, apesar do rabo ser de um dinossauro jovem, a monstra revela uma plumagem adulta, não uma penúgen."
+        },
+        {
+          "file": "1629340988999780235.wav",
+          "duration_s": 9.0,
+          "latency_s": 1.502687215000151,
+          "rtf": 0.16696524611112787,
+          "reference": "O presidente norte-americano, George W. Bush, recebeu bem o anúncio.",
+          "hypothesis": "O presidente norte-americano George W. Bush recebeu bem o anúncio."
+        },
+        {
+          "file": "9785454123552928776.wav",
+          "duration_s": 13.08,
+          "latency_s": 1.6862787520003621,
+          "rtf": 0.12892039388381973,
+          "reference": "Quando você foi para o exterior pela primeira vez, as pessoas provavelmente foram pacientes e compreensivas, sabendo que viajantes em um novo país precisam se adaptar.",
+          "hypothesis": "Quando você foi para o exterior pela primeira vez as pessoas provavelmente foram pacientes e compreensivas sabendo que viajantes em um novo país precisam se adaptar."
+        },
+        {
+          "file": "18059640891474996759.wav",
+          "duration_s": 14.28,
+          "latency_s": 1.8327677410002252,
+          "rtf": 0.12834507990197655,
+          "reference": "Os membros de uma subcultura frequentemente sinalizam sua filiação por meio de um uso distinto e simbólico de estilo, que inclui modas, maneirismos e jargões.",
+          "hypothesis": "Os membros de uma subcultura frequentemente sinalizam sua afiliação por meio de um uso distinto e simbólico de estilo, que inclui modas, maneirismos e jargões."
+        },
+        {
+          "file": "9776935321561977831.wav",
+          "duration_s": 5.52,
+          "latency_s": 1.4699607339998693,
+          "rtf": 0.2662972344202662,
+          "reference": "Aquilo não pareceu fazer sentido para mim; certamente não foi justo.",
+          "hypothesis": "Aquilo não pareceu fazer sentido para mim, certamente não foi justo."
+        },
+        {
+          "file": "5103851611728544118.wav",
+          "duration_s": 13.08,
+          "latency_s": 1.7754235209999933,
+          "rtf": 0.13573574319571816,
+          "reference": "Mas as florestas não contam só com pântanos de mangue - elas têm algumas das últimas grandes selvas que já cobriram a superfície gangética restantes.",
+          "hypothesis": "Mas as florestas não contam só com pântanos de mangue. Elas têm algumas das últimas grandes selvas que já cobriram a superfície ganjética restantes."
+        },
+        {
+          "file": "6314416073878600155.wav",
+          "duration_s": 16.8,
+          "latency_s": 1.8166200119999303,
+          "rtf": 0.10813214357142442,
+          "reference": "Seu 1.000º selo foi o magnífico \"Os Grandes Feitos dos Reis Suecos\", de David Klöcker Ehrenstrahl, em 2000, que está listado no Livro Guinness dos Recordes.",
+          "hypothesis": "O 10º primeiro selo foi o magnífico, os grandes feitos dos reis suecos de Davi Clocker-Erenstral, em 2000, que está listado no livro Guinness dos Récords."
+        },
+        {
+          "file": "10021311324523185658.wav",
+          "duration_s": 11.82,
+          "latency_s": 1.6504605149998497,
+          "rtf": 0.1396328692893274,
+          "reference": "O objetivo principal da ciência é entender como o mundo funciona através do método científico. É esse método que orienta as pesquisas científicas.",
+          "hypothesis": "O objetivo principal da ciência é entender como o mundo funciona através do método científico, esse método que orienta e pesquisa científicas."
+        },
+        {
+          "file": "3663138061544035381.wav",
+          "duration_s": 14.34,
+          "latency_s": 1.699711357999604,
+          "rtf": 0.11852938340304073,
+          "reference": "Acidentes aéreos são comuns no Irã, que tem uma frota envelhecida e mal conservada tanto para operações civis quanto militares.",
+          "hypothesis": "Acidentes aéreos são comuns do Ira, quem tem uma frota envelhecida e mal conservada tanto para operações civis quanto militares."
+        },
+        {
+          "file": "7503316393114322388.wav",
+          "duration_s": 7.38,
+          "latency_s": 1.5763220690000708,
+          "rtf": 0.21359377628727247,
+          "reference": "Alguns festivais têm áreas especiais de acampamento para famílias com crianças pequenas.",
+          "hypothesis": "Alguns festivais têm áreas especiais que dê acampamento para famílias com crianças pequenas."
+        },
+        {
+          "file": "1203413407386234720.wav",
+          "duration_s": 16.74,
+          "latency_s": 1.8229989910000768,
+          "rtf": 0.10890077604540484,
+          "reference": "Os Artigos necessitavam do consentimento unânime entre todos os estados antes que pudessem ser emendados e os estados deram tão pouca importância ao governo central que os representantes deles quase nunca estavam presentes.",
+          "hypothesis": "Os artigos necessitavam do consentimento unânime entre todos os estados antes que pudessem ser emendados e os estados deram tão pouco importância ao governo central que os representantes deles quase nunca estavam presentes."
+        },
+        {
+          "file": "3198007100466734105.wav",
+          "duration_s": 15.9,
+          "latency_s": 1.765027388999897,
+          "rtf": 0.11100801188678598,
+          "reference": "Esse  novo ambiente tem recursos diferentes e novos competidores, então a nova população precisará adquirir características diferentes das que já possui e adaptar-se para se tornar uma forte competidora.",
+          "hypothesis": "Esse novo ambiente tem recursos diferentes e novos competidores. Então a nova população precisará adquirir características diferentes das que já possui e adaptar-se para se tornar uma forte competidora."
+        }
+      ]
+    },
+    {
+      "model": "medium",
+      "compute_type": "int8",
+      "beam_size": 1,
+      "load_s": 143.97889658299982,
+      "peak_rss_mb": 3753.8359375,
+      "wer": 0.046583850931677016,
+      "full_latency_s": {
+        "mean": 4.7717289251667205,
+        "p50": 4.848912658500012,
+        "p90": 5.213132147000124,
+        "max": 5.418864547000339
+      },
+      "full_rtf": {
+        "mean": 0.44409690233936483,
+        "p50": 0.39366887565877207,
+        "p90": 0.649113155092588,
+        "max": 0.7735025978260894
+      },
+      "short_latency_s": {
+        "mean": 4.036103867533347,
+        "p50": 4.0455543815000965,
+        "p90": 4.152298618999794,
+        "max": 4.202644168000006
+      },
+      "samples": [
+        {
+          "file": "13221766043673296259.wav",
+          "duration_s": 7.44,
+          "latency_s": 4.405897612999979,
+          "rtf": 0.5921905393817176,
+          "reference": "Eles ainda estão tentando determinar o tamanho do acidente e como a terra será afetada.",
+          "hypothesis": "Eles ainda estão tentando determinar o tamanho do acidente e como a terra será afetada."
+        },
+        {
+          "file": "10408390450801752955.wav",
+          "duration_s": 14.1,
+          "latency_s": 5.418864547000339,
+          "rtf": 0.38431663453903114,
+          "reference": "O inverno pode ser decepcionantemente frio: as temperaturas raramente ficam abaixo do congelante, mas o vento e a umidade combinadas tornam a sensação mais fria que o que o termômetro mostra.",
+          "hypothesis": "O inverno pode ser decepcionantemente frio, as temperaturas raramente ficam abaixo do congelante, mas o vento e a umidade combinadas tornam a sensação mais fria que o que o termômetro mostra."
+        },
+        {
+          "file": "17715481015254381646.wav",
+          "duration_s": 6.48,
+          "latency_s": 4.206253244999971,
+          "rtf": 0.649113155092588,
+          "reference": "Vale a pena caminhar meia hora pela intrigante vila.",
+          "hypothesis": "Vale a pena caminhar meia hora pela intrigante vila."
+        },
+        {
+          "file": "16655615501947115357.wav",
+          "duration_s": 9.18,
+          "latency_s": 4.417447859000276,
+          "rtf": 0.48120347047933293,
+          "reference": "A população original não mudou em nada, eles ainda precisam das mesmas adaptações de antes.",
+          "hypothesis": "A população original não mudou em nada. Eles ainda precisam das mesmas adaptações de antes."
+        },
+        {
+          "file": "16378273986139646510.wav",
+          "duration_s": 14.82,
+          "latency_s": 4.947707180999714,
+          "rtf": 0.33385338603236936,
+          "reference": "Anteriormente, o CEO da Ring, Jamie Siminoff, comentou que a empresa surgiu quando sua campainha não podia ser ouvida de sua loja em sua garagem.",
+          "hypothesis": "Anteriormente, o CEO da Ring, James Simeonov, comentou que a empresa surgiu quando sua campainha não podia ser ouvida de sua loja em sua garagem."
+        },
+        {
+          "file": "14042294750736263832.wav",
+          "duration_s": 5.64,
+          "latency_s": 4.21003814300002,
+          "rtf": 0.7464606636524859,
+          "reference": "A maior parte da vida familiar hebraica acontecia ao ar livre.",
+          "hypothesis": "A maior parte da vida familiar hebraica acontecia ao ar livre."
+        },
+        {
+          "file": "13092883766962544808.wav",
+          "duration_s": 12.24,
+          "latency_s": 4.78483461299993,
+          "rtf": 0.39091786053920996,
+          "reference": "NHK também disse que a usina nuclear de Kashiwazaki Kariwa, da prefeitura de Niigata, estava funcionando de forma normal.",
+          "hypothesis": "E a Gakata me disse que a usina nuclear de Kawasaki, Kariwa, da prefeitura de Niigata estava funcionando de forma normal."
+        },
+        {
+          "file": "9529495412281962161.wav",
+          "duration_s": 6.6,
+          "latency_s": 4.3790845980001905,
+          "rtf": 0.6634976663636653,
+          "reference": "Mais três bombas explodiram perto dos prédios do governo em um período de duas horas.",
+          "hypothesis": "Mais três bombas explodiram perto dos prédios do governo em um período de duas horas."
+        },
+        {
+          "file": "12649617510059681669.wav",
+          "duration_s": 16.56,
+          "latency_s": 5.268810932000179,
+          "rtf": 0.31816491135266783,
+          "reference": "Empresas transportadoras são bem pagas para entregar coisas rapidamente. Frequentemente, o tempo é muito importante no envio de documentos comerciais, mercadorias ou peças sobressalentes para um reparo urgente.",
+          "hypothesis": "Empresas transportadoras são bem pagas para entregar coisas rapidamente. Frequentemente o tempo é muito importante no envio de documentos comerciais, mercadorias ou peças sobressalentes para um reparo urgente."
+        },
+        {
+          "file": "571132148497651365.wav",
+          "duration_s": 12.3,
+          "latency_s": 4.551255046999813,
+          "rtf": 0.37002073552844006,
+          "reference": "Ainda assim, oitenta por cento dos nossos produtos foram taxados com tarifas em países da América Central. Nós tratamos vocês.",
+          "hypothesis": "Ainda assim, 80% dos nossos produtos foram taxados com tarifas em países da América Central. Nós tratamos vocês."
+        },
+        {
+          "file": "10772221179495683943.wav",
+          "duration_s": 15.9,
+          "latency_s": 5.219010786000126,
+          "rtf": 0.3282396720754796,
+          "reference": "O Parque Nacional Kruger fica no nordeste da África do Sul, ao longo da fronteira de Moçambique ao leste, do Zimbábue ao norte, e o Crocodile River na fronteira sul.",
+          "hypothesis": "O Parque Nacional Krug fica no nordeste da África do Sul. Ao longo da fronteira de Moçambique ao leste, do Zimbábue ao norte e ao Crocodile River na fronteira sul."
+        },
+        {
+          "file": "10588000562732328309.wav",
+          "duration_s": 9.48,
+          "latency_s": 4.687038738999945,
+          "rtf": 0.4944133690928212,
+          "reference": "O placar final foi uma vitória por um ponto, 21 a 20, encerrando a sequência de 15 vitórias consecutivas dos All Blacks.",
+          "hypothesis": "O placar final foi uma vitória por 1 ponto 21 a 20, encerrando a sequência de 15 vitórias consecutivas dos All Blacks."
+        },
+        {
+          "file": "12682472689138541212.wav",
+          "duration_s": 14.64,
+          "latency_s": 4.860477853000248,
+          "rtf": 0.33199985334701143,
+          "reference": "O relatório é iniciado com um apelo por um debate aberto e pela formação de um consenso no Estados Unidos sobre a política relacionada ao Oriente Médio.",
+          "hypothesis": "O relatório é iniciado com apelo por um debate aberto e pela formação de um consenso nos Estados Unidos sobre a política relacionada ao Oriente Médio."
+        },
+        {
+          "file": "16289878480453063156.wav",
+          "duration_s": 10.74,
+          "latency_s": 4.553029309000067,
+          "rtf": 0.42393196545624456,
+          "reference": "O Natal é um dos feriados mais importantes do cristianismo e é celebrado como o aniversário de Jesus.",
+          "hypothesis": "O Natal é um dos feriados mais importantes do cristianismo. Ele é celebrado como aniversário de Jesus."
+        },
+        {
+          "file": "16531068642759102861.wav",
+          "duration_s": 7.26,
+          "latency_s": 4.50212049899983,
+          "rtf": 0.6201267904958443,
+          "reference": "Além disso, não existia autoridade para revogar as leis fiscais e tarifas entre os estados.",
+          "hypothesis": "Além disso, não existe autoridade para revulgar as leis fiscais e tarifas entre os estados."
+        },
+        {
+          "file": "8363463989661215730.wav",
+          "duration_s": 15.72,
+          "latency_s": 5.039635340000132,
+          "rtf": 0.32058748982189134,
+          "reference": "Ao pedirem um comentário seu, Miller disse, \"Mike fala muito durantes a audiência... eu estava me preparando, então não estava prestando muita atenção no que ele estava dizendo\".",
+          "hypothesis": "Ao pedirem um comentário seu, Miller disse, Mike, fala muito durante a audiência. Eu estava me preparando, então não estava prestando muita atenção no que ele estava dizendo."
+        },
+        {
+          "file": "995364916917181840.wav",
+          "duration_s": 12.36,
+          "latency_s": 4.9005828270001075,
+          "rtf": 0.3964872837378728,
+          "reference": "O Japão possui cerca de 7.000 ilhas (a maior sendo Honshu), tornando o Japão a 7ª maior ilha do mundo!",
+          "hypothesis": "O Japão possui cerca de 7 mil ilhas, a maior sendo Honshu, tornando o Japão a sétima maior ilha do mundo."
+        },
+        {
+          "file": "15838979793707947248.wav",
+          "duration_s": 11.28,
+          "latency_s": 4.972935382000287,
+          "rtf": 0.4408630657801673,
+          "reference": "A ciência aponta hoje que essa economia baseada no carbono deslocou a biosfera do estado estável que havia permitido a evolução humana ao longo dos últimos dois milhões de anos.",
+          "hypothesis": "A ciência aponta hoje que essa economia baseada no carbono deslocou a biosfera do estado estável que havia permitido a evolução humana ao longo dos últimos dois milhões de anos."
+        },
+        {
+          "file": "5581036766732116626.wav",
+          "duration_s": 12.48,
+          "latency_s": 5.009911521000049,
+          "rtf": 0.40143521802885007,
+          "reference": "Os pesquisadores sugeriram que, apesar do rabo ser de um dinossauro jovem, a amostra revela uma plumagem adulta, não uma penugem.",
+          "hypothesis": "Os pesquisadores sugeriram que, apesar do rabo ser de um dinossauro jovem, a amostra revela uma plumagem adulta, não uma penugem."
+        },
+        {
+          "file": "1629340988999780235.wav",
+          "duration_s": 9.0,
+          "latency_s": 4.308207432000017,
+          "rtf": 0.4786897146666686,
+          "reference": "O presidente norte-americano, George W. Bush, recebeu bem o anúncio.",
+          "hypothesis": "O presidente norte-americano George W. Bush recebeu bem o anúncio."
+        },
+        {
+          "file": "9785454123552928776.wav",
+          "duration_s": 13.08,
+          "latency_s": 4.856306568000036,
+          "rtf": 0.3712772605504615,
+          "reference": "Quando você foi para o exterior pela primeira vez, as pessoas provavelmente foram pacientes e compreensivas, sabendo que viajantes em um novo país precisam se adaptar.",
+          "hypothesis": "Quando você foi para o exterior pela primeira vez, as pessoas provavelmente foram pacientes e compreensivas sabendo que viajantes em um novo país precisam se adaptar."
+        },
+        {
+          "file": "18059640891474996759.wav",
+          "duration_s": 14.28,
+          "latency_s": 5.186774907000199,
+          "rtf": 0.363219531302535,
+          "reference": "Os membros de uma subcultura frequentemente sinalizam sua filiação por meio de um uso distinto e simbólico de estilo, que inclui modas, maneirismos e jargões.",
+          "hypothesis": "Os membros de uma subcultura frequentemente sinalizam sua filiação por meio de um uso distinto e simbólico de estilo, que inclui modas, maneirismos e jargões."
+        },
+        {
+          "file": "9776935321561977831.wav",
+          "duration_s": 5.52,
+          "latency_s": 4.269734340000014,
+          "rtf": 0.7735025978260894,
+          "reference": "Aquilo não pareceu fazer sentido para mim; certamente não foi justo.",
+          "hypothesis": "Aquilo não pareceu fazer sentido para mim, certamente não foi justo."
+        },
+        {
+          "file": "5103851611728544118.wav",
+          "duration_s": 13.08,
+          "latency_s": 4.977735434000351,
+          "rtf": 0.38056081299696876,
+          "reference": "Mas as florestas não contam só com pântanos de mangue - elas têm algumas das últimas grandes selvas que já cobriram a superfície gangética restantes.",
+          "hypothesis": "Mas as florestas não contam só com pântanos de mangue. Elas têm algumas das últimas grandes selvas que já cobriram a superfície gangética restantes."
+        },
+        {
+          "file": "6314416073878600155.wav",
+          "duration_s": 16.8,
+          "latency_s": 4.950746211000023,
+          "rtf": 0.2946872744642871,
+          "reference": "Seu 1.000º selo foi o magnífico \"Os Grandes Feitos dos Reis Suecos\", de David Klöcker Ehrenstrahl, em 2000, que está listado no Livro Guinness dos Recordes.",
+          "hypothesis": "O 11º selo foi o magnífico Os grandes feitos dos reis suecos de Davi Klöker Erenstrahl em 2000 que está listado no livro Guinness dos recordes"
+        },
+        {
+          "file": "10021311324523185658.wav",
+          "duration_s": 11.82,
+          "latency_s": 4.6856831089999105,
+          "rtf": 0.3964198907783342,
+          "reference": "O objetivo principal da ciência é entender como o mundo funciona através do método científico. É esse método que orienta as pesquisas científicas.",
+          "hypothesis": "O objetivo principal da ciência é entender como o mundo funciona através do método científico, esse método que orienta e pesquisa científicas."
+        },
+        {
+          "file": "3663138061544035381.wav",
+          "duration_s": 14.34,
+          "latency_s": 4.841518748999988,
+          "rtf": 0.33762334372384856,
+          "reference": "Acidentes aéreos são comuns no Irã, que tem uma frota envelhecida e mal conservada tanto para operações civis quanto militares.",
+          "hypothesis": "Acidentes aéreos são comuns no Irã. Quem tem uma frota envelhecida e mal conservada tanto para operações civis quanto militares."
+        },
+        {
+          "file": "7503316393114322388.wav",
+          "duration_s": 7.38,
+          "latency_s": 4.5242364189998625,
+          "rtf": 0.6130401651761331,
+          "reference": "Alguns festivais têm áreas especiais de acampamento para famílias com crianças pequenas.",
+          "hypothesis": "Alguns festivais têm áreas especiais que dê acampamento para famílias com crianças pequenas."
+        },
+        {
+          "file": "1203413407386234720.wav",
+          "duration_s": 16.74,
+          "latency_s": 5.213132147000124,
+          "rtf": 0.3114176909796968,
+          "reference": "Os Artigos necessitavam do consentimento unânime entre todos os estados antes que pudessem ser emendados e os estados deram tão pouca importância ao governo central que os representantes deles quase nunca estavam presentes.",
+          "hypothesis": "Os artigos necessitavam do consentimento unânime entre todos os estados antes que pudessem ser emendados e os estados deram tão pouco importância ao governo central que os representantes deles quase nunca estavam presentes."
+        },
+        {
+          "file": "3198007100466734105.wav",
+          "duration_s": 15.9,
+          "latency_s": 5.002856404999875,
+          "rtf": 0.31464505691823114,
+          "reference": "Esse  novo ambiente tem recursos diferentes e novos competidores, então a nova população precisará adquirir características diferentes das que já possui e adaptar-se para se tornar uma forte competidora.",
+          "hypothesis": "Esse novo ambiente tem recursos diferentes e novos competidores. Então a nova população precisará adquirir características diferentes das que já possuir e adaptar-se para se tornar uma forte competidora."
+        }
+      ]
+    },
+    {
+      "model": "large-v3-turbo",
+      "compute_type": "int8",
+      "beam_size": 1,
+      "load_s": 151.73723616300003,
+      "peak_rss_mb": 2921.94921875,
+      "wer": 0.03881987577639751,
+      "full_latency_s": {
+        "mean": 7.649054471133331,
+        "p50": 7.663607693499898,
+        "p90": 7.783908543000052,
+        "max": 7.881945134000034
+      },
+      "full_rtf": {
+        "mean": 0.7249555794614696,
+        "p50": 0.6191265524005167,
+        "p90": 1.1460560274242722,
+        "max": 1.3530747739130253
+      },
+      "short_latency_s": {
+        "mean": 7.4805676611665906,
+        "p50": 7.434290711499898,
+        "p90": 7.467585804999999,
+        "max": 8.847955174999697
+      },
+      "samples": [
+        {
+          "file": "13221766043673296259.wav",
+          "duration_s": 7.44,
+          "latency_s": 7.612100673999976,
+          "rtf": 1.023131811021502,
+          "reference": "Eles ainda estão tentando determinar o tamanho do acidente e como a terra será afetada.",
+          "hypothesis": "Eles ainda estão tentando determinar o tamanho do acidente e como a terra será afetada."
+        },
+        {
+          "file": "10408390450801752955.wav",
+          "duration_s": 14.1,
+          "latency_s": 7.881945134000034,
+          "rtf": 0.5590032009929102,
+          "reference": "O inverno pode ser decepcionantemente frio: as temperaturas raramente ficam abaixo do congelante, mas o vento e a umidade combinadas tornam a sensação mais fria que o que o termômetro mostra.",
+          "hypothesis": "O inverno pode ser decepcionantemente frio. As temperaturas raramente ficam abaixo do congelante, mas o vento e a umidade combinadas tornam a sensação mais fria que o que o termômetro mostra."
+        },
+        {
+          "file": "17715481015254381646.wav",
+          "duration_s": 6.48,
+          "latency_s": 7.5286057190000975,
+          "rtf": 1.1618218702160643,
+          "reference": "Vale a pena caminhar meia hora pela intrigante vila.",
+          "hypothesis": "Vale a pena caminhar meia hora pela intrigante vila."
+        },
+        {
+          "file": "16655615501947115357.wav",
+          "duration_s": 9.18,
+          "latency_s": 7.528321743000106,
+          "rtf": 0.8200786212418416,
+          "reference": "A população original não mudou em nada, eles ainda precisam das mesmas adaptações de antes.",
+          "hypothesis": "A população original não mudou em nada. Eles ainda precisam das mesmas adaptações de antes."
+        },
+        {
+          "file": "16378273986139646510.wav",
+          "duration_s": 14.82,
+          "latency_s": 7.748250576999908,
+          "rtf": 0.5228239255735431,
+          "reference": "Anteriormente, o CEO da Ring, Jamie Siminoff, comentou que a empresa surgiu quando sua campainha não podia ser ouvida de sua loja em sua garagem.",
+          "hypothesis": "Anteriormente, o CEO da Ring, James Minhoff, comentou que a empresa surgiu quando sua campainha não podia ser ouvida de sua loja em sua garagem."
+        },
+        {
+          "file": "14042294750736263832.wav",
+          "duration_s": 5.64,
+          "latency_s": 7.362424840000131,
+          "rtf": 1.305394475177328,
+          "reference": "A maior parte da vida familiar hebraica acontecia ao ar livre.",
+          "hypothesis": "A maior parte da vida familiar hebraica acontecia ao ar livre."
+        },
+        {
+          "file": "13092883766962544808.wav",
+          "duration_s": 12.24,
+          "latency_s": 7.533509304999825,
+          "rtf": 0.6154827863561948,
+          "reference": "NHK também disse que a usina nuclear de Kashiwazaki Kariwa, da prefeitura de Niigata, estava funcionando de forma normal.",
+          "hypothesis": "N.H.Kata me disse que a usina nuclear de Kawasaki Kariwa da prefeitura de Nigata estava funcionando de forma normal."
+        },
+        {
+          "file": "9529495412281962161.wav",
+          "duration_s": 6.6,
+          "latency_s": 7.563969781000196,
+          "rtf": 1.1460560274242722,
+          "reference": "Mais três bombas explodiram perto dos prédios do governo em um período de duas horas.",
+          "hypothesis": "Mais três bombas explodiram perto dos prédios do governo em um período de duas horas."
+        },
+        {
+          "file": "12649617510059681669.wav",
+          "duration_s": 16.56,
+          "latency_s": 7.840308583000024,
+          "rtf": 0.47344858592995315,
+          "reference": "Empresas transportadoras são bem pagas para entregar coisas rapidamente. Frequentemente, o tempo é muito importante no envio de documentos comerciais, mercadorias ou peças sobressalentes para um reparo urgente.",
+          "hypothesis": "Empresas transportadoras são bem pagas para entregar coisas rapidamente. Frequentemente, o tempo é muito importante no envio de documentos comerciais, mercadorias ou peças sobressalentes para um reparo urgente."
+        },
+        {
+          "file": "571132148497651365.wav",
+          "duration_s": 12.3,
+          "latency_s": 7.630760641000052,
+          "rtf": 0.620387043983744,
+          "reference": "Ainda assim, oitenta por cento dos nossos produtos foram taxados com tarifas em países da América Central. Nós tratamos vocês.",
+          "hypothesis": "Ainda assim, 80% dos nossos produtos foram taxados com tarifas em países da América Central. Nós tratamos vocês."
+        },
+        {
+          "file": "10772221179495683943.wav",
+          "duration_s": 15.9,
+          "latency_s": 7.783908543000052,
+          "rtf": 0.4895539964150976,
+          "reference": "O Parque Nacional Kruger fica no nordeste da África do Sul, ao longo da fronteira de Moçambique ao leste, do Zimbábue ao norte, e o Crocodile River na fronteira sul.",
+          "hypothesis": "O Parque Nacional Kruger fica no nordeste da África do Sul. Ao longo da fronteira de Moçambique ao leste, do Zimbábue ao norte e ao Crocodile River na fronteira sul."
+        },
+        {
+          "file": "10588000562732328309.wav",
+          "duration_s": 9.48,
+          "latency_s": 7.632482903999971,
+          "rtf": 0.8051142303797437,
+          "reference": "O placar final foi uma vitória por um ponto, 21 a 20, encerrando a sequência de 15 vitórias consecutivas dos All Blacks.",
+          "hypothesis": "O placar final foi uma vitória por um ponto, 21 a 20, encerrando a sequência de 15 vitórias consecutivas dos All Blacks."
+        },
+        {
+          "file": "12682472689138541212.wav",
+          "duration_s": 14.64,
+          "latency_s": 7.695635527999912,
+          "rtf": 0.5256581644808682,
+          "reference": "O relatório é iniciado com um apelo por um debate aberto e pela formação de um consenso no Estados Unidos sobre a política relacionada ao Oriente Médio.",
+          "hypothesis": "O relatório é iniciado com apelo por um debate aberto e pela formação de um consenso nos Estados Unidos sobre a política relacionada ao Oriente Médio."
+        },
+        {
+          "file": "16289878480453063156.wav",
+          "duration_s": 10.74,
+          "latency_s": 7.587115094999717,
+          "rtf": 0.7064352974860072,
+          "reference": "O Natal é um dos feriados mais importantes do cristianismo e é celebrado como o aniversário de Jesus.",
+          "hypothesis": "O Natal é um dos feriados mais importantes do Cristianismo. Ele é celebrado como aniversário de Jesus."
+        },
+        {
+          "file": "16531068642759102861.wav",
+          "duration_s": 7.26,
+          "latency_s": 7.581168043000162,
+          "rtf": 1.0442380224518129,
+          "reference": "Além disso, não existia autoridade para revogar as leis fiscais e tarifas entre os estados.",
+          "hypothesis": "Além disso, não existia autoridade para revogar as leis fiscais e tarifas entre os Estados."
+        },
+        {
+          "file": "8363463989661215730.wav",
+          "duration_s": 15.72,
+          "latency_s": 7.700647634000234,
+          "rtf": 0.48986308104327186,
+          "reference": "Ao pedirem um comentário seu, Miller disse, \"Mike fala muito durantes a audiência... eu estava me preparando, então não estava prestando muita atenção no que ele estava dizendo\".",
+          "hypothesis": "Ao pedirem um comentário seu, Miller disse, Mike, fala muito durante a audiência. Eu estava me preparando, então não estava prestando muita atenção no que ele estava dizendo."
+        },
+        {
+          "file": "995364916917181840.wav",
+          "duration_s": 12.36,
+          "latency_s": 7.676004018000185,
+          "rtf": 0.6210359237864228,
+          "reference": "O Japão possui cerca de 7.000 ilhas (a maior sendo Honshu), tornando o Japão a 7ª maior ilha do mundo!",
+          "hypothesis": "O Japão possui cerca de 7 mil ilhas, a maior sendo Honshu, tornando o Japão a sétima maior ilha do mundo."
+        },
+        {
+          "file": "15838979793707947248.wav",
+          "duration_s": 11.28,
+          "latency_s": 7.714948353000182,
+          "rtf": 0.6839493220744842,
+          "reference": "A ciência aponta hoje que essa economia baseada no carbono deslocou a biosfera do estado estável que havia permitido a evolução humana ao longo dos últimos dois milhões de anos.",
+          "hypothesis": "A ciência aponta hoje que essa economia baseada no carbono deslocou a biosfera do estado estável que havia permitido a evolução humana ao longo dos últimos dois milhões de anos."
+        },
+        {
+          "file": "5581036766732116626.wav",
+          "duration_s": 12.48,
+          "latency_s": 7.710968438999771,
+          "rtf": 0.6178660608172893,
+          "reference": "Os pesquisadores sugeriram que, apesar do rabo ser de um dinossauro jovem, a amostra revela uma plumagem adulta, não uma penugem.",
+          "hypothesis": "Os pesquisadores sugeriram que, apesar do rabo ser de um dinossauro jovem, a amostra revela uma plumagem adulta, não uma penugem."
+        },
+        {
+          "file": "1629340988999780235.wav",
+          "duration_s": 9.0,
+          "latency_s": 7.518870310999773,
+          "rtf": 0.8354300345555303,
+          "reference": "O presidente norte-americano, George W. Bush, recebeu bem o anúncio.",
+          "hypothesis": "O presidente norte-americano George W. Bush recebeu bem o anúncio."
+        },
+        {
+          "file": "9785454123552928776.wav",
+          "duration_s": 13.08,
+          "latency_s": 7.695790915999623,
+          "rtf": 0.5883632198776471,
+          "reference": "Quando você foi para o exterior pela primeira vez, as pessoas provavelmente foram pacientes e compreensivas, sabendo que viajantes em um novo país precisam se adaptar.",
+          "hypothesis": "Quando você foi para o exterior pela primeira vez, as pessoas provavelmente foram pacientes e compreensivas sabendo que viajantes em um novo país precisam de se adaptar."
+        },
+        {
+          "file": "18059640891474996759.wav",
+          "duration_s": 14.28,
+          "latency_s": 7.752302328000042,
+          "rtf": 0.5428783142857172,
+          "reference": "Os membros de uma subcultura frequentemente sinalizam sua filiação por meio de um uso distinto e simbólico de estilo, que inclui modas, maneirismos e jargões.",
+          "hypothesis": "Os membros de uma subcultura frequentemente sinalizam sua filiação por meio de um uso distinto e simbólico de estilo, que inclui modas, maneirismos e jargões."
+        },
+        {
+          "file": "9776935321561977831.wav",
+          "duration_s": 5.52,
+          "latency_s": 7.4689727519999,
+          "rtf": 1.3530747739130253,
+          "reference": "Aquilo não pareceu fazer sentido para mim; certamente não foi justo.",
+          "hypothesis": "Aquilo não pareceu fazer sentido para mim. Certamente não foi justo."
+        },
+        {
+          "file": "5103851611728544118.wav",
+          "duration_s": 13.08,
+          "latency_s": 7.6985566939997625,
+          "rtf": 0.5885746707950889,
+          "reference": "Mas as florestas não contam só com pântanos de mangue - elas têm algumas das últimas grandes selvas que já cobriram a superfície gangética restantes.",
+          "hypothesis": "Mas as florestas não contam só com pântanos de mangue. Elas têm algumas das últimas grandes selvas que já cobriram a superfície gangética restantes."
+        },
+        {
+          "file": "6314416073878600155.wav",
+          "duration_s": 16.8,
+          "latency_s": 7.730095247999998,
+          "rtf": 0.460124717142857,
+          "reference": "Seu 1.000º selo foi o magnífico \"Os Grandes Feitos dos Reis Suecos\", de David Klöcker Ehrenstrahl, em 2000, que está listado no Livro Guinness dos Recordes.",
+          "hypothesis": "O décimo primeiro selo foi o magnífico Os Grandes Feitos dos Reis Suecos de David Klocker Erenstrall em 2000 que está listado no livro Guinness dos Recordes."
+        },
+        {
+          "file": "10021311324523185658.wav",
+          "duration_s": 11.82,
+          "latency_s": 7.614740417000121,
+          "rtf": 0.6442250775803825,
+          "reference": "O objetivo principal da ciência é entender como o mundo funciona através do método científico. É esse método que orienta as pesquisas científicas.",
+          "hypothesis": "O objetivo principal da ciência é entender como o mundo funciona através do método científico. Esse método que orienta pesquisas científicas."
+        },
+        {
+          "file": "3663138061544035381.wav",
+          "duration_s": 14.34,
+          "latency_s": 7.651211368999611,
+          "rtf": 0.5335572781729158,
+          "reference": "Acidentes aéreos são comuns no Irã, que tem uma frota envelhecida e mal conservada tanto para operações civis quanto militares.",
+          "hypothesis": "Acidentes aéreos são comuns no Irã. Quem tem uma frota envelhecida e mal conservada tanto para operações civis quanto militares?"
+        },
+        {
+          "file": "7503316393114322388.wav",
+          "duration_s": 7.38,
+          "latency_s": 7.538661755000248,
+          "rtf": 1.0214988827913616,
+          "reference": "Alguns festivais têm áreas especiais de acampamento para famílias com crianças pequenas.",
+          "hypothesis": "Alguns festivais têm áreas especiais de acampamento para famílias com crianças pequenas."
+        },
+        {
+          "file": "1203413407386234720.wav",
+          "duration_s": 16.74,
+          "latency_s": 7.787071364999974,
+          "rtf": 0.46517750089605586,
+          "reference": "Os Artigos necessitavam do consentimento unânime entre todos os estados antes que pudessem ser emendados e os estados deram tão pouca importância ao governo central que os representantes deles quase nunca estavam presentes.",
+          "hypothesis": "Os artigos necessitavam do consentimento unânime entre todos os estados antes que pudessem ser emendados e os estados deram tão pouca importância ao governo central que os representantes deles quase nunca estavam presentes."
+        },
+        {
+          "file": "3198007100466734105.wav",
+          "duration_s": 15.9,
+          "latency_s": 7.702285425000355,
+          "rtf": 0.4844204669811544,
+          "reference": "Esse  novo ambiente tem recursos diferentes e novos competidores, então a nova população precisará adquirir características diferentes das que já possui e adaptar-se para se tornar uma forte competidora.",
+          "hypothesis": "Esse novo ambiente tem recursos diferentes e novos competidores. Então a nova população precisará adquirir características diferentes das que já possuir e adaptar-se para se tornar uma forte competidora."
+        }
+      ]
+    }
+  ]
+}
