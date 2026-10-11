@@ -13,6 +13,10 @@ class FakeLLM:
         self.reply = reply
         self.fail_after = fail_after
         self.calls: list[list[dict]] = []
+        self.prefills: list[list[dict]] = []
+
+    async def prefill(self, messages):
+        self.prefills.append(messages)
 
     async def stream_chat(self, messages):
         self.calls.append(messages)
@@ -81,10 +85,17 @@ def test_data_e_hora_vao_na_mensagem_do_usuario():
 def test_historico_guarda_o_texto_exato_e_corta_em_bloco():
     conv, llm, _ = make("Resposta **bruta**.\n")
     stamp = "[domingo, 11/10/2026, 17h55]"
-    sizes = []
+    sizes, prefills = [], []
     for i in range(6):
         run(conv, f"pergunta {i}")
         sizes.append(len(conv.history) // 2)
+        prefills.append(len(llm.prefills))
+    # o cache só é pré-aquecido depois do corte (5ª resposta), com o prompt já cortado
+    assert prefills == [0, 0, 0, 0, 1, 1]
+    assert llm.prefills[0][0]["role"] == "system"
+    assert [m["content"] for m in llm.prefills[0][1:]] == [
+        f"{stamp} pergunta 3", "Resposta **bruta**.\n", f"{stamp} pergunta 4", "Resposta **bruta**.\n",
+    ]
     # history_turns=4: cresce até 4 trocas; na 5ª, volta para as 2 mais recentes de uma vez
     assert sizes == [1, 2, 3, 4, 2, 3]
     assert [m["content"] for m in conv.history] == [

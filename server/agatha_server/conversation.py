@@ -31,6 +31,8 @@ class ConversationConfig:
 class SupportsStreamChat(Protocol):
     def stream_chat(self, messages: list[dict]) -> AsyncIterator[str]: ...
 
+    async def prefill(self, messages: list[dict]) -> None: ...
+
 
 class SupportsSynthesize(Protocol):
     sample_rate: int
@@ -72,6 +74,7 @@ class Conversation:
         self._clock = clock
         self._now = now
         self.history: list[dict] = []
+        self._prefill_task: asyncio.Task | None = None
 
     async def respond(self, user_text: str, t_ref: float) -> AsyncIterator[TextChunk | Audio | Done]:
         """Gera a resposta trecho a trecho. `t_ref` é o instante do fim da fala (relógio monotônico)."""
@@ -127,3 +130,15 @@ class Conversation:
         if len(self.history) > 2 * self.config.history_turns:
             keep = max(1, self.config.history_turns // 2)
             self.history = self.history[-2 * keep:]
+            # O corte invalida o cache do llama.cpp. Enquanto a resposta ainda está sendo falada
+            # (vários segundos), recalcula o cache do prompt cortado em segundo plano, para a
+            # próxima pergunta não pagar ~2 s de reprocessamento.
+            self._prefill_task = asyncio.create_task(self._prefill([system_message(), *self.history]))
+
+    async def _prefill(self, messages: list[dict]) -> None:
+        t0 = self._clock()
+        try:
+            await self._llm.prefill(messages)
+            log.info("cache do LLM recalculado após o corte do histórico (%.0f ms)", (self._clock() - t0) * 1000)
+        except Exception as e:
+            log.warning("falha ao recalcular o cache do LLM: %s", e)

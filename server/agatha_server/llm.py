@@ -45,6 +45,17 @@ class LLMClient:
                 if delta:
                     yield delta
 
+    async def prefill(self, messages: list[dict]) -> None:
+        """Processa um prompt só para deixá-lo no cache do llama.cpp (gera 1 token e descarta)."""
+        body = {
+            "messages": messages,
+            "max_tokens": 1,
+            "cache_prompt": True,
+            "chat_template_kwargs": {"enable_thinking": False},
+        }
+        response = await self._client.post("/v1/chat/completions", json=body)
+        response.raise_for_status()
+
     async def healthy(self) -> bool:
         try:
             response = await self._client.get("/health", timeout=3.0)
