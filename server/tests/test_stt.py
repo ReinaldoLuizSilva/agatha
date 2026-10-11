@@ -11,7 +11,6 @@ from agatha_server.stt import STTConfig, Transcriber
 FLEURS = "/dados/agatha/data/fleurs/pt_br"
 
 
-
 def _free_vram_mb() -> int:
     if shutil.which("nvidia-smi") is None:
         return 0

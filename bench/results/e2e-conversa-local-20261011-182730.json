@@ -1,0 +1,157 @@
+{
+  "date": "2026-10-11T18:28:21",
+  "url": "ws://127.0.0.1:8765/",
+  "speed": 1.0,
+  "gap_ms": 1500,
+  "files": [
+    "/dados/agatha/data/test-questions/01.wav",
+    "/dados/agatha/data/test-questions/02.wav",
+    "/dados/agatha/data/test-questions/03.wav",
+    "/dados/agatha/data/test-questions/04.wav",
+    "/dados/agatha/data/test-questions/05.wav"
+  ],
+  "transcripts": [
+    {
+      "type": "transcript",
+      "segment": 1,
+      "text": "Oi, Agatha. Tudo bem?",
+      "timings": {
+        "speech_ms": 1152,
+        "endpoint_ms": 511,
+        "queue_ms": 0,
+        "stt_ms": 354,
+        "total_ms": 866
+      }
+    },
+    {
+      "type": "transcript",
+      "segment": 2,
+      "text": "Que horas são agora?",
+      "timings": {
+        "speech_ms": 960,
+        "endpoint_ms": 512,
+        "queue_ms": 0,
+        "stt_ms": 329,
+        "total_ms": 841
+      }
+    },
+    {
+      "type": "transcript",
+      "segment": 3,
+      "text": "Deslica rapidinho o que é um TG nos Zabbix.",
+      "timings": {
+        "speech_ms": 2432,
+        "endpoint_ms": 512,
+        "queue_ms": 0,
+        "stt_ms": 393,
+        "total_ms": 905
+      }
+    },
+    {
+      "type": "transcript",
+      "segment": 4,
+      "text": "Quanto é 15% de 240?",
+      "timings": {
+        "speech_ms": 2240,
+        "endpoint_ms": 511,
+        "queue_ms": 0,
+        "stt_ms": 350,
+        "total_ms": 861
+      }
+    },
+    {
+      "type": "transcript",
+      "segment": 5,
+      "text": "e se fosse 20%.",
+      "timings": {
+        "speech_ms": 1408,
+        "endpoint_ms": 512,
+        "queue_ms": 0,
+        "stt_ms": 378,
+        "total_ms": 890
+      }
+    }
+  ],
+  "responses": [
+    {
+      "type": "response_end",
+      "response": 1,
+      "reason": "done",
+      "text": "Tudo ótimo por aqui. Como posso ajudar hoje?",
+      "timings": {
+        "stt_ms": 866,
+        "llm_first_token_ms": 1187,
+        "first_chunk_ms": 1524,
+        "tts_first_ms": 65,
+        "first_audio_ms": 1589,
+        "audio_ms": 2926
+      },
+      "e2e_ms": 1592,
+      "audio_s": 2.9257142857142857
+    },
+    {
+      "type": "response_end",
+      "response": 2,
+      "reason": "done",
+      "text": "São 18h27. Tem mais algo que eu possa fazer?",
+      "timings": {
+        "stt_ms": 841,
+        "llm_first_token_ms": 1198,
+        "first_chunk_ms": 1647,
+        "tts_first_ms": 92,
+        "first_audio_ms": 1740,
+        "audio_ms": 3924
+      },
+      "e2e_ms": 1743,
+      "audio_s": 3.924172335600907
+    },
+    {
+      "type": "response_end",
+      "response": 3,
+      "reason": "done",
+      "text": "TG significa Trigger Group no Zabbix. É um grupo que organiza os gatilhos de monitoramento. Isso facilita a gestão e a visualização dos alertas.",
+      "timings": {
+        "stt_ms": 905,
+        "llm_first_token_ms": 1311,
+        "first_chunk_ms": 1814,
+        "tts_first_ms": 119,
+        "first_audio_ms": 1934,
+        "audio_ms": 8858
+      },
+      "e2e_ms": 1936,
+      "audio_s": 8.858412698412698
+    },
+    {
+      "type": "response_end",
+      "response": 4,
+      "reason": "done",
+      "text": "Quinze por cento de 240 é 36. É um cálculo simples.",
+      "timings": {
+        "stt_ms": 861,
+        "llm_first_token_ms": 1194,
+        "first_chunk_ms": 1980,
+        "tts_first_ms": 157,
+        "first_audio_ms": 2137,
+        "audio_ms": 4807
+      },
+      "e2e_ms": 2140,
+      "audio_s": 4.806530612244898
+    },
+    {
+      "type": "response_end",
+      "response": 5,
+      "reason": "done",
+      "text": "Vinte por cento de 240 é 48. Se precisar de mais contas, é só falar.",
+      "timings": {
+        "stt_ms": 890,
+        "llm_first_token_ms": 1227,
+        "first_chunk_ms": 2009,
+        "tts_first_ms": 161,
+        "first_audio_ms": 2171,
+        "audio_ms": 6107
+      },
+      "e2e_ms": 2174,
+      "audio_s": 6.106848072562358
+    }
+  ]
+}

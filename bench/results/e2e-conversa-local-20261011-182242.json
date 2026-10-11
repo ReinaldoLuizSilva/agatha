@@ -1,0 +1,157 @@
+{
+  "date": "2026-10-11T18:23:39",
+  "url": "ws://127.0.0.1:8765/",
+  "speed": 1.0,
+  "gap_ms": 1500,
+  "files": [
+    "/dados/agatha/data/test-questions/01.wav",
+    "/dados/agatha/data/test-questions/02.wav",
+    "/dados/agatha/data/test-questions/03.wav",
+    "/dados/agatha/data/test-questions/04.wav",
+    "/dados/agatha/data/test-questions/05.wav"
+  ],
+  "transcripts": [
+    {
+      "type": "transcript",
+      "segment": 1,
+      "text": "Oi Álvaro, tudo bem?",
+      "timings": {
+        "speech_ms": 1152,
+        "endpoint_ms": 511,
+        "queue_ms": 0,
+        "stt_ms": 350,
+        "total_ms": 862
+      }
+    },
+    {
+      "type": "transcript",
+      "segment": 2,
+      "text": "Que horas são agora?",
+      "timings": {
+        "speech_ms": 960,
+        "endpoint_ms": 512,
+        "queue_ms": 0,
+        "stt_ms": 318,
+        "total_ms": 831
+      }
+    },
+    {
+      "type": "transcript",
+      "segment": 3,
+      "text": "Deslica rapidinho o que é o Antigenus AbX.",
+      "timings": {
+        "speech_ms": 2432,
+        "endpoint_ms": 512,
+        "queue_ms": 0,
+        "stt_ms": 375,
+        "total_ms": 887
+      }
+    },
+    {
+      "type": "transcript",
+      "segment": 4,
+      "text": "Quanto a 15% de 240?",
+      "timings": {
+        "speech_ms": 2240,
+        "endpoint_ms": 511,
+        "queue_ms": 0,
+        "stt_ms": 391,
+        "total_ms": 903
+      }
+    },
+    {
+      "type": "transcript",
+      "segment": 5,
+      "text": "E se fosse 20%",
+      "timings": {
+        "speech_ms": 1408,
+        "endpoint_ms": 511,
+        "queue_ms": 0,
+        "stt_ms": 324,
+        "total_ms": 835
+      }
+    }
+  ],
+  "responses": [
+    {
+      "type": "response_end",
+      "response": 1,
+      "reason": "done",
+      "text": "Oi, tudo ótimo por aqui. Como posso ajudar você hoje?",
+      "timings": {
+        "stt_ms": 862,
+        "llm_first_token_ms": 1183,
+        "first_chunk_ms": 1572,
+        "tts_first_ms": 91,
+        "first_audio_ms": 1663,
+        "audio_ms": 3704
+      },
+      "e2e_ms": 1666,
+      "audio_s": 3.7035827664399092
+    },
+    {
+      "type": "response_end",
+      "response": 2,
+      "reason": "done",
+      "text": "São dezessete horas e vinte e dois minutos. Mais alguma coisa que eu possa fazer para você?",
+      "timings": {
+        "stt_ms": 831,
+        "llm_first_token_ms": 1184,
+        "first_chunk_ms": 1848,
+        "tts_first_ms": 127,
+        "first_audio_ms": 1975,
+        "audio_ms": 5584
+      },
+      "e2e_ms": 1976,
+      "audio_s": 5.584399092970521
+    },
+    {
+      "type": "response_end",
+      "response": 3,
+      "reason": "done",
+      "text": "Antigenus AbX é um sistema de gerenciamento de vulnerabilidades. Ele ajuda a identificar e priorizar riscos de segurança em sistemas. Quer saber mais sobre como ele funciona?",
+      "timings": {
+        "stt_ms": 887,
+        "llm_first_token_ms": 1294,
+        "first_chunk_ms": 2125,
+        "tts_first_ms": 186,
+        "first_audio_ms": 2312,
+        "audio_ms": 10507
+      },
+      "e2e_ms": 2312,
+      "audio_s": 10.50702947845805
+    },
+    {
+      "type": "response_end",
+      "response": 4,
+      "reason": "done",
+      "text": "Quinze por cento de 240 é 36. Você precisa de ajuda com algum cálculo de infraestrutura?",
+      "timings": {
+        "stt_ms": 903,
+        "llm_first_token_ms": 1370,
+        "first_chunk_ms": 2151,
+        "tts_first_ms": 167,
+        "first_audio_ms": 2319,
+        "audio_ms": 6409
+      },
+      "e2e_ms": 2320,
+      "audio_s": 6.408707482993197
+    },
+    {
+      "type": "response_end",
+      "response": 5,
+      "reason": "done",
+      "text": "Vinte por cento de 240 dá 48. Posso te ajudar com algum comando do Linux ou Oracle?",
+      "timings": {
+        "stt_ms": 835,
+        "llm_first_token_ms": 1166,
+        "first_chunk_ms": 1946,
+        "tts_first_ms": 159,
+        "first_audio_ms": 2106,
+        "audio_ms": 6490
+      },
+      "e2e_ms": 2108,
+      "audio_s": 6.489977324263038
+    }
+  ]
+}

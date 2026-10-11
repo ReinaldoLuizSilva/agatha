@@ -1,0 +1,157 @@
+{
+  "date": "2026-10-11T18:20:38",
+  "url": "ws://127.0.0.1:8765/",
+  "speed": 1.0,
+  "gap_ms": 1500,
+  "files": [
+    "/dados/agatha/data/test-questions/01.wav",
+    "/dados/agatha/data/test-questions/02.wav",
+    "/dados/agatha/data/test-questions/03.wav",
+    "/dados/agatha/data/test-questions/04.wav",
+    "/dados/agatha/data/test-questions/05.wav"
+  ],
+  "transcripts": [
+    {
+      "type": "transcript",
+      "segment": 1,
+      "text": "Oi Álvaro, tudo bem?",
+      "timings": {
+        "speech_ms": 1152,
+        "endpoint_ms": 512,
+        "queue_ms": 0,
+        "stt_ms": 344,
+        "total_ms": 857
+      }
+    },
+    {
+      "type": "transcript",
+      "segment": 2,
+      "text": "Que horas são agora?",
+      "timings": {
+        "speech_ms": 960,
+        "endpoint_ms": 512,
+        "queue_ms": 0,
+        "stt_ms": 319,
+        "total_ms": 832
+      }
+    },
+    {
+      "type": "transcript",
+      "segment": 3,
+      "text": "Deslica rapidinho o que é o Antigenus AbX.",
+      "timings": {
+        "speech_ms": 2432,
+        "endpoint_ms": 512,
+        "queue_ms": 0,
+        "stt_ms": 418,
+        "total_ms": 930
+      }
+    },
+    {
+      "type": "transcript",
+      "segment": 4,
+      "text": "Quanto a 15% de 240?",
+      "timings": {
+        "speech_ms": 2240,
+        "endpoint_ms": 512,
+        "queue_ms": 0,
+        "stt_ms": 339,
+        "total_ms": 851
+      }
+    },
+    {
+      "type": "transcript",
+      "segment": 5,
+      "text": "E se fosse 20%",
+      "timings": {
+        "speech_ms": 1408,
+        "endpoint_ms": 511,
+        "queue_ms": 0,
+        "stt_ms": 318,
+        "total_ms": 830
+      }
+    }
+  ],
+  "responses": [
+    {
+      "type": "response_end",
+      "response": 1,
+      "reason": "done",
+      "text": "Tudo ótimo por aqui. Não sei quem é Álvaro, mas estou pronta para ajudar. Como posso te auxiliar, Rei?",
+      "timings": {
+        "stt_ms": 857,
+        "llm_first_token_ms": 2143,
+        "first_chunk_ms": 2477,
+        "tts_first_ms": 142,
+        "first_audio_ms": 2620,
+        "audio_ms": 6629
+      },
+      "e2e_ms": 2622,
+      "audio_s": 6.629297052154195
+    },
+    {
+      "type": "response_end",
+      "response": 2,
+      "reason": "done",
+      "text": "São dezessete horas e dezenove minutos. Estou aqui para o que precisar, Rei.",
+      "timings": {
+        "stt_ms": 832,
+        "llm_first_token_ms": 1208,
+        "first_chunk_ms": 1818,
+        "tts_first_ms": 244,
+        "first_audio_ms": 2062,
+        "audio_ms": 4841
+      },
+      "e2e_ms": 2068,
+      "audio_s": 4.841360544217687
+    },
+    {
+      "type": "response_end",
+      "response": 3,
+      "reason": "done",
+      "text": "Não tenho acesso a esse termo específico. Você poderia soletrar ou me dar mais contexto sobre Antigenus AbX?",
+      "timings": {
+        "stt_ms": 930,
+        "llm_first_token_ms": 1335,
+        "first_chunk_ms": 1779,
+        "tts_first_ms": 236,
+        "first_audio_ms": 2015,
+        "audio_ms": 6664
+      },
+      "e2e_ms": 2016,
+      "audio_s": 6.664126984126984
+    },
+    {
+      "type": "response_end",
+      "response": 4,
+      "reason": "done",
+      "text": "Quinze por cento de 240 é 36. Quer calcular mais algum valor, Rei?",
+      "timings": {
+        "stt_ms": 851,
+        "llm_first_token_ms": 1270,
+        "first_chunk_ms": 2049,
+        "tts_first_ms": 329,
+        "first_audio_ms": 2378,
+        "audio_ms": 5689
+      },
+      "e2e_ms": 2383,
+      "audio_s": 5.688888888888889
+    },
+    {
+      "type": "response_end",
+      "response": 5,
+      "reason": "done",
+      "text": "Vinte por cento de 240 dá 48. Se precisar de mais contas, é só chamar.",
+      "timings": {
+        "stt_ms": 830,
+        "llm_first_token_ms": 1160,
+        "first_chunk_ms": 1937,
+        "tts_first_ms": 321,
+        "first_audio_ms": 2259,
+        "audio_ms": 6432
+      },
+      "e2e_ms": 2259,
+      "audio_s": 6.431927437641724
+    }
+  ]
+}

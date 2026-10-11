@@ -96,6 +96,7 @@ def load_config(env: dict | None = None) -> ServerConfig:
         tts=TTSConfig(
             voice=get("TTS_VOICE", tts_defaults.voice),
             length_scale=get("TTS_LENGTH_SCALE", tts_defaults.length_scale, float),
+            threads=get("TTS_THREADS", tts_defaults.threads, int),
         ),
         conversation=ConversationConfig(
             history_turns=get("HISTORY_TURNS", conv_defaults.history_turns, int),

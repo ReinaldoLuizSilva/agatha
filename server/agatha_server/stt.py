@@ -20,7 +20,9 @@ class STTConfig:
     language: str = "pt"
     models_dir: str = "/dados/agatha/models/whisper"
     cpu_threads: int = 4
-    initial_prompt: str | None = None  # vocabulário para ajudar com jargão (plano B do ADR-002)
+    # Vocabulário que ajuda o Whisper com nomes e jargão (plano B do ADR-002). Medido na Fase 2:
+    # "Agatha" deixou de virar "Álvaro" e o tempo de transcrição não mudou.
+    initial_prompt: str | None = "Agatha, Zabbix, Oracle, trigger, tablespace, Linux, Podman"
 
 
 def preload_cuda_libs() -> None:

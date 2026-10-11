@@ -75,7 +75,7 @@ def test_data_e_hora_vao_na_mensagem_do_usuario():
     system, user = llm.calls[0]
     assert system["role"] == "system"
     assert describe_now(NOW) not in system["content"]  # prefixo estável para o cache do llama.cpp
-    assert user == {"role": "user", "content": "[domingo, 11 de outubro de 2026, 17:55] Que horas são?"}
+    assert user == {"role": "user", "content": "[domingo, 11/10/2026, 17h55] Que horas são?"}
 
 
 def test_historico_e_limitado_e_guarda_o_texto_exato():
@@ -83,7 +83,7 @@ def test_historico_e_limitado_e_guarda_o_texto_exato():
     for i in range(3):
         run(conv, f"pergunta {i}")
     # history_turns=2: só as duas últimas trocas ficam, com o texto exato enviado e gerado
-    stamp = "[domingo, 11 de outubro de 2026, 17:55]"
+    stamp = "[domingo, 11/10/2026, 17h55]"
     assert [m["content"] for m in conv.history] == [
         f"{stamp} pergunta 1", "Resposta **bruta**.\n", f"{stamp} pergunta 2", "Resposta **bruta**.\n",
     ]
