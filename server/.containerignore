@@ -1,0 +1,8 @@
+# Contexto de build da imagem do servidor (deploy/server/Containerfile)
+.env
+.env.*
+tests/
+scripts/
+*.egg-info/
+**/__pycache__/
+README.md

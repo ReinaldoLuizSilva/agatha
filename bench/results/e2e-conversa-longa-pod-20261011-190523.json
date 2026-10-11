@@ -1,0 +1,418 @@
+{
+  "date": "2026-10-11T19:07:37",
+  "url": "ws://192.168.1.25:8765/",
+  "speed": 1.0,
+  "gap_ms": 1500,
+  "files": [
+    "/dados/agatha/data/test-questions/longa/01.wav",
+    "/dados/agatha/data/test-questions/longa/02.wav",
+    "/dados/agatha/data/test-questions/longa/03.wav",
+    "/dados/agatha/data/test-questions/longa/04.wav",
+    "/dados/agatha/data/test-questions/longa/05.wav",
+    "/dados/agatha/data/test-questions/longa/06.wav",
+    "/dados/agatha/data/test-questions/longa/07.wav",
+    "/dados/agatha/data/test-questions/longa/08.wav",
+    "/dados/agatha/data/test-questions/longa/09.wav",
+    "/dados/agatha/data/test-questions/longa/10.wav",
+    "/dados/agatha/data/test-questions/longa/11.wav",
+    "/dados/agatha/data/test-questions/longa/12.wav",
+    "/dados/agatha/data/test-questions/longa/13.wav",
+    "/dados/agatha/data/test-questions/longa/14.wav"
+  ],
+  "transcripts": [
+    {
+      "type": "transcript",
+      "segment": 1,
+      "text": "Oi, Agatha. Tudo bem?",
+      "timings": {
+        "speech_ms": 1120,
+        "endpoint_ms": 512,
+        "queue_ms": 0,
+        "stt_ms": 346,
+        "total_ms": 858
+      }
+    },
+    {
+      "type": "transcript",
+      "segment": 2,
+      "text": "Vai que serve o Zabbix",
+      "timings": {
+        "speech_ms": 1120,
+        "endpoint_ms": 511,
+        "queue_ms": 0,
+        "stt_ms": 339,
+        "total_ms": 851
+      }
+    },
+    {
+      "type": "transcript",
+      "segment": 3,
+      "text": "e o que é um item nos Zabbix?",
+      "timings": {
+        "speech_ms": 1344,
+        "endpoint_ms": 512,
+        "queue_ms": 0,
+        "stt_ms": 415,
+        "total_ms": 928
+      }
+    },
+    {
+      "type": "transcript",
+      "segment": 4,
+      "text": "Que horas são agora?",
+      "timings": {
+        "speech_ms": 864,
+        "endpoint_ms": 512,
+        "queue_ms": 0,
+        "stt_ms": 325,
+        "total_ms": 837
+      }
+    },
+    {
+      "type": "transcript",
+      "segment": 5,
+      "text": "Que dia é hoje?",
+      "timings": {
+        "speech_ms": 768,
+        "endpoint_ms": 511,
+        "queue_ms": 0,
+        "stt_ms": 326,
+        "total_ms": 837
+      }
+    },
+    {
+      "type": "transcript",
+      "segment": 6,
+      "text": "quanto a 12 vezes 8?",
+      "timings": {
+        "speech_ms": 1248,
+        "endpoint_ms": 512,
+        "queue_ms": 0,
+        "stt_ms": 331,
+        "total_ms": 843
+      }
+    },
+    {
+      "type": "transcript",
+      "segment": 7,
+      "text": "e dividido o Pod 4.",
+      "timings": {
+        "speech_ms": 1152,
+        "endpoint_ms": 512,
+        "queue_ms": 0,
+        "stt_ms": 338,
+        "total_ms": 850
+      }
+    },
+    {
+      "type": "transcript",
+      "segment": 8,
+      "text": "O que é um tabespaceno Oracle?",
+      "timings": {
+        "speech_ms": 1504,
+        "endpoint_ms": 512,
+        "queue_ms": 0,
+        "stt_ms": 405,
+        "total_ms": 917
+      }
+    },
+    {
+      "type": "transcript",
+      "segment": 9,
+      "text": "ola diferença entre Podman e Dock.",
+      "timings": {
+        "speech_ms": 1792,
+        "endpoint_ms": 512,
+        "queue_ms": 0,
+        "stt_ms": 353,
+        "total_ms": 866
+      }
+    },
+    {
+      "type": "transcript",
+      "segment": 10,
+      "text": "Como vejo o uso de memória no Linux?",
+      "timings": {
+        "speech_ms": 1824,
+        "endpoint_ms": 512,
+        "queue_ms": 0,
+        "stt_ms": 365,
+        "total_ms": 878
+      }
+    },
+    {
+      "type": "transcript",
+      "segment": 11,
+      "text": "Me dá uma ideia de almoço rápido.",
+      "timings": {
+        "speech_ms": 1632,
+        "endpoint_ms": 512,
+        "queue_ms": 0,
+        "stt_ms": 357,
+        "total_ms": 870
+      }
+    },
+    {
+      "type": "transcript",
+      "segment": 12,
+      "text": "Qual foi a primeira coisa que eu te perguntei hoje?",
+      "timings": {
+        "speech_ms": 2240,
+        "endpoint_ms": 512,
+        "queue_ms": 0,
+        "stt_ms": 385,
+        "total_ms": 897
+      }
+    },
+    {
+      "type": "transcript",
+      "segment": 13,
+      "text": "O que é Kubernetes?",
+      "timings": {
+        "speech_ms": 1120,
+        "endpoint_ms": 512,
+        "queue_ms": 0,
+        "stt_ms": 378,
+        "total_ms": 891
+      }
+    },
+    {
+      "type": "transcript",
+      "segment": 14,
+      "text": "Obrigado, Agatha.",
+      "timings": {
+        "speech_ms": 1088,
+        "endpoint_ms": 512,
+        "queue_ms": 0,
+        "stt_ms": 334,
+        "total_ms": 846
+      }
+    }
+  ],
+  "responses": [
+    {
+      "type": "response_end",
+      "response": 1,
+      "reason": "done",
+      "text": "Oi, Rei. Estou ótima, obrigado por perguntar. Como posso ajudar você hoje?",
+      "timings": {
+        "stt_ms": 858,
+        "llm_first_token_ms": 1178,
+        "first_chunk_ms": 1403,
+        "tts_first_ms": 44,
+        "first_audio_ms": 1447,
+        "audio_ms": 5573
+      },
+      "e2e_ms": 1448,
+      "audio_s": 5.572789115646258
+    },
+    {
+      "type": "response_end",
+      "response": 2,
+      "reason": "done",
+      "text": "Ele é ótimo para monitorar sistemas. Você quer saber como configurar algo no Zabbix?",
+      "timings": {
+        "stt_ms": 851,
+        "llm_first_token_ms": 1248,
+        "first_chunk_ms": 1691,
+        "tts_first_ms": 113,
+        "first_audio_ms": 1805,
+        "audio_ms": 5294
+      },
+      "e2e_ms": 1807,
+      "audio_s": 5.294149659863946
+    },
+    {
+      "type": "response_end",
+      "response": 3,
+      "reason": "done",
+      "text": "Um item no Zabbix coleta uma informação. É o dado específico que você quer monitorar do seu servidor.",
+      "timings": {
+        "stt_ms": 928,
+        "llm_first_token_ms": 1337,
+        "first_chunk_ms": 1892,
+        "tts_first_ms": 112,
+        "first_audio_ms": 2005,
+        "audio_ms": 5805
+      },
+      "e2e_ms": 2006,
+      "audio_s": 5.804988662131519
+    },
+    {
+      "type": "response_end",
+      "response": 4,
+      "reason": "done",
+      "text": "São 19h05 agora. O dia de hoje é 11/10/2026.",
+      "timings": {
+        "stt_ms": 837,
+        "llm_first_token_ms": 1134,
+        "first_chunk_ms": 1636,
+        "tts_first_ms": 81,
+        "first_audio_ms": 1718,
+        "audio_ms": 5236
+      },
+      "e2e_ms": 1718,
+      "audio_s": 5.23609977324263
+    },
+    {
+      "type": "response_end",
+      "response": 5,
+      "reason": "done",
+      "text": "É domingo, Rei. A data de hoje é 11/10/2026.",
+      "timings": {
+        "stt_ms": 837,
+        "llm_first_token_ms": 1138,
+        "first_chunk_ms": 1420,
+        "tts_first_ms": 62,
+        "first_audio_ms": 1482,
+        "audio_ms": 4737
+      },
+      "e2e_ms": 1483,
+      "audio_s": 4.73687074829932
+    },
+    {
+      "type": "response_end",
+      "response": 6,
+      "reason": "done",
+      "text": "Doze vezes oito é 96. Posso ajudar com algo técnico agora?",
+      "timings": {
+        "stt_ms": 843,
+        "llm_first_token_ms": 1176,
+        "first_chunk_ms": 1678,
+        "tts_first_ms": 112,
+        "first_audio_ms": 1790,
+        "audio_ms": 4748
+      },
+      "e2e_ms": 1791,
+      "audio_s": 4.748480725623582
+    },
+    {
+      "type": "response_end",
+      "response": 7,
+      "reason": "done",
+      "text": "Dividindo 96 por 4 dá 24. Quer verificar alguma métrica de infraestrutura?",
+      "timings": {
+        "stt_ms": 850,
+        "llm_first_token_ms": 1188,
+        "first_chunk_ms": 1912,
+        "tts_first_ms": 145,
+        "first_audio_ms": 2058,
+        "audio_ms": 5805
+      },
+      "e2e_ms": 2059,
+      "audio_s": 5.804988662131519
+    },
+    {
+      "type": "response_end",
+      "response": 8,
+      "reason": "done",
+      "text": "Não entendi o termo tabespaceno no Oracle. Você poderia repetir ou esclarecer o que gostaria de saber?",
+      "timings": {
+        "stt_ms": 917,
+        "llm_first_token_ms": 1272,
+        "first_chunk_ms": 2059,
+        "tts_first_ms": 113,
+        "first_audio_ms": 2172,
+        "audio_ms": 5886
+      },
+      "e2e_ms": 2173,
+      "audio_s": 5.88625850340136
+    },
+    {
+      "type": "response_end",
+      "response": 9,
+      "reason": "done",
+      "text": "Podman e Docker são gerenciadores de contêineres. O Podman opera sem um daemon centralizado, diferente do Docker.",
+      "timings": {
+        "stt_ms": 866,
+        "llm_first_token_ms": 1219,
+        "first_chunk_ms": 1949,
+        "tts_first_ms": 136,
+        "first_audio_ms": 2086,
+        "audio_ms": 7036
+      },
+      "e2e_ms": 2086,
+      "audio_s": 7.035646258503402
+    },
+    {
+      "type": "response_end",
+      "response": 10,
+      "reason": "done",
+      "text": "Use o comando free para ver o uso de memória. Ele mostra a quantidade de RAM livre e usada no sistema.",
+      "timings": {
+        "stt_ms": 878,
+        "llm_first_token_ms": 1238,
+        "first_chunk_ms": 1858,
+        "tts_first_ms": 112,
+        "first_audio_ms": 1970,
+        "audio_ms": 6107
+      },
+      "e2e_ms": 1971,
+      "audio_s": 6.106848072562358
+    },
+    {
+      "type": "response_end",
+      "response": 11,
+      "reason": "done",
+      "text": "Que tal um sanduíche rápido? É algo simples e que você faz em pouco tempo.",
+      "timings": {
+        "stt_ms": 870,
+        "llm_first_token_ms": 1233,
+        "first_chunk_ms": 1684,
+        "tts_first_ms": 77,
+        "first_audio_ms": 1762,
+        "audio_ms": 4354
+      },
+      "e2e_ms": 1762,
+      "audio_s": 4.35374149659864
+    },
+    {
+      "type": "response_end",
+      "response": 12,
+      "reason": "done",
+      "text": "Você perguntou sobre o Zabbix. Foi a primeira coisa que você me perguntou hoje.",
+      "timings": {
+        "stt_ms": 897,
+        "llm_first_token_ms": 1272,
+        "first_chunk_ms": 1781,
+        "tts_first_ms": 93,
+        "first_audio_ms": 1875,
+        "audio_ms": 4807
+      },
+      "e2e_ms": 1875,
+      "audio_s": 4.806530612244898
+    },
+    {
+      "type": "response_end",
+      "response": 13,
+      "reason": "done",
+      "text": "Kubernetes gerencia aplicações em contêineres. Ele automatiza a implantação, escalonamento e gerenciamento de serviços de rede.",
+      "timings": {
+        "stt_ms": 891,
+        "llm_first_token_ms": 1242,
+        "first_chunk_ms": 1862,
+        "tts_first_ms": 144,
+        "first_audio_ms": 2007,
+        "audio_ms": 8313
+      },
+      "e2e_ms": 2008,
+      "audio_s": 8.312743764172335
+    },
+    {
+      "type": "response_end",
+      "response": 14,
+      "reason": "done",
+      "text": "De nada, Rei. Estou aqui para ajudar no que precisar.",
+      "timings": {
+        "stt_ms": 846,
+        "llm_first_token_ms": 1246,
+        "first_chunk_ms": 1532,
+        "tts_first_ms": 56,
+        "first_audio_ms": 1589,
+        "audio_ms": 3379
+      },
+      "e2e_ms": 1589,
+      "audio_s": 3.378503401360544
+    }
+  ]
+}

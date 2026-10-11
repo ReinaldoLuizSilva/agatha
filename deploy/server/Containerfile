@@ -1,0 +1,35 @@
+# Servidor da Agatha (núcleo, VAD, STT na GPU, TTS na CPU).
+#
+# - Base nvidia/cuda:12.9.1-base-ubi9 (ADR-001). O cuBLAS e o cuDNN vêm dos wheels do extra
+#   `gpu` do pyproject, as mesmas versões validadas no desenvolvimento (ADR-002).
+# - Os modelos NÃO entram na imagem: são montados somente leitura em /models.
+# - O token vem do --env-file, nunca da imagem.
+#
+#   podman build --format docker -f deploy/server/Containerfile -t localhost/agatha-server:0.2.0 server
+#   (o contexto é a pasta server/; --format docker preserva o HEALTHCHECK)
+#   Para rodar junto com o LLM, use deploy/up.sh.
+
+FROM docker.io/nvidia/cuda:12.9.1-base-ubi9
+
+RUN dnf install -y python3.12 python3.12-pip && dnf clean all
+
+WORKDIR /app
+COPY pyproject.toml ./
+COPY agatha_server ./agatha_server
+RUN python3.12 -m pip install --no-cache-dir ".[gpu]"
+
+LABEL org.opencontainers.image.title="agatha-server" \
+      org.opencontainers.image.description="Servidor da Agatha: VAD, STT (GPU), LLM (cliente) e TTS" \
+      org.opencontainers.image.version="0.2.0" \
+      org.opencontainers.image.source="https://github.com/ReinaldoLuizSilva/agatha"
+
+# Caminhos dentro do container (modelos montados em /models; o LLM no mesmo pod)
+ENV AGATHA_STT_MODELS_DIR=/models/whisper \
+    AGATHA_TTS_VOICE=/models/tts/piper/dii_pt-BR.onnx \
+    AGATHA_LLM_URL=http://127.0.0.1:8080 \
+    PYTHONUNBUFFERED=1
+
+EXPOSE 8765
+HEALTHCHECK --interval=30s --timeout=5s --start-period=60s \
+    CMD python3.12 -c "import socket; socket.create_connection(('127.0.0.1', 8765), 2)" || exit 1
+ENTRYPOINT ["python3.12", "-m", "agatha_server"]

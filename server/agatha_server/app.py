@@ -22,6 +22,7 @@ from websockets.exceptions import ConnectionClosed
 from . import protocol
 from .config import ServerConfig
 from .conversation import Audio, Conversation, Done, TextChunk
+from .prompts import system_message
 from .vad import Segmenter, SileroVAD, SpeechEnd, SpeechStart
 
 log = logging.getLogger(__name__)
@@ -288,9 +289,17 @@ async def run(config: ServerConfig, transcriber: SupportsTranscribe, llm, synthe
     )
     if await llm.healthy():
         log.info("LLM disponível em %s", config.llm.url)
+        # Deixa o prompt de sistema no cache do llama.cpp: sem isso, a 1ª pergunta depois de
+        # subir o LLM paga ~1,5 s processando o prompt inteiro.
+        t0 = time.monotonic()
+        try:
+            await llm.prefill([system_message()])
+            log.info("prompt de sistema no cache do LLM (%.0f ms)", (time.monotonic() - t0) * 1000)
+        except Exception as e:
+            log.warning("falha ao pré-carregar o prompt no LLM: %s", e)
     else:
         log.warning("LLM indisponível em %s: as respostas vão falhar até ele subir "
-                    "(deploy/llama/run-llm.sh)", config.llm.url)
+                    "(deploy/up.sh)", config.llm.url)
     loop = asyncio.get_running_loop()
     stop = loop.create_future()
     for sig in (signal.SIGINT, signal.SIGTERM):
