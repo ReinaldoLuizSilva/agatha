@@ -13,7 +13,7 @@ from dataclasses import dataclass, field
 from datetime import datetime
 from typing import Protocol
 
-from .prompts import system_message
+from .prompts import system_message, user_message
 from .text import Chunker, clean, normalize_for_speech
 
 log = logging.getLogger(__name__)
@@ -71,10 +71,12 @@ class Conversation:
 
     async def respond(self, user_text: str, t_ref: float) -> AsyncIterator[TextChunk | Audio | Done]:
         """Gera a resposta trecho a trecho. `t_ref` é o instante do fim da fala (relógio monotônico)."""
-        messages = [system_message(self._now()), *self.history, {"role": "user", "content": user_text}]
+        user = user_message(user_text, self._now())
+        messages = [system_message(), *self.history, user]
         chunker = Chunker()
         timings: dict = {}
         spoken: list[str] = []
+        raw: list[str] = []  # texto exato do modelo, para o histórico bater com o cache do llama.cpp
         loop = asyncio.get_running_loop()
 
         def ms_since_ref() -> int:
@@ -97,6 +99,7 @@ class Conversation:
 
         try:
             async for delta in self._llm.stream_chat(messages):
+                raw.append(delta)
                 if "llm_first_token_ms" not in timings:
                     timings["llm_first_token_ms"] = ms_since_ref()
                 for raw_chunk in chunker.feed(delta):
@@ -110,10 +113,11 @@ class Conversation:
             yield Done("error", " ".join(spoken), timings)
             return
 
-        answer = " ".join(spoken)
-        self._remember(user_text, answer)
-        yield Done("done", answer, timings)
+        self._remember(user, "".join(raw))
+        yield Done("done", " ".join(spoken), timings)
 
-    def _remember(self, user_text: str, answer: str) -> None:
-        self.history += [{"role": "user", "content": user_text}, {"role": "assistant", "content": answer}]
+    def _remember(self, user: dict, raw_answer: str) -> None:
+        # Guarda exatamente o que foi enviado e gerado: qualquer diferença no prefixo do prompt
+        # obriga o llama.cpp a reprocessar (ver prompts.py).
+        self.history += [user, {"role": "assistant", "content": raw_answer}]
         self.history = self.history[-2 * self.config.history_turns:]

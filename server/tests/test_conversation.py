@@ -69,23 +69,30 @@ def test_tts_recebe_texto_limpo_e_normalizado():
     assert synth.spoken == ["Use o top.", "O disco está com oitenta e cinco por cento."]
 
 
-def test_prompt_tem_data_e_hora():
+def test_data_e_hora_vao_na_mensagem_do_usuario():
     conv, llm, _ = make("Ok.")
     run(conv, "Que horas são?")
-    system = llm.calls[0][0]
+    system, user = llm.calls[0]
     assert system["role"] == "system"
-    assert describe_now(NOW) in system["content"]
-    assert describe_now(NOW) == "domingo, 11 de outubro de 2026, 17:55"
+    assert describe_now(NOW) not in system["content"]  # prefixo estável para o cache do llama.cpp
+    assert user == {"role": "user", "content": "[domingo, 11 de outubro de 2026, 17:55] Que horas são?"}
 
 
-def test_historico_e_limitado():
-    conv, llm, _ = make("Resposta.")
+def test_historico_e_limitado_e_guarda_o_texto_exato():
+    conv, llm, _ = make("Resposta **bruta**.\n")
     for i in range(3):
         run(conv, f"pergunta {i}")
-    # history_turns=2: só as duas últimas trocas ficam
-    assert [m["content"] for m in conv.history] == ["pergunta 1", "Resposta.", "pergunta 2", "Resposta."]
-    # a 3ª chamada viu o sistema + 2 trocas anteriores + a pergunta
+    # history_turns=2: só as duas últimas trocas ficam, com o texto exato enviado e gerado
+    stamp = "[domingo, 11 de outubro de 2026, 17:55]"
+    assert [m["content"] for m in conv.history] == [
+        f"{stamp} pergunta 1", "Resposta **bruta**.\n", f"{stamp} pergunta 2", "Resposta **bruta**.\n",
+    ]
+    # a 3ª chamada viu o sistema + as 2 trocas anteriores, idênticas ao que foi enviado/gerado, + a pergunta
+    raw = "Resposta **bruta**.\n"
     assert [m["role"] for m in llm.calls[2]] == ["system", "user", "assistant", "user", "assistant", "user"]
+    assert [m["content"] for m in llm.calls[2][1:]] == [
+        f"{stamp} pergunta 0", raw, f"{stamp} pergunta 1", raw, f"{stamp} pergunta 2",
+    ]
 
 
 def test_erro_no_llm():

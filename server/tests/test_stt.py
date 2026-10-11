@@ -1,6 +1,7 @@
 import csv
 import os
 import shutil
+import subprocess
 
 import numpy as np
 import pytest
@@ -9,7 +10,20 @@ from agatha_server.stt import STTConfig, Transcriber
 
 FLEURS = "/dados/agatha/data/fleurs/pt_br"
 
-pytestmark = pytest.mark.skipif(shutil.which("nvidia-smi") is None, reason="sem GPU NVIDIA")
+
+
+def _free_vram_mb() -> int:
+    if shutil.which("nvidia-smi") is None:
+        return 0
+    out = subprocess.run(["nvidia-smi", "--query-gpu=memory.free", "--format=csv,noheader,nounits"],
+                         capture_output=True, text=True, check=False).stdout
+    return int(out.split()[0]) if out.strip() else 0
+
+
+# O modelo de teste precisa de ~0,4 GB; com o servidor e o LLM no ar a GPU fica quase cheia.
+pytestmark = pytest.mark.skipif(
+    _free_vram_mb() < 700, reason="GPU ausente ou sem VRAM livre (pare o servidor e o agatha-llm)"
+)
 
 
 @pytest.fixture(scope="module")
