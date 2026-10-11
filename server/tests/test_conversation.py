@@ -45,7 +45,7 @@ def run(conversation: Conversation, text: str) -> list:
 
 def make(reply: str, **kwargs) -> tuple[Conversation, FakeLLM, FakeSynth]:
     llm, synth = FakeLLM(reply, **kwargs), FakeSynth()
-    conv = Conversation(llm, synth, ThreadPoolExecutor(1), ConversationConfig(history_turns=2),
+    conv = Conversation(llm, synth, ThreadPoolExecutor(1), ConversationConfig(history_turns=4),
                         clock=lambda: 1.0, now=lambda: NOW)
     return conv, llm, synth
 
@@ -78,21 +78,28 @@ def test_data_e_hora_vao_na_mensagem_do_usuario():
     assert user == {"role": "user", "content": "[domingo, 11/10/2026, 17h55] Que horas são?"}
 
 
-def test_historico_e_limitado_e_guarda_o_texto_exato():
+def test_historico_guarda_o_texto_exato_e_corta_em_bloco():
     conv, llm, _ = make("Resposta **bruta**.\n")
-    for i in range(3):
-        run(conv, f"pergunta {i}")
-    # history_turns=2: só as duas últimas trocas ficam, com o texto exato enviado e gerado
     stamp = "[domingo, 11/10/2026, 17h55]"
+    sizes = []
+    for i in range(6):
+        run(conv, f"pergunta {i}")
+        sizes.append(len(conv.history) // 2)
+    # history_turns=4: cresce até 4 trocas; na 5ª, volta para as 2 mais recentes de uma vez
+    assert sizes == [1, 2, 3, 4, 2, 3]
     assert [m["content"] for m in conv.history] == [
-        f"{stamp} pergunta 1", "Resposta **bruta**.\n", f"{stamp} pergunta 2", "Resposta **bruta**.\n",
+        f"{stamp} pergunta 3", "Resposta **bruta**.\n", f"{stamp} pergunta 4", "Resposta **bruta**.\n",
+        f"{stamp} pergunta 5", "Resposta **bruta**.\n",
     ]
     # a 3ª chamada viu o sistema + as 2 trocas anteriores, idênticas ao que foi enviado/gerado, + a pergunta
     raw = "Resposta **bruta**.\n"
-    assert [m["role"] for m in llm.calls[2]] == ["system", "user", "assistant", "user", "assistant", "user"]
     assert [m["content"] for m in llm.calls[2][1:]] == [
         f"{stamp} pergunta 0", raw, f"{stamp} pergunta 1", raw, f"{stamp} pergunta 2",
     ]
+    # entre dois cortes, cada chamada começa exatamente com a anterior: o prefixo não muda e o
+    # llama.cpp reaproveita o cache (chamadas 0 a 4; o corte acontece depois da 5ª resposta)
+    for i in range(1, 5):
+        assert llm.calls[i][: len(llm.calls[i - 1])] == llm.calls[i - 1]
 
 
 def test_erro_no_llm():

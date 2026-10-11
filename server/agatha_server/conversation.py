@@ -21,7 +21,11 @@ log = logging.getLogger(__name__)
 
 @dataclass(frozen=True)
 class ConversationConfig:
-    history_turns: int = 6  # pares pergunta/resposta mantidos no contexto
+    # Pares pergunta/resposta mantidos no contexto. O corte é em bloco: ao passar de
+    # `history_turns`, volta para a metade. Cortar uma troca por turno mudaria o começo do prompt
+    # a cada turno, e o llama.cpp reprocessaria tudo (Gemma 4 usa sliding window attention):
+    # medido no teste do Windows, 525 tokens em 2,1 s na 8ª pergunta.
+    history_turns: int = 12
 
 
 class SupportsStreamChat(Protocol):
@@ -120,4 +124,6 @@ class Conversation:
         # Guarda exatamente o que foi enviado e gerado: qualquer diferença no prefixo do prompt
         # obriga o llama.cpp a reprocessar (ver prompts.py).
         self.history += [user, {"role": "assistant", "content": raw_answer}]
-        self.history = self.history[-2 * self.config.history_turns:]
+        if len(self.history) > 2 * self.config.history_turns:
+            keep = max(1, self.config.history_turns // 2)
+            self.history = self.history[-2 * keep:]

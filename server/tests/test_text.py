@@ -18,9 +18,9 @@ def test_divide_por_frase():
     assert stream("Oi, Rei. Tudo certo por aqui! E você?") == ["Oi, Rei.", "Tudo certo por aqui!", "E você?"]
 
 
-def test_primeiro_trecho_corta_em_virgula_depois_de_30_caracteres():
-    text = "Um trigger no Zabbix é uma regra de alerta, que dispara quando algo sai do normal."
-    assert stream(text) == ["Um trigger no Zabbix é uma regra de alerta,", "que dispara quando algo sai do normal."]
+def test_primeiro_trecho_corta_na_primeira_virgula_depois_de_15_caracteres():
+    text = "Para rodar o Zabbix, você precisa de um servidor Linux e de um banco de dados."
+    assert stream(text) == ["Para rodar o Zabbix,", "você precisa de um servidor Linux e de um banco de dados."]
 
 
 def test_virgula_cedo_nao_corta():
@@ -79,6 +79,9 @@ def test_clean(raw, expected):
     ("Tem 16 GB de RAM.", "Tem dezesseis gigabytes de ram."),
     ("A CPU está alta.", "A cê pê u está alta."),
     ("Quinze por cento.", "Quinze por cento."),
+    ("Hoje é 11/10/2026.", "Hoje é onze de outubro de dois mil e vinte e seis."),
+    ("Vence em 1/3.", "Vence em primeiro de março."),
+    ("Backup de 05/01/26 ok.", "Backup de cinco de janeiro de dois mil e vinte e seis ok."),
 ])
 def test_normalize(raw, expected):
     assert normalize_for_speech(raw) == expected

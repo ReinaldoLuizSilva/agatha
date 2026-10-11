@@ -18,7 +18,7 @@ _CLAUSE_END = re.compile(r"[,;:—–]\s")
 
 
 class Chunker:
-    def __init__(self, first_min_chars: int = 30, clause_min_chars: int = 100):
+    def __init__(self, first_min_chars: int = 15, clause_min_chars: int = 100):
         self.first_min_chars = first_min_chars
         self.clause_min_chars = clause_min_chars
         self._buffer = ""
@@ -111,7 +111,11 @@ UNITS = {
     "GHz": "gigahertz", "MHz": "megahertz", "ms": "milissegundos",
 }
 
+_MONTHS = ["janeiro", "fevereiro", "março", "abril", "maio", "junho", "julho", "agosto",
+           "setembro", "outubro", "novembro", "dezembro"]
+
 _IP = re.compile(r"\b(\d{1,3})\.(\d{1,3})\.(\d{1,3})\.(\d{1,3})\b")
+_DATE = re.compile(r"\b(0?[1-9]|[12]\d|3[01])/(0?[1-9]|1[0-2])(?:/(\d{4}|\d{2}))?\b")
 _TIME = re.compile(r"\b([01]?\d|2[0-3])(?::|h)([0-5]\d)\b")
 _HOURS = re.compile(r"\b([01]?\d|2[0-3])h\b")
 _PERCENT = re.compile(r"(\d+(?:,\d+)?)\s?%")
@@ -137,8 +141,18 @@ def _number(token: str) -> str:
     return _int(int(token))
 
 
+def _date(m: re.Match) -> str:
+    day = "primeiro" if int(m[1]) == 1 else _int(int(m[1]))
+    words = f"{day} de {_MONTHS[int(m[2]) - 1]}"
+    if m[3]:
+        year = int(m[3]) + (2000 if len(m[3]) == 2 else 0)
+        words += f" de {_int(year)}"
+    return words
+
+
 def normalize_for_speech(text: str) -> str:
     text = _IP.sub(lambda m: " ponto ".join(_int(int(g)) for g in m.groups()), text)
+    text = _DATE.sub(_date, text)
     text = _MONEY.sub(
         lambda m: _int(int(m[1].replace(".", ""))) + " reais"
         + (f" e {_int(int(m[2]))} centavos" if m[2] and int(m[2]) else ""),
