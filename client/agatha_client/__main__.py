@@ -176,19 +176,26 @@ async def session(url: str, token: str, source: MicSource | WavSource) -> None:
 
         receiver = asyncio.create_task(receive())
         sender = asyncio.create_task(send())
-        finished, _ = await asyncio.wait({receiver, sender}, return_when=asyncio.FIRST_COMPLETED)
-        if sender in finished and sender.exception() is None:
-            # arquivo terminou: espera as transcrições das frases já encerradas
-            deadline = time.monotonic() + 10
-            while ended - done and time.monotonic() < deadline:
-                await asyncio.sleep(0.05)
-        for task in (receiver, sender):
-            task.cancel()
-        for task in finished:
-            if task.exception() is not None:
-                raise task.exception()
-        if receiver in finished:
-            raise ConnectionError("o servidor encerrou a conexão")
+        try:
+            finished, _ = await asyncio.wait({receiver, sender}, return_when=asyncio.FIRST_COMPLETED)
+            if sender in finished and sender.exception() is None:
+                # arquivo terminou: espera as transcrições das frases já encerradas
+                deadline = time.monotonic() + 10
+                while ended - done and time.monotonic() < deadline:
+                    await asyncio.sleep(0.05)
+            for task in finished:
+                if task.exception() is not None:
+                    raise task.exception()
+            if receiver in finished:
+                raise ConnectionError("o servidor encerrou a conexão")
+        except asyncio.CancelledError:
+            # Ctrl+C: fecha normalmente (1000); sair do `async with` com exceção fecharia com 1011
+            await ws.close()
+            raise
+        finally:
+            for task in (receiver, sender):
+                task.cancel()
+            await asyncio.gather(receiver, sender, return_exceptions=True)
 
 
 async def run(url: str, token: str, source: MicSource | WavSource) -> None:
