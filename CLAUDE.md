@@ -58,7 +58,13 @@ agatha/
 - [x] Fase 0: servidor preparado (driver 580 OK, `nvidia-smi` funcionando, usuário `agatha`, diretórios em /dados)
 - [x] Fase 0: repositório no GitHub clonado em `~/agatha`
 - [x] Fase 0: esqueleto — estrutura de pastas, README, `.gitignore` e ADR-001 (`docs/adr/0001-arquitetura-inicial.md`)
-- [ ] Fase 1: loop servidor ouve → transcreve → imprime (PT-BR)
+- [x] Fase 1: loop servidor ouve → transcreve → imprime (PT-BR). Cliente Windows → WebSocket → Silero VAD →
+      faster-whisper `small` na GPU (ADR-002, ADR-003). Fim da fala → texto ≈ 0,85–0,9 s com a voz do Reinaldo.
+      Pendências levadas para a Fase 2:
+      - testar jargão (Zabbix, Oracle); se errar, usar `AGATHA_STT_INITIAL_PROMPT` (plano B do ADR-002)
+      - STT ocasionalmente ~2× mais lento em palavra curta isolada: medir fallback de temperatura vs. clock da GPU
+      - pausas > 500 ms no meio da frase a quebram em duas (`min_silence_ms`); revisar o endpointing
+      - medir STT e LLM juntos na GPU (VRAM e disputa)
 - [ ] Fase 2: conversa ponta a ponta com streaming e medição de latência
 - [ ] Fase 3: wake word "Agatha", memória de contexto, primeiras ferramentas
 - [ ] Fase 4: serviço systemd, logs, testes, README final
