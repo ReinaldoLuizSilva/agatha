@@ -21,6 +21,7 @@ def main() -> int:
         level=config.log_level,
         format="%(asctime)s %(levelname)s %(name)s: %(message)s",
     )
+    logging.getLogger("faster_whisper").setLevel(logging.WARNING)  # uma linha por transcrição
     log = logging.getLogger("agatha_server")
 
     stt = config.stt

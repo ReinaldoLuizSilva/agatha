@@ -65,13 +65,23 @@ class Transcriber:
         self.config = config
         if config.device == "cuda":
             preload_cuda_libs()
-        self._model = WhisperModel(
-            config.model,
-            device=config.device,
-            compute_type=config.compute_type,
-            cpu_threads=config.cpu_threads,
-            download_root=config.models_dir,
-        )
+
+        def load(local_only: bool) -> WhisperModel:
+            return WhisperModel(
+                config.model,
+                device=config.device,
+                compute_type=config.compute_type,
+                cpu_threads=config.cpu_threads,
+                download_root=config.models_dir,
+                local_files_only=local_only,
+            )
+
+        # Cache local primeiro: a partida não depende de internet (projeto 100% local).
+        try:
+            self._model = load(local_only=True)
+        except FileNotFoundError:
+            log.info("modelo %s não está em %s; baixando", config.model, config.models_dir)
+            self._model = load(local_only=False)
 
     def warmup(self) -> None:
         """Primeira inferência fora do caminho crítico (inicializa kernels e alocador)."""
