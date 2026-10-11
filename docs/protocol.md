@@ -76,7 +76,8 @@ Antes do `ready`, o servidor rejeita qualquer áudio.
     "min_silence_ms": 500,
     "pre_roll_ms": 300,
     "min_speech_ms": 250,
-    "max_segment_s": 25
+    "max_segment_s": 25,
+    "continuation_ms": 700
   }
 }
 ```
@@ -128,6 +129,12 @@ O `start` só sai depois de `min_speech_ms` de fala. Trechos mais curtos são de
 Os tempos são os mesmos da v1 (`total_ms` vai do último bloco com fala até o texto pronto). Se o
 texto não estiver vazio, o servidor **inicia uma resposta** e passa a ignorar o microfone. Texto
 vazio não gera resposta.
+
+**Frase cortada por uma pausa:** se o texto parecer incompleto (termina em reticências, vírgula ou
+numa palavra como "e", "de", "que", "para"), o servidor espera até `continuation_ms` por uma
+continuação. Se a pessoa voltar a falar, a próxima transcrição é **juntada** à anterior e a
+resposta (`response_start.segment`) se refere à última frase. Se não, responde ao que tem. Cada
+parte continua gerando o seu `transcript`.
 
 ## Respostas
 

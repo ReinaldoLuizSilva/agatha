@@ -1,7 +1,9 @@
 """Testes do servidor WebSocket (protocolo v2) com VAD, STT e conversa falsos (sem GPU)."""
 
 import asyncio
+import dataclasses
 import json
+import time
 
 import numpy as np
 import pytest
@@ -42,8 +44,21 @@ class FakeTranscriber:
         return self.text
 
 
+class SequenceTranscriber:
+    """Devolve um texto por chamada, na ordem; depois, texto vazio."""
+
+    def __init__(self, texts: list[str]):
+        self.texts = list(texts)
+
+    def transcribe(self, audio: np.ndarray) -> str:
+        return self.texts.pop(0) if self.texts else ""
+
+
 class FakeConversation:
+    heard: list[str] = []  # textos que chegaram para resposta (ordem de chegada)
+
     async def respond(self, user_text, t_ref):
+        FakeConversation.heard.append(user_text)
         yield TextChunk("Oi, Rei.")
         yield Audio(REPLY_AUDIO[0])
         yield TextChunk("Tudo bem.")
@@ -66,12 +81,15 @@ def utterance() -> list[bytes]:
     return [pcm(1, a) for a, n in ((0, 5), (1000, 20), (0, 20)) for _ in range(n)]
 
 
-def with_server(scenario, transcript: str = "olá agatha", hello_timeout: float = 5.0, grace: float = 15.0):
+def with_server(scenario, transcript: str = "olá agatha", hello_timeout: float = 5.0, grace: float = 15.0,
+                transcriber=None, continuation_ms: int = 300):
     """Sobe o servidor numa porta livre, roda o cenário do cliente e devolve o resultado."""
+    FakeConversation.heard = []
+    config = dataclasses.replace(CONFIG, vad=dataclasses.replace(CONFIG.vad, continuation_ms=continuation_ms))
 
     async def main():
         app = AgathaServer(
-            CONFIG, FakeTranscriber(transcript), FakeConversation, RATE,
+            config, transcriber or FakeTranscriber(transcript), FakeConversation, RATE,
             vad_factory=EnergyVAD, hello_timeout=hello_timeout, playback_grace_s=grace,
         )
         async with serve(app.handler, "127.0.0.1", 0) as server:
@@ -259,3 +277,59 @@ def test_volta_a_ouvir_se_playback_end_nao_chega():
     first_after = with_server(scenario, grace=0.2)
     assert first_after["type"] == "vad"
     assert first_after["event"] == "start"
+
+
+# --- Frase incompleta (pausa no meio) ---------------------------------------------------
+
+def test_frase_incompleta_e_juntada_com_a_continuacao():
+    async def scenario(ws):
+        await start(ws)
+        await send_all(ws, utterance())  # "qual o tamanho da"
+        await send_all(ws, utterance())  # "tablespace users?" logo em seguida
+        return await recv_until(ws, "response_end")
+
+    msgs = with_server(scenario, transcriber=SequenceTranscriber(["qual o tamanho da", "tablespace users?"]))
+    assert [m["text"] for m in msgs if isinstance(m, dict) and m["type"] == "transcript"] == [
+        "qual o tamanho da", "tablespace users?"
+    ]
+    starts = [m for m in msgs if isinstance(m, dict) and m["type"] == "response_start"]
+    assert starts == [{"type": "response_start", "response": 1, "segment": 2}]
+    assert FakeConversation.heard == ["qual o tamanho da tablespace users?"]
+
+
+def test_frase_incompleta_sem_continuacao_responde_apos_o_prazo():
+    async def scenario(ws):
+        await start(ws)
+        await send_all(ws, utterance())
+        await recv_until(ws, "transcript")
+        t0 = time.monotonic()
+        await recv_until(ws, "response_start")
+        return time.monotonic() - t0
+
+    waited = with_server(scenario, transcriber=SequenceTranscriber(["me fala sobre o"]), continuation_ms=300)
+    assert 0.25 <= waited < 2
+    assert FakeConversation.heard == ["me fala sobre o"]
+
+
+def test_continuacao_vazia_responde_ao_que_tinha():
+    async def scenario(ws):
+        await start(ws)
+        await send_all(ws, utterance())
+        await send_all(ws, utterance())  # ruído que vira transcrição vazia
+        return await recv_until(ws, "response_end")
+
+    with_server(scenario, transcriber=SequenceTranscriber(["me fala sobre o", ""]), continuation_ms=5000)
+    assert FakeConversation.heard == ["me fala sobre o"]
+
+
+def test_frase_completa_nao_espera():
+    async def scenario(ws):
+        await start(ws)
+        await send_all(ws, utterance())
+        await recv_until(ws, "transcript")
+        t0 = time.monotonic()
+        await recv_until(ws, "response_start")
+        return time.monotonic() - t0
+
+    waited = with_server(scenario, transcriber=SequenceTranscriber(["que horas são?"]), continuation_ms=5000)
+    assert waited < 0.5

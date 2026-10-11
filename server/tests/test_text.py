@@ -1,6 +1,6 @@
 import pytest
 
-from agatha_server.text import Chunker, clean, normalize_for_speech
+from agatha_server.text import Chunker, clean, looks_incomplete, normalize_for_speech
 
 
 def stream(text: str, chunker: Chunker | None = None, step: int = 3) -> list[str]:
@@ -85,3 +85,20 @@ def test_clean(raw, expected):
 ])
 def test_normalize(raw, expected):
     assert normalize_for_speech(raw) == expected
+
+
+# --- Fala incompleta -------------------------------------------------------------------
+
+@pytest.mark.parametrize("text", [
+    "Qual é o tamanho da", "Me explica para que serve o", "Verifica o servidor e", "Eu queria saber,",
+    "Está me escutando...", "Liga o alerta de.", "Quero saber sobre",
+])
+def test_parece_incompleta(text):
+    assert looks_incomplete(text)
+
+
+@pytest.mark.parametrize("text", [
+    "Que horas são agora?", "Obrigado, Agatha.", "Me fala do Zabbix", "Qual o tamanho da tablespace USERS?", "",
+])
+def test_parece_completa(text):
+    assert not looks_incomplete(text)

@@ -58,6 +58,9 @@ class VADConfig:
     pre_roll_ms: int = 300
     min_speech_ms: int = 250
     max_segment_s: float = 25.0
+    # Se a transcrição parecer incompleta (termina em "e", "de", vírgula...), espera esse tempo
+    # por uma continuação antes de responder, e junta as partes (0 desliga).
+    continuation_ms: int = 700
 
     @property
     def neg_threshold(self) -> float:

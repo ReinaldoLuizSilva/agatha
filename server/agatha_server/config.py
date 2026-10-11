@@ -87,6 +87,7 @@ def load_config(env: dict | None = None) -> ServerConfig:
             pre_roll_ms=get("VAD_PRE_ROLL_MS", vad_defaults.pre_roll_ms, int),
             min_speech_ms=get("VAD_MIN_SPEECH_MS", vad_defaults.min_speech_ms, int),
             max_segment_s=get("VAD_MAX_SEGMENT_S", vad_defaults.max_segment_s, float),
+            continuation_ms=get("VAD_CONTINUATION_MS", vad_defaults.continuation_ms, int),
         ),
         llm=LLMConfig(
             url=get("LLM_URL", llm_defaults.url),

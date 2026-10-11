@@ -92,6 +92,7 @@ def ready(session: str, vad: VADConfig, output_sample_rate: int) -> str:
             "pre_roll_ms": vad.pre_roll_ms,
             "min_speech_ms": vad.min_speech_ms,
             "max_segment_s": vad.max_segment_s,
+            "continuation_ms": vad.continuation_ms,
         },
     })
 

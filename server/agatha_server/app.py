@@ -4,6 +4,9 @@ Cada conexão é uma `Session` com dois estados (ADR-006):
 - ouvindo: o áudio passa pelo VAD; frases completas são transcritas;
 - respondendo: uma transcrição com texto dispara a resposta (LLM → TTS) e o microfone é
   ignorado até o cliente enviar `playback_end` (ou até o prazo de segurança).
+
+Se a transcrição parecer cortada no meio (`looks_incomplete`), ela é segurada por
+`continuation_ms`: se a pessoa voltar a falar, as partes são juntadas numa pergunta só.
 """
 
 import asyncio
@@ -23,6 +26,7 @@ from . import protocol
 from .config import ServerConfig
 from .conversation import Audio, Conversation, Done, TextChunk
 from .prompts import system_message
+from .text import looks_incomplete
 from .vad import Segmenter, SileroVAD, SpeechEnd, SpeechStart
 
 log = logging.getLogger(__name__)
@@ -121,6 +125,10 @@ class Session:
         self.current_response: int | None = None
         self._response_task: asyncio.Task | None = None
         self._resume_timer: asyncio.TimerHandle | None = None
+        # transcrição que parece incompleta, à espera de continuação: (evento, texto, fim do STT)
+        self._held: tuple[SpeechEnd, str, float] | None = None
+        self._hold_timer: asyncio.TimerHandle | None = None
+        self._speaking = False  # há uma frase confirmada em andamento (entre vad start e end)
         self._tasks: set[asyncio.Task] = set()
 
     async def run(self) -> None:
@@ -133,8 +141,9 @@ class Session:
         except ConnectionClosed:
             pass
         finally:
-            if self._resume_timer:
-                self._resume_timer.cancel()
+            for timer in (self._resume_timer, self._hold_timer):
+                if timer:
+                    timer.cancel()
             for task in self._tasks:
                 task.cancel()
             log.info("[%s] desconectado (código %s)", self.id, self.ws.close_code)
@@ -166,7 +175,12 @@ class Session:
             await self._send(protocol.vad_event(event))
             if isinstance(event, SpeechStart):
                 log.debug("[%s] #%d início da fala (%d ms)", self.id, event.segment, event.audio_ms)
+                self._speaking = True
+                if self._hold_timer:  # voltou a falar: a frase segurada vai ganhar continuação
+                    self._hold_timer.cancel()
+                    self._hold_timer = None
             elif isinstance(event, SpeechEnd):
+                self._speaking = False
                 self._spawn(self._transcribe(event))
 
     async def _transcribe(self, event: SpeechEnd) -> None:
@@ -185,12 +199,37 @@ class Session:
             timings["endpoint_ms"], timings["stt_ms"], timings["total_ms"],
         )
         await self._send(protocol.transcript(event.segment, text, timings))
-        if not text:
-            return
         if self.state != self.LISTENING:
-            log.info("[%s] #%d ignorada: resposta em andamento (half-duplex)", self.id, event.segment)
+            if text:
+                log.info("[%s] #%d ignorada: resposta em andamento (half-duplex)", self.id, event.segment)
+            return
+        if not text:
+            if self._held and self._hold_timer is None:  # a "continuação" era só ruído
+                self._release_held()
+            return
+        if self._held:
+            text = f"{self._held[1]} {text}"
+            self._held = None
+            if self._hold_timer:
+                self._hold_timer.cancel()
+                self._hold_timer = None
+        continuation = self.server.config.vad.continuation_ms
+        if continuation > 0 and looks_incomplete(text):
+            log.info("[%s] #%d parece incompleta; aguardando continuação: %r", self.id, event.segment, text)
+            self._held = (event, text, finished)
+            # Se a pessoa já voltou a falar (antes de esta transcrição ficar pronta), espera a
+            # próxima transcrição em vez de um prazo fixo.
+            if not self._speaking:
+                self._hold_timer = asyncio.get_running_loop().call_later(continuation / 1000, self._release_held)
             return
         self._start_response(event, text, finished)
+
+    def _release_held(self) -> None:
+        self._hold_timer = None
+        if self._held and self.state == self.LISTENING:
+            event, text, finished = self._held
+            self._held = None
+            self._start_response(event, text, finished)
 
     # --- Resposta ---------------------------------------------------------------------
 

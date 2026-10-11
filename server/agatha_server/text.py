@@ -6,6 +6,7 @@
 - `clean`: remove markdown, emoji e símbolos (vai para a tela e para o TTS).
 - `normalize_for_speech`: números, porcentagens, IPs, versões, horas e siglas por extenso
   (só para o TTS; ver ADR-005).
+- `looks_incomplete`: diz se uma transcrição parece cortada no meio (pausa longa na fala).
 """
 
 import re
@@ -48,6 +49,29 @@ class Chunker:
             if m.start() >= min_chars:
                 return m.end()
         return None
+
+
+# --- Fala incompleta ----------------------------------------------------------------
+
+# Palavras que quase nunca terminam uma frase em português: se a transcrição acaba numa delas,
+# a pessoa provavelmente fez uma pausa no meio da frase.
+_DANGLING = {
+    "e", "ou", "mas", "porque", "que", "se", "como", "quando", "onde", "qual", "quais",
+    "de", "do", "da", "dos", "das", "em", "no", "na", "nos", "nas", "para", "pra", "pro", "com",
+    "sem", "por", "pelo", "pela", "ao", "à", "aos", "às", "entre", "sobre", "até",
+    "o", "a", "os", "as", "um", "uma", "uns", "umas", "meu", "minha", "seu", "sua", "esse", "essa",
+    "este", "esta", "isso", "é", "tipo", "então",
+}
+
+
+def looks_incomplete(text: str) -> bool:
+    text = text.strip()
+    if not text:
+        return False
+    if text.endswith(("...", "…", ",", ":", ";", "-", "—")):
+        return True
+    last = re.sub(r"[^\w]", "", text.split()[-1].lower())
+    return last in _DANGLING
 
 
 # --- Limpeza -------------------------------------------------------------------------
