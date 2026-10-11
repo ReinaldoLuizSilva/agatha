@@ -1,0 +1,84 @@
+import pytest
+
+from agatha_server.text import Chunker, clean, normalize_for_speech
+
+
+def stream(text: str, chunker: Chunker | None = None, step: int = 3) -> list[str]:
+    """Alimenta o chunker em pedaços pequenos, como tokens do LLM."""
+    chunker = chunker or Chunker()
+    out = []
+    for i in range(0, len(text), step):
+        out += chunker.feed(text[i : i + step])
+    return out + chunker.flush()
+
+
+# --- Chunker ---------------------------------------------------------------------------
+
+def test_divide_por_frase():
+    assert stream("Oi, Rei. Tudo certo por aqui! E você?") == ["Oi, Rei.", "Tudo certo por aqui!", "E você?"]
+
+
+def test_primeiro_trecho_corta_em_virgula_depois_de_30_caracteres():
+    text = "Um trigger no Zabbix é uma regra de alerta, que dispara quando algo sai do normal."
+    assert stream(text) == ["Um trigger no Zabbix é uma regra de alerta,", "que dispara quando algo sai do normal."]
+
+
+def test_virgula_cedo_nao_corta():
+    assert stream("Oi, Rei. Tudo bem.") == ["Oi, Rei.", "Tudo bem."]
+
+
+def test_depois_do_primeiro_trecho_virgula_so_corta_em_trecho_longo():
+    text = "Claro. Primeiro veja o serviço, depois os logs, e por fim a rede."
+    assert stream(text) == ["Claro.", "Primeiro veja o serviço, depois os logs, e por fim a rede."]
+
+
+def test_nao_corta_em_ip_nem_decimal():
+    assert stream("O IP é 192.168.1.25 e o uso é 2,5 vezes maior. Ok.") == [
+        "O IP é 192.168.1.25 e o uso é 2,5 vezes maior.", "Ok."
+    ]
+
+
+def test_quebra_de_linha_corta():
+    assert stream("Primeiro passo\nSegundo passo") == ["Primeiro passo", "Segundo passo"]
+
+
+def test_sem_pontuacao_sai_no_flush():
+    chunker = Chunker()
+    assert chunker.feed("texto sem pontuação") == []
+    assert chunker.flush() == ["texto sem pontuação"]
+
+
+# --- Limpeza ---------------------------------------------------------------------------
+
+@pytest.mark.parametrize("raw, expected", [
+    ("Use o comando `top` ou **htop**.", "Use o comando top ou htop."),
+    ("Tudo bem por aqui. 😊", "Tudo bem por aqui."),
+    ("- primeiro\n- segundo", "primeiro segundo"),
+    ("## Título\nTexto", "Título Texto"),
+    ("Veja [a doc](https://x.com/a) ou https://y.com/b agora.", "Veja a doc ou link agora."),
+    ("Um \"container\" (contêiner) lógico.", "Um container contêiner lógico."),
+    ("```sql\nSELECT 1;\n```\nPronto.", "Pronto."),
+    ("ps aux --sort=-%mem", "ps aux --sort=-%mem"),
+])
+def test_clean(raw, expected):
+    assert clean(raw) == expected
+
+
+# --- Normalização ----------------------------------------------------------------------
+
+@pytest.mark.parametrize("raw, expected", [
+    ("O servidor 192.168.1.25 caiu.", "O servidor cento e noventa e dois ponto cento e sessenta e oito ponto um ponto vinte e cinco caiu."),
+    ("Disco com 85% de uso.", "Disco com oitenta e cinco por cento de uso."),
+    ("Podman 5.8 instalado.", "Podman cinco ponto oito instalado."),
+    ("São 1.575 pessoas.", "São mil quinhentos e setenta e cinco pessoas."),
+    ("Uso 2,5 vezes maior.", "Uso dois vírgula cinco vezes maior."),
+    ("Alerta às 14:30.", "Alerta às catorze e trinta."),
+    ("Reunião às 9h.", "Reunião às nove horas."),
+    ("Custa R$ 10,50.", "Custa dez reais e cinquenta centavos."),
+    ("Ficou em 1º lugar.", "Ficou em primeiro lugar."),
+    ("Tem 16 GB de RAM.", "Tem dezesseis gigabytes de ram."),
+    ("A CPU está alta.", "A cê pê u está alta."),
+    ("Quinze por cento.", "Quinze por cento."),
+])
+def test_normalize(raw, expected):
+    assert normalize_for_speech(raw) == expected
