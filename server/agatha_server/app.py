@@ -76,7 +76,7 @@ class AgathaServer:
         finally:
             for task in pending:
                 task.cancel()
-            log.info("[%s] desconectado", session)
+            log.info("[%s] desconectado (código %s)", session, ws.close_code)
 
     async def _handshake(self, ws: ServerConnection, session: str) -> dict | None:
         try:
