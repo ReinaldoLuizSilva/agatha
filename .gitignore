@@ -1,0 +1,60 @@
+# --- Segredos / configuração local ---
+.env
+.env.*
+!.env.example
+
+# --- Modelos (ficam em /dados/agatha/models, nunca no git) ---
+models/
+*.gguf
+*.ggml
+*.bin
+*.onnx
+*.pt
+*.pth
+*.safetensors
+*.ckpt
+*.tflite
+
+# --- Áudio (gravações, testes, saídas de TTS) ---
+*.wav
+*.mp3
+*.flac
+*.ogg
+*.opus
+*.m4a
+*.aac
+*.pcm
+*.raw
+
+# --- Dados e logs de runtime (ficam em /dados/agatha/{data,logs}) ---
+data/
+logs/
+*.log
+
+# --- Ambientes virtuais Python ---
+.venv/
+venv/
+env/
+.python-version
+
+# --- Python ---
+__pycache__/
+*.py[cod]
+*.egg-info/
+.eggs/
+build/
+dist/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.coverage
+htmlcov/
+
+# --- Editores / SO ---
+.vscode/
+.idea/
+*.swp
+*~
+.DS_Store
+Thumbs.db
+desktop.ini
