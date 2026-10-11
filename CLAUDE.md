@@ -26,8 +26,8 @@ e no trabalho (infra, Oracle, Zabbix). Também é peça de portfólio Cloud/DevO
 - Driver NVIDIA fixado no branch **580** (repo `epel-nvidia-580` do negativo17). O branch 590+ não suporta Pascal.
 - Não adicionar repos NVIDIA que tragam driver 590+, nem usar os módulos open da NVIDIA (não suportam Pascal).
 - CUDA **12.x** para compilar/rodar (o `nvidia-smi` mostra "CUDA 13.0", mas isso é só o máximo do driver; o toolkit 13 não suporta Pascal).
-- Orçamento de VRAM: 4 GB. STT (faster-whisper `small`, int8) na GPU ~0,4 GB; LLM 3–4B quantizado até ~3,4 GB
-  (ADR-002). Medir antes de mudar.
+- Orçamento de VRAM: 4 GB. STT (faster-whisper `small`, int8) ~0,4 GB (ADR-002) + LLM Gemma 4 E4B Q4_K_M com
+  ctx 4096 ~3,27 GB (ADR-004) = pico de 3,66 GB. Sobra ~0,4 GB: qualquer coisa nova na GPU precisa ser medida antes.
 - Kernel UEK atualizado exige `kernel-uek-devel` da mesma versão para o DKMS recompilar.
 - GPU em container: NVIDIA Container Toolkit 1.20.1 (repo oficial `libnvidia-container`, que só tem o toolkit,
   sem driver), CDI em `/etc/cdi/nvidia.yaml` (regenerado por `nvidia-cdi-refresh.path`), SELinux
