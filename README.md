@@ -4,7 +4,8 @@ Assistente virtual por voz, estilo Jarvis/Alexa, rodando **100% local** num serv
 O foco é ter respostas rápidas, precisas e úteis no dia a dia e no trabalho com infraestrutura
 (Oracle, Zabbix, GitHub).
 
-> Status: **em construção**. Fase 1 concluída: o servidor ouve e transcreve PT-BR em ~0,9 s após o fim da fala.
+> Status: **em construção**. Fase 2 concluída: conversa por voz em PT-BR, 100% local, com a primeira palavra
+> da resposta saindo ~1,7 s após o fim da fala em comandos curtos (2,3–2,9 s em perguntas longas).
 
 ## Arquitetura
 
@@ -66,6 +67,6 @@ Modelos, áudio e dados de runtime ficam fora do repositório, em `/dados/agatha
 
 - [x] **Fase 0**: servidor preparado e esqueleto do repositório
 - [x] **Fase 1**: servidor ouve, transcreve e imprime (PT-BR)
-- [ ] **Fase 2**: conversa ponta a ponta com streaming e medição de latência
+- [x] **Fase 2**: conversa ponta a ponta com streaming e medição de latência
 - [ ] **Fase 3**: wake word "Agatha", memória de contexto, primeiras ferramentas
 - [ ] **Fase 4**: serviço systemd, logs, testes, documentação final
