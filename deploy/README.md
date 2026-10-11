@@ -1,7 +1,55 @@
 # deploy/
 
-Implantação da Agatha no `agatha-srv`. Por enquanto este documento cobre a preparação do host.
-Containers e serviços systemd entram nas próximas fases.
+Implantação da Agatha no `agatha-srv`: preparação do host, imagens e o pod que roda tudo.
+Os serviços systemd (subir no boot, reiniciar em falha) entram na Fase 4.
+
+```
+deploy/
+├── up.sh                # sobe o pod "agatha" (LLM + servidor)
+├── down.sh              # derruba o pod
+├── llama/Containerfile  # imagem do llama-server (CUDA 12, sm_61)
+└── server/Containerfile # imagem do servidor da Agatha
+```
+
+## Rodando a Agatha
+
+```bash
+deploy/up.sh                    # sobe (ou recria) o pod e espera os dois serviços
+podman logs -f agatha-server    # transcrições, respostas e tempos de cada etapa
+podman logs -f agatha-llm       # llama-server
+deploy/down.sh                  # derruba
+```
+
+| container | imagem | GPU | o que faz |
+|---|---|---|---|
+| `agatha-llm` | `localhost/agatha-llama:b11205` | ~3,3 GB | Gemma 4 E4B no llama-server, em `127.0.0.1:8080` dentro do pod |
+| `agatha-server` | `localhost/agatha-server:0.2.0` | ~0,4 GB | VAD, STT, núcleo e TTS; WebSocket em `:8765` |
+
+- **Rede:** os dois containers ficam no mesmo pod e se falam por `127.0.0.1`. O pod publica a
+  porta **8765** (WebSocket, liberada no firewall só para a LAN) e a **8080** apenas em
+  `127.0.0.1` do host, para os benchmarks.
+- **Modelos:** `/dados/agatha/models` é montado **somente leitura**. Nada de modelo dentro das imagens.
+- **Configuração:** o token vem de `server/.env` (`--env-file`); os caminhos dos modelos já estão
+  na imagem do servidor.
+- **Fuso horário:** `--tz=local`. Sem isso, os containers ficam em UTC e a Agatha erra a hora.
+- **VRAM:** o pico com os dois serviços é de ~3,66 GB de 4 GB. Pare o pod antes de rodar os
+  benchmarks de STT e LLM, ou os testes de STT, que precisam da GPU livre.
+
+### Construir as imagens
+
+```bash
+# llama.cpp (só quando mudar a versão; compilar leva ~20 min)
+podman build --format docker -t localhost/agatha-llama:b11205 deploy/llama
+
+# servidor (a cada mudança de código; o contexto é a pasta server/)
+podman build --format docker -f deploy/server/Containerfile -t localhost/agatha-server:0.2.0 server
+podman image prune -f           # remove as camadas antigas
+deploy/up.sh
+```
+
+`--format docker` preserva o `HEALTHCHECK`, que o formato OCI ignora. A imagem do servidor
+instala o extra `gpu` do `pyproject`, ou seja, as mesmas versões de cuBLAS e cuDNN validadas no
+desenvolvimento.
 
 ## Preparação do host
 

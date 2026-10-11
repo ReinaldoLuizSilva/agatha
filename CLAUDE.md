@@ -45,6 +45,13 @@ e no trabalho (infra, Oracle, Zabbix). Também é peça de portfólio Cloud/DevO
 5. Meta de performance: < 2 s entre o fim da fala e o início da resposta. Streaming em todo o pipeline.
    Latência é medida desde o primeiro dia (pasta `bench/`).
 
+## Operação (agatha-srv)
+
+- Subir/derrubar tudo: `deploy/up.sh` / `deploy/down.sh` (pod `agatha`: `agatha-llm` + `agatha-server`).
+- Logs: `podman logs -f agatha-server`. Mudou código do servidor → rebuild da imagem (ver `deploy/README.md`).
+- Benchmarks de GPU e testes de STT precisam do pod parado (VRAM fica em ~3,66 de 4 GB).
+- Cache do LLM: o prefixo do prompt (sistema + histórico) não pode mudar entre turnos (ADR-007).
+
 ## Estrutura do repositório
 
 ```
@@ -69,6 +76,11 @@ agatha/
       - STT ocasionalmente ~2× mais lento em palavra curta isolada: medir fallback de temperatura vs. clock da GPU
       - pausas > 500 ms no meio da frase a quebram em duas (`min_silence_ms`); revisar o endpointing
       - medir STT e LLM juntos na GPU (VRAM e disputa)
-- [ ] Fase 2: conversa ponta a ponta com streaming e medição de latência
+- [ ] Fase 2: conversa ponta a ponta com streaming e medição de latência — **implementada, aguardando o
+      teste final do Reinaldo no Windows** (com jargão). LLM Gemma 4 E4B (ADR-004), TTS Piper "dii" (ADR-005),
+      protocolo v2 half-duplex (ADR-006), ajustes de latência (ADR-007). Fim da fala → primeiro áudio:
+      p50 ~1,84 s no servidor (~2,0 s sentido no Windows). Roda num pod Podman: `deploy/up.sh` / `deploy/down.sh`.
+      Pendências conhecidas: respostas inventadas quando a pergunta chega mal transcrita (limite do 4B;
+      ferramentas na Fase 3); voz "dii" provisória (Reinaldo quer uma mais limpa).
 - [ ] Fase 3: wake word "Agatha", memória de contexto, primeiras ferramentas
 - [ ] Fase 4: serviço systemd, logs, testes, README final
