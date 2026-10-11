@@ -1,29 +1,42 @@
 # Protocolo cliente ↔ servidor
 
 Especificação do protocolo WebSocket entre o cliente (PC Windows) e o servidor (`agatha-srv`).
-As decisões e os motivos estão no [ADR-003](adr/0003-protocolo-websocket.md).
+As decisões e os motivos estão no [ADR-003](adr/0003-protocolo-websocket.md) (base) e no
+[ADR-006](adr/0006-protocolo-v2-half-duplex.md) (v2: respostas faladas e half-duplex).
 
-- **Versão atual:** 1 (Fase 1: o cliente envia áudio, o servidor devolve transcrições)
+- **Versão atual:** 2 (Fase 2: conversa falada). O servidor só aceita a versão 2.
 - **Endereço:** `ws://<servidor>:8765/`
 
 ## Visão geral
 
 Uma única conexão WebSocket por cliente, com dois tipos de frame:
 
-- **Binário:** áudio PCM, só no sentido cliente → servidor.
+- **Binário:** áudio PCM. Do cliente para o servidor vai o microfone (16 kHz); do servidor para o
+  cliente vai a resposta falada (22 050 Hz). O formato de cada sentido é declarado no handshake.
 - **Texto:** mensagens de controle em JSON, nos dois sentidos, sempre com o campo `type`.
 
+A conversa é **half-duplex**: enquanto a Agatha prepara e fala uma resposta, o servidor ignora o
+microfone. Ele volta a ouvir quando o cliente avisa que terminou de tocar (`playback_end`).
+
 ```
-cliente                                  servidor
-   │── {"type":"hello", ...} ──────────────►│
-   │◄────────────── {"type":"ready", ...} ──│
-   │── [PCM binário] ──────────────────────►│
-   │── [PCM binário] ──────────────────────►│
-   │◄─────── {"type":"vad","event":"start"} │
-   │── [PCM binário] ... ──────────────────►│
-   │◄───────── {"type":"vad","event":"end"} │
-   │◄─────────── {"type":"transcript", ...} │
-   │── [PCM binário] ... ──────────────────►│
+cliente                                          servidor
+   │── {"type":"hello", ...} ──────────────────────►│
+   │◄──────────────────── {"type":"ready", ...} ────│
+   │── [PCM 16 kHz] ... ───────────────────────────►│  ouvindo
+   │◄──────────── {"type":"vad","event":"start"} ───│
+   │── [PCM 16 kHz] ... ───────────────────────────►│
+   │◄──────────── {"type":"vad","event":"end"} ─────│
+   │◄──────────── {"type":"transcript", ...} ───────│  pensando (microfone ignorado)
+   │◄──────────── {"type":"response_start"} ────────│
+   │◄──────────── {"type":"response_text"} ─────────│
+   │◄──────────── {"type":"audio_start"} ───────────│  falando
+   │◄──────────── [PCM 22 kHz] ... ─────────────────│
+   │◄──────────── {"type":"response_text"} ─────────│
+   │◄──────────── [PCM 22 kHz] ... ─────────────────│
+   │◄──────────── {"type":"audio_end"} ─────────────│
+   │◄──────────── {"type":"response_end"} ──────────│
+   │   (termina de tocar)                            │
+   │── {"type":"playback_end", ...} ───────────────►│  ouvindo de novo
 ```
 
 ## Handshake
@@ -36,8 +49,8 @@ Antes do `ready`, o servidor rejeita qualquer áudio.
 ```json
 {
   "type": "hello",
-  "protocol": 1,
-  "client": "agatha-client-windows/0.1",
+  "protocol": 2,
+  "client": "agatha-client/0.2 (win32)",
   "token": "<AGATHA_TOKEN>",
   "audio": {"encoding": "pcm_s16le", "sample_rate": 16000, "channels": 1}
 }
@@ -45,18 +58,19 @@ Antes do `ready`, o servidor rejeita qualquer áudio.
 
 | campo      | obrigatório | descrição                                                      |
 |------------|-------------|----------------------------------------------------------------|
-| `protocol` | sim         | versão do protocolo que o cliente fala. Hoje só `1` é aceita   |
+| `protocol` | sim         | versão do protocolo. Só `2` é aceita                           |
 | `client`   | não         | identificação livre do cliente, usada só em log                |
 | `token`    | sim         | segredo compartilhado (`AGATHA_TOKEN` no `.env` do servidor)   |
-| `audio`    | sim         | formato do áudio. Hoje só `pcm_s16le`, `16000`, `1` é aceito   |
+| `audio`    | sim         | formato do microfone. Só `pcm_s16le`, `16000`, `1` é aceito    |
 
 ### `ready` (servidor → cliente)
 
 ```json
 {
   "type": "ready",
-  "protocol": 1,
+  "protocol": 2,
   "session": "3f9c2a71",
+  "output_audio": {"encoding": "pcm_s16le", "sample_rate": 22050, "channels": 1},
   "vad": {
     "threshold": 0.5,
     "min_silence_ms": 500,
@@ -67,33 +81,38 @@ Antes do `ready`, o servidor rejeita qualquer áudio.
 }
 ```
 
-`vad` informa os parâmetros em uso, só para referência e log do cliente.
+`output_audio` é o formato das respostas faladas; a taxa depende da voz do TTS. `vad` informa os
+parâmetros em uso, só para referência e log.
 
-## Áudio (cliente → servidor)
+## Áudio do microfone (cliente → servidor)
 
 - Frames **binários** de PCM com sinal, 16 bits, little-endian (`s16le`), 16 kHz, mono.
 - Tamanho recomendado: **512 amostras** (32 ms, 1024 bytes), o bloco nativo do VAD. O servidor
-  aceita qualquer tamanho e reagrupa internamente, mas o número de bytes precisa ser par.
-- O cliente envia no ritmo em que captura, sem acumular. O servidor faz a detecção de fala.
+  aceita qualquer tamanho e reagrupa, mas o número de bytes precisa ser par.
+- O cliente envia no ritmo em que captura e **para de enviar** enquanto uma resposta está em
+  andamento (de `response_start` até mandar o `playback_end`).
+- **Posição no fluxo:** o servidor conta *todas* as amostras recebidas na sessão, inclusive as que
+  ele ignora durante uma resposta. Os campos `audio_ms` e `speech_end_ms` se referem a essa
+  contagem, que o cliente reproduz contando as amostras que enviou.
 
-## Eventos do servidor
+## Eventos de fala
 
 ### `vad`
 
 ```json
 {"type": "vad", "event": "start", "segment": 1, "audio_ms": 1216}
-{"type": "vad", "event": "end", "segment": 1, "audio_ms": 3840, "reason": "silence"}
+{"type": "vad", "event": "end", "segment": 1, "audio_ms": 3840, "speech_end_ms": 3328, "reason": "silence"}
 ```
 
-| campo      | descrição                                                                          |
-|------------|------------------------------------------------------------------------------------|
-| `event`    | `start`: fala confirmada. `end`: fim da frase                                       |
-| `segment`  | número sequencial da frase na sessão, começando em 1                                |
-| `audio_ms` | posição no fluxo de áudio da sessão. No `start` é o início real da fala; no `end` é onde o fim foi detectado |
-| `reason`   | só no `end`: `silence` (silêncio de `min_silence_ms`) ou `max_length` (`max_segment_s` atingido) |
+| campo           | descrição                                                                 |
+|-----------------|---------------------------------------------------------------------------|
+| `event`         | `start`: fala confirmada. `end`: fim da frase                              |
+| `segment`       | número sequencial da frase na sessão, começando em 1                       |
+| `audio_ms`      | no `start`, o início real da fala; no `end`, onde o fim foi detectado      |
+| `speech_end_ms` | só no `end`: fim do último bloco com fala. É o "fim da fala" da medição de ponta a ponta |
+| `reason`        | só no `end`: `silence` ou `max_length`                                     |
 
-O `start` só é emitido depois de `min_speech_ms` de fala, o que filtra estalos e ruídos curtos.
-Um trecho que não chega a esse mínimo é descartado sem nenhum evento.
+O `start` só sai depois de `min_speech_ms` de fala. Trechos mais curtos são descartados sem evento.
 
 ### `transcript`
 
@@ -102,27 +121,105 @@ Um trecho que não chega a esse mínimo é descartado sem nenhum evento.
   "type": "transcript",
   "segment": 1,
   "text": "Qual o tamanho da tablespace USERS?",
+  "timings": {"speech_ms": 2100, "endpoint_ms": 512, "queue_ms": 0, "stt_ms": 341, "total_ms": 853}
+}
+```
+
+Os tempos são os mesmos da v1 (`total_ms` vai do último bloco com fala até o texto pronto). Se o
+texto não estiver vazio, o servidor **inicia uma resposta** e passa a ignorar o microfone. Texto
+vazio não gera resposta.
+
+## Respostas
+
+### `response_start`
+
+```json
+{"type": "response_start", "response": 1, "segment": 1}
+```
+
+`response` é o número sequencial da resposta na sessão; `segment` é a frase que a originou.
+
+### `response_text`
+
+```json
+{"type": "response_text", "response": 1, "text": "Oi, Rei."}
+```
+
+Um trecho do texto da resposta, já limpo, para exibir. Chega trecho a trecho, cada um logo antes
+do áudio correspondente.
+
+### `audio_start` e áudio da resposta
+
+```json
+{"type": "audio_start", "response": 1, "encoding": "pcm_s16le", "sample_rate": 22050, "channels": 1}
+```
+
+Enviado uma vez por resposta, antes do primeiro frame de áudio. Em seguida vêm frames **binários**
+de PCM no formato indicado, com até 4096 amostras cada (~186 ms a 22 050 Hz). Como há uma resposta
+de cada vez, todo frame binário entre `audio_start` e `audio_end` pertence a ela.
+
+### `audio_end`
+
+```json
+{"type": "audio_end", "response": 1}
+```
+
+### `response_end`
+
+```json
+{
+  "type": "response_end",
+  "response": 1,
+  "reason": "done",
+  "text": "Oi, Rei. Tudo certo por aqui.",
   "timings": {
-    "speech_ms": 2100,
-    "endpoint_ms": 512,
-    "queue_ms": 0,
-    "stt_ms": 341,
-    "total_ms": 853
+    "stt_ms": 853,
+    "llm_first_token_ms": 1121,
+    "first_chunk_ms": 1402,
+    "tts_first_ms": 38,
+    "first_audio_ms": 1447,
+    "audio_ms": 2310
   }
 }
 ```
 
-| campo         | descrição                                                                  |
-|---------------|----------------------------------------------------------------------------|
-| `speech_ms`   | duração do segmento de fala (sem o pre-roll)                               |
-| `endpoint_ms` | tempo real entre a chegada do último bloco com fala e a detecção do fim    |
-| `queue_ms`    | espera na fila de transcrição (a GPU atende uma frase por vez)             |
-| `stt_ms`      | tempo de transcrição                                                       |
-| `total_ms`    | do último bloco com fala até o texto pronto: a parte do STT na meta de 2 s |
+| campo    | descrição                                                             |
+|----------|-----------------------------------------------------------------------|
+| `reason` | `done` (resposta completa) ou `error` (falha no LLM ou no TTS)        |
+| `text`   | texto completo da resposta, limpo                                     |
 
-Um segmento que o Whisper transcreve como texto vazio gera `transcript` com `"text": ""`.
+Tempos, em ms, **contados a partir do último bloco com fala** (o mesmo ponto do `speech_end_ms`),
+no relógio do servidor:
 
-### `error`
+| campo                | até quando                                          |
+|----------------------|-----------------------------------------------------|
+| `stt_ms`             | transcrição pronta                                  |
+| `llm_first_token_ms` | primeiro token do LLM                               |
+| `first_chunk_ms`     | primeiro trecho de texto pronto para o TTS          |
+| `tts_first_ms`       | duração da síntese desse primeiro trecho (não acumulado) |
+| `first_audio_ms`     | primeiro frame de áudio enviado                     |
+| `audio_ms`           | duração total do áudio da resposta                  |
+
+Uma resposta com `reason: "error"` pode não ter áudio (sem `audio_start`/`audio_end`).
+
+### `playback_end` (cliente → servidor)
+
+```json
+{"type": "playback_end", "response": 1, "e2e_ms": 1650}
+```
+
+O cliente envia depois de tocar todo o áudio da resposta, ou logo após o `response_end` se não
+houve áudio. O servidor então zera o VAD e volta a ouvir.
+
+| campo    | obrigatório | descrição |
+|----------|-------------|-----------|
+| `response` | sim       | a resposta que terminou de tocar |
+| `e2e_ms`   | não       | **fim da fala → primeiro som**, medido pelo cliente: do momento em que capturou a amostra na posição `speech_end_ms` até o primeiro áudio da resposta chegar à saída de som (incluindo a latência de saída informada pelo driver). `null` se não houve áudio |
+
+Se o `playback_end` não chegar até 15 s depois da duração do áudio, o servidor volta a ouvir
+mesmo assim.
+
+## Erros
 
 ```json
 {"type": "error", "code": "unauthorized", "message": "token inválido"}
@@ -132,7 +229,7 @@ Um segmento que o Whisper transcreve como texto vazio gera `transcript` com `"te
 |------------------------|------------------------------------------------|------------------------------|
 | `bad_message`          | JSON inválido, `type` ausente ou inesperado    | não; sim (1002) se for a 1ª mensagem |
 | `hello_timeout`        | nenhum `hello` em 5 s                          | sim (1008)                   |
-| `unsupported_protocol` | versão de `protocol` não suportada             | sim (1002)                   |
+| `unsupported_protocol` | versão de `protocol` diferente de 2            | sim (1002)                   |
 | `unsupported_audio`    | formato de áudio diferente do aceito           | sim (1003)                   |
 | `unauthorized`         | token ausente ou inválido                      | sim (1008)                   |
 | `audio_before_ready`   | frame binário antes do handshake               | sim (1008)                   |
@@ -141,10 +238,12 @@ Um segmento que o Whisper transcreve como texto vazio gera `transcript` com `"te
 
 ## Encerramento
 
-O cliente pode fechar a conexão a qualquer momento. Uma frase em andamento é descartada.
+O cliente pode fechar a conexão a qualquer momento. Uma frase ou resposta em andamento é
+descartada, e o histórico da conversa daquela sessão é perdido.
 
 ## Histórico de versões
 
-| versão | fase | mudanças            |
-|--------|------|---------------------|
-| 1      | 1    | versão inicial      |
+| versão | fase | mudanças |
+|--------|------|----------|
+| 1      | 1    | versão inicial: microfone → transcrições |
+| 2      | 2    | respostas faladas (`response_*`, `audio_*`, áudio binário do servidor), half-duplex com `playback_end`, `speech_end_ms` no `vad end`, `output_audio` no `ready`, medição de ponta a ponta no cliente |
