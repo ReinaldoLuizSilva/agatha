@@ -130,7 +130,7 @@ Um segmento que o Whisper transcreve como texto vazio gera `transcript` com `"te
 
 | `code`                 | quando                                         | fecha a conexão? (código WS) |
 |------------------------|------------------------------------------------|------------------------------|
-| `bad_message`          | JSON inválido, `type` ausente ou desconhecido  | não                          |
+| `bad_message`          | JSON inválido, `type` ausente ou inesperado    | não; sim (1002) se for a 1ª mensagem |
 | `hello_timeout`        | nenhum `hello` em 5 s                          | sim (1008)                   |
 | `unsupported_protocol` | versão de `protocol` não suportada             | sim (1002)                   |
 | `unsupported_audio`    | formato de áudio diferente do aceito           | sim (1003)                   |
