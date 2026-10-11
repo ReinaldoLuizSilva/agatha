@@ -1,6 +1,6 @@
 # ADR-001: Arquitetura inicial da Agatha
 
-- **Status:** Aceito
+- **Status:** Aceito (item 5 e a linha STT da tabela substituídos pelo [ADR-002](0002-stt-faster-whisper-small-gpu.md))
 - **Data:** 2026-10-11
 
 ## Contexto

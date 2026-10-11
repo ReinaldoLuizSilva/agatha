@@ -26,7 +26,8 @@ e no trabalho (infra, Oracle, Zabbix). Também é peça de portfólio Cloud/DevO
 - Driver NVIDIA fixado no branch **580** (repo `epel-nvidia-580` do negativo17). O branch 590+ não suporta Pascal.
 - Não adicionar repos NVIDIA que tragam driver 590+, nem usar os módulos open da NVIDIA (não suportam Pascal).
 - CUDA **12.x** para compilar/rodar (o `nvidia-smi` mostra "CUDA 13.0", mas isso é só o máximo do driver; o toolkit 13 não suporta Pascal).
-- Orçamento de VRAM: 4 GB. Plano inicial: LLM 3–4B quantizado na GPU, STT na CPU. Medir antes de mudar.
+- Orçamento de VRAM: 4 GB. STT (faster-whisper `small`, int8) na GPU ~0,4 GB; LLM 3–4B quantizado até ~3,4 GB
+  (ADR-002). Medir antes de mudar.
 - Kernel UEK atualizado exige `kernel-uek-devel` da mesma versão para o DKMS recompilar.
 
 ## Decisões já tomadas
