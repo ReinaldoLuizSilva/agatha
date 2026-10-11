@@ -21,8 +21,12 @@ class STTConfig:
     models_dir: str = "/dados/agatha/models/whisper"
     cpu_threads: int = 4
     # Vocabulário que ajuda o Whisper com nomes e jargão (plano B do ADR-002). Medido na Fase 2:
-    # "Agatha" deixou de virar "Álvaro" e o tempo de transcrição não mudou.
-    initial_prompt: str | None = "Agatha, Zabbix, Oracle, trigger, tablespace, Linux, Podman"
+    # "Agatha" deixou de virar "Álvaro" e o tempo de transcrição não mudou. Na Fase 3 entraram os
+    # termos que o teste real no Windows errou ("hosts" virava "roaches"/"roxas").
+    initial_prompt: str | None = (
+        "Agatha, Zabbix, Oracle, trigger, tablespace, host, hosts, template, item, Grafana, "
+        "PostgreSQL, housekeeping, Linux, Podman"
+    )
 
 
 def preload_cuda_libs() -> None:

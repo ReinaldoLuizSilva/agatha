@@ -71,6 +71,7 @@ Antes do `ready`, o servidor rejeita qualquer áudio.
   "protocol": 2,
   "session": "3f9c2a71",
   "output_audio": {"encoding": "pcm_s16le", "sample_rate": 22050, "channels": 1},
+  "wake": {"enabled": true, "words": ["agatha", "agata", "agatah"], "conversation_s": 10},
   "vad": {
     "threshold": 0.5,
     "min_silence_ms": 500,
@@ -82,8 +83,9 @@ Antes do `ready`, o servidor rejeita qualquer áudio.
 }
 ```
 
-`output_audio` é o formato das respostas faladas; a taxa depende da voz do TTS. `vad` informa os
-parâmetros em uso, só para referência e log.
+`output_audio` é o formato das respostas faladas; a taxa depende da voz do TTS. `wake` descreve a
+wake word ([ADR-008](adr/0008-wake-word-pela-transcricao.md)): se está ligada, as palavras aceitas e
+a duração do modo conversa. `vad` informa os parâmetros em uso, só para referência e log.
 
 ## Áudio do microfone (cliente → servidor)
 
@@ -121,14 +123,19 @@ O `start` só sai depois de `min_speech_ms` de fala. Trechos mais curtos são de
 {
   "type": "transcript",
   "segment": 1,
-  "text": "Qual o tamanho da tablespace USERS?",
+  "text": "Agatha, qual o tamanho da tablespace USERS?",
+  "addressed": true,
   "timings": {"speech_ms": 2100, "endpoint_ms": 512, "queue_ms": 0, "stt_ms": 341, "total_ms": 853}
 }
 ```
 
+`addressed` diz se a fala era para a Agatha: o nome entre as 4 primeiras ou as 2 últimas palavras,
+fala iniciada no modo conversa (até `conversation_s` depois da última resposta) ou continuação de
+uma fala que era para ela. Se for `false`, não há resposta.
+
 Os tempos são os mesmos da v1 (`total_ms` vai do último bloco com fala até o texto pronto). Se o
-texto não estiver vazio, o servidor **inicia uma resposta** e passa a ignorar o microfone. Texto
-vazio não gera resposta.
+texto não estiver vazio e `addressed` for `true`, o servidor **inicia uma resposta** e passa a
+ignorar o microfone. Texto vazio não gera resposta.
 
 **Frase cortada por uma pausa:** se o texto parecer incompleto (termina em reticências, vírgula ou
 numa palavra como "e", "de", "que", "para"), o servidor espera até `continuation_ms` por uma
@@ -254,3 +261,4 @@ descartada, e o histórico da conversa daquela sessão é perdido.
 |--------|------|----------|
 | 1      | 1    | versão inicial: microfone → transcrições |
 | 2      | 2    | respostas faladas (`response_*`, `audio_*`, áudio binário do servidor), half-duplex com `playback_end`, `speech_end_ms` no `vad end`, `output_audio` no `ready`, medição de ponta a ponta no cliente |
+| 2 (+)  | 2–3  | campos opcionais, compatíveis: `continuation_ms` no `ready.vad` (frase cortada), `wake` no `ready` e `addressed` no `transcript` (wake word) |

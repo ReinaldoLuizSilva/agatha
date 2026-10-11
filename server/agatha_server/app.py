@@ -7,6 +7,9 @@ Cada conexão é uma `Session` com dois estados (ADR-006):
 
 Se a transcrição parecer cortada no meio (`looks_incomplete`), ela é segurada por
 `continuation_ms`: se a pessoa voltar a falar, as partes são juntadas numa pergunta só.
+
+Wake word (ADR-008): só responde a falas que chamam "Agatha" pelo nome, ou que começam dentro do
+"modo conversa" (alguns segundos depois de cada resposta).
 """
 
 import asyncio
@@ -27,6 +30,7 @@ from .config import ServerConfig
 from .conversation import Audio, Conversation, Done, TextChunk
 from .prompts import system_message
 from .text import looks_incomplete
+from .wake import is_addressed
 from .vad import Segmenter, SileroVAD, SpeechEnd, SpeechStart
 
 log = logging.getLogger(__name__)
@@ -98,7 +102,7 @@ class AgathaServer:
         except protocol.ProtocolError as e:
             await self._reject(ws, e)
             return None
-        await ws.send(protocol.ready(session_id, self.config.vad, self.output_sample_rate))
+        await ws.send(protocol.ready(session_id, self.config.vad, self.output_sample_rate, self.config.wake))
         return hello
 
     async def _reject(self, ws: ServerConnection, e: protocol.ProtocolError) -> None:
@@ -129,6 +133,7 @@ class Session:
         self._held: tuple[SpeechEnd, str, float] | None = None
         self._hold_timer: asyncio.TimerHandle | None = None
         self._speaking = False  # há uma frase confirmada em andamento (entre vad start e end)
+        self._awake_until = 0.0  # fim do "modo conversa" (relógio monotônico)
         self._tasks: set[asyncio.Task] = set()
 
     async def run(self) -> None:
@@ -198,7 +203,8 @@ class Session:
             self.id, event.segment, text, event.speech_ms / 1000,
             timings["endpoint_ms"], timings["stt_ms"], timings["total_ms"],
         )
-        await self._send(protocol.transcript(event.segment, text, timings))
+        addressed = self._addressed(event, text)
+        await self._send(protocol.transcript(event.segment, text, timings, addressed))
         if self.state != self.LISTENING:
             if text:
                 log.info("[%s] #%d ignorada: resposta em andamento (half-duplex)", self.id, event.segment)
@@ -206,6 +212,9 @@ class Session:
         if not text:
             if self._held and self._hold_timer is None:  # a "continuação" era só ruído
                 self._release_held()
+            return
+        if not addressed:
+            log.info("[%s] #%d ignorada: não chamou a Agatha", self.id, event.segment)
             return
         if self._held:
             text = f"{self._held[1]} {text}"
@@ -223,6 +232,14 @@ class Session:
                 self._hold_timer = asyncio.get_running_loop().call_later(continuation / 1000, self._release_held)
             return
         self._start_response(event, text, finished)
+
+    def _addressed(self, event: SpeechEnd, text: str) -> bool:
+        """A fala é para a Agatha? Nome no começo/fim, modo conversa ou continuação de uma que era."""
+        wake = self.server.config.wake
+        if not wake.enabled or self._held is not None:
+            return True
+        started_at = event.last_speech_at - event.speech_ms / 1000
+        return started_at <= self._awake_until or is_addressed(text, wake)
 
     def _release_held(self) -> None:
         self._hold_timer = None
@@ -316,6 +333,8 @@ class Session:
         self.segmenter.reset()
         self.state = self.LISTENING
         self.current_response = None
+        # modo conversa: por alguns segundos, não precisa chamar pelo nome
+        self._awake_until = time.monotonic() + self.server.config.wake.conversation_s
 
 
 async def run(config: ServerConfig, transcriber: SupportsTranscribe, llm, synthesizer) -> None:

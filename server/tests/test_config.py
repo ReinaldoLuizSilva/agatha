@@ -32,3 +32,14 @@ def test_env_file_nao_sobrescreve_ambiente(tmp_path):
 def test_valor_invalido(tmp_path):
     with pytest.raises(ConfigError, match="AGATHA_PORT"):
         load_config({"AGATHA_TOKEN": "x", "AGATHA_PORT": "abc", "AGATHA_ENV_FILE": str(tmp_path / "x")})
+
+
+def test_wake_word(tmp_path):
+    base = {"AGATHA_TOKEN": "x", "AGATHA_ENV_FILE": str(tmp_path / "x")}
+    config = load_config(base)
+    assert config.wake.enabled and "agatha" in config.wake.words and config.wake.conversation_s == 10
+    config = load_config({**base, "AGATHA_REQUIRE_WAKE_WORD": "false", "AGATHA_WAKE_WORDS": "jarvis, sexta",
+                          "AGATHA_CONVERSATION_S": "5"})
+    assert (config.wake.enabled, config.wake.words, config.wake.conversation_s) == (False, ("jarvis", "sexta"), 5.0)
+    with pytest.raises(ConfigError, match="REQUIRE_WAKE_WORD"):
+        load_config({**base, "AGATHA_REQUIRE_WAKE_WORD": "talvez"})

@@ -1,6 +1,6 @@
 # ADR-001: Arquitetura inicial da Agatha
 
-- **Status:** Aceito (item 5 e a linha STT da tabela substituídos pelo [ADR-002](0002-stt-faster-whisper-small-gpu.md))
+- **Status:** Aceito (item 5 e a linha STT da tabela substituídos pelo [ADR-002](0002-stt-faster-whisper-small-gpu.md); wake word no cliente substituída pela detecção na transcrição no [ADR-008](0008-wake-word-pela-transcricao.md))
 - **Data:** 2026-10-11
 
 ## Contexto

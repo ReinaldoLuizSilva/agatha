@@ -6,6 +6,7 @@ import json
 import numpy as np
 
 from .vad import SpeechEnd, SpeechStart, VADConfig
+from .wake import WakeConfig
 
 PROTOCOL_VERSION = 2
 AUDIO_FORMAT = {"encoding": "pcm_s16le", "sample_rate": 16000, "channels": 1}
@@ -80,12 +81,13 @@ def output_audio_format(sample_rate: int) -> dict:
     return {"encoding": "pcm_s16le", "sample_rate": sample_rate, "channels": 1}
 
 
-def ready(session: str, vad: VADConfig, output_sample_rate: int) -> str:
+def ready(session: str, vad: VADConfig, output_sample_rate: int, wake: WakeConfig = WakeConfig()) -> str:
     return _dump({
         "type": "ready",
         "protocol": PROTOCOL_VERSION,
         "session": session,
         "output_audio": output_audio_format(output_sample_rate),
+        "wake": {"enabled": wake.enabled, "words": list(wake.words), "conversation_s": wake.conversation_s},
         "vad": {
             "threshold": vad.threshold,
             "min_silence_ms": vad.min_silence_ms,
@@ -110,8 +112,9 @@ def vad_event(event: SpeechStart | SpeechEnd) -> str:
     })
 
 
-def transcript(segment: int, text: str, timings: dict) -> str:
-    return _dump({"type": "transcript", "segment": segment, "text": text, "timings": timings})
+def transcript(segment: int, text: str, timings: dict, addressed: bool = True) -> str:
+    return _dump({"type": "transcript", "segment": segment, "text": text, "addressed": addressed,
+                  "timings": timings})
 
 
 def response_start(response: int, segment: int) -> str:

@@ -9,6 +9,7 @@ from .llm import LLMConfig
 from .stt import STTConfig
 from .tts import TTSConfig
 from .vad import VADConfig
+from .wake import WakeConfig
 
 
 class ConfigError(Exception):
@@ -26,6 +27,7 @@ class ServerConfig:
     llm: LLMConfig
     tts: TTSConfig
     conversation: ConversationConfig
+    wake: WakeConfig = WakeConfig()
 
 
 def load_env_file(path: Path, env: dict) -> None:
@@ -66,6 +68,19 @@ def load_config(env: dict | None = None) -> ServerConfig:
     llm_defaults = LLMConfig()
     tts_defaults = TTSConfig()
     conv_defaults = ConversationConfig()
+    wake_defaults = WakeConfig()
+
+    def flag(name: str, default: bool) -> bool:
+        value = env.get(f"AGATHA_{name}")
+        if value in (None, ""):
+            return default
+        if value.lower() in ("1", "true", "sim", "yes", "on"):
+            return True
+        if value.lower() in ("0", "false", "nao", "não", "no", "off"):
+            return False
+        raise ConfigError(f"AGATHA_{name}={value!r} inválido (use true/false)")
+
+    words = get("WAKE_WORDS", None)
     return ServerConfig(
         host=get("HOST", "0.0.0.0"),
         port=get("PORT", 8765, int),
@@ -101,5 +116,10 @@ def load_config(env: dict | None = None) -> ServerConfig:
         ),
         conversation=ConversationConfig(
             history_turns=get("HISTORY_TURNS", conv_defaults.history_turns, int),
+        ),
+        wake=WakeConfig(
+            enabled=flag("REQUIRE_WAKE_WORD", wake_defaults.enabled),
+            words=tuple(w.strip() for w in words.split(",") if w.strip()) if words else wake_defaults.words,
+            conversation_s=get("CONVERSATION_S", wake_defaults.conversation_s, float),
         ),
     )

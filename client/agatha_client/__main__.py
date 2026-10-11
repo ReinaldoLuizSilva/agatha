@@ -36,8 +36,9 @@ FATAL_ERRORS = {"unauthorized", "unsupported_protocol", "unsupported_audio"}
 
 
 class Session:
-    def __init__(self, ws, source: MicSource | WavSource, player: Player | NullPlayer):
+    def __init__(self, ws, source: MicSource | WavSource, player: Player | NullPlayer, wake: dict | None = None):
         self.ws = ws
+        self.wake = wake or {}
         self.source = source
         self.player = player
         self.can_send = asyncio.Event()  # limpo durante uma resposta (half-duplex)
@@ -76,9 +77,12 @@ class Session:
                 self.speech_end_ms[msg["segment"]] = msg["speech_end_ms"]
         elif kind == "transcript":
             t = msg["timings"]
-            print(f"  #{msg['segment']} você: {msg['text'] or '(nada reconhecido)'}  "
-                  f"[stt {t['stt_ms']} ms]", flush=True)
-            if not msg["text"]:
+            if msg.get("addressed", True):
+                print(f"  #{msg['segment']} você: {msg['text'] or '(nada reconhecido)'}  "
+                      f"[stt {t['stt_ms']} ms]", flush=True)
+            else:  # não chamou a Agatha (wake word): ela não vai responder
+                print(f"  · ignorado (sem \"Agatha\"): {msg['text']}", flush=True)
+            if not msg["text"] or not msg.get("addressed", True):
                 self.pending.discard(msg["segment"])
         elif kind == "response_start":
             self.can_send.clear()
@@ -109,7 +113,10 @@ class Session:
         server_ms = msg["timings"].get("first_audio_ms")
         detail = f" (servidor {server_ms} ms + rede/reprodução {e2e_ms - server_ms} ms)" if e2e_ms and server_ms else ""
         status = "" if msg["reason"] == "done" else f" [{msg['reason']}]"
-        print(f"\n    ⏱ fim da fala → primeiro som: {e2e_ms} ms{detail}{status}\n", flush=True)
+        print(f"\n    ⏱ fim da fala → primeiro som: {e2e_ms} ms{detail}{status}", flush=True)
+        if self.wake.get("enabled"):
+            print(f"    (pode continuar sem dizer \"Agatha\" por {self.wake['conversation_s']:g} s)", flush=True)
+        print(flush=True)
         self.pending.discard(reply["segment"])
         self.can_send.set()
 
@@ -136,9 +143,15 @@ async def session(url: str, token: str, source: MicSource | WavSource, args) -> 
         player = NullPlayer(rate) if args.no_playback else Player(args.output_device, rate)
         print(f"conectado a {url} (sessão {reply['session']}, resposta a {rate} Hz, "
               f"latência de saída {player.latency * 1000:.0f} ms)")
-        print("Pode falar. Ctrl+C para sair.\n" if not source.finite else "Enviando o arquivo...\n")
+        wake = reply.get("wake") or {}
+        if source.finite:
+            print("Enviando o arquivo...\n")
+        elif wake.get("enabled"):
+            print("Comece chamando \"Agatha\" (ex.: \"Agatha, que horas são?\"). Ctrl+C para sair.\n")
+        else:
+            print("Pode falar. Ctrl+C para sair.\n")
 
-        s = Session(ws, source, player)
+        s = Session(ws, source, player, wake)
         receiver = asyncio.create_task(s.receive_loop())
         sender = asyncio.create_task(s.send_loop())
         try:

@@ -82,10 +82,14 @@ def utterance() -> list[bytes]:
 
 
 def with_server(scenario, transcript: str = "olá agatha", hello_timeout: float = 5.0, grace: float = 15.0,
-                transcriber=None, continuation_ms: int = 300):
+                transcriber=None, continuation_ms: int = 300, conversation_s: float = 10.0):
     """Sobe o servidor numa porta livre, roda o cenário do cliente e devolve o resultado."""
     FakeConversation.heard = []
-    config = dataclasses.replace(CONFIG, vad=dataclasses.replace(CONFIG.vad, continuation_ms=continuation_ms))
+    config = dataclasses.replace(
+        CONFIG,
+        vad=dataclasses.replace(CONFIG.vad, continuation_ms=continuation_ms),
+        wake=dataclasses.replace(CONFIG.wake, conversation_s=conversation_s),
+    )
 
     async def main():
         app = AgathaServer(
@@ -137,6 +141,8 @@ def test_handshake():
     assert ready["protocol"] == 2
     assert ready["output_audio"] == {"encoding": "pcm_s16le", "sample_rate": RATE, "channels": 1}
     assert ready["vad"]["min_silence_ms"] == 500
+    assert ready["wake"]["enabled"] is True
+    assert "agatha" in ready["wake"]["words"]
 
 
 async def expect_rejection(ws) -> tuple[dict, int]:
@@ -288,13 +294,13 @@ def test_frase_incompleta_e_juntada_com_a_continuacao():
         await send_all(ws, utterance())  # "tablespace users?" logo em seguida
         return await recv_until(ws, "response_end")
 
-    msgs = with_server(scenario, transcriber=SequenceTranscriber(["qual o tamanho da", "tablespace users?"]))
+    msgs = with_server(scenario, transcriber=SequenceTranscriber(["agatha, qual o tamanho da", "tablespace users?"]))
     assert [m["text"] for m in msgs if isinstance(m, dict) and m["type"] == "transcript"] == [
-        "qual o tamanho da", "tablespace users?"
+        "agatha, qual o tamanho da", "tablespace users?"
     ]
     starts = [m for m in msgs if isinstance(m, dict) and m["type"] == "response_start"]
     assert starts == [{"type": "response_start", "response": 1, "segment": 2}]
-    assert FakeConversation.heard == ["qual o tamanho da tablespace users?"]
+    assert FakeConversation.heard == ["agatha, qual o tamanho da tablespace users?"]
 
 
 def test_frase_incompleta_sem_continuacao_responde_apos_o_prazo():
@@ -306,9 +312,9 @@ def test_frase_incompleta_sem_continuacao_responde_apos_o_prazo():
         await recv_until(ws, "response_start")
         return time.monotonic() - t0
 
-    waited = with_server(scenario, transcriber=SequenceTranscriber(["me fala sobre o"]), continuation_ms=300)
+    waited = with_server(scenario, transcriber=SequenceTranscriber(["agatha, me fala sobre o"]), continuation_ms=300)
     assert 0.25 <= waited < 2
-    assert FakeConversation.heard == ["me fala sobre o"]
+    assert FakeConversation.heard == ["agatha, me fala sobre o"]
 
 
 def test_continuacao_vazia_responde_ao_que_tinha():
@@ -318,8 +324,8 @@ def test_continuacao_vazia_responde_ao_que_tinha():
         await send_all(ws, utterance())  # ruído que vira transcrição vazia
         return await recv_until(ws, "response_end")
 
-    with_server(scenario, transcriber=SequenceTranscriber(["me fala sobre o", ""]), continuation_ms=5000)
-    assert FakeConversation.heard == ["me fala sobre o"]
+    with_server(scenario, transcriber=SequenceTranscriber(["agatha, me fala sobre o", ""]), continuation_ms=5000)
+    assert FakeConversation.heard == ["agatha, me fala sobre o"]
 
 
 def test_frase_completa_nao_espera():
@@ -331,5 +337,55 @@ def test_frase_completa_nao_espera():
         await recv_until(ws, "response_start")
         return time.monotonic() - t0
 
-    waited = with_server(scenario, transcriber=SequenceTranscriber(["que horas são?"]), continuation_ms=5000)
+    waited = with_server(scenario, transcriber=SequenceTranscriber(["agatha, que horas são?"]), continuation_ms=5000)
     assert waited < 0.5
+
+
+# --- Wake word (ADR-008) ----------------------------------------------------------------
+
+def playback_end(n: int) -> str:
+    return json.dumps({"type": "playback_end", "response": n, "e2e_ms": None})
+
+
+def test_fala_sem_o_nome_e_ignorada():
+    async def scenario(ws):
+        await start(ws)
+        await send_all(ws, utterance())  # "que horas são?" (não chamou)
+        await send_all(ws, utterance())  # "agatha, que horas são?"
+        return await recv_until(ws, "response_end")
+
+    msgs = with_server(scenario, transcriber=SequenceTranscriber(["que horas são?", "agatha, que horas são?"]))
+    transcripts = [m for m in msgs if isinstance(m, dict) and m["type"] == "transcript"]
+    assert [t["addressed"] for t in transcripts] == [False, True]
+    assert FakeConversation.heard == ["agatha, que horas são?"]
+
+
+def test_modo_conversa_aceita_fala_sem_o_nome():
+    async def scenario(ws):
+        await start(ws)
+        await send_all(ws, utterance())
+        await recv_until(ws, "response_end")
+        await ws.send(playback_end(1))
+        await send_all(ws, utterance())  # logo depois, sem o nome
+        return await recv_until(ws, "response_end")
+
+    with_server(scenario, transcriber=SequenceTranscriber(["agatha, o que é o zabbix?", "e um item?"]))
+    assert FakeConversation.heard == ["agatha, o que é o zabbix?", "e um item?"]
+
+
+def test_modo_conversa_expira():
+    async def scenario(ws):
+        await start(ws)
+        await send_all(ws, utterance())
+        await recv_until(ws, "response_end")
+        await ws.send(playback_end(1))
+        # janela de 0,2 s já passou; a pausa cobre também os 640 ms de "fala" do áudio enviado de uma
+        # vez (o servidor estima o início da fala como fim − duração)
+        await asyncio.sleep(1.2)
+        await send_all(ws, utterance())  # sem o nome: ignorada
+        await send_all(ws, utterance())  # com o nome
+        return await recv_until(ws, "response_end")
+
+    with_server(scenario, conversation_s=0.2,
+                transcriber=SequenceTranscriber(["agatha, oi", "e o zabbix?", "agatha, e o zabbix?"]))
+    assert FakeConversation.heard == ["agatha, oi", "agatha, e o zabbix?"]
