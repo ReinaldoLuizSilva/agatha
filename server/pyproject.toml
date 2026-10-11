@@ -1,0 +1,33 @@
+[build-system]
+requires = ["setuptools>=69"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "agatha-server"
+version = "0.1.0"
+description = "Servidor da Agatha: núcleo, VAD, STT, LLM e TTS"
+requires-python = ">=3.12"
+dependencies = [
+    "faster-whisper==1.2.1",
+    "ctranslate2==4.8.2",
+    "onnxruntime==1.31.0",
+    "numpy==2.5.4",
+    "websockets==17.2",
+]
+
+[project.optional-dependencies]
+# Bibliotecas CUDA 12 para o STT na GPU (ADR-002); o host fica só com o driver.
+gpu = [
+    "nvidia-cublas-cu12==12.9.2.10",
+    "nvidia-cudnn-cu12==9.27.0.42",
+]
+dev = [
+    "pytest==9.1.1",
+    "soundfile==0.14.0",
+]
+
+[tool.setuptools.packages.find]
+include = ["agatha_server*"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
