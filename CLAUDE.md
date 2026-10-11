@@ -29,6 +29,10 @@ e no trabalho (infra, Oracle, Zabbix). Também é peça de portfólio Cloud/DevO
 - Orçamento de VRAM: 4 GB. STT (faster-whisper `small`, int8) na GPU ~0,4 GB; LLM 3–4B quantizado até ~3,4 GB
   (ADR-002). Medir antes de mudar.
 - Kernel UEK atualizado exige `kernel-uek-devel` da mesma versão para o DKMS recompilar.
+- GPU em container: NVIDIA Container Toolkit 1.20.1 (repo oficial `libnvidia-container`, que só tem o toolkit,
+  sem driver), CDI em `/etc/cdi/nvidia.yaml` (regenerado por `nvidia-cdi-refresh.path`), SELinux
+  `container_use_devices=on`. Uso: `podman run --device nvidia.com/gpu=all ...` (ver `deploy/README.md`).
+- Docker CE também está instalado no host (estudo de Kubernetes do Reinaldo, fora do projeto). Não mexer; a Agatha usa Podman.
 
 ## Decisões já tomadas
 
