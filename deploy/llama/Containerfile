@@ -1,0 +1,52 @@
+# llama.cpp (llama-server) com CUDA 12 para a GTX 1050 Ti (Pascal, sm_61).
+#
+# Compilado só para Pascal e com versão fixa do llama.cpp. O host só precisa do driver 580
+# e do NVIDIA Container Toolkit (ver deploy/README.md).
+#
+#   podman build --format docker -t localhost/agatha-llama:b11205 deploy/llama
+#   (--format docker preserva o HEALTHCHECK, que o formato OCI ignora)
+#   podman run --rm --device nvidia.com/gpu=all -p 127.0.0.1:8080:8080 \
+#     -v /dados/agatha/models/llm:/models:ro,Z localhost/agatha-llama:b11205 \
+#     -m /models/<modelo>.gguf -ngl 99
+
+ARG CUDA_VERSION=12.9.1
+
+FROM docker.io/nvidia/cuda:${CUDA_VERSION}-devel-ubi9 AS build
+ARG LLAMA_CPP_TAG=b11205
+
+RUN dnf install -y git cmake gcc-c++ && dnf clean all
+
+WORKDIR /src
+RUN git clone --depth 1 --branch ${LLAMA_CPP_TAG} https://github.com/ggml-org/llama.cpp .
+
+# - CMAKE_CUDA_ARCHITECTURES=61: só Pascal (build menor e mais rápido; CUDA 12.x ainda suporta sm_61)
+# - GGML_NATIVE=ON: otimiza a parte de CPU para o processador do próprio agatha-srv (i5-7400, AVX2),
+#   onde a imagem é compilada e executada
+# - BUILD_SHARED_LIBS=OFF: binários estáticos, a imagem final só precisa copiá-los
+RUN cmake -B build \
+        -DCMAKE_BUILD_TYPE=Release \
+        -DGGML_CUDA=ON \
+        -DCMAKE_CUDA_ARCHITECTURES=61 \
+        -DGGML_NATIVE=ON \
+        -DBUILD_SHARED_LIBS=OFF \
+        -DLLAMA_CURL=OFF \
+        -DLLAMA_BUILD_TESTS=OFF \
+    && cmake --build build --config Release -j"$(nproc)" --target llama-server llama-bench
+
+
+FROM docker.io/nvidia/cuda:${CUDA_VERSION}-runtime-ubi9
+ARG LLAMA_CPP_TAG=b11205
+LABEL org.opencontainers.image.title="agatha-llama" \
+      org.opencontainers.image.description="llama.cpp server (CUDA 12, sm_61) para a Agatha" \
+      org.opencontainers.image.version="${LLAMA_CPP_TAG}" \
+      org.opencontainers.image.source="https://github.com/ReinaldoLuizSilva/agatha"
+
+RUN dnf install -y libgomp && dnf clean all
+COPY --from=build /src/build/bin/llama-server /src/build/bin/llama-bench /usr/local/bin/
+
+# Com Podman sem root, o root do container é o usuário agatha no host.
+EXPOSE 8080
+HEALTHCHECK --interval=30s --timeout=5s --start-period=60s \
+    CMD curl -fsS http://127.0.0.1:8080/health || exit 1
+ENTRYPOINT ["llama-server"]
+CMD ["--host", "0.0.0.0", "--port", "8080"]
