@@ -1,0 +1,99 @@
+{
+  "date": "2026-10-11T16:17:27",
+  "url": "ws://127.0.0.1:8765/",
+  "speed": 1.0,
+  "gap_ms": 1000,
+  "files": [
+    "/dados/agatha/data/fleurs/pt_br/dev/7450437965739451777.wav",
+    "/dados/agatha/data/fleurs/pt_br/dev/13756794764949540594.wav",
+    "/dados/agatha/data/fleurs/pt_br/dev/13440791064404963413.wav",
+    "/dados/agatha/data/fleurs/pt_br/dev/7306106858879478280.wav",
+    "/dados/agatha/data/fleurs/pt_br/dev/13678402803289079897.wav"
+  ],
+  "results": [
+    {
+      "type": "transcript",
+      "segment": 1,
+      "text": "Insetos foram os primeiros animais a irem para o ar.",
+      "timings": {
+        "speech_ms": 2752,
+        "endpoint_ms": 512,
+        "queue_ms": 0,
+        "stt_ms": 399,
+        "total_ms": 912
+      }
+    },
+    {
+      "type": "transcript",
+      "segment": 2,
+      "text": "Sua habilidade de voaros ajudou a fugir mais facilmente de inimigos e a encontrar alimento e parceiros de maneira mais eficiente.",
+      "timings": {
+        "speech_ms": 8224,
+        "endpoint_ms": 512,
+        "queue_ms": 0,
+        "stt_ms": 496,
+        "total_ms": 1009
+      }
+    },
+    {
+      "type": "transcript",
+      "segment": 3,
+      "text": "As ilhas do leste da África estão no Oceano Índico.",
+      "timings": {
+        "speech_ms": 2752,
+        "endpoint_ms": 512,
+        "queue_ms": 0,
+        "stt_ms": 415,
+        "total_ms": 928
+      }
+    },
+    {
+      "type": "transcript",
+      "segment": 4,
+      "text": "a uma distância da costa lente da África.",
+      "timings": {
+        "speech_ms": 2336,
+        "endpoint_ms": 512,
+        "queue_ms": 0,
+        "stt_ms": 375,
+        "total_ms": 887
+      }
+    },
+    {
+      "type": "transcript",
+      "segment": 5,
+      "text": "Ela chegou a essa conclusão devido à infinidade de comentários positivos e incentivos enviados a ela por indivíduos do sexo feminino e masculino, pedindo que a medicação contraceptiva seja considerada uma necessidade médica.",
+      "timings": {
+        "speech_ms": 14976,
+        "endpoint_ms": 512,
+        "queue_ms": 0,
+        "stt_ms": 642,
+        "total_ms": 1154
+      }
+    },
+    {
+      "type": "transcript",
+      "segment": 6,
+      "text": "Uma opção cada vez mais popular para aqueles que pretendem ter um ano sabático é viajar e aprender.",
+      "timings": {
+        "speech_ms": 5440,
+        "endpoint_ms": 512,
+        "queue_ms": 0,
+        "stt_ms": 480,
+        "total_ms": 992
+      }
+    },
+    {
+      "type": "transcript",
+      "segment": 7,
+      "text": "A água está derramando sobre o dique em uma seção de 100 pés de largura.",
+      "timings": {
+        "speech_ms": 4768,
+        "endpoint_ms": 513,
+        "queue_ms": 0,
+        "stt_ms": 424,
+        "total_ms": 937
+      }
+    }
+  ]
+}
