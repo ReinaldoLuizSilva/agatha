@@ -126,5 +126,9 @@ agatha/
       Observações (sem correção): pergunta logo após guardar/esquecer fato ainda pode esperar o recálculo do cache
       (7–9 s, ADR-010); "pode esquecer o que eu te falei" depois de outro assunto faz ela perguntar qual;
       conversão tera/giga na calculadora erra ~6/10 (antigo).
-      Próximo passo: novo teste curto no Windows e decidir fechar a Fase 3 ou fazer os opcionais.
+      **3º teste no Windows em 12/10 (13 falas): tudo funcionou.** 1º som mediana 1,95 s, máx 2,17 s. Esquecer com
+      referência vaga, agatha-srv transcrito certo, RAM, calculadora (62,5 · contexto 18% → 45 · 10/3 → "3,33"),
+      tablespaces e alertas ok. Resíduo: "qual é o nome do meu banco de produção?" logo depois de guardar o fato
+      chamou guardar_fato de novo (ja_sabia; resposta certa, só o "deixa eu ver" à toa).
+      Próximo passo: o Reinaldo decide fechar a Fase 3 ou fazer os opcionais.
 - [ ] Fase 4: serviço systemd, logs, testes, README final
