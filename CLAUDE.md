@@ -122,18 +122,19 @@ agatha/
       saudável, VRAM 3,66 GB) e o teste de fumaça passou (fim da fala → 1º áudio p50 1,96 s, máx 2,18 s).
       Repositório fica privado por enquanto; licença (Piper GPL, voz "dii" CC BY-NC-ND, ADR-005) só se um dia
       ficar público. Não levantar de novo antes disso.
-- [ ] Fase 5: wake word no cliente + barge-in — **em andamento** (escopo aprovado em 12/10). Plano: 1 coleta de
-      amostras (`python -m agatha_client.record`), 2 comparar detectores (openWakeWord treinado × Vosk PT-BR com
-      gramática) → ADR-014, 3 wake word no cliente (envia só após o nome ou no modo conversa; o servidor continua
-      confirmando pela transcrição; protocolo v3), 4 barge-in (`interrupt`, cancelar LLM/TTS, "Agatha, para" sem
-      LLM; meta nome → silêncio < 300 ms), 5 cancelamento de eco (AEC do WebRTC com a referência do que tocou),
-      6 teste real no Windows. Decisões do Reinaldo: treino no agatha-srv (sem Colab nem serviço externo; parar o
-      pod durante o treino); ele usa as **caixas de som do notebook**, então o AEC é obrigatório nesta fase.
-      Porcupine descartado (fechado, chave online). Não existe modelo pronto de "Agatha"; a voz dele nas
-      amostras é o que mais vale (usuário único).
-      feito: 1. coleta (12/10): gravador guiado (`python -m agatha_client.record`, `--redo` para regravar);
-      141 falas em /dados/agatha/data/wakeword/gravacoes (manifest.jsonl: vale a última linha de cada id):
-      76 com o nome, 30 negativas, 25 de eco (mic + *.ref.wav do que tocou), 10 min de ambiente. Microfone
-      "Microfone Externo (Realtek)" do notebook; 1ª rodada de perto-001..020 perdida (estalo do conector,
-      regravada). Eco das caixas chega com atraso fixo de 289 ms (stream duplex). "a gata"/"agora"/"a garrafa"
-      viram "Agatha" no Whisper: negativas difíceis de verdade.
+- [ ] Fase 5: barge-in com wake word no cliente — **em andamento** (escopo aprovado em 12/10). Plano revisto
+      pelo ADR-014: 1 coleta ✔, 2 detectores ✔, 3 cancelamento de eco (AEC do WebRTC com a referência do que
+      tocou; o eco chega com atraso fixo de 289 ms), 4 barge-in (`interrupt`, cancelar LLM/TTS, "Agatha, para"
+      sem LLM; meta nome → silêncio < 300 ms), 5 teste real no Windows. Ele usa as **caixas de som do
+      notebook**: sem AEC o detector acerta só ~25% com ela falando.
+      Decisões do Reinaldo: treino no agatha-srv, sem Colab nem serviço externo; opção A do ADR-014 — o
+      detector do cliente serve SÓ para o barge-in, a chamada normal continua pela transcrição no servidor
+      (ADR-008). Guardar o áudio das falas do dia a dia para retreinar NÃO está autorizado (perguntar antes).
+      feito: 1. coleta (`python -m agatha_client.record`, `--redo`): 141 falas em
+      /dados/agatha/data/wakeword/gravacoes (manifest.jsonl: vale a última linha de cada id), microfone
+      "Microfone Externo (Realtek)" do notebook. 2. benchmark (`bench/wake_bench.py`): STT do servidor 98/83/100%
+      (perto/variado/longe), 2,7 falsos/h; Vosk descartado; openWakeWord treinado só com a voz dele
+      (`client/wakeword/train.py`, CPU) 90/79/75%, ~1–3 falsos/h → /dados/agatha/models/wakeword/agatha.onnx.
+      Sintéticos do Piper não ajudaram (desligados). Bug do hífen ("Agatha-srv") corrigido e no ar.
+      ATENÇÃO: treino e testes pesados sempre com `systemd-run --user --scope -p MemoryMax=5G -p
+      MemorySwapMax=0 nice -n 19` — um teste sem teto jogou o LLM no swap (1º áudio 34 s).
