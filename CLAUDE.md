@@ -119,5 +119,7 @@ agatha/
       /dados/agatha/logs + JSONL por resposta, 3 teste de fumaça + CI no GitHub Actions, 4 README final).
       feito: 1. Quadlet no systemd do usuário (ADR-013), reinício em falha testado. 2. logs em arquivo +
       registro de turnos JSONL + bench/turns_report.py. 3. teste de fumaça (server/scripts/smoke.py) e CI no
-      GitHub Actions (passa num venv limpo sem GPU; ainda não rodou no GitHub: depende do push do Reinaldo). Falta o Reinaldo rodar
+      GitHub Actions (passa num venv limpo sem GPU; ainda não rodou no GitHub: depende do push do Reinaldo).
+      4. README final (arquitetura em Mermaid, latência por etapa, índice dos ADRs).
+      Para fechar: Reinaldo liga o linger, testa um reboot (Agatha sobe sozinha) e dá push (CI roda). Falta o Reinaldo rodar
       `sudo loginctl enable-linger agatha` e testar um reboot.

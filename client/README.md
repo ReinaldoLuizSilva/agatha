@@ -2,7 +2,8 @@
 
 Cliente da Agatha, que roda no PC Windows. Ele captura o microfone, envia o áudio ao servidor
 pelo WebSocket ([protocolo v2](../docs/protocol.md)) e **toca a resposta falada** da Agatha. Toda
-a detecção de fala acontece no servidor. A wake word chega na Fase 3.
+a detecção de fala acontece no servidor, inclusive a wake word "Agatha", reconhecida pela
+transcrição ([ADR-008](../docs/adr/0008-wake-word-pela-transcricao.md)).
 
 A conversa é **half-duplex** ([ADR-006](../docs/adr/0006-protocolo-v2-half-duplex.md)): enquanto
 a Agatha pensa e fala, o microfone não é enviado. Ela volta a ouvir quando termina de falar. Por
