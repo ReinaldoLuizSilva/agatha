@@ -103,4 +103,17 @@ agatha/
       para perguntas longas).
       Atenção ao contexto: prefixo fixo do prompt tem ~1630 tokens de 4096 com 7 ferramentas (2283 com a
       memória cheia); cada ferramenta nova cresce o prompt e o tempo de pré-aquecimento (~6 s).
+      **Teste do Reinaldo no Windows em 12/10 (15 falas): tudo funcionou** (wake word, calculadora com contexto,
+      memória guardar/consultar/esquecer, Zabbix, Oracle, conceito sem ferramenta). 1º som ~1,8–2,1 s na maioria.
+      Pendências encontradas nesse teste (próxima sessão começa por aqui):
+      1. lentidão pontual: "que horas são" levou 3,5 s logo após o início (causa desconhecida; investigar nos
+         logs de agatha-server/agatha-llm); "o que você lembra de mim" 3,3 s logo após guardar fato (pré-aquecimento
+         de ~6 s em andamento — conhecido, ADR-010)
+      2. "esquece isso" → pediu "o número do fato": deveria entender o fato recém-guardado e não expor detalhe interno
+      3. Zabbix: item de memória RAM (vm.memory.utilization) sem dados → zabbix_host não informa RAM (agent2 em container?)
+      4. "62.5" da calculadora seria falado "sessenta e dois ponto cinco": normalizador trata decimal com ponto
+         sem unidade como versão (text.py)
+      5. STT de nomes: "PRDORA" → "PR Dora", "agatha-srv" → "Agatha Server" (busca por semelhança salvou o host);
+         avaliar pôr nomes de hosts/bancos no vocabulário do Whisper
+      Depois das pendências: decidir com o Reinaldo fechar a Fase 3 ou fazer os opcionais.
 - [ ] Fase 4: serviço systemd, logs, testes, README final
