@@ -121,5 +121,7 @@ agatha/
       registro de turnos JSONL + bench/turns_report.py. 3. teste de fumaça (server/scripts/smoke.py) e CI no
       GitHub Actions (passa num venv limpo sem GPU; ainda não rodou no GitHub: depende do push do Reinaldo).
       4. README final (arquitetura em Mermaid, latência por etapa, índice dos ADRs).
-      Para fechar: Reinaldo liga o linger, testa um reboot (Agatha sobe sozinha) e dá push (CI roda). Falta o Reinaldo rodar
+      Para fechar: Reinaldo liga o linger, testa um reboot (Agatha sobe sozinha) e dá push (CI roda).
+      Repositório fica privado por enquanto; licença (Piper GPL, voz "dii" CC BY-NC-ND, ADR-005) só se um dia
+      ficar público. Não levantar de novo antes disso. Falta o Reinaldo rodar
       `sudo loginctl enable-linger agatha` e testar um reboot.
