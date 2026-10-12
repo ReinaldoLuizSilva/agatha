@@ -1,0 +1,8293 @@
+{
+ "detector": "stt",
+ "description": "Whisper small CPU int8, vocabulário: Agatha, Zabbix, Oracle, trigger, tablespace, host, hosts, template, item, Grafana, PostgreSQL, housekeeping, Linux, Podman, agatha-srv, PRDORA",
+ "items": [
+  {
+   "id": "perto-001",
+   "group": "perto",
+   "text": "Agatha",
+   "duration_s": 2.5,
+   "events": [
+    {
+     "text": "Agatha",
+     "end_s": 1.472,
+     "hit": true
+    }
+   ]
+  },
+  {
+   "id": "perto-002",
+   "group": "perto",
+   "text": "Agatha?",
+   "duration_s": 2.5,
+   "events": [
+    {
+     "text": "Agatha?",
+     "end_s": 1.376,
+     "hit": true
+    }
+   ]
+  },
+  {
+   "id": "perto-003",
+   "group": "perto",
+   "text": "Agatha, que horas são?",
+   "duration_s": 3.3,
+   "events": [
+    {
+     "text": "Agatha, que horas são?",
+     "end_s": 1.856,
+     "hit": true
+    }
+   ]
+  },
+  {
+   "id": "perto-004",
+   "group": "perto",
+   "text": "Agatha, tem algum problema no Zabbix?",
+   "duration_s": 4.2,
+   "events": [
+    {
+     "text": "Agatha, Teu, premanos, Zabbix.",
+     "end_s": 2.208,
+     "hit": true
+    }
+   ]
+  },
+  {
+   "id": "perto-005",
+   "group": "perto",
+   "text": "Agatha, como está a tablespace USERS?",
+   "duration_s": 4.2,
+   "events": [
+    {
+     "text": "Agatha, como está a tablet space users?",
+     "end_s": 3.776,
+     "hit": true
+    }
+   ]
+  },
+  {
+   "id": "perto-006",
+   "group": "perto",
+   "text": "Agatha, quantas sessões tem no Oracle?",
+   "duration_s": 4.2,
+   "events": [
+    {
+     "text": "Agatha, quantas sessões tem no Oracle?",
+     "end_s": 2.688,
+     "hit": true
+    }
+   ]
+  },
+  {
+   "id": "perto-007",
+   "group": "perto",
+   "text": "Agatha, quanto é quinze por cento de duzentos?",
+   "duration_s": 5.1,
+   "events": [
+    {
+     "text": "Agatha, quanto é 15% de 200?",
+     "end_s": 4.544,
+     "hit": true
+    }
+   ]
+  },
+  {
+   "id": "perto-008",
+   "group": "perto",
+   "text": "Agatha, o que é housekeeping no Zabbix?",
+   "duration_s": 4.7,
+   "events": [
+    {
+     "text": "Agatha, housekeeping, Zabbix",
+     "end_s": 3.072,
+     "hit": true
+    }
+   ]
+  },
+  {
+   "id": "perto-009",
+   "group": "perto",
+   "text": "Agatha, me ajuda com uma coisa",
+   "duration_s": 4.2,
+   "events": [
+    {
+     "text": "Agatha, me ajuda com uma coisa?",
+     "end_s": 2.56,
+     "hit": true
+    }
+   ]
+  },
+  {
+   "id": "perto-010",
+   "group": "perto",
+   "text": "Agatha, guarda que a reunião é amanhã",
+   "duration_s": 4.7,
+   "events": [
+    {
+     "text": "Agatha, guarda reunião que há amanhã.",
+     "end_s": 3.744,
+     "hit": true
+    }
+   ]
+  },
+  {
+   "id": "perto-011",
+   "group": "perto",
+   "text": "Agatha, esquece isso",
+   "duration_s": 2.9,
+   "events": [
+    {
+     "text": "Agatha, esqueça isso.",
+     "end_s": 2.592,
+     "hit": true
+    }
+   ]
+  },
+  {
+   "id": "perto-012",
+   "group": "perto",
+   "text": "Agatha, para",
+   "duration_s": 2.5,
+   "events": [
+    {
+     "text": "Agatha, para!",
+     "end_s": 2.016,
+     "hit": true
+    }
+   ]
+  },
+  {
+   "id": "perto-013",
+   "group": "perto",
+   "text": "Agatha, chega",
+   "duration_s": 2.5,
+   "events": [
+    {
+     "text": "Agatha, shoo me.",
+     "end_s": 2.08,
+     "hit": true
+    }
+   ]
+  },
+  {
+   "id": "perto-014",
+   "group": "perto",
+   "text": "Agatha, espera",
+   "duration_s": 2.5,
+   "events": [
+    {
+     "text": "Agatha, espera!",
+     "end_s": 2.208,
+     "hit": true
+    }
+   ]
+  },
+  {
+   "id": "perto-015",
+   "group": "perto",
+   "text": "Agatha, cancela",
+   "duration_s": 2.5,
+   "events": [
+    {
+     "text": "Agatha, cancel",
+     "end_s": 1.952,
+     "hit": true
+    }
+   ]
+  },
+  {
+   "id": "perto-016",
+   "group": "perto",
+   "text": "Ei, Agatha",
+   "duration_s": 2.5,
+   "events": [
+    {
+     "text": "Hey, Agatha!",
+     "end_s": 1.536,
+     "hit": true
+    }
+   ]
+  },
+  {
+   "id": "perto-017",
+   "group": "perto",
+   "text": "Oi, Agatha, tudo bem?",
+   "duration_s": 3.3,
+   "events": [
+    {
+     "text": "O Agatha tudo certo?",
+     "end_s": 2.624,
+     "hit": true
+    }
+   ]
+  },
+  {
+   "id": "perto-018",
+   "group": "perto",
+   "text": "Bom dia, Agatha",
+   "duration_s": 2.9,
+   "events": [
+    {
+     "text": "Bom dia, Agatha.",
+     "end_s": 2.048,
+     "hit": true
+    }
+   ]
+  },
+  {
+   "id": "perto-019",
+   "group": "perto",
+   "text": "Obrigado, Agatha",
+   "duration_s": 2.5,
+   "events": [
+    {
+     "text": "Obrigado, Agatha.",
+     "end_s": 2.176,
+     "hit": true
+    }
+   ]
+  },
+  {
+   "id": "perto-020",
+   "group": "perto",
+   "text": "Certo, Agatha. E o host do banco?",
+   "duration_s": 4.7,
+   "events": [
+    {
+     "text": "Serto, Agatha, e o banco host do...",
+     "end_s": 3.456,
+     "hit": true
+    }
+   ]
+  },
+  {
+   "id": "perto-021",
+   "group": "perto",
+   "text": "Agatha",
+   "duration_s": 2.5,
+   "events": [
+    {
+     "text": "Agatha",
+     "end_s": 1.216,
+     "hit": true
+    }
+   ]
+  },
+  {
+   "id": "perto-022",
+   "group": "perto",
+   "text": "Agatha?",
+   "duration_s": 2.5,
+   "events": [
+    {
+     "text": "Agatha?",
+     "end_s": 1.888,
+     "hit": true
+    }
+   ]
+  },
+  {
+   "id": "perto-023",
+   "group": "perto",
+   "text": "Agatha, que horas são?",
+   "duration_s": 3.3,
+   "events": [
+    {
+     "text": "Agatha, que horas são?",
+     "end_s": 2.464,
+     "hit": true
+    }
+   ]
+  },
+  {
+   "id": "perto-024",
+   "group": "perto",
+   "text": "Agatha, tem algum problema no Zabbix?",
+   "duration_s": 4.2,
+   "events": [
+    {
+     "text": "Agatha, tem algum problema nos Zabbix?",
+     "end_s": 2.464,
+     "hit": true
+    }
+   ]
+  },
+  {
+   "id": "perto-025",
+   "group": "perto",
+   "text": "Agatha, como está a tablespace USERS?",
+   "duration_s": 4.2,
+   "events": [
+    {
+     "text": "Agatha, como está a stable space nos users?",
+     "end_s": 3.136,
+     "hit": true
+    }
+   ]
+  },
+  {
+   "id": "perto-026",
+   "group": "perto",
+   "text": "Agatha, quantas sessões tem no Oracle?",
+   "duration_s": 4.2,
+   "events": [
+    {
+     "text": "Agatha, quantas sessões tem no Oracle?",
+     "end_s": 2.816,
+     "hit": true
+    }
+   ]
+  },
+  {
+   "id": "perto-027",
+   "group": "perto",
+   "text": "Agatha, quanto é quinze por cento de duzentos?",
+   "duration_s": 5.1,
+   "events": [
+    {
+     "text": "Agatha, quanto é 15% de 200?",
+     "end_s": 4.096,
+     "hit": true
+    }
+   ]
+  },
+  {
+   "id": "perto-028",
+   "group": "perto",
+   "text": "Agatha, o que é housekeeping no Zabbix?",
+   "duration_s": 4.7,
+   "events": [
+    {
+     "text": "Agatha, Oracle, housekeeping, nuzabbix",
+     "end_s": 2.976,
+     "hit": true
+    }
+   ]
+  },
+  {
+   "id": "perto-029",
+   "group": "perto",
+   "text": "Agatha, me ajuda com uma coisa",
+   "duration_s": 4.2,
+   "events": [
+    {
+     "text": "Agatha, me ajuda com alguma coisa.",
+     "end_s": 2.464,
+     "hit": true
+    }
+   ]
+  },
+  {
+   "id": "perto-030",
+   "group": "perto",
+   "text": "Agatha, guarda que a reunião é amanhã",
+   "duration_s": 4.7,
+   "events": [
+    {
+     "text": "Agatha, guarda que a reunião é amanhã.",
+     "end_s": 3.232,
+     "hit": true
+    }
+   ]
+  },
+  {
+   "id": "perto-031",
+   "group": "perto",
+   "text": "Agatha, esquece isso",
+   "duration_s": 2.9,
+   "events": [
+    {
+     "text": "Agatha, esquece isso.",
+     "end_s": 1.888,
+     "hit": true
+    }
+   ]
+  },
+  {
+   "id": "perto-032",
+   "group": "perto",
+   "text": "Agatha, para",
+   "duration_s": 2.5,
+   "events": [
+    {
+     "text": "Agatha para.",
+     "end_s": 1.344,
+     "hit": true
+    }
+   ]
+  },
+  {
+   "id": "perto-033",
+   "group": "perto",
+   "text": "Agatha, chega",
+   "duration_s": 2.5,
+   "events": [
+    {
+     "text": "Agatha-srv",
+     "end_s": 1.376,
+     "hit": false
+    }
+   ]
+  },
+  {
+   "id": "perto-034",
+   "group": "perto",
+   "text": "Agatha, espera",
+   "duration_s": 2.5,
+   "events": [
+    {
+     "text": "Agatha, Espada",
+     "end_s": 1.44,
+     "hit": true
+    }
+   ]
+  },
+  {
+   "id": "perto-035",
+   "group": "perto",
+   "text": "Agatha, cancela",
+   "duration_s": 2.5,
+   "events": [
+    {
+     "text": "Agatha Cancel",
+     "end_s": 1.824,
+     "hit": true
+    }
+   ]
+  },
+  {
+   "id": "perto-036",
+   "group": "perto",
+   "text": "Ei, Agatha",
+   "duration_s": 2.5,
+   "events": [
+    {
+     "text": "e agatha.",
+     "end_s": 1.088,
+     "hit": true
+    }
+   ]
+  },
+  {
+   "id": "perto-037",
+   "group": "perto",
+   "text": "Oi, Agatha, tudo bem?",
+   "duration_s": 3.3,
+   "events": [
+    {
+     "text": "Agatha, tudo bem?",
+     "end_s": 2.528,
+     "hit": true
+    }
+   ]
+  },
+  {
+   "id": "perto-038",
+   "group": "perto",
+   "text": "Bom dia, Agatha",
+   "duration_s": 2.9,
+   "events": [
+    {
+     "text": "Bom dia, Agatha.",
+     "end_s": 1.376,
+     "hit": true
+    }
+   ]
+  },
+  {
+   "id": "perto-039",
+   "group": "perto",
+   "text": "Obrigado, Agatha",
+   "duration_s": 2.5,
+   "events": [
+    {
+     "text": "Obrigado, Agatha.",
+     "end_s": 1.408,
+     "hit": true
+    }
+   ]
+  },
+  {
+   "id": "perto-040",
+   "group": "perto",
+   "text": "Certo, Agatha. E o host do banco?",
+   "duration_s": 4.7,
+   "events": [
+    {
+     "text": "Certo, Agatha, e o host do banco.",
+     "end_s": 2.976,
+     "hit": true
+    }
+   ]
+  },
+  {
+   "id": "variado-001",
+   "group": "variado",
+   "text": "Agatha",
+   "duration_s": 2.5,
+   "events": [
+    {
+     "text": "Agatha",
+     "end_s": 1.088,
+     "hit": true
+    }
+   ]
+  },
+  {
+   "id": "variado-002",
+   "group": "variado",
+   "text": "Agatha, que horas são?",
+   "duration_s": 3.3,
+   "events": [
+    {
+     "text": "Até que horas, rapaz.",
+     "end_s": 1.408,
+     "hit": false
+    }
+   ]
+  },
+  {
+   "id": "variado-003",
+   "group": "variado",
+   "text": "Agatha, tá aí?",
+   "duration_s": 2.9,
+   "events": [
+    {
+     "text": "Agatha, Tai",
+     "end_s": 1.152,
+     "hit": true
+    }
+   ]
+  },
+  {
+   "id": "variado-004",
+   "group": "variado",
+   "text": "Agatha, tem problema no Zabbix?",
+   "duration_s": 3.8,
+   "events": [
+    {
+     "text": "Tem nenhum problema nos Zabbix?",
+     "end_s": 1.632,
+     "hit": false
+    }
+   ]
+  },
+  {
+   "id": "variado-005",
+   "group": "variado",
+   "text": "Agatha, para",
+   "duration_s": 2.5,
+   "events": [
+    {
+     "text": "Agatha, Par",
+     "end_s": 1.12,
+     "hit": true
+    }
+   ]
+  },
+  {
+   "id": "variado-006",
+   "group": "variado",
+   "text": "Agatha",
+   "duration_s": 2.5,
+   "events": [
+    {
+     "text": "Agatha",
+     "end_s": 1.76,
+     "hit": true
+    }
+   ]
+  },
+  {
+   "id": "variado-007",
+   "group": "variado",
+   "text": "Agatha!",
+   "duration_s": 2.5,
+   "events": [
+    {
+     "text": "Agatha",
+     "end_s": 1.152,
+     "hit": true
+    }
+   ]
+  },
+  {
+   "id": "variado-008",
+   "group": "variado",
+   "text": "Agatha, para!",
+   "duration_s": 2.5,
+   "events": [
+    {
+     "text": "Valeu.",
+     "end_s": 0.672,
+     "hit": false
+    }
+   ]
+  },
+  {
+   "id": "variado-009",
+   "group": "variado",
+   "text": "Agatha, chega!",
+   "duration_s": 2.5,
+   "events": [
+    {
+     "text": "Agatha, Xeveu.",
+     "end_s": 1.376,
+     "hit": true
+    }
+   ]
+  },
+  {
+   "id": "variado-010",
+   "group": "variado",
+   "text": "Agatha, e aí?",
+   "duration_s": 2.9,
+   "events": [
+    {
+     "text": "Agatha, eu e",
+     "end_s": 1.472,
+     "hit": true
+    }
+   ]
+  },
+  {
+   "id": "variado-011",
+   "group": "variado",
+   "text": "Agatha",
+   "duration_s": 2.5,
+   "events": [
+    {
+     "text": "Agatha",
+     "end_s": 1.248,
+     "hit": true
+    }
+   ]
+  },
+  {
+   "id": "variado-012",
+   "group": "variado",
+   "text": "Agatha, me escuta",
+   "duration_s": 2.9,
+   "events": [
+    {
+     "text": "Agatha, me escute.",
+     "end_s": 1.184,
+     "hit": true
+    }
+   ]
+  },
+  {
+   "id": "variado-013",
+   "group": "variado",
+   "text": "Agatha",
+   "duration_s": 2.5,
+   "events": [
+    {
+     "text": "Agatha",
+     "end_s": 1.152,
+     "hit": true
+    }
+   ]
+  },
+  {
+   "id": "variado-014",
+   "group": "variado",
+   "text": "Agatha, que horas são?",
+   "duration_s": 3.3,
+   "events": [
+    {
+     "text": "Agatha, garoto, som.",
+     "end_s": 1.568,
+     "hit": true
+    }
+   ]
+  },
+  {
+   "id": "variado-015",
+   "group": "variado",
+   "text": "Agatha, tá aí?",
+   "duration_s": 2.9,
+   "events": [
+    {
+     "text": "Agatha, Tain",
+     "end_s": 1.44,
+     "hit": true
+    }
+   ]
+  },
+  {
+   "id": "variado-016",
+   "group": "variado",
+   "text": "Agatha, tem problema no Zabbix?",
+   "duration_s": 3.8,
+   "events": [
+    {
+     "text": "Agatha, tenho problemas nos apps?",
+     "end_s": 1.984,
+     "hit": true
+    }
+   ]
+  },
+  {
+   "id": "variado-017",
+   "group": "variado",
+   "text": "Agatha, para",
+   "duration_s": 2.5,
+   "events": [
+    {
+     "text": "Agatha, Pa",
+     "end_s": 0.864,
+     "hit": true
+    }
+   ]
+  },
+  {
+   "id": "variado-018",
+   "group": "variado",
+   "text": "Agatha",
+   "duration_s": 2.5,
+   "events": []
+  },
+  {
+   "id": "variado-019",
+   "group": "variado",
+   "text": "Agatha!",
+   "duration_s": 2.5,
+   "events": [
+    {
+     "text": "Agatha",
+     "end_s": 0.96,
+     "hit": true
+    }
+   ]
+  },
+  {
+   "id": "variado-020",
+   "group": "variado",
+   "text": "Agatha, para!",
+   "duration_s": 2.5,
+   "events": [
+    {
+     "text": "Agatha, para. Agatha, para.",
+     "end_s": 2.368,
+     "hit": true
+    }
+   ]
+  },
+  {
+   "id": "variado-021",
+   "group": "variado",
+   "text": "Agatha, chega!",
+   "duration_s": 2.5,
+   "events": [
+    {
+     "text": "Agatha, XRV",
+     "end_s": 1.568,
+     "hit": true
+    }
+   ]
+  },
+  {
+   "id": "variado-022",
+   "group": "variado",
+   "text": "Agatha, e aí?",
+   "duration_s": 2.9,
+   "events": [
+    {
+     "text": "Agatha, Iai",
+     "end_s": 1.152,
+     "hit": true
+    }
+   ]
+  },
+  {
+   "id": "variado-023",
+   "group": "variado",
+   "text": "Agatha",
+   "duration_s": 2.5,
+   "events": [
+    {
+     "text": "Agatha",
+     "end_s": 1.6,
+     "hit": true
+    }
+   ]
+  },
+  {
+   "id": "variado-024",
+   "group": "variado",
+   "text": "Agatha, me escuta",
+   "duration_s": 2.9,
+   "events": [
+    {
+     "text": "Agatha, me escuta.",
+     "end_s": 1.408,
+     "hit": true
+    }
+   ]
+  },
+  {
+   "id": "longe-001",
+   "group": "longe",
+   "text": "Agatha",
+   "duration_s": 2.5,
+   "events": [
+    {
+     "text": "Agatha",
+     "end_s": 1.792,
+     "hit": true
+    }
+   ]
+  },
+  {
+   "id": "longe-002",
+   "group": "longe",
+   "text": "Agatha!",
+   "duration_s": 2.5,
+   "events": [
+    {
+     "text": "Agatha",
+     "end_s": 1.728,
+     "hit": true
+    }
+   ]
+  },
+  {
+   "id": "longe-003",
+   "group": "longe",
+   "text": "Agatha, que horas são?",
+   "duration_s": 3.3,
+   "events": [
+    {
+     "text": "Agatha, que horas estão?",
+     "end_s": 2.656,
+     "hit": true
+    }
+   ]
+  },
+  {
+   "id": "longe-004",
+   "group": "longe",
+   "text": "Agatha, tem algum problema no Zabbix?",
+   "duration_s": 4.2,
+   "events": [
+    {
+     "text": "Agatha, eu tenho um problema do Zax",
+     "end_s": 3.232,
+     "hit": true
+    }
+   ]
+  },
+  {
+   "id": "longe-005",
+   "group": "longe",
+   "text": "Agatha, quantas sessões tem no Oracle?",
+   "duration_s": 4.2,
+   "events": [
+    {
+     "text": "Agatha, quando você é sonhista e boa",
+     "end_s": 2.944,
+     "hit": true
+    }
+   ]
+  },
+  {
+   "id": "longe-006",
+   "group": "longe",
+   "text": "Agatha, me ajuda com uma coisa",
+   "duration_s": 4.2,
+   "events": [
+    {
+     "text": "Agatha, me ajudou com alguma coisa?",
+     "end_s": 3.264,
+     "hit": true
+    }
+   ]
+  },
+  {
+   "id": "longe-007",
+   "group": "longe",
+   "text": "Agatha, para",
+   "duration_s": 2.5,
+   "events": [
+    {
+     "text": "Agatha, Zabbana",
+     "end_s": 2.272,
+     "hit": true
+    }
+   ]
+  },
+  {
+   "id": "longe-008",
+   "group": "longe",
+   "text": "Agatha, chega",
+   "duration_s": 2.5,
+   "events": [
+    {
+     "text": "Agatha, Shib",
+     "end_s": 2.272,
+     "hit": true
+    }
+   ]
+  },
+  {
+   "id": "longe-009",
+   "group": "longe",
+   "text": "Ei, Agatha",
+   "duration_s": 2.5,
+   "events": [
+    {
+     "text": "e agatha.",
+     "end_s": 2.368,
+     "hit": true
+    }
+   ]
+  },
+  {
+   "id": "longe-010",
+   "group": "longe",
+   "text": "Oi, Agatha, tudo bem?",
+   "duration_s": 3.3,
+   "events": [
+    {
+     "text": "Oi, Agatha, tudo bem?",
+     "end_s": 2.432,
+     "hit": true
+    }
+   ]
+  },
+  {
+   "id": "longe-011",
+   "group": "longe",
+   "text": "Obrigado, Agatha",
+   "duration_s": 2.5,
+   "events": [
+    {
+     "text": "Obrigado, Agatha.",
+     "end_s": 2.432,
+     "hit": true
+    }
+   ]
+  },
+  {
+   "id": "longe-012",
+   "group": "longe",
+   "text": "Agatha, esquece isso",
+   "duration_s": 2.9,
+   "events": [
+    {
+     "text": "Agatha, esquece de uso",
+     "end_s": 2.72,
+     "hit": true
+    }
+   ]
+  },
+  {
+   "id": "negativas-001",
+   "group": "negativas",
+   "text": "A gata subiu no telhado",
+   "duration_s": 3.8,
+   "events": [
+    {
+     "text": "Agatha sumiu no tegado.",
+     "end_s": 2.048,
+     "hit": true
+    }
+   ]
+  },
+  {
+   "id": "negativas-002",
+   "group": "negativas",
+   "text": "Agora não dá",
+   "duration_s": 2.9,
+   "events": [
+    {
+     "text": "Agatha, no da.",
+     "end_s": 1.472,
+     "hit": true
+    }
+   ]
+  },
+  {
+   "id": "negativas-003",
+   "group": "negativas",
+   "text": "A garrafa está na geladeira",
+   "duration_s": 3.8,
+   "events": [
+    {
+     "text": "Agatha está no geladeiro.",
+     "end_s": 3.808,
+     "hit": true
+    }
+   ]
+  },
+  {
+   "id": "negativas-004",
+   "group": "negativas",
+   "text": "A garota chegou",
+   "duration_s": 2.9,
+   "events": [
+    {
+     "text": "Agatha chegou.",
+     "end_s": 2.048,
+     "hit": true
+    }
+   ]
+  },
+  {
+   "id": "negativas-005",
+   "group": "negativas",
+   "text": "A gente conversa depois",
+   "duration_s": 3.3,
+   "events": [
+    {
+     "text": "A gente conversa depois.",
+     "end_s": 2.176,
+     "hit": false
+    }
+   ]
+  },
+  {
+   "id": "negativas-006",
+   "group": "negativas",
+   "text": "A data da entrega é sexta",
+   "duration_s": 4.2,
+   "events": [
+    {
+     "text": "Adata da entrega é sexta.",
+     "end_s": 2.496,
+     "hit": false
+    }
+   ]
+  },
+  {
+   "id": "negativas-007",
+   "group": "negativas",
+   "text": "A cada hora o backup roda",
+   "duration_s": 4.2,
+   "events": [
+    {
+     "text": "a cada hora o backup roda.",
+     "end_s": 2.88,
+     "hit": false
+    }
+   ]
+  },
+  {
+   "id": "negativas-008",
+   "group": "negativas",
+   "text": "A tabela está cheia",
+   "duration_s": 3.3,
+   "events": [
+    {
+     "text": "Atavialista Shea",
+     "end_s": 2.08,
+     "hit": false
+    }
+   ]
+  },
+  {
+   "id": "negativas-009",
+   "group": "negativas",
+   "text": "Aguarda um pouco",
+   "duration_s": 2.9,
+   "events": [
+    {
+     "text": "Guardo um pouco.",
+     "end_s": 1.6,
+     "hit": false
+    }
+   ]
+  },
+  {
+   "id": "negativas-010",
+   "group": "negativas",
+   "text": "Acabou o café",
+   "duration_s": 2.9,
+   "events": [
+    {
+     "text": "Acabou o café.",
+     "end_s": 1.824,
+     "hit": false
+    }
+   ]
+  },
+  {
+   "id": "negativas-011",
+   "group": "negativas",
+   "text": "A Renata ligou",
+   "duration_s": 2.9,
+   "events": [
+    {
+     "text": "a Renata de Go.",
+     "end_s": 1.856,
+     "hit": false
+    }
+   ]
+  },
+  {
+   "id": "negativas-012",
+   "group": "negativas",
+   "text": "Achei a chave do carro",
+   "duration_s": 3.8,
+   "events": [
+    {
+     "text": "Achei a charruca.",
+     "end_s": 2.016,
+     "hit": false
+    }
+   ]
+  },
+  {
+   "id": "negativas-013",
+   "group": "negativas",
+   "text": "Agenda a reunião para amanhã",
+   "duration_s": 3.8,
+   "events": [
+    {
+     "text": "Agenda reunião para amanhã",
+     "end_s": 2.368,
+     "hit": false
+    }
+   ]
+  },
+  {
+   "id": "negativas-014",
+   "group": "negativas",
+   "text": "Alberta é uma província do Canadá",
+   "duration_s": 4.2,
+   "events": [
+    {
+     "text": "Alberta é uma província do Canadá.",
+     "end_s": 2.944,
+     "hit": false
+    }
+   ]
+  },
+  {
+   "id": "negativas-015",
+   "group": "negativas",
+   "text": "A pasta está no servidor",
+   "duration_s": 3.8,
+   "events": [
+    {
+     "text": "Apostos Observador",
+     "end_s": 2.016,
+     "hit": false
+    }
+   ]
+  },
+  {
+   "id": "negativas-016",
+   "group": "negativas",
+   "text": "A batata está pronta",
+   "duration_s": 3.3,
+   "events": [
+    {
+     "text": "Agatha, testa pronto.",
+     "end_s": 2.368,
+     "hit": true
+    }
+   ]
+  },
+  {
+   "id": "negativas-017",
+   "group": "negativas",
+   "text": "Atacama é um deserto",
+   "duration_s": 3.3,
+   "events": [
+    {
+     "text": "Atacando no desert.",
+     "end_s": 2.016,
+     "hit": false
+    }
+   ]
+  },
+  {
+   "id": "negativas-018",
+   "group": "negativas",
+   "text": "Amanhã tem jogo",
+   "duration_s": 2.9,
+   "events": [
+    {
+     "text": "Amanhã tem jogo.",
+     "end_s": 1.344,
+     "hit": false
+    }
+   ]
+  },
+  {
+   "id": "negativas-019",
+   "group": "negativas",
+   "text": "Alguém viu o meu fone?",
+   "duration_s": 3.8,
+   "events": [
+    {
+     "text": "I'll give you no funny.",
+     "end_s": 1.984,
+     "hit": false
+    }
+   ]
+  },
+  {
+   "id": "negativas-020",
+   "group": "negativas",
+   "text": "A taxa subiu de novo",
+   "duration_s": 3.8,
+   "events": [
+    {
+     "text": "A taxa subiu de novo.",
+     "end_s": 2.176,
+     "hit": false
+    }
+   ]
+  },
+  {
+   "id": "negativas-021",
+   "group": "negativas",
+   "text": "A lata está vazia",
+   "duration_s": 3.3,
+   "events": [
+    {
+     "text": "Alata, está vazio.",
+     "end_s": 2.144,
+     "hit": false
+    }
+   ]
+  },
+  {
+   "id": "negativas-022",
+   "group": "negativas",
+   "text": "Agachar dói o joelho",
+   "duration_s": 3.3,
+   "events": [
+    {
+     "text": "Agatha-srv, do OJ.",
+     "end_s": 2.56,
+     "hit": false
+    }
+   ]
+  },
+  {
+   "id": "negativas-023",
+   "group": "negativas",
+   "text": "Que horas são?",
+   "duration_s": 2.9,
+   "events": [
+    {
+     "text": "Que horas são?",
+     "end_s": 1.44,
+     "hit": false
+    }
+   ]
+  },
+  {
+   "id": "negativas-024",
+   "group": "negativas",
+   "text": "Tem algum problema no Zabbix?",
+   "duration_s": 3.8,
+   "events": [
+    {
+     "text": "Tem algum problema nos águes?",
+     "end_s": 1.728,
+     "hit": false
+    }
+   ]
+  },
+  {
+   "id": "negativas-025",
+   "group": "negativas",
+   "text": "Para com isso",
+   "duration_s": 2.9,
+   "events": [
+    {
+     "text": "Para com isso.",
+     "end_s": 1.184,
+     "hit": false
+    }
+   ]
+  },
+  {
+   "id": "negativas-026",
+   "group": "negativas",
+   "text": "Chega por hoje",
+   "duration_s": 2.9,
+   "events": [
+    {
+     "text": "Siga por hoje.",
+     "end_s": 1.248,
+     "hit": false
+    }
+   ]
+  },
+  {
+   "id": "negativas-027",
+   "group": "negativas",
+   "text": "Espera aí",
+   "duration_s": 2.5,
+   "events": [
+    {
+     "text": "Espera aí.",
+     "end_s": 0.96,
+     "hit": false
+    }
+   ]
+  },
+  {
+   "id": "negativas-028",
+   "group": "negativas",
+   "text": "Obrigado",
+   "duration_s": 2.5,
+   "events": [
+    {
+     "text": "Obrigado.",
+     "end_s": 0.992,
+     "hit": false
+    }
+   ]
+  },
+  {
+   "id": "negativas-029",
+   "group": "negativas",
+   "text": "Ei, você viu isso?",
+   "duration_s": 3.3,
+   "events": [
+    {
+     "text": "E aí, você viu isso?",
+     "end_s": 2.208,
+     "hit": false
+    }
+   ]
+  },
+  {
+   "id": "negativas-030",
+   "group": "negativas",
+   "text": "O host do banco caiu de novo",
+   "duration_s": 4.7,
+   "events": [
+    {
+     "text": "O rosto do banco caiu de novo.",
+     "end_s": 2.656,
+     "hit": false
+    }
+   ]
+  },
+  {
+   "id": "eco-001",
+   "group": "eco-fala",
+   "text": "Agatha, para",
+   "duration_s": 7.0,
+   "events": [
+    {
+     "text": "Olá, Ronaldo. Estou ótima. Obrigado por perguntar como posso te ajudar agora.",
+     "end_s": 5.728,
+     "hit": false
+    }
+   ]
+  },
+  {
+   "id": "eco-002",
+   "group": "eco-calado",
+   "text": null,
+   "duration_s": 6.9,
+   "events": [
+    {
+     "text": "São 6 e 15 da tarde. Estamos em domingo 11 de outubro de 2026.",
+     "end_s": 5.6,
+     "hit": false
+    }
+   ]
+  },
+  {
+   "id": "eco-003",
+   "group": "eco-fala",
+   "text": "Agatha, chega",
+   "duration_s": 12.4,
+   "events": [
+    {
+     "text": "Antigenuse, abxl, sistema de gerenciamento de segurança. Ele foca em proteger infraestruturas contra ameaças cibernéticas. É uma solução robusta para monitoramento e defesa.",
+     "end_s": 11.584,
+     "hit": false
+    }
+   ]
+  },
+  {
+   "id": "eco-004",
+   "group": "eco-calado",
+   "text": null,
+   "duration_s": 8.9,
+   "events": [
+    {
+     "text": "15% de 240 é 36. Pasta multiplicar 2400, a 15 para achar o valor.",
+     "end_s": 7.776,
+     "hit": false
+    }
+   ]
+  },
+  {
+   "id": "eco-005",
+   "group": "eco-fala",
+   "text": "Agatha, espera",
+   "duration_s": 9.5,
+   "events": [
+    {
+     "text": "20% de 240 é 48, é só multiplicar 2400,920 para ter o resultado.",
+     "end_s": 8.224,
+     "hit": false
+    }
+   ]
+  },
+  {
+   "id": "eco-006",
+   "group": "eco-calado",
+   "text": null,
+   "duration_s": 8.1,
+   "events": [
+    {
+     "text": "Tudo ótimo por aqui. Não sei quem é Álvaro, mas estou pronto para ajudar como posso te auxiliar. Tey!",
+     "end_s": 6.848,
+     "hit": false
+    }
+   ]
+  },
+  {
+   "id": "eco-007",
+   "group": "eco-fala",
+   "text": "Agatha, me fala outra coisa",
+   "duration_s": 6.3,
+   "events": [
+    {
+     "text": "São 17 horas e 19 minutos. Estou andando para me falar outra coisa.",
+     "end_s": 5.184,
+     "hit": false
+    }
+   ]
+  },
+  {
+   "id": "eco-008",
+   "group": "eco-calado",
+   "text": null,
+   "duration_s": 8.2,
+   "events": [
+    {
+     "text": "Não tenho acesso a esse tema específico. Você poderia soletar um e dar mais contextos sobre a ANGINUS AX?",
+     "end_s": 6.88,
+     "hit": false
+    }
+   ]
+  },
+  {
+   "id": "eco-009",
+   "group": "eco-fala",
+   "text": "Agatha, para",
+   "duration_s": 7.2,
+   "events": [
+    {
+     "text": "15% de 240 a 36. Quer calcular mais algum valor?",
+     "end_s": 5.888,
+     "hit": false
+    }
+   ]
+  },
+  {
+   "id": "eco-010",
+   "group": "eco-calado",
+   "text": null,
+   "duration_s": 7.9,
+   "events": [
+    {
+     "text": "20% de 240 dá 48. Se precisar de mais contas, é só chamar.",
+     "end_s": 6.656,
+     "hit": false
+    }
+   ]
+  },
+  {
+   "id": "eco-011",
+   "group": "eco-fala",
+   "text": "Agatha, chega",
+   "duration_s": 5.2,
+   "events": [
+    {
+     "text": "Oi, tudo ótimo por aqui. Como posso ajudar você hoje?",
+     "end_s": 3.904,
+     "hit": false
+    }
+   ]
+  },
+  {
+   "id": "eco-012",
+   "group": "eco-calado",
+   "text": null,
+   "duration_s": 7.1,
+   "events": [
+    {
+     "text": "São 17 horas e 22 minutos. Mais alguma coisa que eu possa fazer para você?",
+     "end_s": 5.792,
+     "hit": false
+    }
+   ]
+  },
+  {
+   "id": "eco-013",
+   "group": "eco-fala",
+   "text": "Agatha, espera",
+   "duration_s": 12.0,
+   "events": [
+    {
+     "text": "Agatha, Zabbix, Oracle, trigger, trigger, tablespace, host, template, trigger, tablespace, host, template, trigger, tablespace, host, template, trigger, tablespace, host, template, trigger, tablespace, host, template, trigger, tablespace, host, template, trigger, tablespace, host, template, trigger, tablespace, host, template, trigger, tablespace, host, tablespace, host, tablespace, host, tablespace, host, tablespace, host, tablespace, host, tablespace, host, tablespace, host, tablespace, host, tablespace, host, tablespace, host, t",
+     "end_s": 10.72,
+     "hit": true
+    }
+   ]
+  },
+  {
+   "id": "eco-014",
+   "group": "eco-calado",
+   "text": null,
+   "duration_s": 7.9,
+   "events": [
+    {
+     "text": "15% de 240 é 36. Você precisa de ajuda com algum cálculo de infestatura?",
+     "end_s": 6.72,
+     "hit": false
+    }
+   ]
+  },
+  {
+   "id": "eco-015",
+   "group": "eco-fala",
+   "text": "Agatha, me fala outra coisa",
+   "duration_s": 8.0,
+   "events": [
+    {
+     "text": "20% de 240 da 48. Posso te ajudar com algum comando do Linux ou Oracle?",
+     "end_s": 6.72,
+     "hit": false
+    }
+   ]
+  },
+  {
+   "id": "eco-016",
+   "group": "eco-calado",
+   "text": null,
+   "duration_s": 4.4,
+   "events": [
+    {
+     "text": "Muito ótimo por aqui. Como posso ajudar hoje?",
+     "end_s": 3.104,
+     "hit": false
+    }
+   ]
+  },
+  {
+   "id": "eco-017",
+   "group": "eco-fala",
+   "text": "Agatha, para",
+   "duration_s": 5.4,
+   "events": [
+    {
+     "text": "São 187, tem mais algo que eu possa fazer?",
+     "end_s": 4.192,
+     "hit": false
+    }
+   ]
+  },
+  {
+   "id": "eco-018",
+   "group": "eco-calado",
+   "text": null,
+   "duration_s": 10.4,
+   "events": [
+    {
+     "text": "CG significa Trigger, Ognos, Avix. É um grupo que organiza os gatiros de monitoramento. Isso facilita a gestão e a visualização dos aletas.",
+     "end_s": 9.024,
+     "hit": false
+    }
+   ]
+  },
+  {
+   "id": "eco-019",
+   "group": "eco-fala",
+   "text": "Agatha, chega",
+   "duration_s": 6.3,
+   "events": [
+    {
+     "text": "15% de 240 a 36. É um cálculo simples.",
+     "end_s": 4.992,
+     "hit": false
+    }
+   ]
+  },
+  {
+   "id": "eco-020",
+   "group": "eco-calado",
+   "text": null,
+   "duration_s": 7.6,
+   "events": [
+    {
+     "text": "20% de 240 é 48. Se precisar de mais contas, é só falar.",
+     "end_s": 6.336,
+     "hit": false
+    }
+   ]
+  },
+  {
+   "id": "eco-021",
+   "group": "eco-fala",
+   "text": "Agatha, espera",
+   "duration_s": 3.8,
+   "events": [
+    {
+     "text": "Beixe eu ver. Agatha, espera.",
+     "end_s": 2.848,
+     "hit": true
+    }
+   ]
+  },
+  {
+   "id": "eco-022",
+   "group": "eco-calado",
+   "text": null,
+   "duration_s": 4.2,
+   "events": [
+    {
+     "text": "Um instante seria o 48.",
+     "end_s": 2.752,
+     "hit": false
+    }
+   ]
+  },
+  {
+   "id": "eco-023",
+   "group": "eco-fala",
+   "text": "Agatha, me fala outra coisa",
+   "duration_s": 4.8,
+   "events": [
+    {
+     "text": "Só um momento, é 69.104.",
+     "end_s": 3.424,
+     "hit": false
+    }
+   ]
+  },
+  {
+   "id": "eco-024",
+   "group": "eco-calado",
+   "text": null,
+   "duration_s": 7.9,
+   "events": [
+    {
+     "text": "Não entendi o tema tigendo o contexto dos Zabbix. Você poderia repetir a palavra ou a pergunta. Por favor?",
+     "end_s": 6.56,
+     "hit": false
+    }
+   ]
+  },
+  {
+   "id": "eco-025",
+   "group": "eco-fala",
+   "text": "Agatha, para",
+   "duration_s": 5.1,
+   "events": [
+    {
+     "text": "De nada, tem algo. Estou aqui para ajudar no que precisar.",
+     "end_s": 3.808,
+     "hit": false
+    }
+   ]
+  },
+  {
+   "id": "ambiente-001",
+   "group": "ambiente",
+   "text": null,
+   "duration_s": 60.0,
+   "events": [
+    {
+     "text": "Outro show, gata.",
+     "end_s": 1.472,
+     "hit": false
+    },
+    {
+     "text": "Zabbix, Oracle, Linux, Podman, agatha-srv, PRDORA",
+     "end_s": 3.744,
+     "hit": false
+    },
+    {
+     "text": "Você vai pôr o pé em cima e ainda vai fazer aqui, ó!",
+     "end_s": 10.24,
+     "hit": false
+    },
+    {
+     "text": "Eu consegui ver",
+     "end_s": 13.472,
+     "hit": false
+    },
+    {
+     "text": "Mas...",
+     "end_s": 14.784,
+     "hit": false
+    },
+    {
+     "text": "O semideira tá falando com esse cara.",
+     "end_s": 60.0,
+     "hit": false
+    }
+   ]
+  },
+  {
+   "id": "ambiente-002",
+   "group": "ambiente",
+   "text": null,
+   "duration_s": 60.0,
+   "events": [
+    {
+     "text": "Eu não quero uma faloça com ter uma mulher aqui.",
+     "end_s": 2.944,
+     "hit": false
+    },
+    {
+     "text": "Eu tinha que lavar a luz",
+     "end_s": 7.904,
+     "hit": false
+    },
+    {
+     "text": "Ela valou seramentos como, eu tinha que lavar o banheiro, tinha que fazer os bagulhos assim e porra, eu não só quero fazer essa porra.",
+     "end_s": 16.672,
+     "hit": false
+    },
+    {
+     "text": "Zabbix,",
+     "end_s": 22.368,
+     "hit": false
+    },
+    {
+     "text": "E por exemplo, se eu tiver que lavar a louça...",
+     "end_s": 25.152,
+     "hit": false
+    },
+    {
+     "text": "e o presidente leu.",
+     "end_s": 26.976,
+     "hit": false
+    },
+    {
+     "text": "Vamos deixar minha suja, vai, acabou e seco.",
+     "end_s": 31.168,
+     "hit": false
+    },
+    {
+     "text": "Sabe como esse vídeo ficaria ainda melhor? Como, Caix.",
+     "end_s": 36.16,
+     "hit": false
+    },
+    {
+     "text": "Maria, Zalgir, Mikar, Agatha, Linux, Podman",
+     "end_s": 46.816,
+     "hit": true
+    },
+    {
+     "text": "Legal, mas está vazia?",
+     "end_s": 48.352,
+     "hit": false
+    },
+    {
+     "text": "e Mariana do Citério, provavelmente.",
+     "end_s": 50.912,
+     "hit": false
+    },
+    {
+     "text": "e a data momentânea do YouTube.",
+     "end_s": 60.0,
+     "hit": false
+    }
+   ]
+  },
+  {
+   "id": "ambiente-003",
+   "group": "ambiente",
+   "text": null,
+   "duration_s": 60.0,
+   "events": [
+    {
+     "text": "O que vai acontecer?",
+     "end_s": 4.288,
+     "hit": false
+    },
+    {
+     "text": "Vamos lá, cabeus óculos",
+     "end_s": 7.68,
+     "hit": false
+    },
+    {
+     "text": "Eu vou comer o e-pot, vai comer o e-pot, vou aprender a fazer um rio de sente cara, cara, ou só vou botar ali e mexer, tem que ter um bagulho, se gostei",
+     "end_s": 17.824,
+     "hit": false
+    },
+    {
+     "text": "Tem um Selfies A Love em aqui pra você, se vai ver que vai ficar diferente.",
+     "end_s": 21.856,
+     "hit": false
+    },
+    {
+     "text": "É pra novo de bodybuilder, viu? Por que eu te falei que eu não consigo ser atleta? Porque vocês já me ensinaram que o atleta precisa saber fazer a própria comida.",
+     "end_s": 30.432,
+     "hit": false
+    },
+    {
+     "text": "Eu não quero cozinhar, entendeu? Tá pra morrer, agora? Ela se glaiou. Hoje você vai provar o Julho.",
+     "end_s": 42.816,
+     "hit": false
+    },
+    {
+     "text": "Zabbix, Oracle, Linux, Podman, agatha-srv, PRDORA",
+     "end_s": 44.096,
+     "hit": false
+    },
+    {
+     "text": "O que está bonito, cara? Tem duas meninas e as crianças ali como eles, mas tem muito.",
+     "end_s": 57.632,
+     "hit": false
+    }
+   ]
+  },
+  {
+   "id": "ambiente-004",
+   "group": "ambiente",
+   "text": null,
+   "duration_s": 60.0,
+   "events": [
+    {
+     "text": "Fone, tom, panadjeta de 3, você não consegue comer 3, não? Você consegue, você consegue, com o Quanto Sábado de X, com o Mato de X",
+     "end_s": 8.736,
+     "hit": false
+    },
+    {
+     "text": "Agoa-se de lego",
+     "end_s": 10.304,
+     "hit": false
+    },
+    {
+     "text": "Você não soltei porque está de sim, mesmo. Mas eu quase não ia ir por me tomar de segura. Se as coisas não baixam, nem não baixam. Vamos dar um jeito na minha.",
+     "end_s": 17.792,
+     "hit": false
+    },
+    {
+     "text": "Tomate, se bora ver. Tomate, se bora com você.",
+     "end_s": 28.448,
+     "hit": false
+    },
+    {
+     "text": "O que é um diferença aí, se eu quiser sair para a rua?",
+     "end_s": 48.0,
+     "hit": false
+    },
+    {
+     "text": "e o Zadji.",
+     "end_s": 51.776,
+     "hit": false
+    },
+    {
+     "text": "A gente aqui é ajudar a minha mãe a limpar a cara e fazer a comida.",
+     "end_s": 55.584,
+     "hit": false
+    },
+    {
+     "text": "O que é que a gente tem?",
+     "end_s": 59.968,
+     "hit": false
+    }
+   ]
+  },
+  {
+   "id": "ambiente-005",
+   "group": "ambiente",
+   "text": null,
+   "duration_s": 60.0,
+   "events": [
+    {
+     "text": "Isso é que eu vou coer o foco de brilheta",
+     "end_s": 2.784,
+     "hit": false
+    },
+    {
+     "text": "Checa, lava, banheiro, lá, rumo, macho parado, não sei o que.",
+     "end_s": 6.496,
+     "hit": false
+    },
+    {
+     "text": "Correta não está congelado. Correta é a metanilíquia. Meu filho está com fome, cara. Mas ela não se desasse boa, meu filho está emagrecendo antes. Toma só café da manhã.",
+     "end_s": 16.608,
+     "hit": false
+    },
+    {
+     "text": "Zabbix, Oracle, Linux, Podman, agatha-srv, PRDORA",
+     "end_s": 18.272,
+     "hit": false
+    },
+    {
+     "text": "Parc, agatha, post, parc",
+     "end_s": 30.976,
+     "hit": true
+    },
+    {
+     "text": "Foto de Linux, e o contrário.",
+     "end_s": 34.4,
+     "hit": false
+    },
+    {
+     "text": "Fora, Zaspana, Saldore, Linux, Podman, Alba, Fudio, Google, Procurar",
+     "end_s": 39.008,
+     "hit": false
+    },
+    {
+     "text": "e o Podsclasker",
+     "end_s": 40.928,
+     "hit": false
+    },
+    {
+     "text": "Caralho, Judo, você nem sabia que tinha uma faca fechada para descascar? Nossa, o seu eu usava pra...",
+     "end_s": 47.136,
+     "hit": false
+    },
+    {
+     "text": "Abre embalagem",
+     "end_s": 49.856,
+     "hit": false
+    },
+    {
+     "text": "um tip com homem brasileiro que não conhece sua própria cozinha, não sabe...",
+     "end_s": 60.0,
+     "hit": false
+    }
+   ]
+  },
+  {
+   "id": "ambiente-006",
+   "group": "ambiente",
+   "text": null,
+   "duration_s": 60.0,
+   "events": [
+    {
+     "text": "Sim, usaremos isso.",
+     "end_s": 4.8,
+     "hit": false
+    },
+    {
+     "text": "Liga para Maria, não é só assim. Claro, acho que é mais fácil mesmo. Por exemplo, a gente se amada e... Ali está bom o negócio. Boa etapa!",
+     "end_s": 11.968,
+     "hit": false
+    },
+    {
+     "text": "A gente está ensinando a gente.",
+     "end_s": 14.72,
+     "hit": false
+    },
+    {
+     "text": "O seguinte, eu só tenho esse cara aqui",
+     "end_s": 18.272,
+     "hit": false
+    },
+    {
+     "text": "e divertir em casa fazer o café na manhã para nós?",
+     "end_s": 22.592,
+     "hit": false
+    },
+    {
+     "text": "e agora a gente está procurando a tábua de picar a cebola.",
+     "end_s": 27.168,
+     "hit": false
+    },
+    {
+     "text": "Paralho",
+     "end_s": 28.384,
+     "hit": false
+    },
+    {
+     "text": "Se não tiver, está no prazo mesmo, está no prazo.",
+     "end_s": 31.872,
+     "hit": false
+    },
+    {
+     "text": "Deteguando a possível.",
+     "end_s": 34.464,
+     "hit": false
+    },
+    {
+     "text": "Tenho você e por uma lástima.",
+     "end_s": 37.088,
+     "hit": false
+    },
+    {
+     "text": "Infacta",
+     "end_s": 38.912,
+     "hit": false
+    },
+    {
+     "text": "Caramel, Zabbix, Oracle, trigger, trigger, tablespace, host, template, tablespace, host, template, tablespace, host, template, tablespace, host, template, tablespace, host, template, tablespace, host, template, tablespace, host, template, tablespace, host, template, tablespace, host, template, tablespace, host, template, tablespace, host, template, tablespace, host, template, tablespace, host, template, tablespace, host, template, tablespace, host, tablespace, host, tablespace, host, tablespace, host, tablespace, host, tables",
+     "end_s": 40.928,
+     "hit": false
+    },
+    {
+     "text": "Taba de cortar",
+     "end_s": 42.624,
+     "hit": false
+    },
+    {
+     "text": "e Google's Lacada, Linux. E, vinha, sertaneja, santo, do Otocara.",
+     "end_s": 47.456,
+     "hit": false
+    },
+    {
+     "text": "Parabéns, abriu essa porra, mas deve ter encostado esse nome.",
+     "end_s": 52.192,
+     "hit": false
+    },
+    {
+     "text": "E o Dacha, cabelo de tichar",
+     "end_s": 56.224,
+     "hit": false
+    },
+    {
+     "text": "Alí, carteiro todo.",
+     "end_s": 58.624,
+     "hit": false
+    }
+   ]
+  },
+  {
+   "id": "ambiente-007",
+   "group": "ambiente",
+   "text": null,
+   "duration_s": 60.0,
+   "events": [
+    {
+     "text": "Filhoc",
+     "end_s": 2.592,
+     "hit": false
+    },
+    {
+     "text": "Obrigado, Pedro.",
+     "end_s": 3.904,
+     "hit": false
+    },
+    {
+     "text": "Vamos lá, o que a gente vai fazer hoje?",
+     "end_s": 7.008,
+     "hit": false
+    },
+    {
+     "text": "na primeira série.",
+     "end_s": 9.088,
+     "hit": false
+    },
+    {
+     "text": "Ovo pizza. Tu sabe!",
+     "end_s": 12.192,
+     "hit": false
+    },
+    {
+     "text": "e fazer algo na cozinha?",
+     "end_s": 18.496,
+     "hit": false
+    },
+    {
+     "text": "Drop!",
+     "end_s": 19.872,
+     "hit": false
+    },
+    {
+     "text": "Fantástico!",
+     "end_s": 22.432,
+     "hit": false
+    },
+    {
+     "text": "Leandro, se você não estivesse... Estive com uns anos. 23. Se eu estivesse 23 anos e eu morasse em casa na minha casa, eu ia ter fugao de uma foda.",
+     "end_s": 34.656,
+     "hit": false
+    },
+    {
+     "text": "do Covid-300 comigo então.",
+     "end_s": 38.848,
+     "hit": false
+    },
+    {
+     "text": "Comenta, que eu vou aí!",
+     "end_s": 40.992,
+     "hit": false
+    },
+    {
+     "text": "A minha mãe foi tão na Carnaia, a Suja, a Amorama Maria.",
+     "end_s": 48.544,
+     "hit": false
+    },
+    {
+     "text": "Rubi, a Maria, é, Zabinda Maria.",
+     "end_s": 53.024,
+     "hit": false
+    },
+    {
+     "text": "",
+     "end_s": 60.0,
+     "hit": false
+    }
+   ]
+  },
+  {
+   "id": "ambiente-008",
+   "group": "ambiente",
+   "text": null,
+   "duration_s": 60.0,
+   "events": [
+    {
+     "text": "Doa, Podvise",
+     "end_s": 1.344,
+     "hit": false
+    },
+    {
+     "text": "Filhote.",
+     "end_s": 14.272,
+     "hit": false
+    },
+    {
+     "text": "e os outros que saiu do Stranger Things.",
+     "end_s": 55.712,
+     "hit": false
+    }
+   ]
+  },
+  {
+   "id": "ambiente-009",
+   "group": "ambiente",
+   "text": null,
+   "duration_s": 60.0,
+   "events": [
+    {
+     "text": "Esse dedo indicador aqui",
+     "end_s": 3.008,
+     "hit": false
+    },
+    {
+     "text": "",
+     "end_s": 3.968,
+     "hit": false
+    },
+    {
+     "text": "e Linux.",
+     "end_s": 24.352,
+     "hit": false
+    },
+    {
+     "text": "Outro sida também",
+     "end_s": 34.016,
+     "hit": false
+    },
+    {
+     "text": "e o que já foi preso aí, mano.",
+     "end_s": 41.76,
+     "hit": false
+    },
+    {
+     "text": "Aptim, mas eu vou estar na balança do público que me parou isso.",
+     "end_s": 60.0,
+     "hit": false
+    }
+   ]
+  },
+  {
+   "id": "ambiente-010",
+   "group": "ambiente",
+   "text": null,
+   "duration_s": 60.0,
+   "events": [
+    {
+     "text": "da IoT para preencher que ela porra da IoT duas fininhas",
+     "end_s": 7.84,
+     "hit": false
+    },
+    {
+     "text": "Para que ela para não ficar algum espaço no pãozinho sem nada",
+     "end_s": 14.752,
+     "hit": false
+    },
+    {
+     "text": "Quais aqui no seu DZK?",
+     "end_s": 17.024,
+     "hit": false
+    },
+    {
+     "text": "Eu só pensei, ok cara, minha causa tá caindo",
+     "end_s": 22.272,
+     "hit": false
+    },
+    {
+     "text": "Na minha casa, cabum gente.",
+     "end_s": 29.248,
+     "hit": false
+    },
+    {
+     "text": "Cozendo pra mim, hein?",
+     "end_s": 36.832,
+     "hit": false
+    },
+    {
+     "text": "Cadê o spray de azeite?",
+     "end_s": 42.336,
+     "hit": false
+    },
+    {
+     "text": "O pessoal aqui que vai na frente",
+     "end_s": 44.896,
+     "hit": false
+    },
+    {
+     "text": "Pode na ZEIT, mas será gastar mais dinheiro?",
+     "end_s": 48.192,
+     "hit": false
+    },
+    {
+     "text": "Como é, me pare do acento? No meu caso, graças a Deus, eu consigo ter o azeite, não tem que usar uma gordura saturada, usar uma gordura, mas a nossa gordura, quando esquenta, é bem a foda-se, entendeu? É isso que é o problema.",
+     "end_s": 60.0,
+     "hit": false
+    }
+   ]
+  },
+  {
+   "id": "fleurs-10021311324523185658",
+   "group": "fleurs",
+   "text": null,
+   "duration_s": 11.82,
+   "events": [
+    {
+     "text": "Obstacle principal da ciência, entender como o mundo funciona através do método científico, esse método que orienta e...",
+     "end_s": 8.48,
+     "hit": false
+    },
+    {
+     "text": "Pisizas, científicas.",
+     "end_s": 10.688,
+     "hit": false
+    }
+   ]
+  },
+  {
+   "id": "fleurs-10114312680249610589",
+   "group": "fleurs",
+   "text": null,
+   "duration_s": 14.58,
+   "events": [
+    {
+     "text": "Esquiar é uma atividade importante na viagem para muitos entusiastas ocasionalmente conhecidos como SkiBums que planejam férias inteiras só para esquiar em um local específico.",
+     "end_s": 13.376,
+     "hit": false
+    }
+   ]
+  },
+  {
+   "id": "fleurs-10165966771567591302",
+   "group": "fleurs",
+   "text": null,
+   "duration_s": 6.66,
+   "events": [
+    {
+     "text": "Lacracing tomou a frente para cantar os Bajans.",
+     "end_s": 4.96,
+     "hit": false
+    }
+   ]
+  },
+  {
+   "id": "fleurs-10181533133173393073",
+   "group": "fleurs",
+   "text": null,
+   "duration_s": 13.92,
+   "events": [
+    {
+     "text": "Robin U. Tapá, fez a pontuação mais alta do Inins, 70 corridas em apenas 41 bolas, acertando 11, 4 e 2, 6.",
+     "end_s": 12.128,
+     "hit": false
+    }
+   ]
+  },
+  {
+   "id": "fleurs-10214311447059175309",
+   "group": "fleurs",
+   "text": null,
+   "duration_s": 11.88,
+   "events": [
+    {
+     "text": "A principal cerveja local é a Number One. Ela não é uma cerveja elaborada, mas é prazerosa e refrescante. A outra cerveja local se chama Manta.",
+     "end_s": 10.656,
+     "hit": false
+    }
+   ]
+  },
+  {
+   "id": "fleurs-10221738448089878097",
+   "group": "fleurs",
+   "text": null,
+   "duration_s": 7.44,
+   "events": [
+    {
+     "text": "No começo, as vestimentas foram muito influenciadas pela cultura bizantina na região leste.",
+     "end_s": 6.176,
+     "hit": false
+    }
+   ]
+  },
+  {
+   "id": "fleurs-10264842099136155935",
+   "group": "fleurs",
+   "text": null,
+   "duration_s": 11.52,
+   "events": [
+    {
+     "text": "Como os estudantes frequentemente são a audiência mais crítica, o autor do blog começa a empenhar-se para melhorar a escrita e evitar críticas.",
+     "end_s": 9.376,
+     "hit": false
+    }
+   ]
+  },
+  {
+   "id": "fleurs-10275176137959631739",
+   "group": "fleurs",
+   "text": null,
+   "duration_s": 9.0,
+   "events": [
+    {
+     "text": "A maioria dos distritos é servida por micro-ônibus, costeiros japoneses, que são confortáveis e resistentes.",
+     "end_s": 7.552,
+     "hit": false
+    }
+   ]
+  },
+  {
+   "id": "fleurs-10281411371095075004",
+   "group": "fleurs",
+   "text": null,
+   "duration_s": 8.52,
+   "events": [
+    {
+     "text": "O Amazonas também é o rio mais largo da Terra, às vezes com quase 10 quilômetros de largura.",
+     "end_s": 7.264,
+     "hit": false
+    }
+   ]
+  },
+  {
+   "id": "fleurs-10288689224088672788",
+   "group": "fleurs",
+   "text": null,
+   "duration_s": 15.84,
+   "events": [
+    {
+     "text": "Em uma parceria da NPWS e da Sporning Shooters Association of Australia, NSW, INC, voluntários qualificados foram recrutados de acordo com o programa de caça da Sporning Shooters Association.",
+     "end_s": 14.88,
+     "hit": false
+    }
+   ]
+  },
+  {
+   "id": "fleurs-1028956226170549330",
+   "group": "fleurs",
+   "text": null,
+   "duration_s": 11.58,
+   "events": [
+    {
+     "text": "O objetivo principal da ciência é entender como o mundo funciona através do método científico",
+     "end_s": 6.528,
+     "hit": false
+    },
+    {
+     "text": "É esse método que orienta as pesquisas científicas.",
+     "end_s": 10.368,
+     "hit": false
+    }
+   ]
+  },
+  {
+   "id": "fleurs-10408390450801752955",
+   "group": "fleurs",
+   "text": null,
+   "duration_s": 14.1,
+   "events": [
+    {
+     "text": "O inverno pode ser decepcionantemente frio. As temperaturas raramente ficam abaixo do congelante, mas o vento e a umidade combinadas torna uma sensação mais fria que o que o termômetro mostra.",
+     "end_s": 13.056,
+     "hit": false
+    }
+   ]
+  },
+  {
+   "id": "fleurs-10469354627012887368",
+   "group": "fleurs",
+   "text": null,
+   "duration_s": 16.74,
+   "events": [
+    {
+     "text": "108 pratos de Champang Bihog, isto é, 56 comidas diferentes?",
+     "end_s": 6.944,
+     "hit": false
+    },
+    {
+     "text": "como doces, frutas, nozes, prados, etc. que no hinduismo são oferecidos a divindade?",
+     "end_s": 13.216,
+     "hit": false
+    },
+    {
+     "text": "foram servidos para Babaxian.",
+     "end_s": 15.712,
+     "hit": false
+    }
+   ]
+  },
+  {
+   "id": "fleurs-10484400070252823650",
+   "group": "fleurs",
+   "text": null,
+   "duration_s": 15.48,
+   "events": [
+    {
+     "text": "O Parque Nacional Kruger fica no Nordeste da África do Sul.",
+     "end_s": 5.216,
+     "hit": false
+    },
+    {
+     "text": "ao longo da fronteira de Moçambique ao leste.",
+     "end_s": 8.352,
+     "hit": false
+    },
+    {
+     "text": "Do Zimbabwe ao norte?",
+     "end_s": 10.4,
+     "hit": false
+    },
+    {
+     "text": "e o crocodile-river na fronteira sul.",
+     "end_s": 14.304,
+     "hit": false
+    }
+   ]
+  },
+  {
+   "id": "fleurs-10588000562732328309",
+   "group": "fleurs",
+   "text": null,
+   "duration_s": 9.48,
+   "events": [
+    {
+     "text": "O placar final foi uma vitória por um ponto, 21 a 20, encerrando a sequência de 15 vitórias consecutivas dos All Blacks.",
+     "end_s": 8.096,
+     "hit": false
+    }
+   ]
+  },
+  {
+   "id": "fleurs-10600441480645147290",
+   "group": "fleurs",
+   "text": null,
+   "duration_s": 13.86,
+   "events": [
+    {
+     "text": "alguns relatórios dizem que o número oficial de mortos foi 8 e outros confirmam que até 30 ficam feridas.",
+     "end_s": 7.584,
+     "hit": false
+    },
+    {
+     "text": "Mas os números finais ainda não são conhecidos.",
+     "end_s": 12.0,
+     "hit": false
+    }
+   ]
+  },
+  {
+   "id": "fleurs-10655108907409043247",
+   "group": "fleurs",
+   "text": null,
+   "duration_s": 11.94,
+   "events": [
+    {
+     "text": "A principal cerveja local é a number one. Ela não é uma cerveja elaborada, mas é prazerosa e refrescante.",
+     "end_s": 7.456,
+     "hit": false
+    },
+    {
+     "text": "Outra cerveja local se chama Manta",
+     "end_s": 10.624,
+     "hit": false
+    }
+   ]
+  },
+  {
+   "id": "fleurs-10686842456770290048",
+   "group": "fleurs",
+   "text": null,
+   "duration_s": 11.22,
+   "events": [
+    {
+     "text": "Os pesquisadores sugeriram que, apesar do rabo ser um dinossauro jovem,",
+     "end_s": 5.664,
+     "hit": false
+    },
+    {
+     "text": "A amostra revela uma plumagem adulta, não uma penúgen.",
+     "end_s": 9.952,
+     "hit": false
+    }
+   ]
+  },
+  {
+   "id": "fleurs-10770520936029242279",
+   "group": "fleurs",
+   "text": null,
+   "duration_s": 13.8,
+   "events": [
+    {
+     "text": "O budismo de betano é baseado nos ensinamentos de Buda, mas foram ampliados pelo caminho do Amur-Dhuma.",
+     "end_s": 8.128,
+     "hit": false
+    },
+    {
+     "text": "do Mahayama e por muitas técnicas do yoga indiano.",
+     "end_s": 12.256,
+     "hit": false
+    }
+   ]
+  },
+  {
+   "id": "fleurs-10772221179495683943",
+   "group": "fleurs",
+   "text": null,
+   "duration_s": 15.9,
+   "events": [
+    {
+     "text": "O Parque Nacional Krug fica no Nordeste da África do Sul.",
+     "end_s": 5.12,
+     "hit": false
+    },
+    {
+     "text": "Ao longo da fronteira de Moçambique ao leste, do Zimbabwe ao norte e ao Crocodile River na fronteira sul.",
+     "end_s": 13.408,
+     "hit": false
+    }
+   ]
+  },
+  {
+   "id": "fleurs-10777509745863636963",
+   "group": "fleurs",
+   "text": null,
+   "duration_s": 9.24,
+   "events": [
+    {
+     "text": "Dizem que os saques generalizados continuaram durante toda a noite, ao passo que não se via a polícia presente nas ruas de Bishkek.",
+     "end_s": 7.904,
+     "hit": false
+    }
+   ]
+  },
+  {
+   "id": "fleurs-10875569365139483518",
+   "group": "fleurs",
+   "text": null,
+   "duration_s": 10.2,
+   "events": [
+    {
+     "text": "Os produtos artesanais podem ser definidos como antigüidades, embora sejam mais jovens do que produtos parecidos produzidos em massa.",
+     "end_s": 8.704,
+     "hit": false
+    }
+   ]
+  },
+  {
+   "id": "fleurs-10876957198676858120",
+   "group": "fleurs",
+   "text": null,
+   "duration_s": 8.16,
+   "events": [
+    {
+     "text": "Com apenas 18 medalhas disponíveis por dia, um número considerável de países não conseguiu ganhar medalhas.",
+     "end_s": 6.816,
+     "hit": false
+    }
+   ]
+  },
+  {
+   "id": "fleurs-10884389430710460345",
+   "group": "fleurs",
+   "text": null,
+   "duration_s": 13.8,
+   "events": [
+    {
+     "text": "Perdi minha irmã e a amiga dela, e no meu caminho havia duas pessoas deficientes em cadeiras de rodas.",
+     "end_s": 7.744,
+     "hit": false
+    },
+    {
+     "text": "Donas pulando e empolando elas, disse Armand Versace.",
+     "end_s": 11.936,
+     "hit": false
+    }
+   ]
+  },
+  {
+   "id": "fleurs-1088555081702852536",
+   "group": "fleurs",
+   "text": null,
+   "duration_s": 5.64,
+   "events": [
+    {
+     "text": "O resultado da análise do gráfico será disponibilizado no site público.",
+     "end_s": 4.736,
+     "hit": false
+    }
+   ]
+  },
+  {
+   "id": "fleurs-10900250493010378627",
+   "group": "fleurs",
+   "text": null,
+   "duration_s": 8.58,
+   "events": [
+    {
+     "text": "Essas coisas se tornaram disciplinas separadas, que se concentram em fornecer soluções para os problemas da vida real.",
+     "end_s": 7.712,
+     "hit": false
+    }
+   ]
+  },
+  {
+   "id": "fleurs-11092620502618673768",
+   "group": "fleurs",
+   "text": null,
+   "duration_s": 11.76,
+   "events": [
+    {
+     "text": "Se for visitar as áreas arcticas ou antárticas no inverno, você vai experimentar a noite polar, o que significa que o Sol não sobe acima do horizonte.",
+     "end_s": 10.24,
+     "hit": false
+    }
+   ]
+  },
+  {
+   "id": "fleurs-11132459245063364782",
+   "group": "fleurs",
+   "text": null,
+   "duration_s": 7.14,
+   "events": [
+    {
+     "text": "O maior torneio do ano ocorre em dezembro, nos campos de Polo, em Las Canitas",
+     "end_s": 5.824,
+     "hit": false
+    }
+   ]
+  },
+  {
+   "id": "fleurs-11193159258989471636",
+   "group": "fleurs",
+   "text": null,
+   "duration_s": 14.04,
+   "events": [
+    {
+     "text": "Com o passar do tempo, conforme a nova população começa a se adaptar ao seu novo ambiente",
+     "end_s": 7.936,
+     "hit": false
+    },
+    {
+     "text": "ela vai ficando menos e menos parecida com a outra população.",
+     "end_s": 12.96,
+     "hit": false
+    }
+   ]
+  },
+  {
+   "id": "fleurs-11259549995937065245",
+   "group": "fleurs",
+   "text": null,
+   "duration_s": 11.28,
+   "events": [
+    {
+     "text": "ou placar final, foi uma vitória por um ponto.",
+     "end_s": 3.392,
+     "hit": false
+    },
+    {
+     "text": "21-20, encerrando a sequência de 15 vitórias consecutivas...",
+     "end_s": 8.16,
+     "hit": false
+    },
+    {
+     "text": "do All Blacks.",
+     "end_s": 9.76,
+     "hit": false
+    }
+   ]
+  },
+  {
+   "id": "fleurs-11267891273569506653",
+   "group": "fleurs",
+   "text": null,
+   "duration_s": 21.72,
+   "events": [
+    {
+     "text": "As amplas avenidas, os prédios com fachado de vidro e os centros comerciais modernos, são marcados por telhados vermelhos tradicionais. O mercado do século XVIII e as antigas mesquitas e igrigas, embora a cidade tenha uma atmosfera que remete mais à Europa Mediterrânea do que a Turquia clássica.",
+     "end_s": 21.152,
+     "hit": false
+    }
+   ]
+  },
+  {
+   "id": "fleurs-11278916061079989542",
+   "group": "fleurs",
+   "text": null,
+   "duration_s": 9.48,
+   "events": [
+    {
+     "text": "Unatau",
+     "end_s": 1.952,
+     "hit": false
+    },
+    {
+     "text": "É um dos feriados mais importantes do cristianismo e é celebrado como o aniversário de Jesus.",
+     "end_s": 8.384,
+     "hit": false
+    }
+   ]
+  },
+  {
+   "id": "fleurs-11296799965122436324",
+   "group": "fleurs",
+   "text": null,
+   "duration_s": 15.66,
+   "events": [
+    {
+     "text": "O tranche entre Pointe-Marrion e FireMonte apresenta as condições mais desafiadoras para motoristas na rodovia Búfalo-Pittsburg.",
+     "end_s": 10.272,
+     "hit": false
+    },
+    {
+     "text": "que passam frequentemente por áreas de sertão isoladas.",
+     "end_s": 15.264,
+     "hit": false
+    }
+   ]
+  },
+  {
+   "id": "fleurs-11300549843206521668",
+   "group": "fleurs",
+   "text": null,
+   "duration_s": 15.9,
+   "events": [
+    {
+     "text": "Podemos começar a viver de maneira mais amigável com o ambiente. Podemos nos juntar ao movimento ambiental e podemos até ser ativistas para reduzirmos o sofrimento futuro em algum grau.",
+     "end_s": 15.264,
+     "hit": false
+    }
+   ]
+  },
+  {
+   "id": "fleurs-1131978976260848772",
+   "group": "fleurs",
+   "text": null,
+   "duration_s": 12.48,
+   "events": [
+    {
+     "text": "Robin Utapa fez a pontuação mais alta do Innings, 70 corridas em apenas 41 bolas, acertando 11,4 e 2,6.",
+     "end_s": 10.496,
+     "hit": false
+    }
+   ]
+  },
+  {
+   "id": "fleurs-11336492390727033871",
+   "group": "fleurs",
+   "text": null,
+   "duration_s": 13.8,
+   "events": [
+    {
+     "text": "Devido a longa distância desde o continente, os mamíferos não podem fazer a jornada e que tornou a tartaruga gigante a principal animal do pasto nos galápagos.",
+     "end_s": 12.416,
+     "hit": false
+    }
+   ]
+  },
+  {
+   "id": "fleurs-11418592154298278484",
+   "group": "fleurs",
+   "text": null,
+   "duration_s": 8.46,
+   "events": [
+    {
+     "text": "Assim que você consegue sair da corrente, nadar de volta não é mais difícil do que seria usualmente.",
+     "end_s": 7.552,
+     "hit": false
+    }
+   ]
+  },
+  {
+   "id": "fleurs-11451482652857144615",
+   "group": "fleurs",
+   "text": null,
+   "duration_s": 11.4,
+   "events": [
+    {
+     "text": "Um ex-policial filipino sequestrou um ônibus de turistas em Manila, capital das Filipinas, e os manteve reféns em Hong Kong.",
+     "end_s": 9.248,
+     "hit": false
+    }
+   ]
+  },
+  {
+   "id": "fleurs-11484580613623955848",
+   "group": "fleurs",
+   "text": null,
+   "duration_s": 12.24,
+   "events": [
+    {
+     "text": "Ele adverte que não há garantias de que alguma ação no Iraque neste momento irá impedir a guerra entre seitas, o aumento da violência ou a tendência para o caos.",
+     "end_s": 10.816,
+     "hit": false
+    }
+   ]
+  },
+  {
+   "id": "fleurs-11528870747103321554",
+   "group": "fleurs",
+   "text": null,
+   "duration_s": 15.0,
+   "events": [
+    {
+     "text": "O budismo tibetano é baseado nos ensinamentos de Buda, mas foram ampliados pelo caminho do amor, do Marraiana e por muitas técnicas do yoga indiano.",
+     "end_s": 13.76,
+     "hit": false
+    }
+   ]
+  },
+  {
+   "id": "fleurs-11703936421131471808",
+   "group": "fleurs",
+   "text": null,
+   "duration_s": 10.98,
+   "events": [
+    {
+     "text": "A religião principal na mão Udavia é o Cristianismo Ortodoxo.",
+     "end_s": 8.0,
+     "hit": false
+    }
+   ]
+  },
+  {
+   "id": "fleurs-11852142662884391002",
+   "group": "fleurs",
+   "text": null,
+   "duration_s": 14.4,
+   "events": [
+    {
+     "text": "Aculinária Majorquina, assim como o Adesona Seminares no Metrô. Ele vai basear em pão vegetais e carne.",
+     "end_s": 8.288,
+     "hit": false
+    },
+    {
+     "text": "especialmente de porco. Eu utilizo azeite de oliva em tudo.",
+     "end_s": 12.736,
+     "hit": false
+    }
+   ]
+  },
+  {
+   "id": "fleurs-11868703931408793172",
+   "group": "fleurs",
+   "text": null,
+   "duration_s": 8.16,
+   "events": [
+    {
+     "text": "Você pode ver as pirâmides no escuro e também no silêncio.",
+     "end_s": 4.864,
+     "hit": false
+    },
+    {
+     "text": "antes de um show começar.",
+     "end_s": 6.848,
+     "hit": false
+    }
+   ]
+  },
+  {
+   "id": "fleurs-11874095154467965042",
+   "group": "fleurs",
+   "text": null,
+   "duration_s": 11.82,
+   "events": [
+    {
+     "text": "O objetivo principal da ciência é entender como o mundo funciona através do método científico e esse método de que orienta as pessoas científicas.",
+     "end_s": 9.472,
+     "hit": false
+    }
+   ]
+  },
+  {
+   "id": "fleurs-11931116086520927288",
+   "group": "fleurs",
+   "text": null,
+   "duration_s": 8.7,
+   "events": [
+    {
+     "text": "Há muitas praias, devido a Auckland ficarem duas enceadas.",
+     "end_s": 4.832,
+     "hit": false
+    },
+    {
+     "text": "As mais populares ficam em três áreas.",
+     "end_s": 7.84,
+     "hit": false
+    }
+   ]
+  },
+  {
+   "id": "fleurs-12012966600545456436",
+   "group": "fleurs",
+   "text": null,
+   "duration_s": 12.0,
+   "events": [
+    {
+     "text": "O curso cobrirá, normalmente, todos os tópicos conversados aqui com bastante mais detalhes, normalmente com experiência prática.",
+     "end_s": 10.912,
+     "hit": false
+    }
+   ]
+  },
+  {
+   "id": "fleurs-1203413407386234720",
+   "group": "fleurs",
+   "text": null,
+   "duration_s": 16.74,
+   "events": [
+    {
+     "text": "Os artigos necessitavam do consentimento unânime entre todos os estados antes que pudessem ser imendados e os estados deram tão pouco importância ao governo central que os representantes deles quase nunca estavam presentes.",
+     "end_s": 15.84,
+     "hit": false
+    }
+   ]
+  },
+  {
+   "id": "fleurs-12080198172208341234",
+   "group": "fleurs",
+   "text": null,
+   "duration_s": 14.22,
+   "events": [
+    {
+     "text": "Quando os combates acessaram após os feridos serem transportados para o hospital, cerca de 40 dos outros em...",
+     "end_s": 7.488,
+     "hit": false
+    },
+    {
+     "text": "Ternos restantes permanecem no pati e se recusam a voltar para suas selas.",
+     "end_s": 12.576,
+     "hit": false
+    }
+   ]
+  },
+  {
+   "id": "fleurs-12189467844772725952",
+   "group": "fleurs",
+   "text": null,
+   "duration_s": 12.6,
+   "events": [
+    {
+     "text": "Não sei se você nota isso ou não, mas uma grande parte das mercadorias da América Central veio para este país sem pagar impostos.",
+     "end_s": 11.392,
+     "hit": false
+    }
+   ]
+  },
+  {
+   "id": "fleurs-1221552808331230491",
+   "group": "fleurs",
+   "text": null,
+   "duration_s": 12.36,
+   "events": [
+    {
+     "text": "Na maioria dos casos, se inscreverem um curso no exterior durante um ano sabático pode, de fato, aumentar suas chances de ingressar na educação superior no seu país de origem.",
+     "end_s": 11.488,
+     "hit": false
+    }
+   ]
+  },
+  {
+   "id": "fleurs-12252969563763450375",
+   "group": "fleurs",
+   "text": null,
+   "duration_s": 8.52,
+   "events": [
+    {
+     "text": "No adro da igreja há interessantes esculturas em mármore de pombas sobre tumbas de pessoas.",
+     "end_s": 7.2,
+     "hit": false
+    }
+   ]
+  },
+  {
+   "id": "fleurs-12283912677614379977",
+   "group": "fleurs",
+   "text": null,
+   "duration_s": 15.54,
+   "events": [
+    {
+     "text": "Devido a longa distância desde o continente, os mamíferos não puderam fazer a jornada, o que tornou a tartaruga gigante a principal animal de pasto nas calápagos.",
+     "end_s": 12.512,
+     "hit": false
+    }
+   ]
+  },
+  {
+   "id": "fleurs-12439698581380539453",
+   "group": "fleurs",
+   "text": null,
+   "duration_s": 14.76,
+   "events": [
+    {
+     "text": "Em princípio, o budismo tibetano é muito simples. Ele consiste na Kundalini Yoga, na meditação e no caminho do amor obrangente.",
+     "end_s": 12.096,
+     "hit": false
+    }
+   ]
+  },
+  {
+   "id": "fleurs-12478445157631932958",
+   "group": "fleurs",
+   "text": null,
+   "duration_s": 9.3,
+   "events": [
+    {
+     "text": "Não havia grandes florestas na terra de Canaã?",
+     "end_s": 4.896,
+     "hit": false
+    },
+    {
+     "text": "Por isso a madeira era extremamente cara.",
+     "end_s": 8.576,
+     "hit": false
+    }
+   ]
+  },
+  {
+   "id": "fleurs-1252968753248888315",
+   "group": "fleurs",
+   "text": null,
+   "duration_s": 15.12,
+   "events": [
+    {
+     "text": "Em uma parceria da NPWS e da Sporting Shooters Association of Australia, INC, voluntários qualificados foram recrutados de acordo com o programa de caça da Sporting Shooters Association.",
+     "end_s": 13.664,
+     "hit": false
+    }
+   ]
+  },
+  {
+   "id": "fleurs-12608289738982942272",
+   "group": "fleurs",
+   "text": null,
+   "duration_s": 6.6,
+   "events": [
+    {
+     "text": "Todos foram afetados por sua força influenciadora desde o rei até o plebeu",
+     "end_s": 5.952,
+     "hit": false
+    }
+   ]
+  },
+  {
+   "id": "fleurs-12649617510059681669",
+   "group": "fleurs",
+   "text": null,
+   "duration_s": 16.56,
+   "events": [
+    {
+     "text": "Empresas transportadoras são bem pagas para entregar coisas rapidamente.",
+     "end_s": 6.336,
+     "hit": false
+    },
+    {
+     "text": "Frequentemente, o tempo é muito importante no envio de documentos comerciais, mercadorias ou peças sobressalentes para um reparo urgente.",
+     "end_s": 15.744,
+     "hit": false
+    }
+   ]
+  },
+  {
+   "id": "fleurs-12682472689138541212",
+   "group": "fleurs",
+   "text": null,
+   "duration_s": 14.64,
+   "events": [
+    {
+     "text": "o relatório é iniciado com apelo por um debate aberto e pela formação de um consenso nos Estados Unidos sobre a política relacionada ao Oriente Médio.",
+     "end_s": 12.416,
+     "hit": false
+    }
+   ]
+  },
+  {
+   "id": "fleurs-12714713260942421678",
+   "group": "fleurs",
+   "text": null,
+   "duration_s": 14.76,
+   "events": [
+    {
+     "text": "A culinária é maior, Kina.",
+     "end_s": 2.752,
+     "hit": false
+    },
+    {
+     "text": "Assim como a de zonas similares no Mediterrâneo",
+     "end_s": 5.888,
+     "hit": false
+    },
+    {
+     "text": "é baseada em pão, vegetais e carne, especialmente de porco.",
+     "end_s": 10.88,
+     "hit": false
+    },
+    {
+     "text": "e utilize azeite de oliva em tudo.",
+     "end_s": 13.952,
+     "hit": false
+    }
+   ]
+  },
+  {
+   "id": "fleurs-12748241411558243402",
+   "group": "fleurs",
+   "text": null,
+   "duration_s": 8.34,
+   "events": [
+    {
+     "text": "Apesar de três pessoas estarem dentro da casa quando ela foi atingida pelo carro, nenhuma delas ficou ferida.",
+     "end_s": 7.392,
+     "hit": false
+    }
+   ]
+  },
+  {
+   "id": "fleurs-12778209501458965696",
+   "group": "fleurs",
+   "text": null,
+   "duration_s": 14.1,
+   "events": [
+    {
+     "text": "Gordon John Droll, porta-voz de Bush, classificou a promessa da Coreia do Norte como um importante passo em direção ao objetivo de alcançar a desnuclearização verificável da Península coreana.",
+     "end_s": 13.216,
+     "hit": false
+    }
+   ]
+  },
+  {
+   "id": "fleurs-12781802128469181142",
+   "group": "fleurs",
+   "text": null,
+   "duration_s": 17.22,
+   "events": [
+    {
+     "text": "Entre as 1400 pessoas entrevistadas antes das eleições federais de 2010, o percentual dos que se opõem à mudança na Austrália",
+     "end_s": 10.08,
+     "hit": false
+    },
+    {
+     "text": "Para ela se tornar uma república, cresceu 8% desde 2008.",
+     "end_s": 15.744,
+     "hit": false
+    }
+   ]
+  },
+  {
+   "id": "fleurs-12817267281232432150",
+   "group": "fleurs",
+   "text": null,
+   "duration_s": 9.42,
+   "events": [
+    {
+     "text": "Um ex policial filipino sequestrou ônibus de turistas em Manila, capital das Filipinas, e os manteve reféns em Hong Kong.",
+     "end_s": 8.32,
+     "hit": false
+    }
+   ]
+  },
+  {
+   "id": "fleurs-12818291475688349546",
+   "group": "fleurs",
+   "text": null,
+   "duration_s": 8.7,
+   "events": [
+    {
+     "text": "Aquilo não pareceu fazer sentido para mim. Certamente não foi justo.",
+     "end_s": 6.88,
+     "hit": false
+    }
+   ]
+  },
+  {
+   "id": "fleurs-12827436540485124190",
+   "group": "fleurs",
+   "text": null,
+   "duration_s": 8.4,
+   "events": [
+    {
+     "text": "Naturalistas e Filosofos se concentraram em textos clássicos e, em particular, na Bíblia em Latín.",
+     "end_s": 7.52,
+     "hit": false
+    }
+   ]
+  },
+  {
+   "id": "fleurs-12863661200875768521",
+   "group": "fleurs",
+   "text": null,
+   "duration_s": 9.24,
+   "events": [
+    {
+     "text": "Os árabes também levaram para as terras o Islã, que ganhou muita popularidade em Komores e Maiote.",
+     "end_s": 7.648,
+     "hit": false
+    }
+   ]
+  },
+  {
+   "id": "fleurs-12893805641143776198",
+   "group": "fleurs",
+   "text": null,
+   "duration_s": 20.64,
+   "events": [
+    {
+     "text": "Agora, amplamente disponível pelo arquipélago, a culinária javanese inclui uma variadade de pratos temperados de maneira simples.",
+     "end_s": 8.928,
+     "hit": false
+    },
+    {
+     "text": "Codimentos predominantes de preferência javanês, acendo amendoim, pimentas, açúcar, principalmente açúcar do coco javanês e várias especiarias aromáticas.",
+     "end_s": 19.296,
+     "hit": false
+    }
+   ]
+  },
+  {
+   "id": "fleurs-13092883766962544808",
+   "group": "fleurs",
+   "text": null,
+   "duration_s": 12.24,
+   "events": [
+    {
+     "text": "e agatha-mijis que auzina o Cliade.",
+     "end_s": 3.616,
+     "hit": false
+    },
+    {
+     "text": "Kamasaki, Kanewa",
+     "end_s": 5.696,
+     "hit": false
+    },
+    {
+     "text": "Prefeitura de ____ estava funcionando de forma normal.",
+     "end_s": 11.296,
+     "hit": false
+    }
+   ]
+  },
+  {
+   "id": "fleurs-13111501150672418838",
+   "group": "fleurs",
+   "text": null,
+   "duration_s": 13.62,
+   "events": [
+    {
+     "text": "o Parque Abrange de 19.500 km² e é dividido em 14 zonas ecológicas diferentes, cada uma sustentando diferentes espécies animais.",
+     "end_s": 12.928,
+     "hit": false
+    }
+   ]
+  },
+  {
+   "id": "fleurs-13176761622758203681",
+   "group": "fleurs",
+   "text": null,
+   "duration_s": 13.38,
+   "events": [
+    {
+     "text": "As mulheres devem estar...",
+     "end_s": 2.272,
+     "hit": false
+    },
+    {
+     "text": "Entender que as diferenças culturais podem ocasionar atos que elas considerariam como assédio e não é incomum serem seguidas agarradas pelo braço e etc.",
+     "end_s": 12.384,
+     "hit": false
+    }
+   ]
+  },
+  {
+   "id": "fleurs-13180728382513734737",
+   "group": "fleurs",
+   "text": null,
+   "duration_s": 12.78,
+   "events": [
+    {
+     "text": "Alguns animais, como os elefantes e as girafas, têm a tendência de se aproximarem dos carros e o equipamento básico possibilita uma boa visualização.",
+     "end_s": 11.68,
+     "hit": false
+    }
+   ]
+  },
+  {
+   "id": "fleurs-13221766043673296259",
+   "group": "fleurs",
+   "text": null,
+   "duration_s": 7.44,
+   "events": [
+    {
+     "text": "Eles ainda estão tentando determinar o tamanho do acidente e como a terra será afetada.",
+     "end_s": 6.656,
+     "hit": false
+    }
+   ]
+  },
+  {
+   "id": "fleurs-13238830627750381272",
+   "group": "fleurs",
+   "text": null,
+   "duration_s": 9.84,
+   "events": [
+    {
+     "text": "Naturalistas e Filosofos se concentraram em textos clássicos e, em particular, na Bíblia, em Latín.",
+     "end_s": 8.8,
+     "hit": false
+    }
+   ]
+  },
+  {
+   "id": "fleurs-1331833229962432141",
+   "group": "fleurs",
+   "text": null,
+   "duration_s": 6.12,
+   "events": [
+    {
+     "text": "Os espanhóis iniciaram um período de colonização que durou três séculos.",
+     "end_s": 4.64,
+     "hit": false
+    }
+   ]
+  },
+  {
+   "id": "fleurs-13440791064404963413",
+   "group": "fleurs",
+   "text": null,
+   "duration_s": 17.52,
+   "events": [
+    {
+     "text": "Ela chegou a essa conclusão devido à infinidade de comentários positivos e incentivos enviados a ela por indivíduos do sexo feminino e masculino, pedindo que a medicação contraceptiva seja considerada uma necessidade médica.",
+     "end_s": 15.584,
+     "hit": false
+    }
+   ]
+  },
+  {
+   "id": "fleurs-136235502130033299",
+   "group": "fleurs",
+   "text": null,
+   "duration_s": 6.12,
+   "events": [
+    {
+     "text": "Os cientistas dizem que a explosão causada pela colisão foi intensa.",
+     "end_s": 4.704,
+     "hit": false
+    }
+   ]
+  },
+  {
+   "id": "fleurs-13644000713903171934",
+   "group": "fleurs",
+   "text": null,
+   "duration_s": 16.2,
+   "events": [
+    {
+     "text": "A ciência aponta hoje que essa economia baseada no carbono deslocou a biosfera do estado estável que havia permitido a evolução humana ao longo dos últimos 2 milhões de anos.",
+     "end_s": 15.2,
+     "hit": false
+    }
+   ]
+  },
+  {
+   "id": "fleurs-13678402803289079897",
+   "group": "fleurs",
+   "text": null,
+   "duration_s": 6.12,
+   "events": [
+    {
+     "text": "Agatha está derramando sobre o DIC em uma sessão de 100 pés de largura.",
+     "end_s": 5.344,
+     "hit": true
+    }
+   ]
+  },
+  {
+   "id": "fleurs-13756794764949540594",
+   "group": "fleurs",
+   "text": null,
+   "duration_s": 7.74,
+   "events": [
+    {
+     "text": "As ilhas do leste da África estão no Oceano Índico.",
+     "end_s": 3.648,
+     "hit": false
+    },
+    {
+     "text": "a uma distância da costa leste da África.",
+     "end_s": 6.912,
+     "hit": false
+    }
+   ]
+  },
+  {
+   "id": "fleurs-13766167675576683106",
+   "group": "fleurs",
+   "text": null,
+   "duration_s": 14.46,
+   "events": [
+    {
+     "text": "Na maioria dos casos, se escreverem um concurso no exterior durante um ano sabático pode, de fato, aumentar suas chances de ingressar na educação superior no seu país de origem.",
+     "end_s": 12.992,
+     "hit": false
+    }
+   ]
+  },
+  {
+   "id": "fleurs-13867156691922332750",
+   "group": "fleurs",
+   "text": null,
+   "duration_s": 9.36,
+   "events": [
+    {
+     "text": "Acidentes Aéreos são comuns no Irã.",
+     "end_s": 2.592,
+     "hit": false
+    },
+    {
+     "text": "que tem uma frota envelhecida e mal conservada, tanto para operações civis quanto militares.",
+     "end_s": 8.832,
+     "hit": false
+    }
+   ]
+  },
+  {
+   "id": "fleurs-13867458745275327281",
+   "group": "fleurs",
+   "text": null,
+   "duration_s": 5.16,
+   "events": [
+    {
+     "text": "O 5º C é Pedro Marteli em 4 anos",
+     "end_s": 4.032,
+     "hit": false
+    }
+   ]
+  },
+  {
+   "id": "fleurs-13879296923236682283",
+   "group": "fleurs",
+   "text": null,
+   "duration_s": 11.76,
+   "events": [
+    {
+     "text": "Logo, policiais preparados com equipamento anti-motin entraram no pátio e encurralaram os detentos com gás lacrimogênio.",
+     "end_s": 9.344,
+     "hit": false
+    }
+   ]
+  },
+  {
+   "id": "fleurs-13914814401492683405",
+   "group": "fleurs",
+   "text": null,
+   "duration_s": 14.34,
+   "events": [
+    {
+     "text": "A tecnologia oferece a solução com aulas de campo virtuais.",
+     "end_s": 5.6,
+     "hit": false
+    },
+    {
+     "text": "Da sala de aula, os alunos podem ver peças de museus visitar um aquário ou admirar belas obras de arte.",
+     "end_s": 13.088,
+     "hit": false
+    }
+   ]
+  },
+  {
+   "id": "fleurs-14001237774995782012",
+   "group": "fleurs",
+   "text": null,
+   "duration_s": 13.38,
+   "events": [
+    {
+     "text": "A principal cerveja local é a number one. Ela não é uma cerveja elaborada, mas é prazerosa e refrescante. A outra cerveja local se chama Manta.",
+     "end_s": 11.936,
+     "hit": false
+    }
+   ]
+  },
+  {
+   "id": "fleurs-14034847373049017150",
+   "group": "fleurs",
+   "text": null,
+   "duration_s": 14.76,
+   "events": [
+    {
+     "text": "O Parque Abrange, 19.500 km², é dividido em 14 zonas ecológicas diferentes.",
+     "end_s": 10.016,
+     "hit": false
+    },
+    {
+     "text": "cada uma sustentando diferentes espécies animais.",
+     "end_s": 14.016,
+     "hit": false
+    }
+   ]
+  },
+  {
+   "id": "fleurs-14042294750736263832",
+   "group": "fleurs",
+   "text": null,
+   "duration_s": 5.64,
+   "events": [
+    {
+     "text": "A maior parte da vida familiar hebraica acontecia ao ar livre.",
+     "end_s": 4.704,
+     "hit": false
+    }
+   ]
+  },
+  {
+   "id": "fleurs-14049926987864085982",
+   "group": "fleurs",
+   "text": null,
+   "duration_s": 10.98,
+   "events": [
+    {
+     "text": "o satellite no espaço recebe a chamada e depois a redirecione de volta.",
+     "end_s": 5.984,
+     "hit": false
+    },
+    {
+     "text": "quase instantaneamente.",
+     "end_s": 8.0,
+     "hit": false
+    }
+   ]
+  },
+  {
+   "id": "fleurs-14051619729602366996",
+   "group": "fleurs",
+   "text": null,
+   "duration_s": 11.1,
+   "events": [
+    {
+     "text": "Os gastos de guerra do imperialismo dos Estados Unidos na conquista das Filipinas foram pagos pela própria população filipina.",
+     "end_s": 10.112,
+     "hit": false
+    }
+   ]
+  },
+  {
+   "id": "fleurs-14094810676704975512",
+   "group": "fleurs",
+   "text": null,
+   "duration_s": 15.48,
+   "events": [
+    {
+     "text": "Entre as 1400 pessoas entrevistadas às eleições federais de 2010, o percentual dos que se opõe à mudança na Austrália para ela se tornar uma república cresceu de 8% desde 2008.",
+     "end_s": 14.176,
+     "hit": false
+    }
+   ]
+  },
+  {
+   "id": "fleurs-14106123975849437227",
+   "group": "fleurs",
+   "text": null,
+   "duration_s": 9.0,
+   "events": [
+    {
+     "text": "Apesar de três pessoas estarem dentro da casa quando ela foi atingida pelo carro, nenhuma delas ficou ferida.",
+     "end_s": 7.456,
+     "hit": false
+    }
+   ]
+  },
+  {
+   "id": "fleurs-14199968064805023859",
+   "group": "fleurs",
+   "text": null,
+   "duration_s": 12.72,
+   "events": [
+    {
+     "text": "Por favor.",
+     "end_s": 1.824,
+     "hit": false
+    },
+    {
+     "text": "Trate o local com toda dignidade, solenidade e respeito que ele merece. Não faça piadas sobre o holocausto ou nazistas.",
+     "end_s": 10.912,
+     "hit": false
+    }
+   ]
+  },
+  {
+   "id": "fleurs-1420874805665270704",
+   "group": "fleurs",
+   "text": null,
+   "duration_s": 10.2,
+   "events": [
+    {
+     "text": "muitos formatos comuns, a família APS de formatos por exemplo, são iguais a se aproxima muito dessa proporção.",
+     "end_s": 8.768,
+     "hit": false
+    }
+   ]
+  },
+  {
+   "id": "fleurs-14259488304418287904",
+   "group": "fleurs",
+   "text": null,
+   "duration_s": 13.92,
+   "events": [
+    {
+     "text": "As mulheres devem entender que diferenças culturais podem acasar narratos que elas considerariam como assédio e não em comum serem seguidas, agarradas pelo braço, etc.",
+     "end_s": 12.352,
+     "hit": false
+    }
+   ]
+  },
+  {
+   "id": "fleurs-14339056453637387328",
+   "group": "fleurs",
+   "text": null,
+   "duration_s": 17.1,
+   "events": [
+    {
+     "text": "Gordon John Drone, o portavoz de Bush classificou a promessa da Coreia do Norte como um importante passo em direção ao objetivo de alcançar a desnuclearização verificável",
+     "end_s": 13.152,
+     "hit": false
+    },
+    {
+     "text": "da Península Coreana.",
+     "end_s": 15.456,
+     "hit": false
+    }
+   ]
+  },
+  {
+   "id": "fleurs-14480226027404278813",
+   "group": "fleurs",
+   "text": null,
+   "duration_s": 8.22,
+   "events": [
+    {
+     "text": "Os primeiros casos de doença nesta temporada foram notificados no final de julho.",
+     "end_s": 5.856,
+     "hit": false
+    }
+   ]
+  },
+  {
+   "id": "fleurs-14556252455434671584",
+   "group": "fleurs",
+   "text": null,
+   "duration_s": 7.92,
+   "events": [
+    {
+     "text": "A água está derrebando sobre o dique e uma sessão de sem pé de largura.",
+     "end_s": 6.208,
+     "hit": false
+    }
+   ]
+  },
+  {
+   "id": "fleurs-14590633549409809822",
+   "group": "fleurs",
+   "text": null,
+   "duration_s": 11.88,
+   "events": [
+    {
+     "text": "Um ex policial filipino sequestrou um ônibus de turistas em Manilha.",
+     "end_s": 5.728,
+     "hit": false
+    },
+    {
+     "text": "Capital das Filipinas, Newsmobile Refens, Hong Kong",
+     "end_s": 10.368,
+     "hit": false
+    }
+   ]
+  },
+  {
+   "id": "fleurs-14597665433717979060",
+   "group": "fleurs",
+   "text": null,
+   "duration_s": 6.0,
+   "events": [
+    {
+     "text": "Um curry pode ser seco ou molhado, dependendo da quantidade de líquido.",
+     "end_s": 5.056,
+     "hit": false
+    }
+   ]
+  },
+  {
+   "id": "fleurs-14633487492335271214",
+   "group": "fleurs",
+   "text": null,
+   "duration_s": 11.28,
+   "events": [
+    {
+     "text": "Alimentação na Roma Antiga não incluía mantimentos originados da América e da Ásia para a Europa, assim como aconteceu nos séculos posteriores.",
+     "end_s": 9.856,
+     "hit": false
+    }
+   ]
+  },
+  {
+   "id": "fleurs-14739387872797424152",
+   "group": "fleurs",
+   "text": null,
+   "duration_s": 7.56,
+   "events": [
+    {
+     "text": "Uma opção cada vez mais popular para aqueles que pretende ter um ano sabático é viajar e aprender.",
+     "end_s": 6.688,
+     "hit": false
+    }
+   ]
+  },
+  {
+   "id": "fleurs-147428886929318913",
+   "group": "fleurs",
+   "text": null,
+   "duration_s": 7.8,
+   "events": [
+    {
+     "text": "Uma opção cada vez mais popular para aqueles que pretende ter um ano sabático é viajar e aprender.",
+     "end_s": 6.784,
+     "hit": false
+    }
+   ]
+  },
+  {
+   "id": "fleurs-1475217643939450546",
+   "group": "fleurs",
+   "text": null,
+   "duration_s": 16.44,
+   "events": [
+    {
+     "text": "O medalista de ouro olímpico deveria nadar nos 100 e 200 metros livres e em 13 revezamentos nos jogos da Commonwealth.",
+     "end_s": 8.64,
+     "hit": false
+    },
+    {
+     "text": "mas devido às suas queixas, suas condições físicas foi posta em dúvida.",
+     "end_s": 13.344,
+     "hit": false
+    }
+   ]
+  },
+  {
+   "id": "fleurs-14758885103644035140",
+   "group": "fleurs",
+   "text": null,
+   "duration_s": 13.8,
+   "events": [
+    {
+     "text": "Quando os combates cessaram após os feridos serem transportados para o hospital, cerca de 40 dos outros internos restantes permaneceram no pátio e se recusaram a voltar para suas selas.",
+     "end_s": 12.736,
+     "hit": false
+    }
+   ]
+  },
+  {
+   "id": "fleurs-14764319339787603376",
+   "group": "fleurs",
+   "text": null,
+   "duration_s": 8.22,
+   "events": [
+    {
+     "text": "Os safares são provavelmente a maior atração turística da África e menina dos olhos de muitos visitantes.",
+     "end_s": 7.488,
+     "hit": false
+    }
+   ]
+  },
+  {
+   "id": "fleurs-14875996789014383022",
+   "group": "fleurs",
+   "text": null,
+   "duration_s": 15.0,
+   "events": [
+    {
+     "text": "As qualidades que determinam uma subcultura como distinta podem ser linguísticas, estéticas religiosas, políticas, sexuais, geográficas ou uma combinação de fatores.",
+     "end_s": 14.112,
+     "hit": false
+    }
+   ]
+  },
+  {
+   "id": "fleurs-14883712346346541347",
+   "group": "fleurs",
+   "text": null,
+   "duration_s": 20.28,
+   "events": [
+    {
+     "text": "Esse novo ambiente tem recursos diferentes e novos competidores. Então, a nova população precisará adquirir características diferentes.",
+     "end_s": 11.456,
+     "hit": false
+    },
+    {
+     "text": "das que já possuem e adaptar-se para se tornar uma forte competidora.",
+     "end_s": 17.472,
+     "hit": false
+    }
+   ]
+  },
+  {
+   "id": "fleurs-14884580071509395321",
+   "group": "fleurs",
+   "text": null,
+   "duration_s": 10.8,
+   "events": [
+    {
+     "text": "Nesse ônibus de transporte dinâmico, todos estão de alguma forma conectados e apoiando um sistema de transporte baseado em carros particulares.",
+     "end_s": 10.336,
+     "hit": false
+    }
+   ]
+  },
+  {
+   "id": "fleurs-14919221057976711030",
+   "group": "fleurs",
+   "text": null,
+   "duration_s": 15.36,
+   "events": [
+    {
+     "text": "A tecnologia oferece a solução com aulas de campo virtuais. Da sala de aula, os alunos podem ver peças de museus, visitar um aquário ou admirar belas obras de arte.",
+     "end_s": 14.112,
+     "hit": false
+    }
+   ]
+  },
+  {
+   "id": "fleurs-14929704880350510643",
+   "group": "fleurs",
+   "text": null,
+   "duration_s": 14.4,
+   "events": [
+    {
+     "text": "Em seguida, algumas selas, principalmente células inglesas, têm barras de segurança que permitem que um estribo de couro caia da sela, se puxado para trás por um cavaleiro em queda.",
+     "end_s": 13.12,
+     "hit": false
+    }
+   ]
+  },
+  {
+   "id": "fleurs-1494245890965456814",
+   "group": "fleurs",
+   "text": null,
+   "duration_s": 9.3,
+   "events": [
+    {
+     "text": "Isso se tornou uma prática comum, mas o fél causava mais desgaste nas rodas de madeira dos vagões.",
+     "end_s": 6.624,
+     "hit": false
+    }
+   ]
+  },
+  {
+   "id": "fleurs-14987805420653015977",
+   "group": "fleurs",
+   "text": null,
+   "duration_s": 9.84,
+   "events": [
+    {
+     "text": "o paciente esteve na Nigéria, onde alguns casos de vírus ébola ocorreram.",
+     "end_s": 7.52,
+     "hit": false
+    }
+   ]
+  },
+  {
+   "id": "fleurs-1498791763712732829",
+   "group": "fleurs",
+   "text": null,
+   "duration_s": 12.24,
+   "events": [
+    {
+     "text": "Esquiar é uma atividade importante na viagem para muitos entusiastas, ocasionalmente conhecidos como SkiBuns, que planejam férias inteiras só para esquiar em um local específico.",
+     "end_s": 11.264,
+     "hit": false
+    }
+   ]
+  },
+  {
+   "id": "fleurs-15002211930014783278",
+   "group": "fleurs",
+   "text": null,
+   "duration_s": 12.84,
+   "events": [
+    {
+     "text": "Por exemplo, aprendizado e socialização são indicados com motivações importantes para a utilização da internet James et al 1995",
+     "end_s": 11.648,
+     "hit": false
+    }
+   ]
+  },
+  {
+   "id": "fleurs-15010141412374456010",
+   "group": "fleurs",
+   "text": null,
+   "duration_s": 14.1,
+   "events": [
+    {
+     "text": "Em seguida, algumas selas, principalmente selas inglesas, têm barras de segurança que permitem que um estribo de couro caia da sela, se puxado para trás por um cavaleiro em queda.",
+     "end_s": 13.376,
+     "hit": false
+    }
+   ]
+  },
+  {
+   "id": "fleurs-15011597012505036038",
+   "group": "fleurs",
+   "text": null,
+   "duration_s": 10.32,
+   "events": [
+    {
+     "text": "Com o passar do tempo, conforme a nova população começa a se adaptar ao seu novo ambiente, ela vai ficando menos e menos parecida com a outra população.",
+     "end_s": 9.248,
+     "hit": false
+    }
+   ]
+  },
+  {
+   "id": "fleurs-15085756855608962379",
+   "group": "fleurs",
+   "text": null,
+   "duration_s": 15.12,
+   "events": [
+    {
+     "text": "Arli Velasquez, doméstico, terminou um décimo quinto no SuperG para cadeirantes masculinos. Adam Hall, da Nova Zelândia, terminou em 9 no SuperG para não cadeirantes masculinos.",
+     "end_s": 13.536,
+     "hit": false
+    }
+   ]
+  },
+  {
+   "id": "fleurs-15151544223695431520",
+   "group": "fleurs",
+   "text": null,
+   "duration_s": 12.6,
+   "events": [
+    {
+     "text": "Autoridades locais estão alertando os moradores das proximidades da usina para permanecer dentro de casa, desligarem os ares condicionados e não beberem água de torneira.",
+     "end_s": 10.56,
+     "hit": false
+    }
+   ]
+  },
+  {
+   "id": "fleurs-15155928946214425757",
+   "group": "fleurs",
+   "text": null,
+   "duration_s": 7.26,
+   "events": [
+    {
+     "text": "A maior parte da vida familiar, hebraica.",
+     "end_s": 4.352,
+     "hit": false
+    },
+    {
+     "text": "Acontecia o ar livre.",
+     "end_s": 6.24,
+     "hit": false
+    }
+   ]
+  },
+  {
+   "id": "fleurs-15159169131441776460",
+   "group": "fleurs",
+   "text": null,
+   "duration_s": 10.68,
+   "events": [
+    {
+     "text": "Cantores famosos ao longo do país ofereceram bajans ou canções de devoção aos pés de Shiri Shiam",
+     "end_s": 8.8,
+     "hit": false
+    }
+   ]
+  },
+  {
+   "id": "fleurs-15175175037131408858",
+   "group": "fleurs",
+   "text": null,
+   "duration_s": 20.76,
+   "events": [
+    {
+     "text": "Por exemplo, aprendizado e socialização são indicados como motivações importantes para a utilização da internet. James At",
+     "end_s": 12.128,
+     "hit": false
+    },
+    {
+     "text": "ao 1995.",
+     "end_s": 14.464,
+     "hit": false
+    }
+   ]
+  },
+  {
+   "id": "fleurs-15183125945168561092",
+   "group": "fleurs",
+   "text": null,
+   "duration_s": 9.06,
+   "events": [
+    {
+     "text": "Mas três bombas explodiram perto dos prédios do governo em um período de duas horas.",
+     "end_s": 8.128,
+     "hit": false
+    }
+   ]
+  },
+  {
+   "id": "fleurs-1520995982242236682",
+   "group": "fleurs",
+   "text": null,
+   "duration_s": 12.84,
+   "events": [
+    {
+     "text": "Os membros de uma subcultura frequentemente sinalizam sua filhação por meio de um uso distinto e simbólico de estilo, que inclui modas, maneirismos e jargões.",
+     "end_s": 12.128,
+     "hit": false
+    }
+   ]
+  },
+  {
+   "id": "fleurs-15213275534160973909",
+   "group": "fleurs",
+   "text": null,
+   "duration_s": 11.88,
+   "events": [
+    {
+     "text": "Um curso cobrirá normalmente todos os tópicos conservados aqui com bastante mais detalhes.",
+     "end_s": 6.08,
+     "hit": false
+    },
+    {
+     "text": "Normalmente com experiência prática.",
+     "end_s": 10.976,
+     "hit": false
+    }
+   ]
+  },
+  {
+   "id": "fleurs-15217782805219868786",
+   "group": "fleurs",
+   "text": null,
+   "duration_s": 23.64,
+   "events": [
+    {
+     "text": "As antas avenidas, os prédios com fachada de vidro e os centros comerciais modernos são marcados por telhados vermelhos tradicionais.",
+     "end_s": 10.496,
+     "hit": false
+    },
+    {
+     "text": "o Mercado do Século 18 e as Mesquitas e Igrejas.",
+     "end_s": 15.456,
+     "hit": false
+    },
+    {
+     "text": "Embora a cidade tenha uma atmosfera que remete mais a Europa Mediterrânea do que a Turquia clássica.",
+     "end_s": 22.368,
+     "hit": false
+    }
+   ]
+  },
+  {
+   "id": "fleurs-15227559397971960561",
+   "group": "fleurs",
+   "text": null,
+   "duration_s": 9.24,
+   "events": [
+    {
+     "text": "Os cursos da água do interior podem ser um bom tema ao redor do qual organizar um feriado.",
+     "end_s": 7.712,
+     "hit": false
+    }
+   ]
+  },
+  {
+   "id": "fleurs-15315258868481983319",
+   "group": "fleurs",
+   "text": null,
+   "duration_s": 11.58,
+   "events": [
+    {
+     "text": "Logo, policiais preparados com equipamento anti-motin entraram no pátio e encurralaram os detentos com gás lacrimogênio.",
+     "end_s": 10.496,
+     "hit": false
+    }
+   ]
+  },
+  {
+   "id": "fleurs-15327269793504509719",
+   "group": "fleurs",
+   "text": null,
+   "duration_s": 5.88,
+   "events": [
+    {
+     "text": "ele mantou uma campainha sem fio.",
+     "end_s": 4.0,
+     "hit": false
+    },
+    {
+     "text": "GST",
+     "end_s": 5.184,
+     "hit": false
+    }
+   ]
+  },
+  {
+   "id": "fleurs-15473012590994936756",
+   "group": "fleurs",
+   "text": null,
+   "duration_s": 13.44,
+   "events": [
+    {
+     "text": "Os antigos do Egito do Novo Império se maravilhavam.",
+     "end_s": 4.8,
+     "hit": false
+    },
+    {
+     "text": "com as construções de seus antecessores que tinham até então muito mais de 10 mil anos.",
+     "end_s": 11.712,
+     "hit": false
+    }
+   ]
+  },
+  {
+   "id": "fleurs-15533844267155812305",
+   "group": "fleurs",
+   "text": null,
+   "duration_s": 10.2,
+   "events": [
+    {
+     "text": "Há muitas praias, devido ao client, ficar entre duas enciadas. As mais populares ficam em três áreas.",
+     "end_s": 8.704,
+     "hit": false
+    }
+   ]
+  },
+  {
+   "id": "fleurs-15538425734964286760",
+   "group": "fleurs",
+   "text": null,
+   "duration_s": 10.68,
+   "events": [
+    {
+     "text": "Como os estudantes frequentemente são a audiência mais crítica, o autor do blog começa a empenhar-se para melhorar a escrita e evitar críticas.",
+     "end_s": 9.984,
+     "hit": false
+    }
+   ]
+  },
+  {
+   "id": "fleurs-15564524265694946726",
+   "group": "fleurs",
+   "text": null,
+   "duration_s": 13.8,
+   "events": [
+    {
+     "text": "Os membros de uma subcultura",
+     "end_s": 3.2,
+     "hit": false
+    },
+    {
+     "text": "frequentemente sinalizam sua filiação por meio de um uso distinto e simbólico de estilo.",
+     "end_s": 9.856,
+     "hit": false
+    },
+    {
+     "text": "que inclui modas, maneirismos e jarvões.",
+     "end_s": 13.632,
+     "hit": false
+    }
+   ]
+  },
+  {
+   "id": "fleurs-15588325518103300253",
+   "group": "fleurs",
+   "text": null,
+   "duration_s": 7.56,
+   "events": [
+    {
+     "text": "a polícia disse que o corpo parecia estar ali, a cerca de um dia",
+     "end_s": 5.376,
+     "hit": false
+    }
+   ]
+  },
+  {
+   "id": "fleurs-15624424762221470327",
+   "group": "fleurs",
+   "text": null,
+   "duration_s": 14.88,
+   "events": [
+    {
+     "text": "Os pontos de vista apresentados são normalmente superficiais, gerais e simplificados em relação com as mais detalhadas informações disponíveis em outros lugares.",
+     "end_s": 13.28,
+     "hit": false
+    }
+   ]
+  },
+  {
+   "id": "fleurs-15692038143959016874",
+   "group": "fleurs",
+   "text": null,
+   "duration_s": 5.22,
+   "events": [
+    {
+     "text": "ele montou uma companhia sem fio, disse.",
+     "end_s": 3.264,
+     "hit": false
+    }
+   ]
+  },
+  {
+   "id": "fleurs-15728478101006272123",
+   "group": "fleurs",
+   "text": null,
+   "duration_s": 8.82,
+   "events": [
+    {
+     "text": "O corte estava agendado para terça-feira, mas foi suspenso após uma decisão judicial de emergência.",
+     "end_s": 7.424,
+     "hit": false
+    }
+   ]
+  },
+  {
+   "id": "fleurs-15770027802867777423",
+   "group": "fleurs",
+   "text": null,
+   "duration_s": 21.0,
+   "events": [
+    {
+     "text": "Mas as florestas não...",
+     "end_s": 3.2,
+     "hit": false
+    },
+    {
+     "text": "e só com os pantanos de mangue.",
+     "end_s": 6.72,
+     "hit": false
+    },
+    {
+     "text": "Elas têm algumas das últimas grandes selvas que já cumprirem.",
+     "end_s": 11.648,
+     "hit": false
+    },
+    {
+     "text": "Superfícies",
+     "end_s": 13.568,
+     "hit": false
+    },
+    {
+     "text": "e Jethika.",
+     "end_s": 15.52,
+     "hit": false
+    },
+    {
+     "text": "Estances",
+     "end_s": 16.864,
+     "hit": false
+    }
+   ]
+  },
+  {
+   "id": "fleurs-15838979793707947248",
+   "group": "fleurs",
+   "text": null,
+   "duration_s": 11.28,
+   "events": [
+    {
+     "text": "A ciência aponta hoje que essa economia baseada no carbono deslocou a biosfera do estado-estavo que havia permitido a evolução humana ao longo dos últimos 2 milhões de anos.",
+     "end_s": 10.208,
+     "hit": false
+    }
+   ]
+  },
+  {
+   "id": "fleurs-15857231501896913312",
+   "group": "fleurs",
+   "text": null,
+   "duration_s": 19.98,
+   "events": [
+    {
+     "text": "Os artigos necessitavam de consentimento unânime entre todos os estados antes que pudessem ser emendados e os estados deram tão pouco importância ao governo central que os representantes deles quase nunca estavam presentes.",
+     "end_s": 17.92,
+     "hit": false
+    }
+   ]
+  },
+  {
+   "id": "fleurs-15992381035557116281",
+   "group": "fleurs",
+   "text": null,
+   "duration_s": 12.9,
+   "events": [
+    {
+     "text": "Timbuktu passou a ser utilizado como uma metáfora para se referir às terras distantes e exóticas, tendo em vista sua relativa inacessibilidade.",
+     "end_s": 11.616,
+     "hit": false
+    }
+   ]
+  },
+  {
+   "id": "fleurs-16034299768742232890",
+   "group": "fleurs",
+   "text": null,
+   "duration_s": 11.22,
+   "events": [
+    {
+     "text": "A alimentação na romantiga não incluía mandimentos originados da América e da Ásia para a Europa, assim como aconteceu nos séculos posteriores.",
+     "end_s": 10.176,
+     "hit": false
+    }
+   ]
+  },
+  {
+   "id": "fleurs-16036082430209468584",
+   "group": "fleurs",
+   "text": null,
+   "duration_s": 13.86,
+   "events": [
+    {
+     "text": "Os portugueses a destruíram e reconstruíram com o nome de Casa Branca apenas para abandoná-la após um terremoto em 1755.",
+     "end_s": 12.032,
+     "hit": false
+    }
+   ]
+  },
+  {
+   "id": "fleurs-16074645205950959802",
+   "group": "fleurs",
+   "text": null,
+   "duration_s": 12.18,
+   "events": [
+    {
+     "text": "Japão possui cerca de 7 mil ilhas.",
+     "end_s": 3.808,
+     "hit": false
+    },
+    {
+     "text": "Amaior, Sendo, Honshu",
+     "end_s": 6.08,
+     "hit": false
+    },
+    {
+     "text": "Dona do Japão",
+     "end_s": 7.744,
+     "hit": false
+    },
+    {
+     "text": "a sétima maior ilha do mundo.",
+     "end_s": 10.528,
+     "hit": false
+    }
+   ]
+  },
+  {
+   "id": "fleurs-16103994016128793204",
+   "group": "fleurs",
+   "text": null,
+   "duration_s": 21.24,
+   "events": [
+    {
+     "text": "Ao pedirem um comentário, seu, me lhe disse, Mike, fala muito durante o audio durante.",
+     "end_s": 8.96,
+     "hit": false
+    },
+    {
+     "text": "audiencia",
+     "end_s": 11.584,
+     "hit": false
+    },
+    {
+     "text": "Eu estava me preparando",
+     "end_s": 13.888,
+     "hit": false
+    },
+    {
+     "text": "Então, não estava prestando muita atenção no que ele estava dizendo.",
+     "end_s": 18.656,
+     "hit": false
+    }
+   ]
+  },
+  {
+   "id": "fleurs-16116830234231757765",
+   "group": "fleurs",
+   "text": null,
+   "duration_s": 6.72,
+   "events": [
+    {
+     "text": "Todos foram afetados por sua força influenciadora desde o rei até o plebeu.",
+     "end_s": 5.792,
+     "hit": false
+    }
+   ]
+  },
+  {
+   "id": "fleurs-1615828601922076865",
+   "group": "fleurs",
+   "text": null,
+   "duration_s": 6.12,
+   "events": [
+    {
+     "text": "O paciente esteve na Nigéria, onde alguns casos do vírus ebola ocorreram.",
+     "end_s": 5.216,
+     "hit": false
+    }
+   ]
+  },
+  {
+   "id": "fleurs-16214336675615045447",
+   "group": "fleurs",
+   "text": null,
+   "duration_s": 14.16,
+   "events": [
+    {
+     "text": "A parte do norte, o Sentinel Range, tem as montanhas mais altas da Antártida.",
+     "end_s": 5.984,
+     "hit": false
+    },
+    {
+     "text": "Avisson Macif, chegando a 4892 metros no Monte Vincent.",
+     "end_s": 12.96,
+     "hit": false
+    }
+   ]
+  },
+  {
+   "id": "fleurs-16251172338913859645",
+   "group": "fleurs",
+   "text": null,
+   "duration_s": 16.08,
+   "events": [
+    {
+     "text": "Porém, a maioria das placas estão apenas em catalão, porque este é o último de... este é o idioma.",
+     "end_s": 9.472,
+     "hit": false
+    },
+    {
+     "text": "que foi estabelecido por Lei como língua oficial.",
+     "end_s": 14.464,
+     "hit": false
+    }
+   ]
+  },
+  {
+   "id": "fleurs-16289878480453063156",
+   "group": "fleurs",
+   "text": null,
+   "duration_s": 10.74,
+   "events": [
+    {
+     "text": "O Natal é um dos feriados mais importantes do cristianismo. Ele é celebrado como aniversário de Jesus.",
+     "end_s": 7.904,
+     "hit": false
+    }
+   ]
+  },
+  {
+   "id": "fleurs-1629340988999780235",
+   "group": "fleurs",
+   "text": null,
+   "duration_s": 9.0,
+   "events": [
+    {
+     "text": "O presidente norte-americano, George W. Bush",
+     "end_s": 5.888,
+     "hit": false
+    },
+    {
+     "text": "recebeu bem o anúncio.",
+     "end_s": 8.096,
+     "hit": false
+    }
+   ]
+  },
+  {
+   "id": "fleurs-16337033095986937516",
+   "group": "fleurs",
+   "text": null,
+   "duration_s": 9.24,
+   "events": [
+    {
+     "text": "A maioria dos distritos é servida por micro-ônibus, costeiros japonês, que são confortáveis e resistentes.",
+     "end_s": 8.128,
+     "hit": false
+    }
+   ]
+  },
+  {
+   "id": "fleurs-16378273986139646510",
+   "group": "fleurs",
+   "text": null,
+   "duration_s": 14.82,
+   "events": [
+    {
+     "text": "anteriormente.",
+     "end_s": 2.048,
+     "hit": false
+    },
+    {
+     "text": "O CEO da ring, James Minowth",
+     "end_s": 6.08,
+     "hit": false
+    },
+    {
+     "text": "Comentou que empresa surgiu quando sua campanha não podia ser ouvida de sua loja em sua garagem.",
+     "end_s": 13.664,
+     "hit": false
+    }
+   ]
+  },
+  {
+   "id": "fleurs-16378446718676830579",
+   "group": "fleurs",
+   "text": null,
+   "duration_s": 13.14,
+   "events": [
+    {
+     "text": "O parque abrange 19.500 km² e é dividido em 14 zonas ecológicas diferentes, cada uma sustentando diferentes espécies animais.",
+     "end_s": 11.872,
+     "hit": false
+    }
+   ]
+  },
+  {
+   "id": "fleurs-16450953023129583113",
+   "group": "fleurs",
+   "text": null,
+   "duration_s": 8.7,
+   "events": [
+    {
+     "text": "Pesquisas envolvem a produção de máquinas para automatizar tarefas que exigem atividade inteligente.",
+     "end_s": 7.616,
+     "hit": false
+    }
+   ]
+  },
+  {
+   "id": "fleurs-1645523101934143761",
+   "group": "fleurs",
+   "text": null,
+   "duration_s": 16.14,
+   "events": [
+    {
+     "text": "Seu milésimo selo foi o magnífico.",
+     "end_s": 3.968,
+     "hit": false
+    },
+    {
+     "text": "e os grandes feitos dos reis suecos.",
+     "end_s": 6.816,
+     "hit": false
+    },
+    {
+     "text": "de Davi Clocker, Enestral.",
+     "end_s": 9.92,
+     "hit": false
+    },
+    {
+     "text": "em 2000, que está listado no livro Guinness dos Records.",
+     "end_s": 15.104,
+     "hit": false
+    }
+   ]
+  },
+  {
+   "id": "fleurs-16507449682236474840",
+   "group": "fleurs",
+   "text": null,
+   "duration_s": 8.76,
+   "events": [
+    {
+     "text": "Segundo a polícia, é pouco provável que o motorista do veículo que atingiu o fotógrafo seja acusado criminalmente.",
+     "end_s": 7.776,
+     "hit": false
+    }
+   ]
+  },
+  {
+   "id": "fleurs-16514420506985976066",
+   "group": "fleurs",
+   "text": null,
+   "duration_s": 8.46,
+   "events": [
+    {
+     "text": "Pesquisas em IA envolvem a produção de máquinas para automatizar tarefas que exigem atividade inteligente.",
+     "end_s": 7.744,
+     "hit": false
+    }
+   ]
+  },
+  {
+   "id": "fleurs-16531068642759102861",
+   "group": "fleurs",
+   "text": null,
+   "duration_s": 7.26,
+   "events": [
+    {
+     "text": "Além disso, não existe autoridade para revulgar as leis fiscais e tarifas entre os estádulos.",
+     "end_s": 5.888,
+     "hit": false
+    }
+   ]
+  },
+  {
+   "id": "fleurs-16541454032691212793",
+   "group": "fleurs",
+   "text": null,
+   "duration_s": 9.48,
+   "events": [
+    {
+     "text": "Em estradas com gelo e neve, a fricção é baixa, e você não pode dirigir como se estivesse no asfalto limpo.",
+     "end_s": 8.192,
+     "hit": false
+    }
+   ]
+  },
+  {
+   "id": "fleurs-16584898102203428223",
+   "group": "fleurs",
+   "text": null,
+   "duration_s": 8.22,
+   "events": [
+    {
+     "text": "Há muitas praias devido ao clandificar entre duas enciadas. As mais populares ficam em três áreas.",
+     "end_s": 7.072,
+     "hit": false
+    }
+   ]
+  },
+  {
+   "id": "fleurs-16622740230380586223",
+   "group": "fleurs",
+   "text": null,
+   "duration_s": 6.24,
+   "events": [
+    {
+     "text": "O resultado da análise do gráfico será disponibilizado no site público.",
+     "end_s": 4.96,
+     "hit": false
+    }
+   ]
+  },
+  {
+   "id": "fleurs-16655615501947115357",
+   "group": "fleurs",
+   "text": null,
+   "duration_s": 9.18,
+   "events": [
+    {
+     "text": "A população original não mudou em nada.",
+     "end_s": 4.16,
+     "hit": false
+    },
+    {
+     "text": "eles ainda precisam das mesmas adaptações de antes.",
+     "end_s": 8.128,
+     "hit": false
+    }
+   ]
+  },
+  {
+   "id": "fleurs-16676630718578900373",
+   "group": "fleurs",
+   "text": null,
+   "duration_s": 10.68,
+   "events": [
+    {
+     "text": "A ONU também espera concluir um fundo para ajudar os países afetados pelo aquecimento global.",
+     "end_s": 7.136,
+     "hit": false
+    },
+    {
+     "text": "a lidar com os impactos.",
+     "end_s": 9.536,
+     "hit": false
+    }
+   ]
+  },
+  {
+   "id": "fleurs-1671661522680467362",
+   "group": "fleurs",
+   "text": null,
+   "duration_s": 8.76,
+   "events": [
+    {
+     "text": "Apesar de três pessoas estarem dentro da casa quando ela foi atingida pelo carro, nenhuma delas ficou ferida.",
+     "end_s": 7.68,
+     "hit": false
+    }
+   ]
+  },
+  {
+   "id": "fleurs-16716922951912190447",
+   "group": "fleurs",
+   "text": null,
+   "duration_s": 15.3,
+   "events": [
+    {
+     "text": "Cantores famosos ao longo do país oferecem jambas ou canções de devoção aos pés de Shinshami.",
+     "end_s": 10.496,
+     "hit": false
+    }
+   ]
+  },
+  {
+   "id": "fleurs-16775975320998459020",
+   "group": "fleurs",
+   "text": null,
+   "duration_s": 7.32,
+   "events": [
+    {
+     "text": "Aquilo não pareceu fazer sentido para mim. Certamente não foi justo.",
+     "end_s": 6.08,
+     "hit": false
+    }
+   ]
+  },
+  {
+   "id": "fleurs-16846017153743891070",
+   "group": "fleurs",
+   "text": null,
+   "duration_s": 7.68,
+   "events": [
+    {
+     "text": "O corte estava agendado para a terça-feira, mas foi suspenso após uma decisão judicial de emergência.",
+     "end_s": 6.336,
+     "hit": false
+    }
+   ]
+  },
+  {
+   "id": "fleurs-1693387478589803370",
+   "group": "fleurs",
+   "text": null,
+   "duration_s": 14.16,
+   "events": [
+    {
+     "text": "A culinária maiorquina, assim como a de zonas similares no Mediterrâneo, é baseada em pão, vegetais e carne, especialmente de porco.",
+     "end_s": 9.952,
+     "hit": false
+    },
+    {
+     "text": "e utilizar azeite de oliva em tudo.",
+     "end_s": 12.928,
+     "hit": false
+    }
+   ]
+  },
+  {
+   "id": "fleurs-16942443483515110206",
+   "group": "fleurs",
+   "text": null,
+   "duration_s": 7.44,
+   "events": [
+    {
+     "text": "No adro da igreja há interessantes esculturas em mármore de pombas sobre tumbas de pessoas.",
+     "end_s": 6.24,
+     "hit": false
+    }
+   ]
+  },
+  {
+   "id": "fleurs-16969810939976829407",
+   "group": "fleurs",
+   "text": null,
+   "duration_s": 15.36,
+   "events": [
+    {
+     "text": "Israel exige uma presença militar continua no vale por 10 anos, assim que um acordo seja assinado.",
+     "end_s": 8.512,
+     "hit": false
+    },
+    {
+     "text": "ao passo que a AP concorda em deixar essa presença por apenas cinco anos.",
+     "end_s": 14.4,
+     "hit": false
+    }
+   ]
+  },
+  {
+   "id": "fleurs-17053593731163620565",
+   "group": "fleurs",
+   "text": null,
+   "duration_s": 14.22,
+   "events": [
+    {
+     "text": "Entre as 1400 pessoas entrevistadas, antes das eleições federais de 2010, o percentual dos que se opõe à mudança na Austrália para ela se tornar uma república cresceu 8% desde 2008.",
+     "end_s": 13.504,
+     "hit": false
+    }
+   ]
+  },
+  {
+   "id": "fleurs-17058317420411010905",
+   "group": "fleurs",
+   "text": null,
+   "duration_s": 8.64,
+   "events": [
+    {
+     "text": "Com apenas 18 medalhas disponíveis por dia, um número considerável de países não conseguiu ganhar medalhas.",
+     "end_s": 7.68,
+     "hit": false
+    }
+   ]
+  },
+  {
+   "id": "fleurs-17107233173198883959",
+   "group": "fleurs",
+   "text": null,
+   "duration_s": 5.1,
+   "events": [
+    {
+     "text": "o 5º CEP do Marteli em 4 anos.",
+     "end_s": 4.352,
+     "hit": false
+    }
+   ]
+  },
+  {
+   "id": "fleurs-171095595972867702",
+   "group": "fleurs",
+   "text": null,
+   "duration_s": 9.84,
+   "events": [
+    {
+     "text": "no começo.",
+     "end_s": 1.952,
+     "hit": false
+    },
+    {
+     "text": "As vestimentas foram muito influenciadas pela cultura bizantina na região leste.",
+     "end_s": 7.68,
+     "hit": false
+    }
+   ]
+  },
+  {
+   "id": "fleurs-17143345966173624776",
+   "group": "fleurs",
+   "text": null,
+   "duration_s": 11.16,
+   "events": [
+    {
+     "text": "Exemplos de atividades locais incluem a pescaria, tirar fotografias, ver pássaros, visitar os parques e estudar sobre o ecossistema.",
+     "end_s": 10.432,
+     "hit": false
+    }
+   ]
+  },
+  {
+   "id": "fleurs-17157247231053658",
+   "group": "fleurs",
+   "text": null,
+   "duration_s": 11.28,
+   "events": [
+    {
+     "text": "Com o passar do tempo, conforme a nova população começa a se adaptar ao seu novo ambiente, ela vai ficando menos e menos parecida com outra população.",
+     "end_s": 10.56,
+     "hit": false
+    }
+   ]
+  },
+  {
+   "id": "fleurs-17252577355808169072",
+   "group": "fleurs",
+   "text": null,
+   "duration_s": 10.08,
+   "events": [
+    {
+     "text": "Segundo a polícia, é pouco provável que o motorista do veículo que atingiu o fotógrafo seja acusado criminalmente.",
+     "end_s": 8.224,
+     "hit": false
+    }
+   ]
+  },
+  {
+   "id": "fleurs-17291334028268513722",
+   "group": "fleurs",
+   "text": null,
+   "duration_s": 10.32,
+   "events": [
+    {
+     "text": "A ONU também espera concluir um fundo para ajudar os países afetados pelo Aquecimento Global a lidar com os impactos.",
+     "end_s": 8.832,
+     "hit": false
+    }
+   ]
+  },
+  {
+   "id": "fleurs-17326877719338394023",
+   "group": "fleurs",
+   "text": null,
+   "duration_s": 11.52,
+   "events": [
+    {
+     "text": "Os safares são provavelmente a maior atração turística da África.",
+     "end_s": 6.304,
+     "hit": false
+    },
+    {
+     "text": "e menina dos olhos de muitos visitantes.",
+     "end_s": 9.92,
+     "hit": false
+    }
+   ]
+  },
+  {
+   "id": "fleurs-17332251830594916699",
+   "group": "fleurs",
+   "text": null,
+   "duration_s": 11.16,
+   "events": [
+    {
+     "text": "Os espanhóises iniciaram o período de organização que durou 3 décadas.",
+     "end_s": 5.536,
+     "hit": false
+    }
+   ]
+  },
+  {
+   "id": "fleurs-17372510918862385614",
+   "group": "fleurs",
+   "text": null,
+   "duration_s": 9.24,
+   "events": [
+    {
+     "text": "O dinheiro pode ser trocado no único banco das ilhas que está localizado em Stanley.",
+     "end_s": 5.824,
+     "hit": false
+    },
+    {
+     "text": "Em frente à loja Fick West",
+     "end_s": 8.416,
+     "hit": false
+    }
+   ]
+  },
+  {
+   "id": "fleurs-17470316993677349979",
+   "group": "fleurs",
+   "text": null,
+   "duration_s": 15.12,
+   "events": [
+    {
+     "text": "Ao pedire um comentário seu, Milha disse, Mike, fala muito durante as audiências.",
+     "end_s": 6.88,
+     "hit": false
+    },
+    {
+     "text": "Eu estava me preparando, então não estava prestando muita atenção no que ele estava dizendo.",
+     "end_s": 13.184,
+     "hit": false
+    }
+   ]
+  },
+  {
+   "id": "fleurs-17502504118461155308",
+   "group": "fleurs",
+   "text": null,
+   "duration_s": 8.04,
+   "events": [
+    {
+     "text": "O maior torneio do ano ocorre em dezembro nos campos de Polo e Las Canitas",
+     "end_s": 6.56,
+     "hit": false
+    }
+   ]
+  },
+  {
+   "id": "fleurs-17570969489687981289",
+   "group": "fleurs",
+   "text": null,
+   "duration_s": 13.98,
+   "events": [
+    {
+     "text": "Alguns relatórios dizem que o número oficial de mortos foi 8, e outros confirma que quase até 30 ficaram feridas, mas os números finais ainda não são conhecidos.",
+     "end_s": 12.0,
+     "hit": false
+    }
+   ]
+  },
+  {
+   "id": "fleurs-1765332823588030476",
+   "group": "fleurs",
+   "text": null,
+   "duration_s": 8.28,
+   "events": [
+    {
+     "text": "Quando você liga para alguém que está há milhares de quilômetros de distância, você está usando um satélite.",
+     "end_s": 6.816,
+     "hit": false
+    }
+   ]
+  },
+  {
+   "id": "fleurs-17703134105101381498",
+   "group": "fleurs",
+   "text": null,
+   "duration_s": 6.48,
+   "events": [
+    {
+     "text": "O resultado da análise do gráfico será disponibilizado no site público.",
+     "end_s": 5.184,
+     "hit": false
+    }
+   ]
+  },
+  {
+   "id": "fleurs-17715481015254381646",
+   "group": "fleurs",
+   "text": null,
+   "duration_s": 6.48,
+   "events": [
+    {
+     "text": "Vale a pena caminhar meia hora pela intrigante vila.",
+     "end_s": 5.248,
+     "hit": false
+    }
+   ]
+  },
+  {
+   "id": "fleurs-17725105978131809998",
+   "group": "fleurs",
+   "text": null,
+   "duration_s": 12.66,
+   "events": [
+    {
+     "text": "Essas teorias sugerem que as pessoas possuem certas necessidades e, ou desejos que foram internalizados à medida que atingem a idade adulta.",
+     "end_s": 11.36,
+     "hit": false
+    }
+   ]
+  },
+  {
+   "id": "fleurs-1780175681102751969",
+   "group": "fleurs",
+   "text": null,
+   "duration_s": 14.4,
+   "events": [
+    {
+     "text": "Em seguida, algumas celas, principalmente celas inglesas, têm barras de segurança que permitem que um estribo de couro caia da cela se puxado para trás por um cavaleiro em queda.",
+     "end_s": 13.056,
+     "hit": false
+    }
+   ]
+  },
+  {
+   "id": "fleurs-1780182668307455829",
+   "group": "fleurs",
+   "text": null,
+   "duration_s": 25.74,
+   "events": [
+    {
+     "text": "o esquinhador polonês com deficiência visual, maciede crezel e a guia Ana",
+     "end_s": 7.648,
+     "hit": false
+    },
+    {
+     "text": "Ogares Ninska",
+     "end_s": 10.528,
+     "hit": false
+    },
+    {
+     "text": "Terminaram?",
+     "end_s": 12.448,
+     "hit": false
+    },
+    {
+     "text": "em décimo lugar no Super-G.",
+     "end_s": 15.648,
+     "hit": false
+    },
+    {
+     "text": "Dion Sjörk Park da Coreia do Sul terminou em 24º lugar no Supergê Masculino na modalidade sentada.",
+     "end_s": 24.768,
+     "hit": false
+    }
+   ]
+  },
+  {
+   "id": "fleurs-17823749746823385946",
+   "group": "fleurs",
+   "text": null,
+   "duration_s": 21.66,
+   "events": [
+    {
+     "text": "Agora amplamente disponível pelo arquipélago, a culinária javanese inclu uma variedade de pratos temperados de maneira simples, os codimentos predominantes da preferência javanese, sendo amendoim, pimentas, açúcar, principalmente açúcar de coco javanês.",
+     "end_s": 18.464,
+     "hit": false
+    },
+    {
+     "text": "e várias especiales aromáticas.",
+     "end_s": 21.152,
+     "hit": false
+    }
+   ]
+  },
+  {
+   "id": "fleurs-17863215876241504534",
+   "group": "fleurs",
+   "text": null,
+   "duration_s": 13.8,
+   "events": [
+    {
+     "text": "o ex-presidente da Câmara, Neil Gingrich, o governador do Texas, Rick Perry e a congresista, Michelle Beckman, terminaram em 4º, 5º e 6º lugares, respectivamente.",
+     "end_s": 12.832,
+     "hit": false
+    }
+   ]
+  },
+  {
+   "id": "fleurs-17925419814901746578",
+   "group": "fleurs",
+   "text": null,
+   "duration_s": 10.56,
+   "events": [
+    {
+     "text": "O dinheiro pode ser usado no único banco das ilhas que está localizado em Stanley, em frente à loja FIC West.",
+     "end_s": 9.632,
+     "hit": false
+    }
+   ]
+  },
+  {
+   "id": "fleurs-17966070482439647916",
+   "group": "fleurs",
+   "text": null,
+   "duration_s": 17.4,
+   "events": [
+    {
+     "text": "a parte do norte, ou",
+     "end_s": 3.2,
+     "hit": false
+    },
+    {
+     "text": "Sentinel range",
+     "end_s": 5.12,
+     "hit": false
+    },
+    {
+     "text": "Tem as montanhas mais altas da Antártida. As vins são macif.",
+     "end_s": 10.144,
+     "hit": false
+    },
+    {
+     "text": "chegando aos 4.892 metros no Monte Vinson.",
+     "end_s": 16.128,
+     "hit": false
+    }
+   ]
+  },
+  {
+   "id": "fleurs-18059640891474996759",
+   "group": "fleurs",
+   "text": null,
+   "duration_s": 14.28,
+   "events": [
+    {
+     "text": "Os membros de uma subcultura frequentemente sinalizam sua afiliação por meio de um uso distinto e simbólico de estilo, que inclui modas, maneirismos e jargões.",
+     "end_s": 12.48,
+     "hit": false
+    }
+   ]
+  },
+  {
+   "id": "fleurs-18080302175267009086",
+   "group": "fleurs",
+   "text": null,
+   "duration_s": 13.02,
+   "events": [
+    {
+     "text": "Crocodilos de água salgada não vivem ativamente no oceano. Seu habitat principal são os estuários dos rios que ficam ao norte de Rockhampton.",
+     "end_s": 11.68,
+     "hit": false
+    }
+   ]
+  },
+  {
+   "id": "fleurs-18101499474742782835",
+   "group": "fleurs",
+   "text": null,
+   "duration_s": 9.18,
+   "events": [
+    {
+     "text": "Ainda assim, 80% dos nossos produtos foram taxados com tarifas em países da América Central. Nós tratamos vocês.",
+     "end_s": 8.288,
+     "hit": false
+    }
+   ]
+  },
+  {
+   "id": "fleurs-18114319383402389128",
+   "group": "fleurs",
+   "text": null,
+   "duration_s": 7.62,
+   "events": [
+    {
+     "text": "No adro da igreja, há interessantes culturas em mármã de pombas sobre tumbas de pessoas.",
+     "end_s": 6.432,
+     "hit": false
+    }
+   ]
+  },
+  {
+   "id": "fleurs-18138514788264254070",
+   "group": "fleurs",
+   "text": null,
+   "duration_s": 11.28,
+   "events": [
+    {
+     "text": "Neste ônibus de transporte dinâmico, todas estão de alguma forma conectados e apoiando um sistema de transporte baseado em carros particulares.",
+     "end_s": 10.848,
+     "hit": false
+    }
+   ]
+  },
+  {
+   "id": "fleurs-18148875611708606143",
+   "group": "fleurs",
+   "text": null,
+   "duration_s": 7.08,
+   "events": [
+    {
+     "text": "Alguns festivais têm áreas especiais de acampamento para famílias com crianças pequenas.",
+     "end_s": 5.472,
+     "hit": false
+    }
+   ]
+  },
+  {
+   "id": "fleurs-1815986301330810552",
+   "group": "fleurs",
+   "text": null,
+   "duration_s": 8.76,
+   "events": [
+    {
+     "text": "há milhares de anos um homem chamado Aristarco disse que o sistema solar se movia ao redor do sol",
+     "end_s": 7.232,
+     "hit": false
+    }
+   ]
+  },
+  {
+   "id": "fleurs-18167435619939899320",
+   "group": "fleurs",
+   "text": null,
+   "duration_s": 19.14,
+   "events": [
+    {
+     "text": "Sua primeira foi o Slalom, onde recebeu um Did Not Finish. Não terminou.",
+     "end_s": 8.288,
+     "hit": false
+    },
+    {
+     "text": "na sua primeira prova.",
+     "end_s": 10.592,
+     "hit": false
+    },
+    {
+     "text": "36 de 116 competidores obtiveram o mesmo resultado na corrida.",
+     "end_s": 17.92,
+     "hit": false
+    }
+   ]
+  },
+  {
+   "id": "fleurs-18213066347844614497",
+   "group": "fleurs",
+   "text": null,
+   "duration_s": 14.04,
+   "events": [
+    {
+     "text": "Essas teorias sugerem que as pessoas possuem certas necessidades e...",
+     "end_s": 6.496,
+     "hit": false
+    },
+    {
+     "text": "ou desejos que foram internalizados à medida que atinge a idade adulta.",
+     "end_s": 12.384,
+     "hit": false
+    }
+   ]
+  },
+  {
+   "id": "fleurs-18260906891494697027",
+   "group": "fleurs",
+   "text": null,
+   "duration_s": 14.4,
+   "events": [
+    {
+     "text": "Robin Utapa fez a pontuação mais alta dos innings.",
+     "end_s": 5.824,
+     "hit": false
+    },
+    {
+     "text": "70 corridas em apenas 41 bolas.",
+     "end_s": 9.312,
+     "hit": false
+    },
+    {
+     "text": "acertando 11, 4 e 2, 6.",
+     "end_s": 13.056,
+     "hit": false
+    }
+   ]
+  },
+  {
+   "id": "fleurs-18313679133686181069",
+   "group": "fleurs",
+   "text": null,
+   "duration_s": 9.36,
+   "events": [
+    {
+     "text": "Essas coisas se tornaram disciplinas separadas, que se concentram em fornecer soluções para os problemas da vida real.",
+     "end_s": 8.608,
+     "hit": false
+    }
+   ]
+  },
+  {
+   "id": "fleurs-1835954951562502804",
+   "group": "fleurs",
+   "text": null,
+   "duration_s": 10.5,
+   "events": [
+    {
+     "text": "Segunda polícia, é pouco provável que o motorista do veículo que atingiu fotógrafo seja acusado criminalmente.",
+     "end_s": 8.384,
+     "hit": false
+    }
+   ]
+  },
+  {
+   "id": "fleurs-18402814664983238097",
+   "group": "fleurs",
+   "text": null,
+   "duration_s": 14.76,
+   "events": [
+    {
+     "text": "SQL é uma atividade importante na viagem para muitos entusiastas.",
+     "end_s": 5.792,
+     "hit": false
+    },
+    {
+     "text": "occasionalmente conhecidos como Eskibuns.",
+     "end_s": 9.184,
+     "hit": false
+    },
+    {
+     "text": "que planejam férias inteiras só para esquiarem um local específico.",
+     "end_s": 13.856,
+     "hit": false
+    }
+   ]
+  },
+  {
+   "id": "fleurs-1851139986974700599",
+   "group": "fleurs",
+   "text": null,
+   "duration_s": 8.76,
+   "events": [
+    {
+     "text": "há milhares de anos um homem chamado Ari Starco disse que o sistema solar se movia ao redor do sol",
+     "end_s": 7.648,
+     "hit": false
+    }
+   ]
+  },
+  {
+   "id": "fleurs-1996386217637072184",
+   "group": "fleurs",
+   "text": null,
+   "duration_s": 8.04,
+   "events": [
+    {
+     "text": "Em estradas com gelo e neve, a fricção é baixa e você não pode dirigir como se estivesse no asfalto limpo.",
+     "end_s": 7.488,
+     "hit": false
+    }
+   ]
+  },
+  {
+   "id": "fleurs-2072705913343665893",
+   "group": "fleurs",
+   "text": null,
+   "duration_s": 11.16,
+   "events": [
+    {
+     "text": "Os árabes também levaram para as terras ou isla que ganhou muita popularidade com",
+     "end_s": 5.632,
+     "hit": false
+    },
+    {
+     "text": "em comores e maiores.",
+     "end_s": 10.048,
+     "hit": false
+    }
+   ]
+  },
+  {
+   "id": "fleurs-2204694701353268629",
+   "group": "fleurs",
+   "text": null,
+   "duration_s": 13.56,
+   "events": [
+    {
+     "text": "Alguns animais, como os elefantes e as girafas, têm a tendência de se aproximarem dos carros, e o equipamento básico possibilita uma boa realização.",
+     "end_s": 10.592,
+     "hit": false
+    }
+   ]
+  },
+  {
+   "id": "fleurs-224127154845543547",
+   "group": "fleurs",
+   "text": null,
+   "duration_s": 12.54,
+   "events": [
+    {
+     "text": "Ele adverte que não há garantias de que alguma ação no Iraque neste momento irá impedir a guerra entre seitas, o aumento da violência ou a tendência para o caos.",
+     "end_s": 10.368,
+     "hit": false
+    }
+   ]
+  },
+  {
+   "id": "fleurs-2259930233268437052",
+   "group": "fleurs",
+   "text": null,
+   "duration_s": 9.3,
+   "events": [
+    {
+     "text": "Em estradas com gelo e neve, a fricção é baixa e você não pode dirigir como se estivesse no asfalto limpo.",
+     "end_s": 7.84,
+     "hit": false
+    }
+   ]
+  },
+  {
+   "id": "fleurs-2266958527866833162",
+   "group": "fleurs",
+   "text": null,
+   "duration_s": 11.82,
+   "events": [
+    {
+     "text": "Por favor, trate o local com toda a dignidade, solenidade e respeito que ele merece. Não faça piadas sobre o local, estou ou nazistas.",
+     "end_s": 10.464,
+     "hit": false
+    }
+   ]
+  },
+  {
+   "id": "fleurs-2354285574998781073",
+   "group": "fleurs",
+   "text": null,
+   "duration_s": 15.36,
+   "events": [
+    {
+     "text": "Antes mesmo de uma organização ser inovadora, os líderes precisam criar uma cultura de inovação.",
+     "end_s": 8.352,
+     "hit": false
+    },
+    {
+     "text": "assim como um conhecimento compartilhado e um aprendizado organizacional.",
+     "end_s": 14.144,
+     "hit": false
+    }
+   ]
+  },
+  {
+   "id": "fleurs-2459153027829054874",
+   "group": "fleurs",
+   "text": null,
+   "duration_s": 11.76,
+   "events": [
+    {
+     "text": "Dizem que os sacs generalizados continuaram durante toda a noite, ao passo que não se via polícia presente nas ruas de bichiqueque.",
+     "end_s": 10.24,
+     "hit": false
+    }
+   ]
+  },
+  {
+   "id": "fleurs-2472676724964272970",
+   "group": "fleurs",
+   "text": null,
+   "duration_s": 7.92,
+   "events": [
+    {
+     "text": "Não havia grandes forestas na terra de Canaan?",
+     "end_s": 4.224,
+     "hit": false
+    },
+    {
+     "text": "Por isso a madeira é extremamente cara",
+     "end_s": 6.848,
+     "hit": false
+    }
+   ]
+  },
+  {
+   "id": "fleurs-2481921880208619171",
+   "group": "fleurs",
+   "text": null,
+   "duration_s": 10.26,
+   "events": [
+    {
+     "text": "Argentina é conhecida por ter um dos melhores times jogadores de polo do mundo",
+     "end_s": 7.872,
+     "hit": false
+    }
+   ]
+  },
+  {
+   "id": "fleurs-2490012484117565776",
+   "group": "fleurs",
+   "text": null,
+   "duration_s": 6.06,
+   "events": [
+    {
+     "text": "O presidente norte-americano George W. Bush recebeu bem o anúncio.",
+     "end_s": 4.736,
+     "hit": false
+    }
+   ]
+  },
+  {
+   "id": "fleurs-2772943818481267212",
+   "group": "fleurs",
+   "text": null,
+   "duration_s": 9.06,
+   "events": [
+    {
+     "text": "Muitos formatos comuns, a família APS de formatos, por exemplo, são iguais ou se aproximam muito dessa proporção.",
+     "end_s": 8.224,
+     "hit": false
+    }
+   ]
+  },
+  {
+   "id": "fleurs-2871015398720882976",
+   "group": "fleurs",
+   "text": null,
+   "duration_s": 10.14,
+   "events": [
+    {
+     "text": "Os antigos do Egito do Novo Império se maravilhavam com as construções de seus antecessores que tinham até então muito mais de 10 mil anos.",
+     "end_s": 8.768,
+     "hit": false
+    }
+   ]
+  },
+  {
+   "id": "fleurs-2916528444542522707",
+   "group": "fleurs",
+   "text": null,
+   "duration_s": 10.74,
+   "events": [
+    {
+     "text": "Ainda assim, 80% dos nossos produtos foram taxados com tarifas em países da América Central. Nós tratamos vocês.",
+     "end_s": 9.344,
+     "hit": false
+    }
+   ]
+  },
+  {
+   "id": "fleurs-3009929680353589233",
+   "group": "fleurs",
+   "text": null,
+   "duration_s": 12.42,
+   "events": [
+    {
+     "text": "Nestionibus de Transporte Dinâmico",
+     "end_s": 3.552,
+     "hit": false
+    },
+    {
+     "text": "Todos estão de alguma forma conectados e apoiando o sistema de transporte baseado em carros particulares.",
+     "end_s": 11.552,
+     "hit": false
+    }
+   ]
+  },
+  {
+   "id": "fleurs-3069194344392039495",
+   "group": "fleurs",
+   "text": null,
+   "duration_s": 9.9,
+   "events": [
+    {
+     "text": "cientistas afirmam que a plumagem superior desse animal era castanha e a parte inferior era clara ou caree",
+     "end_s": 7.68,
+     "hit": false
+    },
+    {
+     "text": "Tenoid.",
+     "end_s": 9.024,
+     "hit": false
+    }
+   ]
+  },
+  {
+   "id": "fleurs-3156370309138992027",
+   "group": "fleurs",
+   "text": null,
+   "duration_s": 15.3,
+   "events": [
+    {
+     "text": "Sua primeira foi o Slalom, onde recebeu um did not finish, não terminou na sua primeira prova.",
+     "end_s": 7.808,
+     "hit": false
+    },
+    {
+     "text": "36 de 116 competidores obtiveram o mesmo resultado na corrida.",
+     "end_s": 13.696,
+     "hit": false
+    }
+   ]
+  },
+  {
+   "id": "fleurs-3198007100466734105",
+   "group": "fleurs",
+   "text": null,
+   "duration_s": 15.9,
+   "events": [
+    {
+     "text": "Esse novo ambiente tem recursos diferentes e novos competidores. Então a nova população precisará adquirir características diferentes das que já possuir.",
+     "end_s": 11.008,
+     "hit": false
+    },
+    {
+     "text": "e adaptar-se para se tornar uma forte competidora.",
+     "end_s": 14.944,
+     "hit": false
+    }
+   ]
+  },
+  {
+   "id": "fleurs-3208382705573395150",
+   "group": "fleurs",
+   "text": null,
+   "duration_s": 7.68,
+   "events": [
+    {
+     "text": "O cientista dizem",
+     "end_s": 2.816,
+     "hit": false
+    },
+    {
+     "text": "que a explosão causada pela colisão foi intensa.",
+     "end_s": 6.816,
+     "hit": false
+    }
+   ]
+  },
+  {
+   "id": "fleurs-3230890028521006914",
+   "group": "fleurs",
+   "text": null,
+   "duration_s": 10.62,
+   "events": [
+    {
+     "text": "No entanto, se tiver alguma alteração ou solicitação, esta deve ser primeiro encaminhada para o agente de viagens, e não diretamente para o hotel.",
+     "end_s": 9.568,
+     "hit": false
+    }
+   ]
+  },
+  {
+   "id": "fleurs-3303712440330086924",
+   "group": "fleurs",
+   "text": null,
+   "duration_s": 9.48,
+   "events": [
+    {
+     "text": "O corte estava agendado para a terça-feira, mas foi suspenso após uma decisão judicial de emergência.",
+     "end_s": 8.224,
+     "hit": false
+    }
+   ]
+  },
+  {
+   "id": "fleurs-3346963065578588660",
+   "group": "fleurs",
+   "text": null,
+   "duration_s": 12.84,
+   "events": [
+    {
+     "text": "Como os estudantes frequentemente são a audiência mais crítica, o autor do blog começa a empenhar-se para melhorar a escrita e evitar críticas.",
+     "end_s": 10.848,
+     "hit": false
+    }
+   ]
+  },
+  {
+   "id": "fleurs-3388358451916631012",
+   "group": "fleurs",
+   "text": null,
+   "duration_s": 9.12,
+   "events": [
+    {
+     "text": "Então, Laki Rathsync",
+     "end_s": 3.36,
+     "hit": false
+    },
+    {
+     "text": "tomou a frente para cantar os Badger Hunts.",
+     "end_s": 7.36,
+     "hit": false
+    }
+   ]
+  },
+  {
+   "id": "fleurs-3458994494227742326",
+   "group": "fleurs",
+   "text": null,
+   "duration_s": 9.0,
+   "events": [
+    {
+     "text": "O satélite no espaço recebe a chamada e depois a redirecione de volta, quase instantaneamente.",
+     "end_s": 7.904,
+     "hit": false
+    }
+   ]
+  },
+  {
+   "id": "fleurs-3489757294702285589",
+   "group": "fleurs",
+   "text": null,
+   "duration_s": 17.52,
+   "events": [
+    {
+     "text": "Ele usa tecnologia baseada em satélite, em oposição à tecnologia mais antiga baseada em radar terrestre para permitir que os controladores de tráfego aéreo localizem aeronaves com maior precisão e ofereçam informações mais precisas aos pilotos.",
+     "end_s": 15.904,
+     "hit": false
+    }
+   ]
+  },
+  {
+   "id": "fleurs-3500126156774491760",
+   "group": "fleurs",
+   "text": null,
+   "duration_s": 12.6,
+   "events": [
+    {
+     "text": "A tecnologia oferece a solução com aulas de campo virtuais.",
+     "end_s": 4.544,
+     "hit": false
+    },
+    {
+     "text": "Da sala de aula, os alunos podem ver peças de museus, visitar um aquário ou admilar belas obras de arte.",
+     "end_s": 11.904,
+     "hit": false
+    }
+   ]
+  },
+  {
+   "id": "fleurs-3588952532184379049",
+   "group": "fleurs",
+   "text": null,
+   "duration_s": 17.52,
+   "events": [
+    {
+     "text": "Gordon Jones, o portavoz de Bush",
+     "end_s": 3.968,
+     "hit": false
+    },
+    {
+     "text": "O negócio ficou à promessa da Coreia do Norte, como um...",
+     "end_s": 6.688,
+     "hit": false
+    },
+    {
+     "text": "importante passo em direção ao objetivo de alcançar a desnuclearização verificável",
+     "end_s": 12.544,
+     "hit": false
+    },
+    {
+     "text": "da Península Coreana.",
+     "end_s": 14.752,
+     "hit": false
+    }
+   ]
+  },
+  {
+   "id": "fleurs-361255710189481391",
+   "group": "fleurs",
+   "text": null,
+   "duration_s": 13.26,
+   "events": [
+    {
+     "text": "Autoridades locais estão alertando os moradores das proximidades da usina para permanecerem dentro de casa, desligarem os ars condicionados e não beberem água da torneira.",
+     "end_s": 12.32,
+     "hit": false
+    }
+   ]
+  },
+  {
+   "id": "fleurs-3632657067668460474",
+   "group": "fleurs",
+   "text": null,
+   "duration_s": 7.26,
+   "events": [
+    {
+     "text": "Laka Singh",
+     "end_s": 2.432,
+     "hit": false
+    },
+    {
+     "text": "Tomou a frente para cantar os Bajans.",
+     "end_s": 5.728,
+     "hit": false
+    }
+   ]
+  },
+  {
+   "id": "fleurs-3636981430438760907",
+   "group": "fleurs",
+   "text": null,
+   "duration_s": 15.72,
+   "events": [
+    {
+     "text": "Arli Velasquez, do México, terminou em 15º no SuperG para cadeirantes masculino.",
+     "end_s": 7.712,
+     "hit": false
+    },
+    {
+     "text": "Adam Howe, da Nova Zelândia, terminou em nono no SuperG para não cadeirantes masculino.",
+     "end_s": 14.176,
+     "hit": false
+    }
+   ]
+  },
+  {
+   "id": "fleurs-3657142178140369021",
+   "group": "fleurs",
+   "text": null,
+   "duration_s": 10.5,
+   "events": [
+    {
+     "text": "Após assistirem aos horrores e atrocidades da guerra durante a Primeira Guerra Mundial, as nações desejaram evitar tal situação novamente no futuro.",
+     "end_s": 9.088,
+     "hit": false
+    }
+   ]
+  },
+  {
+   "id": "fleurs-3663138061544035381",
+   "group": "fleurs",
+   "text": null,
+   "duration_s": 14.34,
+   "events": [
+    {
+     "text": "Acidentes aéreos são comuns do Ira.",
+     "end_s": 4.416,
+     "hit": false
+    },
+    {
+     "text": "Quem tem uma frota envelhecida e mal conservada tanto para operações civis quanto militares?",
+     "end_s": 11.328,
+     "hit": false
+    }
+   ]
+  },
+  {
+   "id": "fleurs-3666760449928281770",
+   "group": "fleurs",
+   "text": null,
+   "duration_s": 11.94,
+   "events": [
+    {
+     "text": "No entanto, se tiver alguma alteração ou solicitação, esta deve ser o primeiro encaminhada para o agente de viagens e não diretamente para o hotel.",
+     "end_s": 10.624,
+     "hit": false
+    }
+   ]
+  },
+  {
+   "id": "fleurs-3698363675734552388",
+   "group": "fleurs",
+   "text": null,
+   "duration_s": 11.94,
+   "events": [
+    {
+     "text": "Cientistas acreditam que as jaguatíricas seguem e encontram suas presas pelo cheiro, farajando onde elas estiveram pelo solo.",
+     "end_s": 10.432,
+     "hit": false
+    }
+   ]
+  },
+  {
+   "id": "fleurs-3727042440199411219",
+   "group": "fleurs",
+   "text": null,
+   "duration_s": 10.8,
+   "events": [
+    {
+     "text": "Essas teorias sugerem que as pessoas possuem certas necessidades e ou desejos que foram internalizados à medida que atingem a idade adulta.",
+     "end_s": 10.08,
+     "hit": false
+    }
+   ]
+  },
+  {
+   "id": "fleurs-3818815652285067180",
+   "group": "fleurs",
+   "text": null,
+   "duration_s": 12.3,
+   "events": [
+    {
+     "text": "Os pontos de vista apresentados são normalmente superficiais, gerais e simplificados em relação com as mais detalhadas informações disponíveis em outros lugares.",
+     "end_s": 11.36,
+     "hit": false
+    }
+   ]
+  },
+  {
+   "id": "fleurs-3882676591443843152",
+   "group": "fleurs",
+   "text": null,
+   "duration_s": 15.12,
+   "events": [
+    {
+     "text": "Insetos foram os primeiros animais a irem para o ar. Sua habilidade de voar os ajudou a fugir mais facilmente de inimigos e a encontrar alimento e parceiros de maneira mais eficiente.",
+     "end_s": 14.304,
+     "hit": false
+    }
+   ]
+  },
+  {
+   "id": "fleurs-3936191607268657086",
+   "group": "fleurs",
+   "text": null,
+   "duration_s": 14.4,
+   "events": [
+    {
+     "text": "O trecho entre Point Marion e Fairmont apresenta as condições mais desafiadoras para motoristas na rodovia Buffalo, Pittsburgh, que passam frequentemente por áreas de sertão isoladas",
+     "end_s": 13.216,
+     "hit": false
+    }
+   ]
+  },
+  {
+   "id": "fleurs-3940504976178597837",
+   "group": "fleurs",
+   "text": null,
+   "duration_s": 15.42,
+   "events": [
+    {
+     "text": "Timbuktu passou a ser utilizado como uma metáfora para se referir a terras distantes e exóticas.",
+     "end_s": 9.76,
+     "hit": false
+    },
+    {
+     "text": "tendo em vista sua relativa inacessibilidade.",
+     "end_s": 14.688,
+     "hit": false
+    }
+   ]
+  },
+  {
+   "id": "fleurs-3963377673522964852",
+   "group": "fleurs",
+   "text": null,
+   "duration_s": 11.64,
+   "events": [
+    {
+     "text": "Exemplos de atividades locais incluem a pescaria, tirar fotografias, ver pássaros, visitar os parques e estudar sobre o ecossistema.",
+     "end_s": 10.624,
+     "hit": false
+    }
+   ]
+  },
+  {
+   "id": "fleurs-4054705248447991548",
+   "group": "fleurs",
+   "text": null,
+   "duration_s": 6.96,
+   "events": [
+    {
+     "text": "Argentina, conhecida por ter um dos melhores times jogadores de polo do mundo",
+     "end_s": 5.312,
+     "hit": false
+    }
+   ]
+  },
+  {
+   "id": "fleurs-4150459610829707564",
+   "group": "fleurs",
+   "text": null,
+   "duration_s": 12.3,
+   "events": [
+    {
+     "text": "Eventualmente, as rodas de madeira foram substituídas por rodas de ferro.",
+     "end_s": 5.28,
+     "hit": false
+    },
+    {
+     "text": "Em 1767, os primeiros trilhos totalmente de ferro foram introduzidos.",
+     "end_s": 11.488,
+     "hit": false
+    }
+   ]
+  },
+  {
+   "id": "fleurs-4258342358311034186",
+   "group": "fleurs",
+   "text": null,
+   "duration_s": 8.64,
+   "events": [
+    {
+     "text": "Assim que você consegue sair da corrente, nadar de volta não é mais difícil do que seria usualmente.",
+     "end_s": 7.232,
+     "hit": false
+    }
+   ]
+  },
+  {
+   "id": "fleurs-4310583430883355765",
+   "group": "fleurs",
+   "text": null,
+   "duration_s": 14.04,
+   "events": [
+    {
+     "text": "Os pesquisadores sugeriram que, apesar do rabo ser de onde não sabe o jovem, a amostra revela uma promagem adulta. Não uma pelugem.",
+     "end_s": 12.256,
+     "hit": false
+    }
+   ]
+  },
+  {
+   "id": "fleurs-4425015061907449675",
+   "group": "fleurs",
+   "text": null,
+   "duration_s": 7.38,
+   "events": [
+    {
+     "text": "O presidente norte-americano George W. Bush recebeu bem o anúncio.",
+     "end_s": 5.536,
+     "hit": false
+    }
+   ]
+  },
+  {
+   "id": "fleurs-4477853205646198741",
+   "group": "fleurs",
+   "text": null,
+   "duration_s": 9.48,
+   "events": [
+    {
+     "text": "Segundo Dr. Maul, alguns pacientes podem ter contraído vírus no hospital, e ao menos dois eram profissionais da saúde.",
+     "end_s": 8.448,
+     "hit": false
+    }
+   ]
+  },
+  {
+   "id": "fleurs-4489404331031553786",
+   "group": "fleurs",
+   "text": null,
+   "duration_s": 8.4,
+   "events": [
+    {
+     "text": "Os cursos da água do interior podem ser um bom tema ao redor do qual organizar um feriado.",
+     "end_s": 6.368,
+     "hit": false
+    }
+   ]
+  },
+  {
+   "id": "fleurs-4603864562494315480",
+   "group": "fleurs",
+   "text": null,
+   "duration_s": 10.98,
+   "events": [
+    {
+     "text": "Segundo Dr. Mall, alguns pacientes podem ter contraído vírus no hospital, e ao menos dois eram profissionais de saúde.",
+     "end_s": 9.824,
+     "hit": false
+    }
+   ]
+  },
+  {
+   "id": "fleurs-4641652054983643386",
+   "group": "fleurs",
+   "text": null,
+   "duration_s": 15.0,
+   "events": [
+    {
+     "text": "a parte do norte ou Centennial Ranch",
+     "end_s": 3.776,
+     "hit": false
+    },
+    {
+     "text": "Tenham as montanhas mais altas da antártida.",
+     "end_s": 6.816,
+     "hit": false
+    },
+    {
+     "text": "As Vinsons Massif chegando aos 4.892 metros no Monte Vinson.",
+     "end_s": 13.216,
+     "hit": false
+    }
+   ]
+  },
+  {
+   "id": "fleurs-4738271291436980165",
+   "group": "fleurs",
+   "text": null,
+   "duration_s": 19.26,
+   "events": [
+    {
+     "text": "Elas podem ver muito bem no escuro com a visão noturna e também conseguem se mover de forma fortiva. As jaguatíricas caçam suas presas misturando-se com o ambiente que as rodeia e, em seguida, atacam suas presas.",
+     "end_s": 17.984,
+     "hit": false
+    }
+   ]
+  },
+  {
+   "id": "fleurs-4824294892355421530",
+   "group": "fleurs",
+   "text": null,
+   "duration_s": 25.98,
+   "events": [
+    {
+     "text": "Em 6 de outubro de 1789,",
+     "end_s": 3.744,
+     "hit": false
+    },
+    {
+     "text": "O aterrorizado, Rei Luiz 16",
+     "end_s": 7.456,
+     "hit": false
+    },
+    {
+     "text": "a Rainha Maria Antonieta seus dois filhos jovens Maria Teresa de 11 anos e Luiz Carlos de 4 anos",
+     "end_s": 15.168,
+     "hit": false
+    },
+    {
+     "text": "E aí manda o rei madame Elizabeth",
+     "end_s": 17.856,
+     "hit": false
+    },
+    {
+     "text": "foram forçados a voltar para Paris.",
+     "end_s": 20.896,
+     "hit": false
+    },
+    {
+     "text": "Partindo de Versales por uma multidão de mulheres dos mercados.",
+     "end_s": 25.472,
+     "hit": false
+    }
+   ]
+  },
+  {
+   "id": "fleurs-492939011400287085",
+   "group": "fleurs",
+   "text": null,
+   "duration_s": 16.56,
+   "events": [
+    {
+     "text": "O medalhista de ouro olímpico deveria nadar no 100 e 200 metros livres e em 3 revezamentos nos jogos da Commonwealth, mas devido a suas queixas, sua condição física foi posta em dúvida.",
+     "end_s": 14.848,
+     "hit": false
+    }
+   ]
+  },
+  {
+   "id": "fleurs-5077662190809691543",
+   "group": "fleurs",
+   "text": null,
+   "duration_s": 5.64,
+   "events": [
+    {
+     "text": "É o 5º sepe do martele em 4 anos.",
+     "end_s": 4.896,
+     "hit": false
+    }
+   ]
+  },
+  {
+   "id": "fleurs-5103851611728544118",
+   "group": "fleurs",
+   "text": null,
+   "duration_s": 13.08,
+   "events": [
+    {
+     "text": "Mas as florestas não contam só com pântanos de mangue. Elas têm algumas das últimas grandes selvas que já cobriram a superfície.",
+     "end_s": 8.928,
+     "hit": false
+    },
+    {
+     "text": ", gangética restantes.",
+     "end_s": 11.392,
+     "hit": false
+    }
+   ]
+  },
+  {
+   "id": "fleurs-5187768305781861957",
+   "group": "fleurs",
+   "text": null,
+   "duration_s": 6.78,
+   "events": [
+    {
+     "text": "Os cientistas dizem que a explosão causada pela colisão foi intensa.",
+     "end_s": 5.568,
+     "hit": false
+    }
+   ]
+  },
+  {
+   "id": "fleurs-5203800839162025155",
+   "group": "fleurs",
+   "text": null,
+   "duration_s": 9.12,
+   "events": [
+    {
+     "text": "Você pode ver as pirâmides no escuro?",
+     "end_s": 3.936,
+     "hit": false
+    },
+    {
+     "text": "e também no silêncio antes de o show começar.",
+     "end_s": 8.096,
+     "hit": false
+    }
+   ]
+  },
+  {
+   "id": "fleurs-5204772937759115980",
+   "group": "fleurs",
+   "text": null,
+   "duration_s": 14.64,
+   "events": [
+    {
+     "text": "Crocodilos de água salgada não vivem ativamente no oceano.",
+     "end_s": 5.504,
+     "hit": false
+    },
+    {
+     "text": "Seu habitat principal são os estuários dos rios que ficam ao norte de Rockhampton.",
+     "end_s": 13.312,
+     "hit": false
+    }
+   ]
+  },
+  {
+   "id": "fleurs-5227886693918355135",
+   "group": "fleurs",
+   "text": null,
+   "duration_s": 13.02,
+   "events": [
+    {
+     "text": "Eventualmente, as rodas de madeira foram substituídas por rodas de ferro em 1767. Os primeiros trilhos totalmente de ferro foram introduzidos.",
+     "end_s": 11.808,
+     "hit": false
+    }
+   ]
+  },
+  {
+   "id": "fleurs-5315126586563273573",
+   "group": "fleurs",
+   "text": null,
+   "duration_s": 11.82,
+   "events": [
+    {
+     "text": "O placar final foi uma vitória por um ponto, 21 a 20.",
+     "end_s": 5.76,
+     "hit": false
+    },
+    {
+     "text": "encerrando a sequência de 15 vitórias consecutivas dos All Blacks.",
+     "end_s": 10.816,
+     "hit": false
+    }
+   ]
+  },
+  {
+   "id": "fleurs-5344815051966714840",
+   "group": "fleurs",
+   "text": null,
+   "duration_s": 10.32,
+   "events": [
+    {
+     "text": "Curso, cobrirá normalmente todos os tópicos conversados aqui com bastante mais detalhes, normalmente com experiência prática.",
+     "end_s": 9.44,
+     "hit": false
+    }
+   ]
+  },
+  {
+   "id": "fleurs-5382999559523738956",
+   "group": "fleurs",
+   "text": null,
+   "duration_s": 17.76,
+   "events": [
+    {
+     "text": "108 pratos",
+     "end_s": 2.912,
+     "hit": false
+    },
+    {
+     "text": "de Chapambe-Hog, isto é, 56 comidas diferentes como doces, frutas, nozes, prados, etc.",
+     "end_s": 10.4,
+     "hit": false
+    },
+    {
+     "text": "que no hinduísmo são oferecidos a divindade.",
+     "end_s": 14.048,
+     "hit": false
+    },
+    {
+     "text": "foram servidos para Babaxian.",
+     "end_s": 16.768,
+     "hit": false
+    }
+   ]
+  },
+  {
+   "id": "fleurs-5484277854107967851",
+   "group": "fleurs",
+   "text": null,
+   "duration_s": 11.64,
+   "events": [
+    {
+     "text": "Timbuktu passou a ser utilizado como uma metáfora para se referir a terras distantes e exóticas tendem vista sua relativa inacessibilidade.",
+     "end_s": 10.72,
+     "hit": false
+    }
+   ]
+  },
+  {
+   "id": "fleurs-5546372198253077978",
+   "group": "fleurs",
+   "text": null,
+   "duration_s": 18.42,
+   "events": [
+    {
+     "text": "Alive Lasquez do México terminou um décimo quinto no SuperG para cada irante masculino. Adam Hall da Nova Zelândia terminou em 9 anos.",
+     "end_s": 12.608,
+     "hit": false
+    },
+    {
+     "text": "no SuperG para não cadeirantes masculinos.",
+     "end_s": 15.968,
+     "hit": false
+    }
+   ]
+  },
+  {
+   "id": "fleurs-5581036766732116626",
+   "group": "fleurs",
+   "text": null,
+   "duration_s": 12.48,
+   "events": [
+    {
+     "text": "Os pesquisadores sugeriram que, apesar do rabo ser de um dinossauro jovem, a amostra revela uma plumagem adulta, não uma penúgen.",
+     "end_s": 11.072,
+     "hit": false
+    }
+   ]
+  },
+  {
+   "id": "fleurs-558752047642912276",
+   "group": "fleurs",
+   "text": null,
+   "duration_s": 10.98,
+   "events": [
+    {
+     "text": "O fernocos se tornou uma prática comum, mas o fernocos causava mais desgrace nas rodas de madeira dos vagões.",
+     "end_s": 8.0,
+     "hit": false
+    }
+   ]
+  },
+  {
+   "id": "fleurs-5619138959227786023",
+   "group": "fleurs",
+   "text": null,
+   "duration_s": 12.96,
+   "events": [
+    {
+     "text": "As mulheres devem entender que diferenças culturais podem ocasionar atos que elas considerariam como assédio. E não é incomum serem seguidas agarradas pelo braço, etc.",
+     "end_s": 11.744,
+     "hit": false
+    }
+   ]
+  },
+  {
+   "id": "fleurs-5649273802585698774",
+   "group": "fleurs",
+   "text": null,
+   "duration_s": 10.8,
+   "events": [
+    {
+     "text": "Todos foram afetados por sua força influenciadora.",
+     "end_s": 5.984,
+     "hit": false
+    },
+    {
+     "text": "desde o rei até o plebeu.",
+     "end_s": 9.216,
+     "hit": false
+    }
+   ]
+  },
+  {
+   "id": "fleurs-5657247343531383909",
+   "group": "fleurs",
+   "text": null,
+   "duration_s": 8.4,
+   "events": [
+    {
+     "text": "e Linux é relativamente fácil em italiano, já que a maioria das palavras são pronunciadas exatamente como foram escritas.",
+     "end_s": 7.456,
+     "hit": false
+    }
+   ]
+  },
+  {
+   "id": "fleurs-566972918211021788",
+   "group": "fleurs",
+   "text": null,
+   "duration_s": 8.52,
+   "events": [
+    {
+     "text": "Naturalistas e filósofos se concentram em textos clássicos e, em particular, na Bíblia, em latín.",
+     "end_s": 7.904,
+     "hit": false
+    }
+   ]
+  },
+  {
+   "id": "fleurs-5670042647841658807",
+   "group": "fleurs",
+   "text": null,
+   "duration_s": 9.66,
+   "events": [
+    {
+     "text": "O Natal é um dos feriados mais importantes do cristianismo e é celebrado como aniversário de Jesus.",
+     "end_s": 8.032,
+     "hit": false
+    }
+   ]
+  },
+  {
+   "id": "fleurs-5688826217879473856",
+   "group": "fleurs",
+   "text": null,
+   "duration_s": 13.32,
+   "events": [
+    {
+     "text": "Agatha",
+     "end_s": 2.112,
+     "hit": true
+    },
+    {
+     "text": "e também disse que é o Zinanuclear.",
+     "end_s": 4.704,
+     "hit": false
+    },
+    {
+     "text": "De Cachewazac, Cariwa",
+     "end_s": 8.16,
+     "hit": false
+    },
+    {
+     "text": "da prefeitura de negata, estava funcionando fora do normal.",
+     "end_s": 12.64,
+     "hit": false
+    }
+   ]
+  },
+  {
+   "id": "fleurs-571132148497651365",
+   "group": "fleurs",
+   "text": null,
+   "duration_s": 12.3,
+   "events": [
+    {
+     "text": "Ainda assim, 80% dos nossos produtos foram tachados com tarifas em países da América Central.",
+     "end_s": 6.56,
+     "hit": false
+    },
+    {
+     "text": "Nós tratamos vocês.",
+     "end_s": 8.512,
+     "hit": false
+    }
+   ]
+  },
+  {
+   "id": "fleurs-5741675051675293793",
+   "group": "fleurs",
+   "text": null,
+   "duration_s": 17.94,
+   "events": [
+    {
+     "text": "Os artigos necessitavam do consentimento na anime entre todos os estados, antes que pudessem ser emandados, e os estados deram tão pouca importância ao governo central, que os representantes deles quase nunca estavam presentes.",
+     "end_s": 16.576,
+     "hit": false
+    }
+   ]
+  },
+  {
+   "id": "fleurs-5776960217522515025",
+   "group": "fleurs",
+   "text": null,
+   "duration_s": 10.86,
+   "events": [
+    {
+     "text": "Além disso,",
+     "end_s": 2.144,
+     "hit": false
+    },
+    {
+     "text": "Não existia autoridade",
+     "end_s": 4.608,
+     "hit": false
+    },
+    {
+     "text": "para revogar as leis fiscais e tarifas entre os estados.",
+     "end_s": 9.824,
+     "hit": false
+    }
+   ]
+  },
+  {
+   "id": "fleurs-5900320804548982509",
+   "group": "fleurs",
+   "text": null,
+   "duration_s": 13.98,
+   "events": [
+    {
+     "text": "Podemos começar a viver de maneira mais amigável com o ambiente, podemos nos juntar ao movimento ambiental e podemos até ser ativistas para reduzirmos o sofrimento futuro em algum grau.",
+     "end_s": 12.8,
+     "hit": false
+    }
+   ]
+  },
+  {
+   "id": "fleurs-5962535208989167907",
+   "group": "fleurs",
+   "text": null,
+   "duration_s": 5.22,
+   "events": [
+    {
+     "text": "a polícia disse que o corpo parecia estar ali a cerca de um dia",
+     "end_s": 4.352,
+     "hit": false
+    }
+   ]
+  },
+  {
+   "id": "fleurs-598042320649786128",
+   "group": "fleurs",
+   "text": null,
+   "duration_s": 13.14,
+   "events": [
+    {
+     "text": "Alguns relatórios dizem que o número oficial de mortos foi oito, e outros confirmaram que até trinta ficaram feridas, mas os números finais ainda não são conhecidos.",
+     "end_s": 11.744,
+     "hit": false
+    }
+   ]
+  },
+  {
+   "id": "fleurs-611377884192820639",
+   "group": "fleurs",
+   "text": null,
+   "duration_s": 12.48,
+   "events": [
+    {
+     "text": "Em princípio, o budismo tibetana é muito simples. Ele consiste na kundalini yoga, na meditação e no caminho do amor abrangente.",
+     "end_s": 11.008,
+     "hit": false
+    }
+   ]
+  },
+  {
+   "id": "fleurs-6217705920816115071",
+   "group": "fleurs",
+   "text": null,
+   "duration_s": 13.2,
+   "events": [
+    {
+     "text": "Produdos artesanais podem ser definidos como antiguidades, embora sejam mais jovens do que produtos parecidos produtos.",
+     "end_s": 8.992,
+     "hit": false
+    },
+    {
+     "text": "em massa.",
+     "end_s": 10.336,
+     "hit": false
+    }
+   ]
+  },
+  {
+   "id": "fleurs-6240356422265195312",
+   "group": "fleurs",
+   "text": null,
+   "duration_s": 12.78,
+   "events": [
+    {
+     "text": "Um telefone via satélite geralmente não substitui um telefone celular, já que para fazer uma chamada você precisa estar ao ar livre com vista para o satélite.",
+     "end_s": 10.848,
+     "hit": false
+    }
+   ]
+  },
+  {
+   "id": "fleurs-6314416073878600155",
+   "group": "fleurs",
+   "text": null,
+   "duration_s": 16.8,
+   "events": [
+    {
+     "text": "O décimo primeiro selo.",
+     "end_s": 4.032,
+     "hit": false
+    },
+    {
+     "text": "Magnífico, os grandes feitos dos reis suecos.",
+     "end_s": 8.768,
+     "hit": false
+    },
+    {
+     "text": "de Davi Clocker, Erenstral.",
+     "end_s": 11.616,
+     "hit": false
+    },
+    {
+     "text": "em 2000, que está listado no livro Guinness dos Records.",
+     "end_s": 16.064,
+     "hit": false
+    }
+   ]
+  },
+  {
+   "id": "fleurs-6367795772731068730",
+   "group": "fleurs",
+   "text": null,
+   "duration_s": 14.16,
+   "events": [
+    {
+     "text": "As qualidades que determinam uma subcultura como distinta podem ser linguísticas, estéticas, religiosas, políticas, sexuais, geográficas ou uma combinação de fatores.",
+     "end_s": 13.408,
+     "hit": false
+    }
+   ]
+  },
+  {
+   "id": "fleurs-6385612862874419213",
+   "group": "fleurs",
+   "text": null,
+   "duration_s": 26.88,
+   "events": [
+    {
+     "text": "Como um membro da NSA, ele ajudou Carter na condução de assuntos diplomáticos mundiais, como o acordo de Camp David em 1978.",
+     "end_s": 10.56,
+     "hit": false
+    },
+    {
+     "text": "a normalização das relações Estados Unidos e China, no final dos anos 1970.",
+     "end_s": 16.384,
+     "hit": false
+    },
+    {
+     "text": "A Revolução Iraniana, que levou a crise dos reféns em 1979.",
+     "end_s": 21.792,
+     "hit": false
+    },
+    {
+     "text": "e a invasão soviética no Afeganistão em 1979.",
+     "end_s": 25.76,
+     "hit": false
+    }
+   ]
+  },
+  {
+   "id": "fleurs-651449505495567705",
+   "group": "fleurs",
+   "text": null,
+   "duration_s": 9.54,
+   "events": [
+    {
+     "text": "As ilhas do Leste da África estão no Oceano Índico, a uma distância da costa Leste da África.",
+     "end_s": 7.936,
+     "hit": false
+    }
+   ]
+  },
+  {
+   "id": "fleurs-656001987193252257",
+   "group": "fleurs",
+   "text": null,
+   "duration_s": 15.54,
+   "events": [
+    {
+     "text": "Elas podem ver muito bem no escuro com a visão noturna e também conseguem se mover de forma fortiva. As jaguatíricas causam suas presas misturando-se com o ambiente que as rodeia e em seguida atacam suas presas.",
+     "end_s": 15.008,
+     "hit": false
+    }
+   ]
+  },
+  {
+   "id": "fleurs-6586403891845290601",
+   "group": "fleurs",
+   "text": null,
+   "duration_s": 10.44,
+   "events": [
+    {
+     "text": "A pronúncia é relativamente fácil em italiano.",
+     "end_s": 4.032,
+     "hit": false
+    },
+    {
+     "text": "já que a maioria das palavras são pronunciadas exatamente como foram escritas.",
+     "end_s": 9.152,
+     "hit": false
+    }
+   ]
+  },
+  {
+   "id": "fleurs-6587031614402483799",
+   "group": "fleurs",
+   "text": null,
+   "duration_s": 21.84,
+   "events": [
+    {
+     "text": "Ele usa tecnologia baseada em satélite em oposição à tecnologia mais antiga, baseada em radar terrestre.",
+     "end_s": 10.528,
+     "hit": false
+    },
+    {
+     "text": "Para permitir que os controladores de tráfego aéreo localizem aeronaves com maior precisão e ofereçam informações mais precisas aos pilotos.",
+     "end_s": 21.184,
+     "hit": false
+    }
+   ]
+  },
+  {
+   "id": "fleurs-661581677088379650",
+   "group": "fleurs",
+   "text": null,
+   "duration_s": 12.12,
+   "events": [
+    {
+     "text": "Os antigos do Egito do Novo Império se maravilhavam",
+     "end_s": 4.128,
+     "hit": false
+    },
+    {
+     "text": "com as construções de seus antecessores que tinham até então muito mais de mil anos.",
+     "end_s": 10.88,
+     "hit": false
+    }
+   ]
+  },
+  {
+   "id": "fleurs-6660712214250973272",
+   "group": "fleurs",
+   "text": null,
+   "duration_s": 11.58,
+   "events": [
+    {
+     "text": "O relatório é iniciado com um apelo por um debate aberto e pela formação de consenso nos Estados Unidos sobre a política relacionada à Oriente Médio.",
+     "end_s": 10.496,
+     "hit": false
+    }
+   ]
+  },
+  {
+   "id": "fleurs-6673962221102391317",
+   "group": "fleurs",
+   "text": null,
+   "duration_s": 10.5,
+   "events": [
+    {
+     "text": "Com apenas 18 medalhas disponíveis por dia, o número considerável do país não conseguiu ganhar medalhas.",
+     "end_s": 7.36,
+     "hit": false
+    }
+   ]
+  },
+  {
+   "id": "fleurs-6781778095180602356",
+   "group": "fleurs",
+   "text": null,
+   "duration_s": 8.28,
+   "events": [
+    {
+     "text": "Quando você liga para alguém que está a melhores de quilômetros de distância, você está usando um satélite.",
+     "end_s": 6.944,
+     "hit": false
+    }
+   ]
+  },
+  {
+   "id": "fleurs-6787762050387056624",
+   "group": "fleurs",
+   "text": null,
+   "duration_s": 7.2,
+   "events": [
+    {
+     "text": "A água está derramando sobre o Dick em uma sessão de 100 pés de largura.",
+     "end_s": 5.92,
+     "hit": false
+    }
+   ]
+  },
+  {
+   "id": "fleurs-6796105948661068844",
+   "group": "fleurs",
+   "text": null,
+   "duration_s": 10.5,
+   "events": [
+    {
+     "text": "Os gastos de guerra do imperialismo dos Estados Unidos na conquista das Filipinas foram pagos pela própria população filipina.",
+     "end_s": 8.608,
+     "hit": false
+    }
+   ]
+  },
+  {
+   "id": "fleurs-6845176413831639571",
+   "group": "fleurs",
+   "text": null,
+   "duration_s": 25.92,
+   "events": [
+    {
+     "text": "Em 6 de outubro de 1789, o aterrorizado rei Luís XVI, a rainha Maria Antonieta, seus dois filhos jovens, Maria Teresa de 11 anos e Luiz Carlos de 4 anos,",
+     "end_s": 13.632,
+     "hit": false
+    },
+    {
+     "text": "e a Imanda do Rei, Madame Elizabeth.",
+     "end_s": 16.48,
+     "hit": false
+    },
+    {
+     "text": "foram forçados a voltar para Paris, partindo de versá-los por uma multidão de mulheres dos mercados.",
+     "end_s": 24.448,
+     "hit": false
+    }
+   ]
+  },
+  {
+   "id": "fleurs-6851050761978063249",
+   "group": "fleurs",
+   "text": null,
+   "duration_s": 11.76,
+   "events": [
+    {
+     "text": "Os produtos artesanais podem ser definidos como antigüidades, embora os sejam mais jovens do que os produtos parecidos produzidos em massa.",
+     "end_s": 9.984,
+     "hit": false
+    }
+   ]
+  },
+  {
+   "id": "fleurs-6901042758825370800",
+   "group": "fleurs",
+   "text": null,
+   "duration_s": 10.92,
+   "events": [
+    {
+     "text": "O dinheiro pode ser trocado no único banco das ilhas que está localizado em Stanley, em frente à loja FE C West.",
+     "end_s": 9.312,
+     "hit": false
+    }
+   ]
+  },
+  {
+   "id": "fleurs-6920952071246298233",
+   "group": "fleurs",
+   "text": null,
+   "duration_s": 8.28,
+   "events": [
+    {
+     "text": "Não havia grandes florestas na terra de Cana'an.",
+     "end_s": 4.352,
+     "hit": false
+    },
+    {
+     "text": "Por isso a madeira é extremamente cara.",
+     "end_s": 7.04,
+     "hit": false
+    }
+   ]
+  },
+  {
+   "id": "fleurs-6941000598363965033",
+   "group": "fleurs",
+   "text": null,
+   "duration_s": 6.96,
+   "events": [
+    {
+     "text": "um query pode ser seco ou molhado, dependendo da quantidade de líquido.",
+     "end_s": 5.824,
+     "hit": false
+    }
+   ]
+  },
+  {
+   "id": "fleurs-7024878965372683939",
+   "group": "fleurs",
+   "text": null,
+   "duration_s": 22.08,
+   "events": [
+    {
+     "text": "e uma parceria da NPWS.",
+     "end_s": 4.48,
+     "hit": false
+    },
+    {
+     "text": "e da Sporting Shooters Association of Australia, as...",
+     "end_s": 9.024,
+     "hit": false
+    },
+    {
+     "text": "NSW, Inc. Voluntários Qualificados Foram Recruitados",
+     "end_s": 14.208,
+     "hit": false
+    },
+    {
+     "text": "de acordo com o programa de CASA da Sporting Shooters Association.",
+     "end_s": 20.352,
+     "hit": false
+    }
+   ]
+  },
+  {
+   "id": "fleurs-718683841511908498",
+   "group": "fleurs",
+   "text": null,
+   "duration_s": 13.08,
+   "events": [
+    {
+     "text": "até mesmo de uma organização ser inovadora?",
+     "end_s": 4.224,
+     "hit": false
+    },
+    {
+     "text": "Os líderes precisam criar uma cultura de inovação, assim como um conhecimento compartilhado no aprendizado organizacional.",
+     "end_s": 12.544,
+     "hit": false
+    }
+   ]
+  },
+  {
+   "id": "fleurs-7224870849785318104",
+   "group": "fleurs",
+   "text": null,
+   "duration_s": 23.28,
+   "events": [
+    {
+     "text": "Agora, amplamente disponível pelo arquipélago, a culinária javanese inclui uma variedade de pratos temperados de maneira simples. Os condimentos predominantes de preferência javanese, sendo amendoim, pimentas, açúcar, principalmente açúcar de coco javanês e várias especiarias aromáticas.",
+     "end_s": 21.408,
+     "hit": false
+    }
+   ]
+  },
+  {
+   "id": "fleurs-7240488274273884791",
+   "group": "fleurs",
+   "text": null,
+   "duration_s": 13.44,
+   "events": [
+    {
+     "text": "NHK também disse que é usina nuclear de cachio azarque carioa.",
+     "end_s": 7.52,
+     "hit": false
+    },
+    {
+     "text": "da prefeitura de negata estava funcionando de forma normal.",
+     "end_s": 12.288,
+     "hit": false
+    }
+   ]
+  },
+  {
+   "id": "fleurs-726772315446984146",
+   "group": "fleurs",
+   "text": null,
+   "duration_s": 6.36,
+   "events": [
+    {
+     "text": "Argentina é conhecida por ter um dos melhores times de jogadores de polo do mundo.",
+     "end_s": 5.28,
+     "hit": false
+    }
+   ]
+  },
+  {
+   "id": "fleurs-7270075089950892790",
+   "group": "fleurs",
+   "text": null,
+   "duration_s": 9.3,
+   "events": [
+    {
+     "text": "O maior torneio do ano ocorre em dezembro nos campos de...",
+     "end_s": 5.632,
+     "hit": false
+    },
+    {
+     "text": "Polo em lascanitas",
+     "end_s": 8.192,
+     "hit": false
+    }
+   ]
+  },
+  {
+   "id": "fleurs-7306106858879478280",
+   "group": "fleurs",
+   "text": null,
+   "duration_s": 7.08,
+   "events": [
+    {
+     "text": "Uma opção cada vez mais popular para aqueles que pretendem ter um ano sabático e viajar e aprender.",
+     "end_s": 5.888,
+     "hit": false
+    }
+   ]
+  },
+  {
+   "id": "fleurs-732710362982423298",
+   "group": "fleurs",
+   "text": null,
+   "duration_s": 8.28,
+   "events": [
+    {
+     "text": "Isso se tornou uma prática comum, mas o ferro causava mais desgaste nas rodas de madeira dos vagões.",
+     "end_s": 7.264,
+     "hit": false
+    }
+   ]
+  },
+  {
+   "id": "fleurs-7377029495898915434",
+   "group": "fleurs",
+   "text": null,
+   "duration_s": 14.16,
+   "events": [
+    {
+     "text": "Israel exige uma presença militar contínua no Vale por 10 anos, assim que um acordo seja assinado. Ao passo que a AP concordem em deixar essa presença por apenas 5 anos.",
+     "end_s": 12.896,
+     "hit": false
+    }
+   ]
+  },
+  {
+   "id": "fleurs-7401519748662699811",
+   "group": "fleurs",
+   "text": null,
+   "duration_s": 17.82,
+   "events": [
+    {
+     "text": "Por exemplo",
+     "end_s": 2.24,
+     "hit": false
+    },
+    {
+     "text": "aprendizado e socialização.",
+     "end_s": 5.504,
+     "hit": false
+    },
+    {
+     "text": "são indicados como motivações importantes para a autísima.",
+     "end_s": 9.28,
+     "hit": false
+    },
+    {
+     "text": "utilização da internet.",
+     "end_s": 12.064,
+     "hit": false
+    },
+    {
+     "text": "James et al.",
+     "end_s": 14.112,
+     "hit": false
+    },
+    {
+     "text": "1995",
+     "end_s": 16.48,
+     "hit": false
+    }
+   ]
+  },
+  {
+   "id": "fleurs-7432076560110561939",
+   "group": "fleurs",
+   "text": null,
+   "duration_s": 5.82,
+   "events": [
+    {
+     "text": "A maior parte da vida familiar hebraica acontecia ao ar livre.",
+     "end_s": 4.864,
+     "hit": false
+    }
+   ]
+  },
+  {
+   "id": "fleurs-7450437965739451777",
+   "group": "fleurs",
+   "text": null,
+   "duration_s": 12.9,
+   "events": [
+    {
+     "text": "Insetos foram os primeiros animais a irem para o ar.",
+     "end_s": 3.232,
+     "hit": false
+    },
+    {
+     "text": "Sua habilidade de voaros ajudou a fugir mais facilmente de inimigos e a encontrar alimento e parceiros de maneira mais eficiente.",
+     "end_s": 12.0,
+     "hit": false
+    }
+   ]
+  },
+  {
+   "id": "fleurs-7503316393114322388",
+   "group": "fleurs",
+   "text": null,
+   "duration_s": 7.38,
+   "events": [
+    {
+     "text": "Alguns festivais têm áreas especiais que dê acampamento para famílias com crianças pequenas.",
+     "end_s": 6.528,
+     "hit": false
+    }
+   ]
+  },
+  {
+   "id": "fleurs-7528725649411082568",
+   "group": "fleurs",
+   "text": null,
+   "duration_s": 7.56,
+   "events": [
+    {
+     "text": "Você pode ver as pirâmides no escuro e também no silêncio antes de o show começar.",
+     "end_s": 6.4,
+     "hit": false
+    }
+   ]
+  },
+  {
+   "id": "fleurs-7555258103634205331",
+   "group": "fleurs",
+   "text": null,
+   "duration_s": 8.88,
+   "events": [
+    {
+     "text": "Os cursos da água do interior podem ser um bom tema ao redor do qual organizar um feriado.",
+     "end_s": 7.68,
+     "hit": false
+    }
+   ]
+  },
+  {
+   "id": "fleurs-765638699227784158",
+   "group": "fleurs",
+   "text": null,
+   "duration_s": 13.02,
+   "events": [
+    {
+     "text": "O relatório é iniciado com um apelo por um debate aberto e pela formação de um consenso nos Estados Unidos sobre a política relucionada ao Oriente Médio.",
+     "end_s": 10.816,
+     "hit": false
+    }
+   ]
+  },
+  {
+   "id": "fleurs-7779954393151011503",
+   "group": "fleurs",
+   "text": null,
+   "duration_s": 16.44,
+   "events": [
+    {
+     "text": "Embora seja amplamente usado, especialmente entre não-romanes, o termo cigano é muitas vezes considerado ofensivo por estar associado a estereótipos negativos e percepções imprecisas sobre o povo români.",
+     "end_s": 15.232,
+     "hit": false
+    }
+   ]
+  },
+  {
+   "id": "fleurs-7846276340528521387",
+   "group": "fleurs",
+   "text": null,
+   "duration_s": 13.86,
+   "events": [
+    {
+     "text": "As qualidades que determinam uma subcultura como distinta podem ser linguísticas, estéticas, religiosas, políticas, sexuais, geográficas ou uma combinação de fatores.",
+     "end_s": 12.992,
+     "hit": false
+    }
+   ]
+  },
+  {
+   "id": "fleurs-785230864927518582",
+   "group": "fleurs",
+   "text": null,
+   "duration_s": 21.24,
+   "events": [
+    {
+     "text": "Elas podem ver muito bem no escuro, com adesão no túnel e também conseguem se mover de forma futiva.",
+     "end_s": 7.52,
+     "hit": false
+    },
+    {
+     "text": "As aquatílicas caçam suas presas misturando-se com o ambiente que as rodeia em seguida estar com suas presas.",
+     "end_s": 15.264,
+     "hit": false
+    }
+   ]
+  },
+  {
+   "id": "fleurs-7853770871679655872",
+   "group": "fleurs",
+   "text": null,
+   "duration_s": 7.08,
+   "events": [
+    {
+     "text": "A religião principal na Moldavia é o cristianismo ortodoxo.",
+     "end_s": 5.12,
+     "hit": false
+    }
+   ]
+  },
+  {
+   "id": "fleurs-7945638663906171010",
+   "group": "fleurs",
+   "text": null,
+   "duration_s": 14.4,
+   "events": [
+    {
+     "text": "o Parque Nacional Kruger fica no Nordeste da África do Sul",
+     "end_s": 4.608,
+     "hit": false
+    },
+    {
+     "text": "ao longo da fronteira de Moçambique, ao leste.",
+     "end_s": 7.936,
+     "hit": false
+    },
+    {
+     "text": "do Zimbabwe ao norte e o Crocodile River na fronteira sul.",
+     "end_s": 13.152,
+     "hit": false
+    }
+   ]
+  },
+  {
+   "id": "fleurs-7994449619953167897",
+   "group": "fleurs",
+   "text": null,
+   "duration_s": 8.82,
+   "events": [
+    {
+     "text": "Eles ainda estão tentando determinar o tamanho do acidente e como a terra será afectada.",
+     "end_s": 6.528,
+     "hit": false
+    }
+   ]
+  },
+  {
+   "id": "fleurs-8138757114198992748",
+   "group": "fleurs",
+   "text": null,
+   "duration_s": 13.44,
+   "events": [
+    {
+     "text": "Israel exige uma presença militar contínua no Vale por 10 anos, assim que um acordo seja assinado. Ao passo que a AP concorda em deixar essa presença por apenas 5 anos.",
+     "end_s": 11.68,
+     "hit": false
+    }
+   ]
+  },
+  {
+   "id": "fleurs-8151192070477108230",
+   "group": "fleurs",
+   "text": null,
+   "duration_s": 16.68,
+   "events": [
+    {
+     "text": "Ela chegou a essa conclusão devido à infinidade de comentários positivos e incentivos enviados à tela por indivíduos do sexo feminino e masculino.",
+     "end_s": 9.792,
+     "hit": false
+    },
+    {
+     "text": "Pedindo que a medicação contraceptiva seja considerada uma necessidade médica.",
+     "end_s": 15.2,
+     "hit": false
+    }
+   ]
+  },
+  {
+   "id": "fleurs-8229558206033876518",
+   "group": "fleurs",
+   "text": null,
+   "duration_s": 13.14,
+   "events": [
+    {
+     "text": "Se for visitar as áreas arcticas ou antárticas no inverno",
+     "end_s": 5.024,
+     "hit": false
+    },
+    {
+     "text": "Você vai experimentar a noite polar, o que significa que o Sol não sobe acima do horizonte.",
+     "end_s": 11.712,
+     "hit": false
+    }
+   ]
+  },
+  {
+   "id": "fleurs-8282479571083413596",
+   "group": "fleurs",
+   "text": null,
+   "duration_s": 10.92,
+   "events": [
+    {
+     "text": "A alimentação na romantiga não incluía mantimentos originados da América e da Ásia para a Europa, assim como aconteceu nos séculos posteriores.",
+     "end_s": 9.376,
+     "hit": false
+    }
+   ]
+  },
+  {
+   "id": "fleurs-8325681291610132223",
+   "group": "fleurs",
+   "text": null,
+   "duration_s": 13.32,
+   "events": [
+    {
+     "text": "Um telefone via satellite geralmente não substitui um telefone celular.",
+     "end_s": 5.888,
+     "hit": false
+    },
+    {
+     "text": "e já que para fazer uma chamada você precisa estar ao ar livre com vista para o satélite.",
+     "end_s": 12.192,
+     "hit": false
+    }
+   ]
+  },
+  {
+   "id": "fleurs-8363463989661215730",
+   "group": "fleurs",
+   "text": null,
+   "duration_s": 15.72,
+   "events": [
+    {
+     "text": "Ao pedirem um comentário seu, me ler disse, Mike, fala muito durante a audiência.",
+     "end_s": 7.008,
+     "hit": false
+    },
+    {
+     "text": "Eu estava me preparando, então não estava prestando muita atenção no que ele estava dizendo.",
+     "end_s": 13.504,
+     "hit": false
+    }
+   ]
+  },
+  {
+   "id": "fleurs-8367636239985161715",
+   "group": "fleurs",
+   "text": null,
+   "duration_s": 12.24,
+   "events": [
+    {
+     "text": "Quando você foi para o exterior pela primeira vez, as pessoas provavelmente foram pacientes e compreensivas, sabendo que viajantes em um novo país precisam se adaptar.",
+     "end_s": 10.464,
+     "hit": false
+    }
+   ]
+  },
+  {
+   "id": "fleurs-8395171489938785844",
+   "group": "fleurs",
+   "text": null,
+   "duration_s": 10.44,
+   "events": [
+    {
+     "text": "exemplos de atividades locais incluem a pescaria, tirar fotografias, ver pássaros, visitar os parques e estudar sobre o ecossistema",
+     "end_s": 9.248,
+     "hit": false
+    }
+   ]
+  },
+  {
+   "id": "fleurs-8408579760359921426",
+   "group": "fleurs",
+   "text": null,
+   "duration_s": 7.56,
+   "events": [
+    {
+     "text": "O Abazonas também é o rio mais largo da Terra, às vezes com quase 10 km de largura.",
+     "end_s": 6.528,
+     "hit": false
+    }
+   ]
+  },
+  {
+   "id": "fleurs-8441657784391235948",
+   "group": "fleurs",
+   "text": null,
+   "duration_s": 10.62,
+   "events": [
+    {
+     "text": "Não sei se você nota isso não.",
+     "end_s": 3.136,
+     "hit": false
+    },
+    {
+     "text": "Mas uma grande parte das mercadorias da América Central veio para este país sem pagar impostos.",
+     "end_s": 9.984,
+     "hit": false
+    }
+   ]
+  },
+  {
+   "id": "fleurs-8483155836563590517",
+   "group": "fleurs",
+   "text": null,
+   "duration_s": 14.52,
+   "events": [
+    {
+     "text": "Os portugueses a destruíram e reconstruíram com o nome de Casa Branca apenas para abandoná-la após um terremoto em 1755.",
+     "end_s": 12.544,
+     "hit": false
+    }
+   ]
+  },
+  {
+   "id": "fleurs-8510533477611443703",
+   "group": "fleurs",
+   "text": null,
+   "duration_s": 13.44,
+   "events": [
+    {
+     "text": "Antes mesmo de uma organização ser inovadora,",
+     "end_s": 3.904,
+     "hit": false
+    },
+    {
+     "text": "Os idrs precisam criar uma cultura de inovação.",
+     "end_s": 7.328,
+     "hit": false
+    },
+    {
+     "text": "assim como conhecimento compartilhado e um aprendizado organizacional.",
+     "end_s": 12.736,
+     "hit": false
+    }
+   ]
+  },
+  {
+   "id": "fleurs-8596602548669644821",
+   "group": "fleurs",
+   "text": null,
+   "duration_s": 8.88,
+   "events": [
+    {
+     "text": "Japão possui cerca de 7 mil ilhas, a maior sendo Hong-Chu, tornando Japão a sétima maior ilha do mundo.",
+     "end_s": 7.616,
+     "hit": false
+    }
+   ]
+  },
+  {
+   "id": "fleurs-8640867287915516308",
+   "group": "fleurs",
+   "text": null,
+   "duration_s": 12.24,
+   "events": [
+    {
+     "text": "Após assistirem os horrores e atrocidades da guerra durante a Primeira Guerra Mundial, as nações desejaram evitar tal situação novamente no futuro.",
+     "end_s": 11.104,
+     "hit": false
+    }
+   ]
+  },
+  {
+   "id": "fleurs-8669448085293436276",
+   "group": "fleurs",
+   "text": null,
+   "duration_s": 13.32,
+   "events": [
+    {
+     "text": "Cientistas acreditam que as jaguatíricas seguem e encontram suas presas pelo cheiro.",
+     "end_s": 8.8,
+     "hit": false
+    },
+    {
+     "text": "farejando onde elas estiverem pelo solo.",
+     "end_s": 12.416,
+     "hit": false
+    }
+   ]
+  },
+  {
+   "id": "fleurs-8684860314671012919",
+   "group": "fleurs",
+   "text": null,
+   "duration_s": 8.58,
+   "events": [
+    {
+     "text": "há milhares de anos um homem chamado Aristarco",
+     "end_s": 4.224,
+     "hit": false
+    },
+    {
+     "text": "Dice que o sistema solar se movia ao redor do sol.",
+     "end_s": 7.744,
+     "hit": false
+    }
+   ]
+  },
+  {
+   "id": "fleurs-8705898161609684782",
+   "group": "fleurs",
+   "text": null,
+   "duration_s": 9.6,
+   "events": [
+    {
+     "text": "A ONU também espera concluir um fundo para ajudar os países afetados pelo aquecimento global ao lidar com os impactos.",
+     "end_s": 8.288,
+     "hit": false
+    }
+   ]
+  },
+  {
+   "id": "fleurs-871832193807330248",
+   "group": "fleurs",
+   "text": null,
+   "duration_s": 9.36,
+   "events": [
+    {
+     "text": "Acidentes Aéreos são comuns no Ira, que têm uma frota envelestida e mal conservada tanto para operações civis quanto militares.",
+     "end_s": 8.192,
+     "hit": false
+    }
+   ]
+  },
+  {
+   "id": "fleurs-8720619529278714478",
+   "group": "fleurs",
+   "text": null,
+   "duration_s": 13.32,
+   "events": [
+    {
+     "text": "seu milésimo selo foi o magnífico Os Grandes Feitos dos Reis Suecos de David Clocker-Erenstral em 2000, que está listado no livro Guinness dos Records.",
+     "end_s": 11.808,
+     "hit": false
+    }
+   ]
+  },
+  {
+   "id": "fleurs-8744429348259055476",
+   "group": "fleurs",
+   "text": null,
+   "duration_s": 17.64,
+   "events": [
+    {
+     "text": "Esse novo ambiente tem recursos diferentes e novos competidores.",
+     "end_s": 5.952,
+     "hit": false
+    },
+    {
+     "text": "Então a nova população precisará adquirir características diferentes das que já possui e adaptar-se para se tornar uma forte competidora.",
+     "end_s": 15.84,
+     "hit": false
+    }
+   ]
+  },
+  {
+   "id": "fleurs-8785869569365511463",
+   "group": "fleurs",
+   "text": null,
+   "duration_s": 7.08,
+   "events": [
+    {
+     "text": "Quando você liga para alguém que está há milhares de quilômetros de distância, você está usando um satélite.",
+     "end_s": 6.4,
+     "hit": false
+    }
+   ]
+  },
+  {
+   "id": "fleurs-8846357540746226839",
+   "group": "fleurs",
+   "text": null,
+   "duration_s": 8.94,
+   "events": [
+    {
+     "text": "A população original não mudou em nada. Eles ainda precisam das mesmas adaptações de antes.",
+     "end_s": 7.968,
+     "hit": false
+    }
+   ]
+  },
+  {
+   "id": "fleurs-8850997720958147818",
+   "group": "fleurs",
+   "text": null,
+   "duration_s": 12.36,
+   "events": [
+    {
+     "text": "Após assistirem aos horrores e atrocidades da guerra durante a Primeira Guerra Mundial,",
+     "end_s": 7.136,
+     "hit": false
+    },
+    {
+     "text": "As nações desejaram evitar tal situação novamente no futuro.",
+     "end_s": 11.52,
+     "hit": false
+    }
+   ]
+  },
+  {
+   "id": "fleurs-8869748271269457510",
+   "group": "fleurs",
+   "text": null,
+   "duration_s": 16.98,
+   "events": [
+    {
+     "text": "Nos Estados Unidos da América, existem cerca de 400 mil casos conhecidos de esclerose múltipla.",
+     "end_s": 9.6,
+     "hit": false
+    },
+    {
+     "text": "fazendo com que seja a principal doença neurológica em jovens e adultos.",
+     "end_s": 15.616,
+     "hit": false
+    }
+   ]
+  },
+  {
+   "id": "fleurs-8873021224182748456",
+   "group": "fleurs",
+   "text": null,
+   "duration_s": 10.98,
+   "events": [
+    {
+     "text": "Dizem que os saques generalizados continuaram durante toda a noite, ao passo que não se via a polícia presente nas ruas de Bishkek.",
+     "end_s": 9.28,
+     "hit": false
+    }
+   ]
+  },
+  {
+   "id": "fleurs-8885842589488806354",
+   "group": "fleurs",
+   "text": null,
+   "duration_s": 8.4,
+   "events": [
+    {
+     "text": "O Abazonas também é o rio mais largo da Terra, às vezes com quase 10 km de largura.",
+     "end_s": 6.656,
+     "hit": false
+    }
+   ]
+  },
+  {
+   "id": "fleurs-8899371669716037365",
+   "group": "fleurs",
+   "text": null,
+   "duration_s": 12.66,
+   "events": [
+    {
+     "text": "Ele adverte que não há garantias de que alguma ação no Iraque, neste momento, irá impedir a guerra entre seitas, o aumento da violência ou a tendência para o caos.",
+     "end_s": 10.912,
+     "hit": false
+    }
+   ]
+  },
+  {
+   "id": "fleurs-8917249859288980637",
+   "group": "fleurs",
+   "text": null,
+   "duration_s": 6.96,
+   "events": [
+    {
+     "text": "um curry pode ser seco ou molhado, dependendo da quantidade de líquido.",
+     "end_s": 5.024,
+     "hit": false
+    }
+   ]
+  },
+  {
+   "id": "fleurs-8932614941580462270",
+   "group": "fleurs",
+   "text": null,
+   "duration_s": 18.24,
+   "events": [
+    {
+     "text": "Ela chegou a essa conclusão devido à infinidade de comentários positivos e incentivos enviados a ela por indivíduos do sexo feminino e masculino, pedindo que a medicação contraceptiva seja considerada uma necessidade médica.",
+     "end_s": 16.704,
+     "hit": false
+    }
+   ]
+  },
+  {
+   "id": "fleurs-9031962862605309166",
+   "group": "fleurs",
+   "text": null,
+   "duration_s": 16.56,
+   "events": [
+    {
+     "text": "A ciência aponta hoje que essa economia baseada no carbono deslocou a biosfera.",
+     "end_s": 7.552,
+     "hit": false
+    },
+    {
+     "text": "do Estado estável que havia permitido a evolução humana ao longo dos últimos dois milhões de anos.",
+     "end_s": 14.496,
+     "hit": false
+    }
+   ]
+  },
+  {
+   "id": "fleurs-9044684036950833906",
+   "group": "fleurs",
+   "text": null,
+   "duration_s": 8.7,
+   "events": [
+    {
+     "text": "No começo, as vestimentas foram muito influenciadas pela cultura bizantina na região leste.",
+     "end_s": 7.776,
+     "hit": false
+    }
+   ]
+  },
+  {
+   "id": "fleurs-9045639627909583213",
+   "group": "fleurs",
+   "text": null,
+   "duration_s": 14.52,
+   "events": [
+    {
+     "text": "Nos Estados Unidos da América, existem cerca de 400 mil casos conhecidos de esclerose múltipla, EM.",
+     "end_s": 8.032,
+     "hit": false
+    },
+    {
+     "text": "fazendo com que seja a principal doença neurológica em jovens e adultos.",
+     "end_s": 13.184,
+     "hit": false
+    }
+   ]
+  },
+  {
+   "id": "fleurs-9078846774637047736",
+   "group": "fleurs",
+   "text": null,
+   "duration_s": 11.76,
+   "events": [
+    {
+     "text": "Por favor, trate o local com toda a dignidade, solenidade e respeito que ele merece. Não faça piadas sobre o holocausto ou nazistas.",
+     "end_s": 10.56,
+     "hit": false
+    }
+   ]
+  },
+  {
+   "id": "fleurs-9131440946753217076",
+   "group": "fleurs",
+   "text": null,
+   "duration_s": 13.44,
+   "events": [
+    {
+     "text": "Na maioria dos casos, sem escrever em um curso no exterior durante um ano sabático pode de fato aumentar sua chance de ingressar na educação superior no seu país de origem.",
+     "end_s": 11.36,
+     "hit": false
+    }
+   ]
+  },
+  {
+   "id": "fleurs-9184441276156315964",
+   "group": "fleurs",
+   "text": null,
+   "duration_s": 17.82,
+   "events": [
+    {
+     "text": "anteriormente o CEO da Ring",
+     "end_s": 5.056,
+     "hit": false
+    },
+    {
+     "text": "James Siminoth",
+     "end_s": 7.168,
+     "hit": false
+    },
+    {
+     "text": "Comentou que a empresa surgiu quando a sua companhia não podia ser ouvida.",
+     "end_s": 12.544,
+     "hit": false
+    },
+    {
+     "text": "e de sua loja em sua garagem.",
+     "end_s": 15.328,
+     "hit": false
+    }
+   ]
+  },
+  {
+   "id": "fleurs-9200698722661472380",
+   "group": "fleurs",
+   "text": null,
+   "duration_s": 10.86,
+   "events": [
+    {
+     "text": "Sentisas afirmam que a plumagem superior desse animal era castanha e a parte inferior era clara ou caratenóide.",
+     "end_s": 8.896,
+     "hit": false
+    }
+   ]
+  },
+  {
+   "id": "fleurs-923053383093135084",
+   "group": "fleurs",
+   "text": null,
+   "duration_s": 18.0,
+   "events": [
+    {
+     "text": "Empresas transportadoras são bem pagas para entregar coisas rapidamente.",
+     "end_s": 5.728,
+     "hit": false
+    },
+    {
+     "text": "Frequentemente, o tempo é muito importante no envio de documentos comerciais, mercadorias ou peças sobressalentes para um reparo urgente.",
+     "end_s": 16.544,
+     "hit": false
+    }
+   ]
+  },
+  {
+   "id": "fleurs-9234938911431549754",
+   "group": "fleurs",
+   "text": null,
+   "duration_s": 9.6,
+   "events": [
+    {
+     "text": "Pesquisas em IA envolvem a produção de máquinas para automatizar tarefas que exigem atividade inteligente.",
+     "end_s": 8.224,
+     "hit": false
+    }
+   ]
+  },
+  {
+   "id": "fleurs-9252945024457337651",
+   "group": "fleurs",
+   "text": null,
+   "duration_s": 8.1,
+   "events": [
+    {
+     "text": "Os primeiros casos da doença, nesta temporada, foram notificados no final de julho.",
+     "end_s": 6.304,
+     "hit": false
+    }
+   ]
+  },
+  {
+   "id": "fleurs-9305559160781135728",
+   "group": "fleurs",
+   "text": null,
+   "duration_s": 22.68,
+   "events": [
+    {
+     "text": "Ele usa tecnologia baseada em satellite em oposição à tecnologia mais antiga baseada em radar terrestre",
+     "end_s": 9.056,
+     "hit": false
+    },
+    {
+     "text": "para permitir que os controladores de tráfico aéreo localizem aeronaves com maior precisão.",
+     "end_s": 15.168,
+     "hit": false
+    },
+    {
+     "text": "e oferecer informações mais precisas aos pilotos.",
+     "end_s": 19.456,
+     "hit": false
+    }
+   ]
+  },
+  {
+   "id": "fleurs-931734486710274058",
+   "group": "fleurs",
+   "text": null,
+   "duration_s": 12.24,
+   "events": [
+    {
+     "text": "Os pontos de vista apresentados são normalmente superficial e gerais e simplificados em relação com as mais detalhadas informações disponíveis em outros lugares.",
+     "end_s": 11.488,
+     "hit": false
+    }
+   ]
+  },
+  {
+   "id": "fleurs-9354178460417624391",
+   "group": "fleurs",
+   "text": null,
+   "duration_s": 10.2,
+   "events": [
+    {
+     "text": "Segundo o Dr. Mu",
+     "end_s": 1.632,
+     "hit": false
+    },
+    {
+     "text": "Alguns pacientes podem ter contraído o vírus no hospital, e ao menos dois eram profissionais de saúde.",
+     "end_s": 8.0,
+     "hit": false
+    }
+   ]
+  },
+  {
+   "id": "fleurs-9409513661305932772",
+   "group": "fleurs",
+   "text": null,
+   "duration_s": 12.72,
+   "events": [
+    {
+     "text": "Quando você foi para o exterior pela primeira vez, as pessoas provavelmente foram pacientes e compreensivas, sabendo que viajantes em um novo país precisam se adaptar.",
+     "end_s": 10.944,
+     "hit": false
+    }
+   ]
+  },
+  {
+   "id": "fleurs-9482481934023246215",
+   "group": "fleurs",
+   "text": null,
+   "duration_s": 10.32,
+   "events": [
+    {
+     "text": "O satélite no espaço recebe a chamada e depois a redireciona de volta, quase instantaneamente.",
+     "end_s": 9.376,
+     "hit": false
+    }
+   ]
+  },
+  {
+   "id": "fleurs-9529495412281962161",
+   "group": "fleurs",
+   "text": null,
+   "duration_s": 6.6,
+   "events": [
+    {
+     "text": "mais três bombas explodiram perto dos prédios do governo em um período de duas horas.",
+     "end_s": 5.792,
+     "hit": false
+    }
+   ]
+  },
+  {
+   "id": "fleurs-9533284779267639089",
+   "group": "fleurs",
+   "text": null,
+   "duration_s": 15.6,
+   "events": [
+    {
+     "text": "Eventualmente, as rodas de madeira foram substituídas por rodas de ferro. Em 1767, os primeiros trilhos totalmente de ferro foram introduzidos.",
+     "end_s": 14.528,
+     "hit": false
+    }
+   ]
+  },
+  {
+   "id": "fleurs-9618303090159622342",
+   "group": "fleurs",
+   "text": null,
+   "duration_s": 15.3,
+   "events": [
+    {
+     "text": "Devido a longa distância desde o continente, os mamíferos não puderam fazer a jornada, o que tornou a tartaruga gigante o principal animal de pasto nas galápagos.",
+     "end_s": 13.664,
+     "hit": false
+    }
+   ]
+  },
+  {
+   "id": "fleurs-9636078437971867321",
+   "group": "fleurs",
+   "text": null,
+   "duration_s": 33.18,
+   "events": [
+    {
+     "text": "como membro da NSA, ele ajudou Carter na condução de assuntos diplomáticos mundiais.",
+     "end_s": 7.68,
+     "hit": false
+    },
+    {
+     "text": "como acordo de Camp David em 1978.",
+     "end_s": 12.064,
+     "hit": false
+    },
+    {
+     "text": "a normalização das relações de Estados Unidos e China no final dos anos...",
+     "end_s": 17.888,
+     "hit": false
+    },
+    {
+     "text": "1970, a evolução iraniana que levou à crise dos efeitos em 1979.",
+     "end_s": 25.376,
+     "hit": false
+    },
+    {
+     "text": "e a invasão soviética na Afganistão em 1979.",
+     "end_s": 30.272,
+     "hit": false
+    }
+   ]
+  },
+  {
+   "id": "fleurs-9740163735477149681",
+   "group": "fleurs",
+   "text": null,
+   "duration_s": 5.04,
+   "events": [
+    {
+     "text": "ele montou uma campainha sem fio, disse.",
+     "end_s": 4.416,
+     "hit": false
+    }
+   ]
+  },
+  {
+   "id": "fleurs-9776935321561977831",
+   "group": "fleurs",
+   "text": null,
+   "duration_s": 5.52,
+   "events": [
+    {
+     "text": "Aquilo não pareceu fazer sentido para mim, certamente não foi justo.",
+     "end_s": 4.672,
+     "hit": false
+    }
+   ]
+  },
+  {
+   "id": "fleurs-9785454123552928776",
+   "group": "fleurs",
+   "text": null,
+   "duration_s": 13.08,
+   "events": [
+    {
+     "text": "Quando você foi para o exterior pela primeira vez, as pessoas provavelmente foram...",
+     "end_s": 5.216,
+     "hit": false
+    },
+    {
+     "text": "Pacientes e compreensivas sabendo que viajantes em um novo país precisam se adaptar.",
+     "end_s": 11.776,
+     "hit": false
+    }
+   ]
+  },
+  {
+   "id": "fleurs-9821995007953074973",
+   "group": "fleurs",
+   "text": null,
+   "duration_s": 6.36,
+   "events": [
+    {
+     "text": "Os espanhóis iniciaram um período de colonização que durou três séculos.",
+     "end_s": 5.056,
+     "hit": false
+    }
+   ]
+  },
+  {
+   "id": "fleurs-983062890642308037",
+   "group": "fleurs",
+   "text": null,
+   "duration_s": 10.38,
+   "events": [
+    {
+     "text": "Porém, a maioria das placas estão apenas em catalão, porque este é o idioma que foi estabelecido por lei como língua oficial.",
+     "end_s": 8.864,
+     "hit": false
+    }
+   ]
+  },
+  {
+   "id": "fleurs-9842499327381171850",
+   "group": "fleurs",
+   "text": null,
+   "duration_s": 8.82,
+   "events": [
+    {
+     "text": "A pronúncia é relativamente fácil em italiano, já que a maioria das palavras são pronunciadas exatamente como foram escritas.",
+     "end_s": 7.488,
+     "hit": false
+    }
+   ]
+  },
+  {
+   "id": "fleurs-9871441612252500580",
+   "group": "fleurs",
+   "text": null,
+   "duration_s": 15.12,
+   "events": [
+    {
+     "text": "Embora seja amplamente usado, especialmente entre não-romanes, o termo se gana é muitas vezes considerado ofensivo por estar associado a estereótipos negativos e percepções imprecisas sobre o povo români.",
+     "end_s": 13.984,
+     "hit": false
+    }
+   ]
+  },
+  {
+   "id": "fleurs-995292712609034233",
+   "group": "fleurs",
+   "text": null,
+   "duration_s": 11.82,
+   "events": [
+    {
+     "text": "Os árabes também levaram para as terras o Islã, que ganhou muita popularidade em Komores e Maiote.",
+     "end_s": 9.376,
+     "hit": false
+    }
+   ]
+  },
+  {
+   "id": "fleurs-995364916917181840",
+   "group": "fleurs",
+   "text": null,
+   "duration_s": 12.36,
+   "events": [
+    {
+     "text": "O Japão possui cerca de 7 mil ilhas, a maior sendo Honshu.",
+     "end_s": 6.592,
+     "hit": false
+    },
+    {
+     "text": "tornando Japão a sétima maior ilha do mundo.",
+     "end_s": 11.264,
+     "hit": false
+    }
+   ]
+  },
+  {
+   "id": "fleurs-9968428291150792624",
+   "group": "fleurs",
+   "text": null,
+   "duration_s": 18.78,
+   "events": [
+    {
+     "text": "O medalhista de ouro olimpico deveria nadar nos 100 e 200 metros livres.",
+     "end_s": 6.464,
+     "hit": false
+    },
+    {
+     "text": "3 revisamentos nos jogos",
+     "end_s": 9.28,
+     "hit": false
+    },
+    {
+     "text": "da Commonwealth.",
+     "end_s": 10.752,
+     "hit": false
+    },
+    {
+     "text": "My Devidas was Casey's",
+     "end_s": 13.248,
+     "hit": false
+    },
+    {
+     "text": "Sua condição física foi post-indulgida.",
+     "end_s": 16.384,
+     "hit": false
+    }
+   ]
+  }
+ ],
+ "audio_s": 5772.4,
+ "cpu_s": 4113.2,
+ "wall_s": 1700.7,
+ "scores": {
+  "-": {
+   "perto": {
+    "recall": 0.975,
+    "n": 40
+   },
+   "variado": {
+    "recall": 0.833,
+    "n": 24
+   },
+   "longe": {
+    "recall": 1.0,
+    "n": 12
+   },
+   "negativas": {
+    "false_fires": 5,
+    "items_fired": 5,
+    "n": 30,
+    "hours": 0.028,
+    "per_hour": 176.6
+   },
+   "eco-fala": {
+    "recall": 0.154,
+    "n": 13
+   },
+   "eco-calado": {
+    "false_fires": 0,
+    "items_fired": 0,
+    "n": 12,
+    "hours": 0.025,
+    "per_hour": 0.0
+   },
+   "ambiente": {
+    "false_fires": 2,
+    "items_fired": 2,
+    "n": 10,
+    "hours": 0.167,
+    "per_hour": 12.0
+   },
+   "fleurs": {
+    "false_fires": 2,
+    "items_fired": 2,
+    "n": 386,
+    "hours": 1.291,
+    "per_hour": 1.5
+   },
+   "recall_sem_eco": 0.934,
+   "disparos_por_hora_fala_comum": 2.7
+  }
+ },
+ "host": {
+  "cpu": "x86_64",
+  "threads": 4
+ }
+}

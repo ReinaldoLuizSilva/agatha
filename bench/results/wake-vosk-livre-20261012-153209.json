@@ -1,0 +1,1061 @@
+{
+ "detector": "vosk-livre",
+ "description": "vosk-model-small-pt-0.3, sem gramática",
+ "items": [
+  {
+   "id": "perto-001",
+   "group": "perto",
+   "text": "Agatha",
+   "duration_s": 2.5,
+   "events": []
+  },
+  {
+   "id": "perto-002",
+   "group": "perto",
+   "text": "Agatha?",
+   "duration_s": 2.5,
+   "events": []
+  },
+  {
+   "id": "perto-003",
+   "group": "perto",
+   "text": "Agatha, que horas são?",
+   "duration_s": 3.3,
+   "events": []
+  },
+  {
+   "id": "perto-004",
+   "group": "perto",
+   "text": "Agatha, tem algum problema no Zabbix?",
+   "duration_s": 4.2,
+   "events": []
+  },
+  {
+   "id": "perto-005",
+   "group": "perto",
+   "text": "Agatha, como está a tablespace USERS?",
+   "duration_s": 4.2,
+   "events": []
+  },
+  {
+   "id": "perto-006",
+   "group": "perto",
+   "text": "Agatha, quantas sessões tem no Oracle?",
+   "duration_s": 4.2,
+   "events": []
+  },
+  {
+   "id": "perto-007",
+   "group": "perto",
+   "text": "Agatha, quanto é quinze por cento de duzentos?",
+   "duration_s": 5.1,
+   "events": [
+    {
+     "word": "agatha",
+     "conf": 0.516,
+     "start_s": 0.69,
+     "end_s": 1.139829,
+     "partial_s": 1.568,
+     "text": "agatha quanto é que se possível de duzentos"
+    }
+   ]
+  },
+  {
+   "id": "perto-008",
+   "group": "perto",
+   "text": "Agatha, o que é housekeeping no Zabbix?",
+   "duration_s": 4.7,
+   "events": []
+  },
+  {
+   "id": "perto-009",
+   "group": "perto",
+   "text": "Agatha, me ajuda com uma coisa",
+   "duration_s": 4.2,
+   "events": []
+  },
+  {
+   "id": "perto-010",
+   "group": "perto",
+   "text": "Agatha, guarda que a reunião é amanhã",
+   "duration_s": 4.7,
+   "events": []
+  },
+  {
+   "id": "perto-011",
+   "group": "perto",
+   "text": "Agatha, esquece isso",
+   "duration_s": 2.9,
+   "events": [
+    {
+     "word": "agatha",
+     "conf": 0.476,
+     "start_s": 0.93,
+     "end_s": 1.47,
+     "partial_s": null,
+     "text": "agatha esqueça isso"
+    }
+   ]
+  },
+  {
+   "id": "perto-012",
+   "group": "perto",
+   "text": "Agatha, para",
+   "duration_s": 2.5,
+   "events": []
+  },
+  {
+   "id": "perto-013",
+   "group": "perto",
+   "text": "Agatha, chega",
+   "duration_s": 2.5,
+   "events": []
+  },
+  {
+   "id": "perto-014",
+   "group": "perto",
+   "text": "Agatha, espera",
+   "duration_s": 2.5,
+   "events": []
+  },
+  {
+   "id": "perto-015",
+   "group": "perto",
+   "text": "Agatha, cancela",
+   "duration_s": 2.5,
+   "events": []
+  },
+  {
+   "id": "perto-016",
+   "group": "perto",
+   "text": "Ei, Agatha",
+   "duration_s": 2.5,
+   "events": []
+  },
+  {
+   "id": "perto-017",
+   "group": "perto",
+   "text": "Oi, Agatha, tudo bem?",
+   "duration_s": 3.3,
+   "events": []
+  },
+  {
+   "id": "perto-018",
+   "group": "perto",
+   "text": "Bom dia, Agatha",
+   "duration_s": 2.9,
+   "events": []
+  },
+  {
+   "id": "perto-019",
+   "group": "perto",
+   "text": "Obrigado, Agatha",
+   "duration_s": 2.5,
+   "events": []
+  },
+  {
+   "id": "perto-020",
+   "group": "perto",
+   "text": "Certo, Agatha. E o host do banco?",
+   "duration_s": 4.7,
+   "events": []
+  },
+  {
+   "id": "perto-021",
+   "group": "perto",
+   "text": "Agatha",
+   "duration_s": 2.5,
+   "events": []
+  },
+  {
+   "id": "perto-022",
+   "group": "perto",
+   "text": "Agatha?",
+   "duration_s": 2.5,
+   "events": []
+  },
+  {
+   "id": "perto-023",
+   "group": "perto",
+   "text": "Agatha, que horas são?",
+   "duration_s": 3.3,
+   "events": []
+  },
+  {
+   "id": "perto-024",
+   "group": "perto",
+   "text": "Agatha, tem algum problema no Zabbix?",
+   "duration_s": 4.2,
+   "events": []
+  },
+  {
+   "id": "perto-025",
+   "group": "perto",
+   "text": "Agatha, como está a tablespace USERS?",
+   "duration_s": 4.2,
+   "events": []
+  },
+  {
+   "id": "perto-026",
+   "group": "perto",
+   "text": "Agatha, quantas sessões tem no Oracle?",
+   "duration_s": 4.2,
+   "events": []
+  },
+  {
+   "id": "perto-027",
+   "group": "perto",
+   "text": "Agatha, quanto é quinze por cento de duzentos?",
+   "duration_s": 5.1,
+   "events": []
+  },
+  {
+   "id": "perto-028",
+   "group": "perto",
+   "text": "Agatha, o que é housekeeping no Zabbix?",
+   "duration_s": 4.7,
+   "events": []
+  },
+  {
+   "id": "perto-029",
+   "group": "perto",
+   "text": "Agatha, me ajuda com uma coisa",
+   "duration_s": 4.2,
+   "events": []
+  },
+  {
+   "id": "perto-030",
+   "group": "perto",
+   "text": "Agatha, guarda que a reunião é amanhã",
+   "duration_s": 4.7,
+   "events": []
+  },
+  {
+   "id": "perto-031",
+   "group": "perto",
+   "text": "Agatha, esquece isso",
+   "duration_s": 2.9,
+   "events": []
+  },
+  {
+   "id": "perto-032",
+   "group": "perto",
+   "text": "Agatha, para",
+   "duration_s": 2.5,
+   "events": []
+  },
+  {
+   "id": "perto-033",
+   "group": "perto",
+   "text": "Agatha, chega",
+   "duration_s": 2.5,
+   "events": []
+  },
+  {
+   "id": "perto-034",
+   "group": "perto",
+   "text": "Agatha, espera",
+   "duration_s": 2.5,
+   "events": []
+  },
+  {
+   "id": "perto-035",
+   "group": "perto",
+   "text": "Agatha, cancela",
+   "duration_s": 2.5,
+   "events": []
+  },
+  {
+   "id": "perto-036",
+   "group": "perto",
+   "text": "Ei, Agatha",
+   "duration_s": 2.5,
+   "events": []
+  },
+  {
+   "id": "perto-037",
+   "group": "perto",
+   "text": "Oi, Agatha, tudo bem?",
+   "duration_s": 3.3,
+   "events": []
+  },
+  {
+   "id": "perto-038",
+   "group": "perto",
+   "text": "Bom dia, Agatha",
+   "duration_s": 2.9,
+   "events": []
+  },
+  {
+   "id": "perto-039",
+   "group": "perto",
+   "text": "Obrigado, Agatha",
+   "duration_s": 2.5,
+   "events": []
+  },
+  {
+   "id": "perto-040",
+   "group": "perto",
+   "text": "Certo, Agatha. E o host do banco?",
+   "duration_s": 4.7,
+   "events": []
+  },
+  {
+   "id": "variado-001",
+   "group": "variado",
+   "text": "Agatha",
+   "duration_s": 2.5,
+   "events": []
+  },
+  {
+   "id": "variado-002",
+   "group": "variado",
+   "text": "Agatha, que horas são?",
+   "duration_s": 3.3,
+   "events": []
+  },
+  {
+   "id": "variado-003",
+   "group": "variado",
+   "text": "Agatha, tá aí?",
+   "duration_s": 2.9,
+   "events": []
+  },
+  {
+   "id": "variado-004",
+   "group": "variado",
+   "text": "Agatha, tem problema no Zabbix?",
+   "duration_s": 3.8,
+   "events": []
+  },
+  {
+   "id": "variado-005",
+   "group": "variado",
+   "text": "Agatha, para",
+   "duration_s": 2.5,
+   "events": []
+  },
+  {
+   "id": "variado-006",
+   "group": "variado",
+   "text": "Agatha",
+   "duration_s": 2.5,
+   "events": []
+  },
+  {
+   "id": "variado-007",
+   "group": "variado",
+   "text": "Agatha!",
+   "duration_s": 2.5,
+   "events": []
+  },
+  {
+   "id": "variado-008",
+   "group": "variado",
+   "text": "Agatha, para!",
+   "duration_s": 2.5,
+   "events": []
+  },
+  {
+   "id": "variado-009",
+   "group": "variado",
+   "text": "Agatha, chega!",
+   "duration_s": 2.5,
+   "events": []
+  },
+  {
+   "id": "variado-010",
+   "group": "variado",
+   "text": "Agatha, e aí?",
+   "duration_s": 2.9,
+   "events": []
+  },
+  {
+   "id": "variado-011",
+   "group": "variado",
+   "text": "Agatha",
+   "duration_s": 2.5,
+   "events": []
+  },
+  {
+   "id": "variado-012",
+   "group": "variado",
+   "text": "Agatha, me escuta",
+   "duration_s": 2.9,
+   "events": []
+  },
+  {
+   "id": "variado-013",
+   "group": "variado",
+   "text": "Agatha",
+   "duration_s": 2.5,
+   "events": []
+  },
+  {
+   "id": "variado-014",
+   "group": "variado",
+   "text": "Agatha, que horas são?",
+   "duration_s": 3.3,
+   "events": []
+  },
+  {
+   "id": "variado-015",
+   "group": "variado",
+   "text": "Agatha, tá aí?",
+   "duration_s": 2.9,
+   "events": []
+  },
+  {
+   "id": "variado-016",
+   "group": "variado",
+   "text": "Agatha, tem problema no Zabbix?",
+   "duration_s": 3.8,
+   "events": []
+  },
+  {
+   "id": "variado-017",
+   "group": "variado",
+   "text": "Agatha, para",
+   "duration_s": 2.5,
+   "events": []
+  },
+  {
+   "id": "variado-018",
+   "group": "variado",
+   "text": "Agatha",
+   "duration_s": 2.5,
+   "events": []
+  },
+  {
+   "id": "variado-019",
+   "group": "variado",
+   "text": "Agatha!",
+   "duration_s": 2.5,
+   "events": []
+  },
+  {
+   "id": "variado-020",
+   "group": "variado",
+   "text": "Agatha, para!",
+   "duration_s": 2.5,
+   "events": []
+  },
+  {
+   "id": "variado-021",
+   "group": "variado",
+   "text": "Agatha, chega!",
+   "duration_s": 2.5,
+   "events": []
+  },
+  {
+   "id": "variado-022",
+   "group": "variado",
+   "text": "Agatha, e aí?",
+   "duration_s": 2.9,
+   "events": []
+  },
+  {
+   "id": "variado-023",
+   "group": "variado",
+   "text": "Agatha",
+   "duration_s": 2.5,
+   "events": []
+  },
+  {
+   "id": "variado-024",
+   "group": "variado",
+   "text": "Agatha, me escuta",
+   "duration_s": 2.9,
+   "events": []
+  },
+  {
+   "id": "longe-001",
+   "group": "longe",
+   "text": "Agatha",
+   "duration_s": 2.5,
+   "events": []
+  },
+  {
+   "id": "longe-002",
+   "group": "longe",
+   "text": "Agatha!",
+   "duration_s": 2.5,
+   "events": []
+  },
+  {
+   "id": "longe-003",
+   "group": "longe",
+   "text": "Agatha, que horas são?",
+   "duration_s": 3.3,
+   "events": []
+  },
+  {
+   "id": "longe-004",
+   "group": "longe",
+   "text": "Agatha, tem algum problema no Zabbix?",
+   "duration_s": 4.2,
+   "events": []
+  },
+  {
+   "id": "longe-005",
+   "group": "longe",
+   "text": "Agatha, quantas sessões tem no Oracle?",
+   "duration_s": 4.2,
+   "events": []
+  },
+  {
+   "id": "longe-006",
+   "group": "longe",
+   "text": "Agatha, me ajuda com uma coisa",
+   "duration_s": 4.2,
+   "events": []
+  },
+  {
+   "id": "longe-007",
+   "group": "longe",
+   "text": "Agatha, para",
+   "duration_s": 2.5,
+   "events": []
+  },
+  {
+   "id": "longe-008",
+   "group": "longe",
+   "text": "Agatha, chega",
+   "duration_s": 2.5,
+   "events": []
+  },
+  {
+   "id": "longe-009",
+   "group": "longe",
+   "text": "Ei, Agatha",
+   "duration_s": 2.5,
+   "events": []
+  },
+  {
+   "id": "longe-010",
+   "group": "longe",
+   "text": "Oi, Agatha, tudo bem?",
+   "duration_s": 3.3,
+   "events": []
+  },
+  {
+   "id": "longe-011",
+   "group": "longe",
+   "text": "Obrigado, Agatha",
+   "duration_s": 2.5,
+   "events": []
+  },
+  {
+   "id": "longe-012",
+   "group": "longe",
+   "text": "Agatha, esquece isso",
+   "duration_s": 2.9,
+   "events": []
+  },
+  {
+   "id": "negativas-001",
+   "group": "negativas",
+   "text": "A gata subiu no telhado",
+   "duration_s": 3.8,
+   "events": []
+  },
+  {
+   "id": "negativas-002",
+   "group": "negativas",
+   "text": "Agora não dá",
+   "duration_s": 2.9,
+   "events": []
+  },
+  {
+   "id": "negativas-003",
+   "group": "negativas",
+   "text": "A garrafa está na geladeira",
+   "duration_s": 3.8,
+   "events": []
+  },
+  {
+   "id": "negativas-004",
+   "group": "negativas",
+   "text": "A garota chegou",
+   "duration_s": 2.9,
+   "events": []
+  },
+  {
+   "id": "negativas-005",
+   "group": "negativas",
+   "text": "A gente conversa depois",
+   "duration_s": 3.3,
+   "events": []
+  },
+  {
+   "id": "negativas-006",
+   "group": "negativas",
+   "text": "A data da entrega é sexta",
+   "duration_s": 4.2,
+   "events": []
+  },
+  {
+   "id": "negativas-007",
+   "group": "negativas",
+   "text": "A cada hora o backup roda",
+   "duration_s": 4.2,
+   "events": []
+  },
+  {
+   "id": "negativas-008",
+   "group": "negativas",
+   "text": "A tabela está cheia",
+   "duration_s": 3.3,
+   "events": []
+  },
+  {
+   "id": "negativas-009",
+   "group": "negativas",
+   "text": "Aguarda um pouco",
+   "duration_s": 2.9,
+   "events": []
+  },
+  {
+   "id": "negativas-010",
+   "group": "negativas",
+   "text": "Acabou o café",
+   "duration_s": 2.9,
+   "events": []
+  },
+  {
+   "id": "negativas-011",
+   "group": "negativas",
+   "text": "A Renata ligou",
+   "duration_s": 2.9,
+   "events": []
+  },
+  {
+   "id": "negativas-012",
+   "group": "negativas",
+   "text": "Achei a chave do carro",
+   "duration_s": 3.8,
+   "events": []
+  },
+  {
+   "id": "negativas-013",
+   "group": "negativas",
+   "text": "Agenda a reunião para amanhã",
+   "duration_s": 3.8,
+   "events": []
+  },
+  {
+   "id": "negativas-014",
+   "group": "negativas",
+   "text": "Alberta é uma província do Canadá",
+   "duration_s": 4.2,
+   "events": []
+  },
+  {
+   "id": "negativas-015",
+   "group": "negativas",
+   "text": "A pasta está no servidor",
+   "duration_s": 3.8,
+   "events": []
+  },
+  {
+   "id": "negativas-016",
+   "group": "negativas",
+   "text": "A batata está pronta",
+   "duration_s": 3.3,
+   "events": []
+  },
+  {
+   "id": "negativas-017",
+   "group": "negativas",
+   "text": "Atacama é um deserto",
+   "duration_s": 3.3,
+   "events": []
+  },
+  {
+   "id": "negativas-018",
+   "group": "negativas",
+   "text": "Amanhã tem jogo",
+   "duration_s": 2.9,
+   "events": []
+  },
+  {
+   "id": "negativas-019",
+   "group": "negativas",
+   "text": "Alguém viu o meu fone?",
+   "duration_s": 3.8,
+   "events": []
+  },
+  {
+   "id": "negativas-020",
+   "group": "negativas",
+   "text": "A taxa subiu de novo",
+   "duration_s": 3.8,
+   "events": []
+  },
+  {
+   "id": "negativas-021",
+   "group": "negativas",
+   "text": "A lata está vazia",
+   "duration_s": 3.3,
+   "events": []
+  },
+  {
+   "id": "negativas-022",
+   "group": "negativas",
+   "text": "Agachar dói o joelho",
+   "duration_s": 3.3,
+   "events": []
+  },
+  {
+   "id": "negativas-023",
+   "group": "negativas",
+   "text": "Que horas são?",
+   "duration_s": 2.9,
+   "events": []
+  },
+  {
+   "id": "negativas-024",
+   "group": "negativas",
+   "text": "Tem algum problema no Zabbix?",
+   "duration_s": 3.8,
+   "events": []
+  },
+  {
+   "id": "negativas-025",
+   "group": "negativas",
+   "text": "Para com isso",
+   "duration_s": 2.9,
+   "events": []
+  },
+  {
+   "id": "negativas-026",
+   "group": "negativas",
+   "text": "Chega por hoje",
+   "duration_s": 2.9,
+   "events": []
+  },
+  {
+   "id": "negativas-027",
+   "group": "negativas",
+   "text": "Espera aí",
+   "duration_s": 2.5,
+   "events": []
+  },
+  {
+   "id": "negativas-028",
+   "group": "negativas",
+   "text": "Obrigado",
+   "duration_s": 2.5,
+   "events": []
+  },
+  {
+   "id": "negativas-029",
+   "group": "negativas",
+   "text": "Ei, você viu isso?",
+   "duration_s": 3.3,
+   "events": []
+  },
+  {
+   "id": "negativas-030",
+   "group": "negativas",
+   "text": "O host do banco caiu de novo",
+   "duration_s": 4.7,
+   "events": []
+  },
+  {
+   "id": "eco-001",
+   "group": "eco-fala",
+   "text": "Agatha, para",
+   "duration_s": 7.0,
+   "events": []
+  },
+  {
+   "id": "eco-002",
+   "group": "eco-calado",
+   "text": null,
+   "duration_s": 6.9,
+   "events": []
+  },
+  {
+   "id": "eco-003",
+   "group": "eco-fala",
+   "text": "Agatha, chega",
+   "duration_s": 12.4,
+   "events": []
+  },
+  {
+   "id": "eco-004",
+   "group": "eco-calado",
+   "text": null,
+   "duration_s": 8.9,
+   "events": []
+  },
+  {
+   "id": "eco-005",
+   "group": "eco-fala",
+   "text": "Agatha, espera",
+   "duration_s": 9.5,
+   "events": []
+  },
+  {
+   "id": "eco-006",
+   "group": "eco-calado",
+   "text": null,
+   "duration_s": 8.1,
+   "events": []
+  },
+  {
+   "id": "eco-007",
+   "group": "eco-fala",
+   "text": "Agatha, me fala outra coisa",
+   "duration_s": 6.3,
+   "events": []
+  },
+  {
+   "id": "eco-008",
+   "group": "eco-calado",
+   "text": null,
+   "duration_s": 8.2,
+   "events": []
+  },
+  {
+   "id": "eco-009",
+   "group": "eco-fala",
+   "text": "Agatha, para",
+   "duration_s": 7.2,
+   "events": []
+  },
+  {
+   "id": "eco-010",
+   "group": "eco-calado",
+   "text": null,
+   "duration_s": 7.9,
+   "events": []
+  },
+  {
+   "id": "eco-011",
+   "group": "eco-fala",
+   "text": "Agatha, chega",
+   "duration_s": 5.2,
+   "events": []
+  },
+  {
+   "id": "eco-012",
+   "group": "eco-calado",
+   "text": null,
+   "duration_s": 7.1,
+   "events": []
+  },
+  {
+   "id": "eco-013",
+   "group": "eco-fala",
+   "text": "Agatha, espera",
+   "duration_s": 12.0,
+   "events": []
+  },
+  {
+   "id": "eco-014",
+   "group": "eco-calado",
+   "text": null,
+   "duration_s": 7.9,
+   "events": []
+  },
+  {
+   "id": "eco-015",
+   "group": "eco-fala",
+   "text": "Agatha, me fala outra coisa",
+   "duration_s": 8.0,
+   "events": []
+  },
+  {
+   "id": "eco-016",
+   "group": "eco-calado",
+   "text": null,
+   "duration_s": 4.4,
+   "events": []
+  },
+  {
+   "id": "eco-017",
+   "group": "eco-fala",
+   "text": "Agatha, para",
+   "duration_s": 5.4,
+   "events": []
+  },
+  {
+   "id": "eco-018",
+   "group": "eco-calado",
+   "text": null,
+   "duration_s": 10.4,
+   "events": []
+  },
+  {
+   "id": "eco-019",
+   "group": "eco-fala",
+   "text": "Agatha, chega",
+   "duration_s": 6.3,
+   "events": []
+  },
+  {
+   "id": "eco-020",
+   "group": "eco-calado",
+   "text": null,
+   "duration_s": 7.6,
+   "events": []
+  },
+  {
+   "id": "eco-021",
+   "group": "eco-fala",
+   "text": "Agatha, espera",
+   "duration_s": 3.8,
+   "events": []
+  },
+  {
+   "id": "eco-022",
+   "group": "eco-calado",
+   "text": null,
+   "duration_s": 4.2,
+   "events": []
+  },
+  {
+   "id": "eco-023",
+   "group": "eco-fala",
+   "text": "Agatha, me fala outra coisa",
+   "duration_s": 4.8,
+   "events": []
+  },
+  {
+   "id": "eco-024",
+   "group": "eco-calado",
+   "text": null,
+   "duration_s": 7.9,
+   "events": []
+  },
+  {
+   "id": "eco-025",
+   "group": "eco-fala",
+   "text": "Agatha, para",
+   "duration_s": 5.1,
+   "events": []
+  },
+  {
+   "id": "ambiente-001",
+   "group": "ambiente",
+   "text": null,
+   "duration_s": 60.0,
+   "events": []
+  },
+  {
+   "id": "ambiente-002",
+   "group": "ambiente",
+   "text": null,
+   "duration_s": 60.0,
+   "events": []
+  },
+  {
+   "id": "ambiente-003",
+   "group": "ambiente",
+   "text": null,
+   "duration_s": 60.0,
+   "events": []
+  },
+  {
+   "id": "ambiente-004",
+   "group": "ambiente",
+   "text": null,
+   "duration_s": 60.0,
+   "events": []
+  },
+  {
+   "id": "ambiente-005",
+   "group": "ambiente",
+   "text": null,
+   "duration_s": 60.0,
+   "events": []
+  },
+  {
+   "id": "ambiente-006",
+   "group": "ambiente",
+   "text": null,
+   "duration_s": 60.0,
+   "events": []
+  },
+  {
+   "id": "ambiente-007",
+   "group": "ambiente",
+   "text": null,
+   "duration_s": 60.0,
+   "events": []
+  },
+  {
+   "id": "ambiente-008",
+   "group": "ambiente",
+   "text": null,
+   "duration_s": 60.0,
+   "events": []
+  },
+  {
+   "id": "ambiente-009",
+   "group": "ambiente",
+   "text": null,
+   "duration_s": 60.0,
+   "events": []
+  },
+  {
+   "id": "ambiente-010",
+   "group": "ambiente",
+   "text": null,
+   "duration_s": 60.0,
+   "events": []
+  }
+ ],
+ "audio_s": 1124.9,
+ "cpu_s": 357.1,
+ "wall_s": 358.1,
+ "scores": {
+  "-": {
+   "perto": {
+    "recall": 0.05,
+    "n": 40
+   },
+   "variado": {
+    "recall": 0.0,
+    "n": 24
+   },
+   "longe": {
+    "recall": 0.0,
+    "n": 12
+   },
+   "negativas": {
+    "false_fires": 0,
+    "items_fired": 0,
+    "n": 30,
+    "hours": 0.028,
+    "per_hour": 0.0
+   },
+   "eco-fala": {
+    "recall": 0.0,
+    "n": 13
+   },
+   "eco-calado": {
+    "false_fires": 0,
+    "items_fired": 0,
+    "n": 12,
+    "hours": 0.025,
+    "per_hour": 0.0
+   },
+   "ambiente": {
+    "false_fires": 0,
+    "items_fired": 0,
+    "n": 10,
+    "hours": 0.167,
+    "per_hour": 0.0
+   },
+   "recall_sem_eco": 0.026,
+   "disparos_por_hora_fala_comum": 0.0
+  }
+ },
+ "host": {
+  "cpu": "x86_64",
+  "threads": 4
+ }
+}

@@ -1,0 +1,13 @@
+# Benchmark da wake word (bench/wake_bench.py, Fase 5), num venv próprio:
+#   python3 -m venv .venv-wake && .venv-wake/bin/pip install -r bench/requirements-wake.txt
+#   .venv-wake/bin/pip install --no-deps openwakeword==0.6.0
+# O openwakeword vai sem dependências: ele exige tflite-runtime no Linux, que não tem versão para o
+# Python 3.12; aqui só se usa o caminho ONNX.
+vosk==0.3.45
+numpy==2.5.4
+soundfile==0.14.0
+onnxruntime==1.31.0
+scikit-learn==1.9.1
+scipy==1.18.1
+tqdm==4.70.1
+requests==2.34.2

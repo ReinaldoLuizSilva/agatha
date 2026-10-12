@@ -1,0 +1,5175 @@
+{
+ "detector": "vosk",
+ "description": "vosk-model-small-pt-0.3, gramática [\"agatha\", \"[unk]\"]",
+ "items": [
+  {
+   "id": "perto-001",
+   "group": "perto",
+   "text": "Agatha",
+   "duration_s": 2.5,
+   "events": [
+    {
+     "word": "agatha",
+     "conf": 1.0,
+     "start_s": 0.93,
+     "end_s": 1.35,
+     "partial_s": 1.568,
+     "text": "agatha"
+    }
+   ]
+  },
+  {
+   "id": "perto-002",
+   "group": "perto",
+   "text": "Agatha?",
+   "duration_s": 2.5,
+   "events": [
+    {
+     "word": "agatha",
+     "conf": 1.0,
+     "start_s": 0.75,
+     "end_s": 1.229606,
+     "partial_s": 1.344,
+     "text": "agatha"
+    }
+   ]
+  },
+  {
+   "id": "perto-003",
+   "group": "perto",
+   "text": "Agatha, que horas são?",
+   "duration_s": 3.3,
+   "events": [
+    {
+     "word": "agatha",
+     "conf": 1.0,
+     "start_s": 0.69,
+     "end_s": 1.14,
+     "partial_s": 1.344,
+     "text": "agatha"
+    }
+   ]
+  },
+  {
+   "id": "perto-004",
+   "group": "perto",
+   "text": "Agatha, tem algum problema no Zabbix?",
+   "duration_s": 4.2,
+   "events": [
+    {
+     "word": "agatha",
+     "conf": 1.0,
+     "start_s": 0.51,
+     "end_s": 0.93,
+     "partial_s": 1.088,
+     "text": "agatha"
+    }
+   ]
+  },
+  {
+   "id": "perto-005",
+   "group": "perto",
+   "text": "Agatha, como está a tablespace USERS?",
+   "duration_s": 4.2,
+   "events": [
+    {
+     "word": "agatha",
+     "conf": 0.993,
+     "start_s": 0.78,
+     "end_s": 1.2,
+     "partial_s": 1.344,
+     "text": "agatha"
+    }
+   ]
+  },
+  {
+   "id": "perto-006",
+   "group": "perto",
+   "text": "Agatha, quantas sessões tem no Oracle?",
+   "duration_s": 4.2,
+   "events": [
+    {
+     "word": "agatha",
+     "conf": 0.997,
+     "start_s": 0.907432,
+     "end_s": 1.272376,
+     "partial_s": 1.344,
+     "text": "agatha"
+    }
+   ]
+  },
+  {
+   "id": "perto-007",
+   "group": "perto",
+   "text": "Agatha, quanto é quinze por cento de duzentos?",
+   "duration_s": 5.1,
+   "events": [
+    {
+     "word": "agatha",
+     "conf": 1.0,
+     "start_s": 0.69,
+     "end_s": 1.14,
+     "partial_s": 1.344,
+     "text": "agatha"
+    }
+   ]
+  },
+  {
+   "id": "perto-008",
+   "group": "perto",
+   "text": "Agatha, o que é housekeeping no Zabbix?",
+   "duration_s": 4.7,
+   "events": [
+    {
+     "word": "agatha",
+     "conf": 1.0,
+     "start_s": 0.57,
+     "end_s": 1.05,
+     "partial_s": 1.088,
+     "text": "agatha"
+    }
+   ]
+  },
+  {
+   "id": "perto-009",
+   "group": "perto",
+   "text": "Agatha, me ajuda com uma coisa",
+   "duration_s": 4.2,
+   "events": [
+    {
+     "word": "agatha",
+     "conf": 1.0,
+     "start_s": 0.93,
+     "end_s": 1.32,
+     "partial_s": 1.568,
+     "text": "agatha"
+    }
+   ]
+  },
+  {
+   "id": "perto-010",
+   "group": "perto",
+   "text": "Agatha, guarda que a reunião é amanhã",
+   "duration_s": 4.7,
+   "events": [
+    {
+     "word": "agatha",
+     "conf": 1.0,
+     "start_s": 1.262176,
+     "end_s": 1.741016,
+     "partial_s": 1.824,
+     "text": "agatha"
+    }
+   ]
+  },
+  {
+   "id": "perto-011",
+   "group": "perto",
+   "text": "Agatha, esquece isso",
+   "duration_s": 2.9,
+   "events": [
+    {
+     "word": "agatha",
+     "conf": 1.0,
+     "start_s": 0.93,
+     "end_s": 1.47,
+     "partial_s": 1.568,
+     "text": "agatha"
+    }
+   ]
+  },
+  {
+   "id": "perto-012",
+   "group": "perto",
+   "text": "Agatha, para",
+   "duration_s": 2.5,
+   "events": [
+    {
+     "word": "agatha",
+     "conf": 1.0,
+     "start_s": 0.962318,
+     "end_s": 1.441656,
+     "partial_s": 1.568,
+     "text": "agatha"
+    }
+   ]
+  },
+  {
+   "id": "perto-013",
+   "group": "perto",
+   "text": "Agatha, chega",
+   "duration_s": 2.5,
+   "events": [
+    {
+     "word": "agatha",
+     "conf": 1.0,
+     "start_s": 0.99,
+     "end_s": 1.44,
+     "partial_s": 1.568,
+     "text": "agatha"
+    }
+   ]
+  },
+  {
+   "id": "perto-014",
+   "group": "perto",
+   "text": "Agatha, espera",
+   "duration_s": 2.5,
+   "events": [
+    {
+     "word": "agatha",
+     "conf": 1.0,
+     "start_s": 1.14,
+     "end_s": 1.56,
+     "partial_s": 1.568,
+     "text": "agatha"
+    }
+   ]
+  },
+  {
+   "id": "perto-015",
+   "group": "perto",
+   "text": "Agatha, cancela",
+   "duration_s": 2.5,
+   "events": [
+    {
+     "word": "agatha",
+     "conf": 1.0,
+     "start_s": 0.75,
+     "end_s": 1.17,
+     "partial_s": 1.344,
+     "text": "agatha"
+    }
+   ]
+  },
+  {
+   "id": "perto-016",
+   "group": "perto",
+   "text": "Ei, Agatha",
+   "duration_s": 2.5,
+   "events": [
+    {
+     "word": "agatha",
+     "conf": 0.996,
+     "start_s": 1.02,
+     "end_s": 1.379529,
+     "partial_s": 1.568,
+     "text": "agatha"
+    }
+   ]
+  },
+  {
+   "id": "perto-017",
+   "group": "perto",
+   "text": "Oi, Agatha, tudo bem?",
+   "duration_s": 3.3,
+   "events": [
+    {
+     "word": "agatha",
+     "conf": 1.0,
+     "start_s": 1.47,
+     "end_s": 1.83,
+     "partial_s": 2.048,
+     "text": "agatha"
+    }
+   ]
+  },
+  {
+   "id": "perto-018",
+   "group": "perto",
+   "text": "Bom dia, Agatha",
+   "duration_s": 2.9,
+   "events": [
+    {
+     "word": "agatha",
+     "conf": 0.978,
+     "start_s": 1.53,
+     "end_s": 1.92,
+     "partial_s": 2.048,
+     "text": "agatha"
+    }
+   ]
+  },
+  {
+   "id": "perto-019",
+   "group": "perto",
+   "text": "Obrigado, Agatha",
+   "duration_s": 2.5,
+   "events": [
+    {
+     "word": "agatha",
+     "conf": 0.958,
+     "start_s": 1.4293,
+     "end_s": 1.72195,
+     "partial_s": 1.824,
+     "text": "agatha"
+    }
+   ]
+  },
+  {
+   "id": "perto-020",
+   "group": "perto",
+   "text": "Certo, Agatha. E o host do banco?",
+   "duration_s": 4.7,
+   "events": [
+    {
+     "word": "agatha",
+     "conf": 1.0,
+     "start_s": 1.56,
+     "end_s": 2.01,
+     "partial_s": 2.304,
+     "text": "agatha"
+    }
+   ]
+  },
+  {
+   "id": "perto-021",
+   "group": "perto",
+   "text": "Agatha",
+   "duration_s": 2.5,
+   "events": [
+    {
+     "word": "agatha",
+     "conf": 1.0,
+     "start_s": 0.48,
+     "end_s": 1.05,
+     "partial_s": 1.088,
+     "text": "agatha"
+    }
+   ]
+  },
+  {
+   "id": "perto-022",
+   "group": "perto",
+   "text": "Agatha?",
+   "duration_s": 2.5,
+   "events": [
+    {
+     "word": "agatha",
+     "conf": 1.0,
+     "start_s": 1.26,
+     "end_s": 1.74,
+     "partial_s": 1.824,
+     "text": "agatha"
+    }
+   ]
+  },
+  {
+   "id": "perto-023",
+   "group": "perto",
+   "text": "Agatha, que horas são?",
+   "duration_s": 3.3,
+   "events": [
+    {
+     "word": "agatha",
+     "conf": 1.0,
+     "start_s": 1.26,
+     "end_s": 1.68,
+     "partial_s": 1.824,
+     "text": "agatha"
+    }
+   ]
+  },
+  {
+   "id": "perto-024",
+   "group": "perto",
+   "text": "Agatha, tem algum problema no Zabbix?",
+   "duration_s": 4.2,
+   "events": [
+    {
+     "word": "agatha",
+     "conf": 0.994,
+     "start_s": 0.63,
+     "end_s": 1.05,
+     "partial_s": 1.088,
+     "text": "agatha"
+    }
+   ]
+  },
+  {
+   "id": "perto-025",
+   "group": "perto",
+   "text": "Agatha, como está a tablespace USERS?",
+   "duration_s": 4.2,
+   "events": [
+    {
+     "word": "agatha",
+     "conf": 1.0,
+     "start_s": 0.392919,
+     "end_s": 0.812765,
+     "partial_s": 1.088,
+     "text": "agatha"
+    }
+   ]
+  },
+  {
+   "id": "perto-026",
+   "group": "perto",
+   "text": "Agatha, quantas sessões tem no Oracle?",
+   "duration_s": 4.2,
+   "events": [
+    {
+     "word": "agatha",
+     "conf": 1.0,
+     "start_s": 0.57,
+     "end_s": 1.08,
+     "partial_s": 1.088,
+     "text": "agatha"
+    }
+   ]
+  },
+  {
+   "id": "perto-027",
+   "group": "perto",
+   "text": "Agatha, quanto é quinze por cento de duzentos?",
+   "duration_s": 5.1,
+   "events": [
+    {
+     "word": "agatha",
+     "conf": 1.0,
+     "start_s": 0.48,
+     "end_s": 0.99,
+     "partial_s": 1.088,
+     "text": "agatha"
+    }
+   ]
+  },
+  {
+   "id": "perto-028",
+   "group": "perto",
+   "text": "Agatha, o que é housekeeping no Zabbix?",
+   "duration_s": 4.7,
+   "events": [
+    {
+     "word": "agatha",
+     "conf": 1.0,
+     "start_s": 0.57,
+     "end_s": 1.02,
+     "partial_s": 1.088,
+     "text": "agatha"
+    }
+   ]
+  },
+  {
+   "id": "perto-029",
+   "group": "perto",
+   "text": "Agatha, me ajuda com uma coisa",
+   "duration_s": 4.2,
+   "events": [
+    {
+     "word": "agatha",
+     "conf": 1.0,
+     "start_s": 0.45,
+     "end_s": 0.900817,
+     "partial_s": 1.088,
+     "text": "agatha"
+    }
+   ]
+  },
+  {
+   "id": "perto-030",
+   "group": "perto",
+   "text": "Agatha, guarda que a reunião é amanhã",
+   "duration_s": 4.7,
+   "events": [
+    {
+     "word": "agatha",
+     "conf": 0.994,
+     "start_s": 0.42,
+     "end_s": 0.93,
+     "partial_s": 1.088,
+     "text": "agatha"
+    }
+   ]
+  },
+  {
+   "id": "perto-031",
+   "group": "perto",
+   "text": "Agatha, esquece isso",
+   "duration_s": 2.9,
+   "events": [
+    {
+     "word": "agatha",
+     "conf": 0.962,
+     "start_s": 0.69,
+     "end_s": 1.08,
+     "partial_s": 1.344,
+     "text": "agatha"
+    }
+   ]
+  },
+  {
+   "id": "perto-032",
+   "group": "perto",
+   "text": "Agatha, para",
+   "duration_s": 2.5,
+   "events": [
+    {
+     "word": "agatha",
+     "conf": 1.0,
+     "start_s": 0.39,
+     "end_s": 0.869246,
+     "partial_s": 0.864,
+     "text": "agatha"
+    }
+   ]
+  },
+  {
+   "id": "perto-033",
+   "group": "perto",
+   "text": "Agatha, chega",
+   "duration_s": 2.5,
+   "events": [
+    {
+     "word": "agatha",
+     "conf": 1.0,
+     "start_s": 0.42,
+     "end_s": 0.84,
+     "partial_s": 0.864,
+     "text": "agatha"
+    }
+   ]
+  },
+  {
+   "id": "perto-034",
+   "group": "perto",
+   "text": "Agatha, espera",
+   "duration_s": 2.5,
+   "events": [
+    {
+     "word": "agatha",
+     "conf": 1.0,
+     "start_s": 0.45,
+     "end_s": 0.87,
+     "partial_s": 1.088,
+     "text": "agatha"
+    }
+   ]
+  },
+  {
+   "id": "perto-035",
+   "group": "perto",
+   "text": "Agatha, cancela",
+   "duration_s": 2.5,
+   "events": [
+    {
+     "word": "agatha",
+     "conf": 1.0,
+     "start_s": 0.6,
+     "end_s": 1.109763,
+     "partial_s": 1.088,
+     "text": "agatha"
+    }
+   ]
+  },
+  {
+   "id": "perto-036",
+   "group": "perto",
+   "text": "Ei, Agatha",
+   "duration_s": 2.5,
+   "events": [
+    {
+     "word": "agatha",
+     "conf": 1.0,
+     "start_s": 0.51,
+     "end_s": 0.96,
+     "partial_s": 1.088,
+     "text": "agatha"
+    }
+   ]
+  },
+  {
+   "id": "perto-037",
+   "group": "perto",
+   "text": "Oi, Agatha, tudo bem?",
+   "duration_s": 3.3,
+   "events": [
+    {
+     "word": "agatha",
+     "conf": 0.727,
+     "start_s": 1.022183,
+     "end_s": 1.383596,
+     "partial_s": 1.568,
+     "text": "agatha agatha"
+    },
+    {
+     "word": "agatha",
+     "conf": 0.957,
+     "start_s": 1.53,
+     "end_s": 1.92,
+     "partial_s": 1.568,
+     "text": "agatha agatha"
+    }
+   ]
+  },
+  {
+   "id": "perto-038",
+   "group": "perto",
+   "text": "Bom dia, Agatha",
+   "duration_s": 2.9,
+   "events": []
+  },
+  {
+   "id": "perto-039",
+   "group": "perto",
+   "text": "Obrigado, Agatha",
+   "duration_s": 2.5,
+   "events": [
+    {
+     "word": "agatha",
+     "conf": 0.962,
+     "start_s": 0.821924,
+     "end_s": 1.229905,
+     "partial_s": 1.088,
+     "text": "agatha"
+    }
+   ]
+  },
+  {
+   "id": "perto-040",
+   "group": "perto",
+   "text": "Certo, Agatha. E o host do banco?",
+   "duration_s": 4.7,
+   "events": [
+    {
+     "word": "agatha",
+     "conf": 1.0,
+     "start_s": 1.08,
+     "end_s": 1.53,
+     "partial_s": 1.824,
+     "text": "agatha"
+    }
+   ]
+  },
+  {
+   "id": "variado-001",
+   "group": "variado",
+   "text": "Agatha",
+   "duration_s": 2.5,
+   "events": [
+    {
+     "word": "agatha",
+     "conf": 0.517,
+     "start_s": 0.57,
+     "end_s": 0.9,
+     "partial_s": 1.088,
+     "text": "agatha"
+    }
+   ]
+  },
+  {
+   "id": "variado-002",
+   "group": "variado",
+   "text": "Agatha, que horas são?",
+   "duration_s": 3.3,
+   "events": []
+  },
+  {
+   "id": "variado-003",
+   "group": "variado",
+   "text": "Agatha, tá aí?",
+   "duration_s": 2.9,
+   "events": [
+    {
+     "word": "agatha",
+     "conf": 0.992,
+     "start_s": 0.36,
+     "end_s": 0.69,
+     "partial_s": 0.864,
+     "text": "agatha"
+    }
+   ]
+  },
+  {
+   "id": "variado-004",
+   "group": "variado",
+   "text": "Agatha, tem problema no Zabbix?",
+   "duration_s": 3.8,
+   "events": []
+  },
+  {
+   "id": "variado-005",
+   "group": "variado",
+   "text": "Agatha, para",
+   "duration_s": 2.5,
+   "events": [
+    {
+     "word": "agatha",
+     "conf": 0.967,
+     "start_s": 0.45,
+     "end_s": 0.75,
+     "partial_s": 1.088,
+     "text": "agatha"
+    }
+   ]
+  },
+  {
+   "id": "variado-006",
+   "group": "variado",
+   "text": "Agatha",
+   "duration_s": 2.5,
+   "events": [
+    {
+     "word": "agatha",
+     "conf": 1.0,
+     "start_s": 0.78,
+     "end_s": 1.62,
+     "partial_s": 1.568,
+     "text": "agatha"
+    }
+   ]
+  },
+  {
+   "id": "variado-007",
+   "group": "variado",
+   "text": "Agatha!",
+   "duration_s": 2.5,
+   "events": [
+    {
+     "word": "agatha",
+     "conf": 1.0,
+     "start_s": 0.57,
+     "end_s": 1.08,
+     "partial_s": 1.088,
+     "text": "agatha"
+    }
+   ]
+  },
+  {
+   "id": "variado-008",
+   "group": "variado",
+   "text": "Agatha, para!",
+   "duration_s": 2.5,
+   "events": []
+  },
+  {
+   "id": "variado-009",
+   "group": "variado",
+   "text": "Agatha, chega!",
+   "duration_s": 2.5,
+   "events": [
+    {
+     "word": "agatha",
+     "conf": 0.937,
+     "start_s": 0.45,
+     "end_s": 0.81,
+     "partial_s": 1.088,
+     "text": "agatha [unk]"
+    }
+   ]
+  },
+  {
+   "id": "variado-010",
+   "group": "variado",
+   "text": "Agatha, e aí?",
+   "duration_s": 2.9,
+   "events": [
+    {
+     "word": "agatha",
+     "conf": 0.992,
+     "start_s": 0.66,
+     "end_s": 1.02,
+     "partial_s": 1.344,
+     "text": "agatha"
+    }
+   ]
+  },
+  {
+   "id": "variado-011",
+   "group": "variado",
+   "text": "Agatha",
+   "duration_s": 2.5,
+   "events": []
+  },
+  {
+   "id": "variado-012",
+   "group": "variado",
+   "text": "Agatha, me escuta",
+   "duration_s": 2.9,
+   "events": []
+  },
+  {
+   "id": "variado-013",
+   "group": "variado",
+   "text": "Agatha",
+   "duration_s": 2.5,
+   "events": []
+  },
+  {
+   "id": "variado-014",
+   "group": "variado",
+   "text": "Agatha, que horas são?",
+   "duration_s": 3.3,
+   "events": []
+  },
+  {
+   "id": "variado-015",
+   "group": "variado",
+   "text": "Agatha, tá aí?",
+   "duration_s": 2.9,
+   "events": [
+    {
+     "word": "agatha",
+     "conf": 0.994,
+     "start_s": 0.75,
+     "end_s": 1.050262,
+     "partial_s": 1.344,
+     "text": "agatha"
+    }
+   ]
+  },
+  {
+   "id": "variado-016",
+   "group": "variado",
+   "text": "Agatha, tem problema no Zabbix?",
+   "duration_s": 3.8,
+   "events": [
+    {
+     "word": "agatha",
+     "conf": 0.834,
+     "start_s": 0.78,
+     "end_s": 1.05,
+     "partial_s": 1.344,
+     "text": "agatha"
+    }
+   ]
+  },
+  {
+   "id": "variado-017",
+   "group": "variado",
+   "text": "Agatha, para",
+   "duration_s": 2.5,
+   "events": []
+  },
+  {
+   "id": "variado-018",
+   "group": "variado",
+   "text": "Agatha",
+   "duration_s": 2.5,
+   "events": []
+  },
+  {
+   "id": "variado-019",
+   "group": "variado",
+   "text": "Agatha!",
+   "duration_s": 2.5,
+   "events": [
+    {
+     "word": "agatha",
+     "conf": 1.0,
+     "start_s": 0.48,
+     "end_s": 0.9,
+     "partial_s": 1.088,
+     "text": "agatha"
+    }
+   ]
+  },
+  {
+   "id": "variado-020",
+   "group": "variado",
+   "text": "Agatha, para!",
+   "duration_s": 2.5,
+   "events": [
+    {
+     "word": "agatha",
+     "conf": 0.608,
+     "start_s": 1.8,
+     "end_s": 2.07,
+     "partial_s": 2.304,
+     "text": "agatha"
+    }
+   ]
+  },
+  {
+   "id": "variado-021",
+   "group": "variado",
+   "text": "Agatha, chega!",
+   "duration_s": 2.5,
+   "events": [
+    {
+     "word": "agatha",
+     "conf": 1.0,
+     "start_s": 0.48,
+     "end_s": 0.9,
+     "partial_s": 1.088,
+     "text": "agatha"
+    }
+   ]
+  },
+  {
+   "id": "variado-022",
+   "group": "variado",
+   "text": "Agatha, e aí?",
+   "duration_s": 2.9,
+   "events": [
+    {
+     "word": "agatha",
+     "conf": 0.624,
+     "start_s": 0.360277,
+     "end_s": 0.719769,
+     "partial_s": 1.088,
+     "text": "agatha"
+    }
+   ]
+  },
+  {
+   "id": "variado-023",
+   "group": "variado",
+   "text": "Agatha",
+   "duration_s": 2.5,
+   "events": []
+  },
+  {
+   "id": "variado-024",
+   "group": "variado",
+   "text": "Agatha, me escuta",
+   "duration_s": 2.9,
+   "events": [
+    {
+     "word": "agatha",
+     "conf": 0.913,
+     "start_s": 0.421162,
+     "end_s": 0.691064,
+     "partial_s": 1.088,
+     "text": "agatha"
+    }
+   ]
+  },
+  {
+   "id": "longe-001",
+   "group": "longe",
+   "text": "Agatha",
+   "duration_s": 2.5,
+   "events": [
+    {
+     "word": "agatha",
+     "conf": 1.0,
+     "start_s": 1.14,
+     "end_s": 1.68,
+     "partial_s": 1.568,
+     "text": "agatha"
+    }
+   ]
+  },
+  {
+   "id": "longe-002",
+   "group": "longe",
+   "text": "Agatha!",
+   "duration_s": 2.5,
+   "events": [
+    {
+     "word": "agatha",
+     "conf": 1.0,
+     "start_s": 1.08,
+     "end_s": 1.619889,
+     "partial_s": 1.568,
+     "text": "agatha"
+    }
+   ]
+  },
+  {
+   "id": "longe-003",
+   "group": "longe",
+   "text": "Agatha, que horas são?",
+   "duration_s": 3.3,
+   "events": [
+    {
+     "word": "agatha",
+     "conf": 0.877,
+     "start_s": 1.56,
+     "end_s": 1.92,
+     "partial_s": 2.048,
+     "text": "agatha"
+    }
+   ]
+  },
+  {
+   "id": "longe-004",
+   "group": "longe",
+   "text": "Agatha, tem algum problema no Zabbix?",
+   "duration_s": 4.2,
+   "events": [
+    {
+     "word": "agatha",
+     "conf": 0.789,
+     "start_s": 1.65,
+     "end_s": 1.98,
+     "partial_s": 2.304,
+     "text": "agatha"
+    }
+   ]
+  },
+  {
+   "id": "longe-005",
+   "group": "longe",
+   "text": "Agatha, quantas sessões tem no Oracle?",
+   "duration_s": 4.2,
+   "events": [
+    {
+     "word": "agatha",
+     "conf": 0.997,
+     "start_s": 1.29,
+     "end_s": 1.71,
+     "partial_s": 1.824,
+     "text": "agatha"
+    }
+   ]
+  },
+  {
+   "id": "longe-006",
+   "group": "longe",
+   "text": "Agatha, me ajuda com uma coisa",
+   "duration_s": 4.2,
+   "events": [
+    {
+     "word": "agatha",
+     "conf": 0.987,
+     "start_s": 1.62,
+     "end_s": 2.01,
+     "partial_s": 2.304,
+     "text": "agatha"
+    }
+   ]
+  },
+  {
+   "id": "longe-007",
+   "group": "longe",
+   "text": "Agatha, para",
+   "duration_s": 2.5,
+   "events": [
+    {
+     "word": "agatha",
+     "conf": 0.973,
+     "start_s": 1.23,
+     "end_s": 1.65,
+     "partial_s": 1.824,
+     "text": "agatha"
+    }
+   ]
+  },
+  {
+   "id": "longe-008",
+   "group": "longe",
+   "text": "Agatha, chega",
+   "duration_s": 2.5,
+   "events": [
+    {
+     "word": "agatha",
+     "conf": 0.99,
+     "start_s": 1.38,
+     "end_s": 1.771673,
+     "partial_s": 2.048,
+     "text": "agatha"
+    }
+   ]
+  },
+  {
+   "id": "longe-009",
+   "group": "longe",
+   "text": "Ei, Agatha",
+   "duration_s": 2.5,
+   "events": [
+    {
+     "word": "agatha",
+     "conf": 1.0,
+     "start_s": 1.770153,
+     "end_s": 2.219611,
+     "partial_s": 2.304,
+     "text": "agatha"
+    }
+   ]
+  },
+  {
+   "id": "longe-010",
+   "group": "longe",
+   "text": "Oi, Agatha, tudo bem?",
+   "duration_s": 3.3,
+   "events": []
+  },
+  {
+   "id": "longe-011",
+   "group": "longe",
+   "text": "Obrigado, Agatha",
+   "duration_s": 2.5,
+   "events": []
+  },
+  {
+   "id": "longe-012",
+   "group": "longe",
+   "text": "Agatha, esquece isso",
+   "duration_s": 2.9,
+   "events": []
+  },
+  {
+   "id": "negativas-001",
+   "group": "negativas",
+   "text": "A gata subiu no telhado",
+   "duration_s": 3.8,
+   "events": [
+    {
+     "word": "agatha",
+     "conf": 1.0,
+     "start_s": 0.42,
+     "end_s": 0.9,
+     "partial_s": 0.864,
+     "text": "agatha [unk]"
+    },
+    {
+     "word": "agatha",
+     "conf": 0.973,
+     "start_s": 1.62,
+     "end_s": 1.979735,
+     "partial_s": 2.304,
+     "text": "agatha"
+    }
+   ]
+  },
+  {
+   "id": "negativas-002",
+   "group": "negativas",
+   "text": "Agora não dá",
+   "duration_s": 2.9,
+   "events": [
+    {
+     "word": "agatha",
+     "conf": 0.994,
+     "start_s": 0.541562,
+     "end_s": 0.960558,
+     "partial_s": 1.088,
+     "text": "agatha"
+    }
+   ]
+  },
+  {
+   "id": "negativas-003",
+   "group": "negativas",
+   "text": "A garrafa está na geladeira",
+   "duration_s": 3.8,
+   "events": [
+    {
+     "word": "agatha",
+     "conf": 0.991,
+     "start_s": 0.84,
+     "end_s": 1.469172,
+     "partial_s": 1.344,
+     "text": "agatha"
+    }
+   ]
+  },
+  {
+   "id": "negativas-004",
+   "group": "negativas",
+   "text": "A garota chegou",
+   "duration_s": 2.9,
+   "events": [
+    {
+     "word": "agatha",
+     "conf": 0.935,
+     "start_s": 0.87,
+     "end_s": 1.2,
+     "partial_s": 1.344,
+     "text": "agatha"
+    }
+   ]
+  },
+  {
+   "id": "negativas-005",
+   "group": "negativas",
+   "text": "A gente conversa depois",
+   "duration_s": 3.3,
+   "events": [
+    {
+     "word": "agatha",
+     "conf": 0.678,
+     "start_s": 1.41,
+     "end_s": 1.71,
+     "partial_s": 1.568,
+     "text": "agatha"
+    }
+   ]
+  },
+  {
+   "id": "negativas-006",
+   "group": "negativas",
+   "text": "A data da entrega é sexta",
+   "duration_s": 4.2,
+   "events": [
+    {
+     "word": "agatha",
+     "conf": 0.931,
+     "start_s": 0.69,
+     "end_s": 1.11,
+     "partial_s": 1.344,
+     "text": "agatha"
+    }
+   ]
+  },
+  {
+   "id": "negativas-007",
+   "group": "negativas",
+   "text": "A cada hora o backup roda",
+   "duration_s": 4.2,
+   "events": []
+  },
+  {
+   "id": "negativas-008",
+   "group": "negativas",
+   "text": "A tabela está cheia",
+   "duration_s": 3.3,
+   "events": []
+  },
+  {
+   "id": "negativas-009",
+   "group": "negativas",
+   "text": "Aguarda um pouco",
+   "duration_s": 2.9,
+   "events": []
+  },
+  {
+   "id": "negativas-010",
+   "group": "negativas",
+   "text": "Acabou o café",
+   "duration_s": 2.9,
+   "events": []
+  },
+  {
+   "id": "negativas-011",
+   "group": "negativas",
+   "text": "A Renata ligou",
+   "duration_s": 2.9,
+   "events": []
+  },
+  {
+   "id": "negativas-012",
+   "group": "negativas",
+   "text": "Achei a chave do carro",
+   "duration_s": 3.8,
+   "events": []
+  },
+  {
+   "id": "negativas-013",
+   "group": "negativas",
+   "text": "Agenda a reunião para amanhã",
+   "duration_s": 3.8,
+   "events": []
+  },
+  {
+   "id": "negativas-014",
+   "group": "negativas",
+   "text": "Alberta é uma província do Canadá",
+   "duration_s": 4.2,
+   "events": []
+  },
+  {
+   "id": "negativas-015",
+   "group": "negativas",
+   "text": "A pasta está no servidor",
+   "duration_s": 3.8,
+   "events": []
+  },
+  {
+   "id": "negativas-016",
+   "group": "negativas",
+   "text": "A batata está pronta",
+   "duration_s": 3.3,
+   "events": [
+    {
+     "word": "agatha",
+     "conf": 0.874,
+     "start_s": 1.291199,
+     "end_s": 1.74,
+     "partial_s": 1.824,
+     "text": "agatha"
+    }
+   ]
+  },
+  {
+   "id": "negativas-017",
+   "group": "negativas",
+   "text": "Atacama é um deserto",
+   "duration_s": 3.3,
+   "events": []
+  },
+  {
+   "id": "negativas-018",
+   "group": "negativas",
+   "text": "Amanhã tem jogo",
+   "duration_s": 2.9,
+   "events": []
+  },
+  {
+   "id": "negativas-019",
+   "group": "negativas",
+   "text": "Alguém viu o meu fone?",
+   "duration_s": 3.8,
+   "events": []
+  },
+  {
+   "id": "negativas-020",
+   "group": "negativas",
+   "text": "A taxa subiu de novo",
+   "duration_s": 3.8,
+   "events": []
+  },
+  {
+   "id": "negativas-021",
+   "group": "negativas",
+   "text": "A lata está vazia",
+   "duration_s": 3.3,
+   "events": [
+    {
+     "word": "agatha",
+     "conf": 0.852,
+     "start_s": 0.96,
+     "end_s": 1.41,
+     "partial_s": 1.568,
+     "text": "agatha"
+    }
+   ]
+  },
+  {
+   "id": "negativas-022",
+   "group": "negativas",
+   "text": "Agachar dói o joelho",
+   "duration_s": 3.3,
+   "events": [
+    {
+     "word": "agatha",
+     "conf": 0.941,
+     "start_s": 1.23,
+     "end_s": 1.559598,
+     "partial_s": 1.824,
+     "text": "agatha"
+    }
+   ]
+  },
+  {
+   "id": "negativas-023",
+   "group": "negativas",
+   "text": "Que horas são?",
+   "duration_s": 2.9,
+   "events": []
+  },
+  {
+   "id": "negativas-024",
+   "group": "negativas",
+   "text": "Tem algum problema no Zabbix?",
+   "duration_s": 3.8,
+   "events": []
+  },
+  {
+   "id": "negativas-025",
+   "group": "negativas",
+   "text": "Para com isso",
+   "duration_s": 2.9,
+   "events": []
+  },
+  {
+   "id": "negativas-026",
+   "group": "negativas",
+   "text": "Chega por hoje",
+   "duration_s": 2.9,
+   "events": []
+  },
+  {
+   "id": "negativas-027",
+   "group": "negativas",
+   "text": "Espera aí",
+   "duration_s": 2.5,
+   "events": []
+  },
+  {
+   "id": "negativas-028",
+   "group": "negativas",
+   "text": "Obrigado",
+   "duration_s": 2.5,
+   "events": []
+  },
+  {
+   "id": "negativas-029",
+   "group": "negativas",
+   "text": "Ei, você viu isso?",
+   "duration_s": 3.3,
+   "events": []
+  },
+  {
+   "id": "negativas-030",
+   "group": "negativas",
+   "text": "O host do banco caiu de novo",
+   "duration_s": 4.7,
+   "events": []
+  },
+  {
+   "id": "eco-001",
+   "group": "eco-fala",
+   "text": "Agatha, para",
+   "duration_s": 7.0,
+   "events": []
+  },
+  {
+   "id": "eco-002",
+   "group": "eco-calado",
+   "text": null,
+   "duration_s": 6.9,
+   "events": [
+    {
+     "word": "agatha",
+     "conf": 0.972,
+     "start_s": 1.32,
+     "end_s": 1.681004,
+     "partial_s": 1.824,
+     "text": "agatha"
+    }
+   ]
+  },
+  {
+   "id": "eco-003",
+   "group": "eco-fala",
+   "text": "Agatha, chega",
+   "duration_s": 12.4,
+   "events": []
+  },
+  {
+   "id": "eco-004",
+   "group": "eco-calado",
+   "text": null,
+   "duration_s": 8.9,
+   "events": []
+  },
+  {
+   "id": "eco-005",
+   "group": "eco-fala",
+   "text": "Agatha, espera",
+   "duration_s": 9.5,
+   "events": []
+  },
+  {
+   "id": "eco-006",
+   "group": "eco-calado",
+   "text": null,
+   "duration_s": 8.1,
+   "events": []
+  },
+  {
+   "id": "eco-007",
+   "group": "eco-fala",
+   "text": "Agatha, me fala outra coisa",
+   "duration_s": 6.3,
+   "events": []
+  },
+  {
+   "id": "eco-008",
+   "group": "eco-calado",
+   "text": null,
+   "duration_s": 8.2,
+   "events": [
+    {
+     "word": "agatha",
+     "conf": 0.677,
+     "start_s": 3.759185,
+     "end_s": 4.075634,
+     "partial_s": 4.448,
+     "text": "agatha"
+    }
+   ]
+  },
+  {
+   "id": "eco-009",
+   "group": "eco-fala",
+   "text": "Agatha, para",
+   "duration_s": 7.2,
+   "events": []
+  },
+  {
+   "id": "eco-010",
+   "group": "eco-calado",
+   "text": null,
+   "duration_s": 7.9,
+   "events": []
+  },
+  {
+   "id": "eco-011",
+   "group": "eco-fala",
+   "text": "Agatha, chega",
+   "duration_s": 5.2,
+   "events": [
+    {
+     "word": "agatha",
+     "conf": 0.881,
+     "start_s": 1.77,
+     "end_s": 2.25,
+     "partial_s": 1.568,
+     "text": "agatha"
+    }
+   ]
+  },
+  {
+   "id": "eco-012",
+   "group": "eco-calado",
+   "text": null,
+   "duration_s": 7.1,
+   "events": []
+  },
+  {
+   "id": "eco-013",
+   "group": "eco-fala",
+   "text": "Agatha, espera",
+   "duration_s": 12.0,
+   "events": []
+  },
+  {
+   "id": "eco-014",
+   "group": "eco-calado",
+   "text": null,
+   "duration_s": 7.9,
+   "events": []
+  },
+  {
+   "id": "eco-015",
+   "group": "eco-fala",
+   "text": "Agatha, me fala outra coisa",
+   "duration_s": 8.0,
+   "events": [
+    {
+     "word": "agatha",
+     "conf": 0.502,
+     "start_s": 4.23,
+     "end_s": 4.59,
+     "partial_s": 4.704,
+     "text": "agatha"
+    }
+   ]
+  },
+  {
+   "id": "eco-016",
+   "group": "eco-calado",
+   "text": null,
+   "duration_s": 4.4,
+   "events": []
+  },
+  {
+   "id": "eco-017",
+   "group": "eco-fala",
+   "text": "Agatha, para",
+   "duration_s": 5.4,
+   "events": [
+    {
+     "word": "agatha",
+     "conf": 1.0,
+     "start_s": 0.87,
+     "end_s": 1.38,
+     "partial_s": 1.568,
+     "text": "agatha"
+    }
+   ]
+  },
+  {
+   "id": "eco-018",
+   "group": "eco-calado",
+   "text": null,
+   "duration_s": 10.4,
+   "events": [
+    {
+     "word": "agatha",
+     "conf": 0.682,
+     "start_s": 8.4,
+     "end_s": 8.82,
+     "partial_s": 5.664,
+     "text": "[unk] agatha"
+    }
+   ]
+  },
+  {
+   "id": "eco-019",
+   "group": "eco-fala",
+   "text": "Agatha, chega",
+   "duration_s": 6.3,
+   "events": [
+    {
+     "word": "agatha",
+     "conf": 0.989,
+     "start_s": 1.44,
+     "end_s": 1.89,
+     "partial_s": 2.048,
+     "text": "agatha"
+    }
+   ]
+  },
+  {
+   "id": "eco-020",
+   "group": "eco-calado",
+   "text": null,
+   "duration_s": 7.6,
+   "events": []
+  },
+  {
+   "id": "eco-021",
+   "group": "eco-fala",
+   "text": "Agatha, espera",
+   "duration_s": 3.8,
+   "events": []
+  },
+  {
+   "id": "eco-022",
+   "group": "eco-calado",
+   "text": null,
+   "duration_s": 4.2,
+   "events": []
+  },
+  {
+   "id": "eco-023",
+   "group": "eco-fala",
+   "text": "Agatha, me fala outra coisa",
+   "duration_s": 4.8,
+   "events": [
+    {
+     "word": "agatha",
+     "conf": 0.796,
+     "start_s": 0.84,
+     "end_s": 1.23,
+     "partial_s": 1.568,
+     "text": "agatha"
+    }
+   ]
+  },
+  {
+   "id": "eco-024",
+   "group": "eco-calado",
+   "text": null,
+   "duration_s": 7.9,
+   "events": []
+  },
+  {
+   "id": "eco-025",
+   "group": "eco-fala",
+   "text": "Agatha, para",
+   "duration_s": 5.1,
+   "events": [
+    {
+     "word": "agatha",
+     "conf": 0.429,
+     "start_s": 1.29,
+     "end_s": 1.71,
+     "partial_s": null,
+     "text": "agatha"
+    }
+   ]
+  },
+  {
+   "id": "ambiente-001",
+   "group": "ambiente",
+   "text": null,
+   "duration_s": 60.0,
+   "events": []
+  },
+  {
+   "id": "ambiente-002",
+   "group": "ambiente",
+   "text": null,
+   "duration_s": 60.0,
+   "events": [
+    {
+     "word": "agatha",
+     "conf": 0.936,
+     "start_s": 45.36,
+     "end_s": 45.63,
+     "partial_s": 45.984,
+     "text": "agatha"
+    },
+    {
+     "word": "agatha",
+     "conf": 0.865,
+     "start_s": 47.49,
+     "end_s": 47.878828,
+     "partial_s": 48.128,
+     "text": "agatha"
+    }
+   ]
+  },
+  {
+   "id": "ambiente-003",
+   "group": "ambiente",
+   "text": null,
+   "duration_s": 60.0,
+   "events": []
+  },
+  {
+   "id": "ambiente-004",
+   "group": "ambiente",
+   "text": null,
+   "duration_s": 60.0,
+   "events": []
+  },
+  {
+   "id": "ambiente-005",
+   "group": "ambiente",
+   "text": null,
+   "duration_s": 60.0,
+   "events": [
+    {
+     "word": "agatha",
+     "conf": 0.534,
+     "start_s": 15.81,
+     "end_s": 15.96,
+     "partial_s": 16.448,
+     "text": "agatha"
+    }
+   ]
+  },
+  {
+   "id": "ambiente-006",
+   "group": "ambiente",
+   "text": null,
+   "duration_s": 60.0,
+   "events": [
+    {
+     "word": "agatha",
+     "conf": 0.822,
+     "start_s": 10.294708,
+     "end_s": 10.681805,
+     "partial_s": 10.944,
+     "text": "agatha"
+    },
+    {
+     "word": "agatha",
+     "conf": 0.995,
+     "start_s": 23.31,
+     "end_s": 23.61,
+     "partial_s": 21.984,
+     "text": "agatha"
+    }
+   ]
+  },
+  {
+   "id": "ambiente-007",
+   "group": "ambiente",
+   "text": null,
+   "duration_s": 60.0,
+   "events": [
+    {
+     "word": "agatha",
+     "conf": 1.0,
+     "start_s": 20.88,
+     "end_s": 21.3,
+     "partial_s": 21.504,
+     "text": "agatha"
+    },
+    {
+     "word": "agatha",
+     "conf": 0.481,
+     "start_s": 31.65,
+     "end_s": 31.858762,
+     "partial_s": 32.288,
+     "text": "agatha"
+    },
+    {
+     "word": "agatha",
+     "conf": 0.687,
+     "start_s": 49.43005,
+     "end_s": 50.191699,
+     "partial_s": 48.128,
+     "text": "agatha"
+    }
+   ]
+  },
+  {
+   "id": "ambiente-008",
+   "group": "ambiente",
+   "text": null,
+   "duration_s": 60.0,
+   "events": []
+  },
+  {
+   "id": "ambiente-009",
+   "group": "ambiente",
+   "text": null,
+   "duration_s": 60.0,
+   "events": [
+    {
+     "word": "agatha",
+     "conf": 0.556,
+     "start_s": 57.06,
+     "end_s": 57.390557,
+     "partial_s": 57.504,
+     "text": "agatha"
+    }
+   ]
+  },
+  {
+   "id": "ambiente-010",
+   "group": "ambiente",
+   "text": null,
+   "duration_s": 60.0,
+   "events": [
+    {
+     "word": "agatha",
+     "conf": 0.916,
+     "start_s": 47.22,
+     "end_s": 47.43,
+     "partial_s": 47.648,
+     "text": "agatha"
+    }
+   ]
+  },
+  {
+   "id": "fleurs-10021311324523185658",
+   "group": "fleurs",
+   "text": null,
+   "duration_s": 11.82,
+   "events": []
+  },
+  {
+   "id": "fleurs-10114312680249610589",
+   "group": "fleurs",
+   "text": null,
+   "duration_s": 14.58,
+   "events": []
+  },
+  {
+   "id": "fleurs-10165966771567591302",
+   "group": "fleurs",
+   "text": null,
+   "duration_s": 6.66,
+   "events": []
+  },
+  {
+   "id": "fleurs-10181533133173393073",
+   "group": "fleurs",
+   "text": null,
+   "duration_s": 13.92,
+   "events": []
+  },
+  {
+   "id": "fleurs-10214311447059175309",
+   "group": "fleurs",
+   "text": null,
+   "duration_s": 11.88,
+   "events": []
+  },
+  {
+   "id": "fleurs-10221738448089878097",
+   "group": "fleurs",
+   "text": null,
+   "duration_s": 7.44,
+   "events": []
+  },
+  {
+   "id": "fleurs-10264842099136155935",
+   "group": "fleurs",
+   "text": null,
+   "duration_s": 11.52,
+   "events": []
+  },
+  {
+   "id": "fleurs-10275176137959631739",
+   "group": "fleurs",
+   "text": null,
+   "duration_s": 9.0,
+   "events": []
+  },
+  {
+   "id": "fleurs-10281411371095075004",
+   "group": "fleurs",
+   "text": null,
+   "duration_s": 8.52,
+   "events": []
+  },
+  {
+   "id": "fleurs-10288689224088672788",
+   "group": "fleurs",
+   "text": null,
+   "duration_s": 15.84,
+   "events": []
+  },
+  {
+   "id": "fleurs-1028956226170549330",
+   "group": "fleurs",
+   "text": null,
+   "duration_s": 11.58,
+   "events": []
+  },
+  {
+   "id": "fleurs-10408390450801752955",
+   "group": "fleurs",
+   "text": null,
+   "duration_s": 14.1,
+   "events": []
+  },
+  {
+   "id": "fleurs-10469354627012887368",
+   "group": "fleurs",
+   "text": null,
+   "duration_s": 16.74,
+   "events": []
+  },
+  {
+   "id": "fleurs-10484400070252823650",
+   "group": "fleurs",
+   "text": null,
+   "duration_s": 15.48,
+   "events": []
+  },
+  {
+   "id": "fleurs-10588000562732328309",
+   "group": "fleurs",
+   "text": null,
+   "duration_s": 9.48,
+   "events": []
+  },
+  {
+   "id": "fleurs-10600441480645147290",
+   "group": "fleurs",
+   "text": null,
+   "duration_s": 13.86,
+   "events": []
+  },
+  {
+   "id": "fleurs-10655108907409043247",
+   "group": "fleurs",
+   "text": null,
+   "duration_s": 11.94,
+   "events": []
+  },
+  {
+   "id": "fleurs-10686842456770290048",
+   "group": "fleurs",
+   "text": null,
+   "duration_s": 11.22,
+   "events": []
+  },
+  {
+   "id": "fleurs-10770520936029242279",
+   "group": "fleurs",
+   "text": null,
+   "duration_s": 13.8,
+   "events": []
+  },
+  {
+   "id": "fleurs-10772221179495683943",
+   "group": "fleurs",
+   "text": null,
+   "duration_s": 15.9,
+   "events": []
+  },
+  {
+   "id": "fleurs-10777509745863636963",
+   "group": "fleurs",
+   "text": null,
+   "duration_s": 9.24,
+   "events": []
+  },
+  {
+   "id": "fleurs-10875569365139483518",
+   "group": "fleurs",
+   "text": null,
+   "duration_s": 10.2,
+   "events": []
+  },
+  {
+   "id": "fleurs-10876957198676858120",
+   "group": "fleurs",
+   "text": null,
+   "duration_s": 8.16,
+   "events": []
+  },
+  {
+   "id": "fleurs-10884389430710460345",
+   "group": "fleurs",
+   "text": null,
+   "duration_s": 13.8,
+   "events": []
+  },
+  {
+   "id": "fleurs-1088555081702852536",
+   "group": "fleurs",
+   "text": null,
+   "duration_s": 5.64,
+   "events": []
+  },
+  {
+   "id": "fleurs-10900250493010378627",
+   "group": "fleurs",
+   "text": null,
+   "duration_s": 8.58,
+   "events": []
+  },
+  {
+   "id": "fleurs-11092620502618673768",
+   "group": "fleurs",
+   "text": null,
+   "duration_s": 11.76,
+   "events": []
+  },
+  {
+   "id": "fleurs-11132459245063364782",
+   "group": "fleurs",
+   "text": null,
+   "duration_s": 7.14,
+   "events": []
+  },
+  {
+   "id": "fleurs-11193159258989471636",
+   "group": "fleurs",
+   "text": null,
+   "duration_s": 14.04,
+   "events": []
+  },
+  {
+   "id": "fleurs-11259549995937065245",
+   "group": "fleurs",
+   "text": null,
+   "duration_s": 11.28,
+   "events": []
+  },
+  {
+   "id": "fleurs-11267891273569506653",
+   "group": "fleurs",
+   "text": null,
+   "duration_s": 21.72,
+   "events": []
+  },
+  {
+   "id": "fleurs-11278916061079989542",
+   "group": "fleurs",
+   "text": null,
+   "duration_s": 9.48,
+   "events": []
+  },
+  {
+   "id": "fleurs-11296799965122436324",
+   "group": "fleurs",
+   "text": null,
+   "duration_s": 15.66,
+   "events": []
+  },
+  {
+   "id": "fleurs-11300549843206521668",
+   "group": "fleurs",
+   "text": null,
+   "duration_s": 15.9,
+   "events": []
+  },
+  {
+   "id": "fleurs-1131978976260848772",
+   "group": "fleurs",
+   "text": null,
+   "duration_s": 12.48,
+   "events": []
+  },
+  {
+   "id": "fleurs-11336492390727033871",
+   "group": "fleurs",
+   "text": null,
+   "duration_s": 13.8,
+   "events": []
+  },
+  {
+   "id": "fleurs-11418592154298278484",
+   "group": "fleurs",
+   "text": null,
+   "duration_s": 8.46,
+   "events": []
+  },
+  {
+   "id": "fleurs-11451482652857144615",
+   "group": "fleurs",
+   "text": null,
+   "duration_s": 11.4,
+   "events": []
+  },
+  {
+   "id": "fleurs-11484580613623955848",
+   "group": "fleurs",
+   "text": null,
+   "duration_s": 12.24,
+   "events": [
+    {
+     "word": "agatha",
+     "conf": 0.599,
+     "start_s": 1.924578,
+     "end_s": 2.224337,
+     "partial_s": 2.528,
+     "text": "[unk] agatha [unk] [unk] [unk]"
+    }
+   ]
+  },
+  {
+   "id": "fleurs-11528870747103321554",
+   "group": "fleurs",
+   "text": null,
+   "duration_s": 15.0,
+   "events": []
+  },
+  {
+   "id": "fleurs-11703936421131471808",
+   "group": "fleurs",
+   "text": null,
+   "duration_s": 10.98,
+   "events": []
+  },
+  {
+   "id": "fleurs-11852142662884391002",
+   "group": "fleurs",
+   "text": null,
+   "duration_s": 14.4,
+   "events": []
+  },
+  {
+   "id": "fleurs-11868703931408793172",
+   "group": "fleurs",
+   "text": null,
+   "duration_s": 8.16,
+   "events": []
+  },
+  {
+   "id": "fleurs-11874095154467965042",
+   "group": "fleurs",
+   "text": null,
+   "duration_s": 11.82,
+   "events": []
+  },
+  {
+   "id": "fleurs-11931116086520927288",
+   "group": "fleurs",
+   "text": null,
+   "duration_s": 8.7,
+   "events": [
+    {
+     "word": "agatha",
+     "conf": 0.896,
+     "start_s": 0.690835,
+     "end_s": 1.11,
+     "partial_s": 1.568,
+     "text": "agatha"
+    }
+   ]
+  },
+  {
+   "id": "fleurs-12012966600545456436",
+   "group": "fleurs",
+   "text": null,
+   "duration_s": 12.0,
+   "events": []
+  },
+  {
+   "id": "fleurs-1203413407386234720",
+   "group": "fleurs",
+   "text": null,
+   "duration_s": 16.74,
+   "events": []
+  },
+  {
+   "id": "fleurs-12080198172208341234",
+   "group": "fleurs",
+   "text": null,
+   "duration_s": 14.22,
+   "events": []
+  },
+  {
+   "id": "fleurs-12189467844772725952",
+   "group": "fleurs",
+   "text": null,
+   "duration_s": 12.6,
+   "events": [
+    {
+     "word": "agatha",
+     "conf": 0.881,
+     "start_s": 10.2,
+     "end_s": 10.5,
+     "partial_s": 10.688,
+     "text": "agatha [unk]"
+    }
+   ]
+  },
+  {
+   "id": "fleurs-1221552808331230491",
+   "group": "fleurs",
+   "text": null,
+   "duration_s": 12.36,
+   "events": []
+  },
+  {
+   "id": "fleurs-12252969563763450375",
+   "group": "fleurs",
+   "text": null,
+   "duration_s": 8.52,
+   "events": []
+  },
+  {
+   "id": "fleurs-12283912677614379977",
+   "group": "fleurs",
+   "text": null,
+   "duration_s": 15.54,
+   "events": []
+  },
+  {
+   "id": "fleurs-12439698581380539453",
+   "group": "fleurs",
+   "text": null,
+   "duration_s": 14.76,
+   "events": []
+  },
+  {
+   "id": "fleurs-12478445157631932958",
+   "group": "fleurs",
+   "text": null,
+   "duration_s": 9.3,
+   "events": []
+  },
+  {
+   "id": "fleurs-1252968753248888315",
+   "group": "fleurs",
+   "text": null,
+   "duration_s": 15.12,
+   "events": []
+  },
+  {
+   "id": "fleurs-12608289738982942272",
+   "group": "fleurs",
+   "text": null,
+   "duration_s": 6.6,
+   "events": []
+  },
+  {
+   "id": "fleurs-12649617510059681669",
+   "group": "fleurs",
+   "text": null,
+   "duration_s": 16.56,
+   "events": [
+    {
+     "word": "agatha",
+     "conf": 0.852,
+     "start_s": 4.801539,
+     "end_s": 5.07,
+     "partial_s": 2.048,
+     "text": "[unk] [unk] agatha"
+    }
+   ]
+  },
+  {
+   "id": "fleurs-12682472689138541212",
+   "group": "fleurs",
+   "text": null,
+   "duration_s": 14.64,
+   "events": []
+  },
+  {
+   "id": "fleurs-12714713260942421678",
+   "group": "fleurs",
+   "text": null,
+   "duration_s": 14.76,
+   "events": []
+  },
+  {
+   "id": "fleurs-12748241411558243402",
+   "group": "fleurs",
+   "text": null,
+   "duration_s": 8.34,
+   "events": []
+  },
+  {
+   "id": "fleurs-12778209501458965696",
+   "group": "fleurs",
+   "text": null,
+   "duration_s": 14.1,
+   "events": []
+  },
+  {
+   "id": "fleurs-12781802128469181142",
+   "group": "fleurs",
+   "text": null,
+   "duration_s": 17.22,
+   "events": []
+  },
+  {
+   "id": "fleurs-12817267281232432150",
+   "group": "fleurs",
+   "text": null,
+   "duration_s": 9.42,
+   "events": []
+  },
+  {
+   "id": "fleurs-12818291475688349546",
+   "group": "fleurs",
+   "text": null,
+   "duration_s": 8.7,
+   "events": []
+  },
+  {
+   "id": "fleurs-12827436540485124190",
+   "group": "fleurs",
+   "text": null,
+   "duration_s": 8.4,
+   "events": []
+  },
+  {
+   "id": "fleurs-12863661200875768521",
+   "group": "fleurs",
+   "text": null,
+   "duration_s": 9.24,
+   "events": []
+  },
+  {
+   "id": "fleurs-12893805641143776198",
+   "group": "fleurs",
+   "text": null,
+   "duration_s": 20.64,
+   "events": [
+    {
+     "word": "agatha",
+     "conf": 0.873,
+     "start_s": 0.24,
+     "end_s": 0.6,
+     "partial_s": 0.864,
+     "text": "agatha"
+    }
+   ]
+  },
+  {
+   "id": "fleurs-13092883766962544808",
+   "group": "fleurs",
+   "text": null,
+   "duration_s": 12.24,
+   "events": [
+    {
+     "word": "agatha",
+     "conf": 0.66,
+     "start_s": 8.58,
+     "end_s": 8.97,
+     "partial_s": 9.248,
+     "text": "agatha"
+    }
+   ]
+  },
+  {
+   "id": "fleurs-13111501150672418838",
+   "group": "fleurs",
+   "text": null,
+   "duration_s": 13.62,
+   "events": []
+  },
+  {
+   "id": "fleurs-13176761622758203681",
+   "group": "fleurs",
+   "text": null,
+   "duration_s": 13.38,
+   "events": []
+  },
+  {
+   "id": "fleurs-13180728382513734737",
+   "group": "fleurs",
+   "text": null,
+   "duration_s": 12.78,
+   "events": []
+  },
+  {
+   "id": "fleurs-13221766043673296259",
+   "group": "fleurs",
+   "text": null,
+   "duration_s": 7.44,
+   "events": []
+  },
+  {
+   "id": "fleurs-13238830627750381272",
+   "group": "fleurs",
+   "text": null,
+   "duration_s": 9.84,
+   "events": []
+  },
+  {
+   "id": "fleurs-1331833229962432141",
+   "group": "fleurs",
+   "text": null,
+   "duration_s": 6.12,
+   "events": []
+  },
+  {
+   "id": "fleurs-13440791064404963413",
+   "group": "fleurs",
+   "text": null,
+   "duration_s": 17.52,
+   "events": []
+  },
+  {
+   "id": "fleurs-136235502130033299",
+   "group": "fleurs",
+   "text": null,
+   "duration_s": 6.12,
+   "events": []
+  },
+  {
+   "id": "fleurs-13644000713903171934",
+   "group": "fleurs",
+   "text": null,
+   "duration_s": 16.2,
+   "events": []
+  },
+  {
+   "id": "fleurs-13678402803289079897",
+   "group": "fleurs",
+   "text": null,
+   "duration_s": 6.12,
+   "events": [
+    {
+     "word": "agatha",
+     "conf": 0.972,
+     "start_s": 0.45,
+     "end_s": 0.93,
+     "partial_s": 1.088,
+     "text": "agatha"
+    }
+   ]
+  },
+  {
+   "id": "fleurs-13756794764949540594",
+   "group": "fleurs",
+   "text": null,
+   "duration_s": 7.74,
+   "events": []
+  },
+  {
+   "id": "fleurs-13766167675576683106",
+   "group": "fleurs",
+   "text": null,
+   "duration_s": 14.46,
+   "events": []
+  },
+  {
+   "id": "fleurs-13867156691922332750",
+   "group": "fleurs",
+   "text": null,
+   "duration_s": 9.36,
+   "events": []
+  },
+  {
+   "id": "fleurs-13867458745275327281",
+   "group": "fleurs",
+   "text": null,
+   "duration_s": 5.16,
+   "events": []
+  },
+  {
+   "id": "fleurs-13879296923236682283",
+   "group": "fleurs",
+   "text": null,
+   "duration_s": 11.76,
+   "events": []
+  },
+  {
+   "id": "fleurs-13914814401492683405",
+   "group": "fleurs",
+   "text": null,
+   "duration_s": 14.34,
+   "events": []
+  },
+  {
+   "id": "fleurs-14001237774995782012",
+   "group": "fleurs",
+   "text": null,
+   "duration_s": 13.38,
+   "events": []
+  },
+  {
+   "id": "fleurs-14034847373049017150",
+   "group": "fleurs",
+   "text": null,
+   "duration_s": 14.76,
+   "events": []
+  },
+  {
+   "id": "fleurs-14042294750736263832",
+   "group": "fleurs",
+   "text": null,
+   "duration_s": 5.64,
+   "events": []
+  },
+  {
+   "id": "fleurs-14049926987864085982",
+   "group": "fleurs",
+   "text": null,
+   "duration_s": 10.98,
+   "events": []
+  },
+  {
+   "id": "fleurs-14051619729602366996",
+   "group": "fleurs",
+   "text": null,
+   "duration_s": 11.1,
+   "events": []
+  },
+  {
+   "id": "fleurs-14094810676704975512",
+   "group": "fleurs",
+   "text": null,
+   "duration_s": 15.48,
+   "events": []
+  },
+  {
+   "id": "fleurs-14106123975849437227",
+   "group": "fleurs",
+   "text": null,
+   "duration_s": 9.0,
+   "events": []
+  },
+  {
+   "id": "fleurs-14199968064805023859",
+   "group": "fleurs",
+   "text": null,
+   "duration_s": 12.72,
+   "events": []
+  },
+  {
+   "id": "fleurs-1420874805665270704",
+   "group": "fleurs",
+   "text": null,
+   "duration_s": 10.2,
+   "events": []
+  },
+  {
+   "id": "fleurs-14259488304418287904",
+   "group": "fleurs",
+   "text": null,
+   "duration_s": 13.92,
+   "events": [
+    {
+     "word": "agatha",
+     "conf": 0.961,
+     "start_s": 10.080679,
+     "end_s": 10.56,
+     "partial_s": 10.688,
+     "text": "agatha [unk]"
+    }
+   ]
+  },
+  {
+   "id": "fleurs-14339056453637387328",
+   "group": "fleurs",
+   "text": null,
+   "duration_s": 17.1,
+   "events": []
+  },
+  {
+   "id": "fleurs-14480226027404278813",
+   "group": "fleurs",
+   "text": null,
+   "duration_s": 8.22,
+   "events": []
+  },
+  {
+   "id": "fleurs-14556252455434671584",
+   "group": "fleurs",
+   "text": null,
+   "duration_s": 7.92,
+   "events": []
+  },
+  {
+   "id": "fleurs-14590633549409809822",
+   "group": "fleurs",
+   "text": null,
+   "duration_s": 11.88,
+   "events": []
+  },
+  {
+   "id": "fleurs-14597665433717979060",
+   "group": "fleurs",
+   "text": null,
+   "duration_s": 6.0,
+   "events": []
+  },
+  {
+   "id": "fleurs-14633487492335271214",
+   "group": "fleurs",
+   "text": null,
+   "duration_s": 11.28,
+   "events": []
+  },
+  {
+   "id": "fleurs-14739387872797424152",
+   "group": "fleurs",
+   "text": null,
+   "duration_s": 7.56,
+   "events": []
+  },
+  {
+   "id": "fleurs-147428886929318913",
+   "group": "fleurs",
+   "text": null,
+   "duration_s": 7.8,
+   "events": []
+  },
+  {
+   "id": "fleurs-1475217643939450546",
+   "group": "fleurs",
+   "text": null,
+   "duration_s": 16.44,
+   "events": []
+  },
+  {
+   "id": "fleurs-14758885103644035140",
+   "group": "fleurs",
+   "text": null,
+   "duration_s": 13.8,
+   "events": []
+  },
+  {
+   "id": "fleurs-14764319339787603376",
+   "group": "fleurs",
+   "text": null,
+   "duration_s": 8.22,
+   "events": []
+  },
+  {
+   "id": "fleurs-14875996789014383022",
+   "group": "fleurs",
+   "text": null,
+   "duration_s": 15.0,
+   "events": []
+  },
+  {
+   "id": "fleurs-14883712346346541347",
+   "group": "fleurs",
+   "text": null,
+   "duration_s": 20.28,
+   "events": []
+  },
+  {
+   "id": "fleurs-14884580071509395321",
+   "group": "fleurs",
+   "text": null,
+   "duration_s": 10.8,
+   "events": []
+  },
+  {
+   "id": "fleurs-14919221057976711030",
+   "group": "fleurs",
+   "text": null,
+   "duration_s": 15.36,
+   "events": []
+  },
+  {
+   "id": "fleurs-14929704880350510643",
+   "group": "fleurs",
+   "text": null,
+   "duration_s": 14.4,
+   "events": [
+    {
+     "word": "agatha",
+     "conf": 0.624,
+     "start_s": 2.22,
+     "end_s": 2.551503,
+     "partial_s": 2.784,
+     "text": "[unk] agatha [unk]"
+    }
+   ]
+  },
+  {
+   "id": "fleurs-1494245890965456814",
+   "group": "fleurs",
+   "text": null,
+   "duration_s": 9.3,
+   "events": []
+  },
+  {
+   "id": "fleurs-14987805420653015977",
+   "group": "fleurs",
+   "text": null,
+   "duration_s": 9.84,
+   "events": []
+  },
+  {
+   "id": "fleurs-1498791763712732829",
+   "group": "fleurs",
+   "text": null,
+   "duration_s": 12.24,
+   "events": []
+  },
+  {
+   "id": "fleurs-15002211930014783278",
+   "group": "fleurs",
+   "text": null,
+   "duration_s": 12.84,
+   "events": []
+  },
+  {
+   "id": "fleurs-15010141412374456010",
+   "group": "fleurs",
+   "text": null,
+   "duration_s": 14.1,
+   "events": [
+    {
+     "word": "agatha",
+     "conf": 0.69,
+     "start_s": 2.16,
+     "end_s": 2.43,
+     "partial_s": 2.784,
+     "text": "agatha [unk]"
+    }
+   ]
+  },
+  {
+   "id": "fleurs-15011597012505036038",
+   "group": "fleurs",
+   "text": null,
+   "duration_s": 10.32,
+   "events": []
+  },
+  {
+   "id": "fleurs-15085756855608962379",
+   "group": "fleurs",
+   "text": null,
+   "duration_s": 15.12,
+   "events": []
+  },
+  {
+   "id": "fleurs-15151544223695431520",
+   "group": "fleurs",
+   "text": null,
+   "duration_s": 12.6,
+   "events": []
+  },
+  {
+   "id": "fleurs-15155928946214425757",
+   "group": "fleurs",
+   "text": null,
+   "duration_s": 7.26,
+   "events": []
+  },
+  {
+   "id": "fleurs-15159169131441776460",
+   "group": "fleurs",
+   "text": null,
+   "duration_s": 10.68,
+   "events": []
+  },
+  {
+   "id": "fleurs-15175175037131408858",
+   "group": "fleurs",
+   "text": null,
+   "duration_s": 20.76,
+   "events": []
+  },
+  {
+   "id": "fleurs-15183125945168561092",
+   "group": "fleurs",
+   "text": null,
+   "duration_s": 9.06,
+   "events": []
+  },
+  {
+   "id": "fleurs-1520995982242236682",
+   "group": "fleurs",
+   "text": null,
+   "duration_s": 12.84,
+   "events": []
+  },
+  {
+   "id": "fleurs-15213275534160973909",
+   "group": "fleurs",
+   "text": null,
+   "duration_s": 11.88,
+   "events": []
+  },
+  {
+   "id": "fleurs-15217782805219868786",
+   "group": "fleurs",
+   "text": null,
+   "duration_s": 23.64,
+   "events": []
+  },
+  {
+   "id": "fleurs-15227559397971960561",
+   "group": "fleurs",
+   "text": null,
+   "duration_s": 9.24,
+   "events": []
+  },
+  {
+   "id": "fleurs-15315258868481983319",
+   "group": "fleurs",
+   "text": null,
+   "duration_s": 11.58,
+   "events": []
+  },
+  {
+   "id": "fleurs-15327269793504509719",
+   "group": "fleurs",
+   "text": null,
+   "duration_s": 5.88,
+   "events": []
+  },
+  {
+   "id": "fleurs-15473012590994936756",
+   "group": "fleurs",
+   "text": null,
+   "duration_s": 13.44,
+   "events": []
+  },
+  {
+   "id": "fleurs-15533844267155812305",
+   "group": "fleurs",
+   "text": null,
+   "duration_s": 10.2,
+   "events": [
+    {
+     "word": "agatha",
+     "conf": 0.983,
+     "start_s": 1.32,
+     "end_s": 1.77,
+     "partial_s": 1.824,
+     "text": "agatha"
+    }
+   ]
+  },
+  {
+   "id": "fleurs-15538425734964286760",
+   "group": "fleurs",
+   "text": null,
+   "duration_s": 10.68,
+   "events": []
+  },
+  {
+   "id": "fleurs-15564524265694946726",
+   "group": "fleurs",
+   "text": null,
+   "duration_s": 13.8,
+   "events": []
+  },
+  {
+   "id": "fleurs-15588325518103300253",
+   "group": "fleurs",
+   "text": null,
+   "duration_s": 7.56,
+   "events": []
+  },
+  {
+   "id": "fleurs-15624424762221470327",
+   "group": "fleurs",
+   "text": null,
+   "duration_s": 14.88,
+   "events": []
+  },
+  {
+   "id": "fleurs-15692038143959016874",
+   "group": "fleurs",
+   "text": null,
+   "duration_s": 5.22,
+   "events": []
+  },
+  {
+   "id": "fleurs-15728478101006272123",
+   "group": "fleurs",
+   "text": null,
+   "duration_s": 8.82,
+   "events": []
+  },
+  {
+   "id": "fleurs-15770027802867777423",
+   "group": "fleurs",
+   "text": null,
+   "duration_s": 21.0,
+   "events": []
+  },
+  {
+   "id": "fleurs-15838979793707947248",
+   "group": "fleurs",
+   "text": null,
+   "duration_s": 11.28,
+   "events": []
+  },
+  {
+   "id": "fleurs-15857231501896913312",
+   "group": "fleurs",
+   "text": null,
+   "duration_s": 19.98,
+   "events": []
+  },
+  {
+   "id": "fleurs-15992381035557116281",
+   "group": "fleurs",
+   "text": null,
+   "duration_s": 12.9,
+   "events": []
+  },
+  {
+   "id": "fleurs-16034299768742232890",
+   "group": "fleurs",
+   "text": null,
+   "duration_s": 11.22,
+   "events": []
+  },
+  {
+   "id": "fleurs-16036082430209468584",
+   "group": "fleurs",
+   "text": null,
+   "duration_s": 13.86,
+   "events": []
+  },
+  {
+   "id": "fleurs-16074645205950959802",
+   "group": "fleurs",
+   "text": null,
+   "duration_s": 12.18,
+   "events": []
+  },
+  {
+   "id": "fleurs-16103994016128793204",
+   "group": "fleurs",
+   "text": null,
+   "duration_s": 21.24,
+   "events": []
+  },
+  {
+   "id": "fleurs-16116830234231757765",
+   "group": "fleurs",
+   "text": null,
+   "duration_s": 6.72,
+   "events": []
+  },
+  {
+   "id": "fleurs-1615828601922076865",
+   "group": "fleurs",
+   "text": null,
+   "duration_s": 6.12,
+   "events": []
+  },
+  {
+   "id": "fleurs-16214336675615045447",
+   "group": "fleurs",
+   "text": null,
+   "duration_s": 14.16,
+   "events": []
+  },
+  {
+   "id": "fleurs-16251172338913859645",
+   "group": "fleurs",
+   "text": null,
+   "duration_s": 16.08,
+   "events": []
+  },
+  {
+   "id": "fleurs-16289878480453063156",
+   "group": "fleurs",
+   "text": null,
+   "duration_s": 10.74,
+   "events": []
+  },
+  {
+   "id": "fleurs-1629340988999780235",
+   "group": "fleurs",
+   "text": null,
+   "duration_s": 9.0,
+   "events": []
+  },
+  {
+   "id": "fleurs-16337033095986937516",
+   "group": "fleurs",
+   "text": null,
+   "duration_s": 9.24,
+   "events": []
+  },
+  {
+   "id": "fleurs-16378273986139646510",
+   "group": "fleurs",
+   "text": null,
+   "duration_s": 14.82,
+   "events": []
+  },
+  {
+   "id": "fleurs-16378446718676830579",
+   "group": "fleurs",
+   "text": null,
+   "duration_s": 13.14,
+   "events": []
+  },
+  {
+   "id": "fleurs-16450953023129583113",
+   "group": "fleurs",
+   "text": null,
+   "duration_s": 8.7,
+   "events": []
+  },
+  {
+   "id": "fleurs-1645523101934143761",
+   "group": "fleurs",
+   "text": null,
+   "duration_s": 16.14,
+   "events": []
+  },
+  {
+   "id": "fleurs-16507449682236474840",
+   "group": "fleurs",
+   "text": null,
+   "duration_s": 8.76,
+   "events": []
+  },
+  {
+   "id": "fleurs-16514420506985976066",
+   "group": "fleurs",
+   "text": null,
+   "duration_s": 8.46,
+   "events": []
+  },
+  {
+   "id": "fleurs-16531068642759102861",
+   "group": "fleurs",
+   "text": null,
+   "duration_s": 7.26,
+   "events": []
+  },
+  {
+   "id": "fleurs-16541454032691212793",
+   "group": "fleurs",
+   "text": null,
+   "duration_s": 9.48,
+   "events": []
+  },
+  {
+   "id": "fleurs-16584898102203428223",
+   "group": "fleurs",
+   "text": null,
+   "duration_s": 8.22,
+   "events": []
+  },
+  {
+   "id": "fleurs-16622740230380586223",
+   "group": "fleurs",
+   "text": null,
+   "duration_s": 6.24,
+   "events": []
+  },
+  {
+   "id": "fleurs-16655615501947115357",
+   "group": "fleurs",
+   "text": null,
+   "duration_s": 9.18,
+   "events": [
+    {
+     "word": "agatha",
+     "conf": 0.802,
+     "start_s": 6.57,
+     "end_s": 7.05,
+     "partial_s": 7.328,
+     "text": "[unk] agatha"
+    }
+   ]
+  },
+  {
+   "id": "fleurs-16676630718578900373",
+   "group": "fleurs",
+   "text": null,
+   "duration_s": 10.68,
+   "events": []
+  },
+  {
+   "id": "fleurs-1671661522680467362",
+   "group": "fleurs",
+   "text": null,
+   "duration_s": 8.76,
+   "events": []
+  },
+  {
+   "id": "fleurs-16716922951912190447",
+   "group": "fleurs",
+   "text": null,
+   "duration_s": 15.3,
+   "events": []
+  },
+  {
+   "id": "fleurs-16775975320998459020",
+   "group": "fleurs",
+   "text": null,
+   "duration_s": 7.32,
+   "events": []
+  },
+  {
+   "id": "fleurs-16846017153743891070",
+   "group": "fleurs",
+   "text": null,
+   "duration_s": 7.68,
+   "events": []
+  },
+  {
+   "id": "fleurs-1693387478589803370",
+   "group": "fleurs",
+   "text": null,
+   "duration_s": 14.16,
+   "events": []
+  },
+  {
+   "id": "fleurs-16942443483515110206",
+   "group": "fleurs",
+   "text": null,
+   "duration_s": 7.44,
+   "events": []
+  },
+  {
+   "id": "fleurs-16969810939976829407",
+   "group": "fleurs",
+   "text": null,
+   "duration_s": 15.36,
+   "events": [
+    {
+     "word": "agatha",
+     "conf": 0.738,
+     "start_s": 3.062222,
+     "end_s": 3.45,
+     "partial_s": 3.968,
+     "text": "agatha"
+    }
+   ]
+  },
+  {
+   "id": "fleurs-17053593731163620565",
+   "group": "fleurs",
+   "text": null,
+   "duration_s": 14.22,
+   "events": []
+  },
+  {
+   "id": "fleurs-17058317420411010905",
+   "group": "fleurs",
+   "text": null,
+   "duration_s": 8.64,
+   "events": []
+  },
+  {
+   "id": "fleurs-17107233173198883959",
+   "group": "fleurs",
+   "text": null,
+   "duration_s": 5.1,
+   "events": []
+  },
+  {
+   "id": "fleurs-171095595972867702",
+   "group": "fleurs",
+   "text": null,
+   "duration_s": 9.84,
+   "events": []
+  },
+  {
+   "id": "fleurs-17143345966173624776",
+   "group": "fleurs",
+   "text": null,
+   "duration_s": 11.16,
+   "events": []
+  },
+  {
+   "id": "fleurs-17157247231053658",
+   "group": "fleurs",
+   "text": null,
+   "duration_s": 11.28,
+   "events": [
+    {
+     "word": "agatha",
+     "conf": 0.809,
+     "start_s": 4.77,
+     "end_s": 5.4,
+     "partial_s": 5.408,
+     "text": "[unk] [unk] agatha"
+    }
+   ]
+  },
+  {
+   "id": "fleurs-17252577355808169072",
+   "group": "fleurs",
+   "text": null,
+   "duration_s": 10.08,
+   "events": []
+  },
+  {
+   "id": "fleurs-17291334028268513722",
+   "group": "fleurs",
+   "text": null,
+   "duration_s": 10.32,
+   "events": []
+  },
+  {
+   "id": "fleurs-17326877719338394023",
+   "group": "fleurs",
+   "text": null,
+   "duration_s": 11.52,
+   "events": []
+  },
+  {
+   "id": "fleurs-17332251830594916699",
+   "group": "fleurs",
+   "text": null,
+   "duration_s": 11.16,
+   "events": []
+  },
+  {
+   "id": "fleurs-17372510918862385614",
+   "group": "fleurs",
+   "text": null,
+   "duration_s": 9.24,
+   "events": []
+  },
+  {
+   "id": "fleurs-17470316993677349979",
+   "group": "fleurs",
+   "text": null,
+   "duration_s": 15.12,
+   "events": []
+  },
+  {
+   "id": "fleurs-17502504118461155308",
+   "group": "fleurs",
+   "text": null,
+   "duration_s": 8.04,
+   "events": []
+  },
+  {
+   "id": "fleurs-17570969489687981289",
+   "group": "fleurs",
+   "text": null,
+   "duration_s": 13.98,
+   "events": []
+  },
+  {
+   "id": "fleurs-1765332823588030476",
+   "group": "fleurs",
+   "text": null,
+   "duration_s": 8.28,
+   "events": []
+  },
+  {
+   "id": "fleurs-17703134105101381498",
+   "group": "fleurs",
+   "text": null,
+   "duration_s": 6.48,
+   "events": []
+  },
+  {
+   "id": "fleurs-17715481015254381646",
+   "group": "fleurs",
+   "text": null,
+   "duration_s": 6.48,
+   "events": []
+  },
+  {
+   "id": "fleurs-17725105978131809998",
+   "group": "fleurs",
+   "text": null,
+   "duration_s": 12.66,
+   "events": []
+  },
+  {
+   "id": "fleurs-1780175681102751969",
+   "group": "fleurs",
+   "text": null,
+   "duration_s": 14.4,
+   "events": [
+    {
+     "word": "agatha",
+     "conf": 0.628,
+     "start_s": 2.01,
+     "end_s": 2.255159,
+     "partial_s": 1.568,
+     "text": "agatha [unk]"
+    }
+   ]
+  },
+  {
+   "id": "fleurs-1780182668307455829",
+   "group": "fleurs",
+   "text": null,
+   "duration_s": 25.74,
+   "events": []
+  },
+  {
+   "id": "fleurs-17823749746823385946",
+   "group": "fleurs",
+   "text": null,
+   "duration_s": 21.66,
+   "events": [
+    {
+     "word": "agatha",
+     "conf": 1.0,
+     "start_s": 1.17,
+     "end_s": 1.53,
+     "partial_s": 1.824,
+     "text": "agatha"
+    }
+   ]
+  },
+  {
+   "id": "fleurs-17863215876241504534",
+   "group": "fleurs",
+   "text": null,
+   "duration_s": 13.8,
+   "events": []
+  },
+  {
+   "id": "fleurs-17925419814901746578",
+   "group": "fleurs",
+   "text": null,
+   "duration_s": 10.56,
+   "events": []
+  },
+  {
+   "id": "fleurs-17966070482439647916",
+   "group": "fleurs",
+   "text": null,
+   "duration_s": 17.4,
+   "events": []
+  },
+  {
+   "id": "fleurs-18059640891474996759",
+   "group": "fleurs",
+   "text": null,
+   "duration_s": 14.28,
+   "events": []
+  },
+  {
+   "id": "fleurs-18080302175267009086",
+   "group": "fleurs",
+   "text": null,
+   "duration_s": 13.02,
+   "events": [
+    {
+     "word": "agatha",
+     "conf": 0.792,
+     "start_s": 2.399179,
+     "end_s": 2.76,
+     "partial_s": 2.528,
+     "text": "[unk] agatha"
+    }
+   ]
+  },
+  {
+   "id": "fleurs-18101499474742782835",
+   "group": "fleurs",
+   "text": null,
+   "duration_s": 9.18,
+   "events": []
+  },
+  {
+   "id": "fleurs-18114319383402389128",
+   "group": "fleurs",
+   "text": null,
+   "duration_s": 7.62,
+   "events": []
+  },
+  {
+   "id": "fleurs-18138514788264254070",
+   "group": "fleurs",
+   "text": null,
+   "duration_s": 11.28,
+   "events": []
+  },
+  {
+   "id": "fleurs-18148875611708606143",
+   "group": "fleurs",
+   "text": null,
+   "duration_s": 7.08,
+   "events": []
+  },
+  {
+   "id": "fleurs-1815986301330810552",
+   "group": "fleurs",
+   "text": null,
+   "duration_s": 8.76,
+   "events": []
+  },
+  {
+   "id": "fleurs-18167435619939899320",
+   "group": "fleurs",
+   "text": null,
+   "duration_s": 19.14,
+   "events": []
+  },
+  {
+   "id": "fleurs-18213066347844614497",
+   "group": "fleurs",
+   "text": null,
+   "duration_s": 14.04,
+   "events": []
+  },
+  {
+   "id": "fleurs-18260906891494697027",
+   "group": "fleurs",
+   "text": null,
+   "duration_s": 14.4,
+   "events": []
+  },
+  {
+   "id": "fleurs-18313679133686181069",
+   "group": "fleurs",
+   "text": null,
+   "duration_s": 9.36,
+   "events": []
+  },
+  {
+   "id": "fleurs-1835954951562502804",
+   "group": "fleurs",
+   "text": null,
+   "duration_s": 10.5,
+   "events": []
+  },
+  {
+   "id": "fleurs-18402814664983238097",
+   "group": "fleurs",
+   "text": null,
+   "duration_s": 14.76,
+   "events": []
+  },
+  {
+   "id": "fleurs-1851139986974700599",
+   "group": "fleurs",
+   "text": null,
+   "duration_s": 8.76,
+   "events": []
+  },
+  {
+   "id": "fleurs-1996386217637072184",
+   "group": "fleurs",
+   "text": null,
+   "duration_s": 8.04,
+   "events": []
+  },
+  {
+   "id": "fleurs-2072705913343665893",
+   "group": "fleurs",
+   "text": null,
+   "duration_s": 11.16,
+   "events": []
+  },
+  {
+   "id": "fleurs-2204694701353268629",
+   "group": "fleurs",
+   "text": null,
+   "duration_s": 13.56,
+   "events": []
+  },
+  {
+   "id": "fleurs-224127154845543547",
+   "group": "fleurs",
+   "text": null,
+   "duration_s": 12.54,
+   "events": [
+    {
+     "word": "agatha",
+     "conf": 0.915,
+     "start_s": 1.74,
+     "end_s": 2.04,
+     "partial_s": 1.344,
+     "text": "[unk] agatha [unk]"
+    }
+   ]
+  },
+  {
+   "id": "fleurs-2259930233268437052",
+   "group": "fleurs",
+   "text": null,
+   "duration_s": 9.3,
+   "events": []
+  },
+  {
+   "id": "fleurs-2266958527866833162",
+   "group": "fleurs",
+   "text": null,
+   "duration_s": 11.82,
+   "events": []
+  },
+  {
+   "id": "fleurs-2354285574998781073",
+   "group": "fleurs",
+   "text": null,
+   "duration_s": 15.36,
+   "events": []
+  },
+  {
+   "id": "fleurs-2459153027829054874",
+   "group": "fleurs",
+   "text": null,
+   "duration_s": 11.76,
+   "events": []
+  },
+  {
+   "id": "fleurs-2472676724964272970",
+   "group": "fleurs",
+   "text": null,
+   "duration_s": 7.92,
+   "events": []
+  },
+  {
+   "id": "fleurs-2481921880208619171",
+   "group": "fleurs",
+   "text": null,
+   "duration_s": 10.26,
+   "events": []
+  },
+  {
+   "id": "fleurs-2490012484117565776",
+   "group": "fleurs",
+   "text": null,
+   "duration_s": 6.06,
+   "events": []
+  },
+  {
+   "id": "fleurs-2772943818481267212",
+   "group": "fleurs",
+   "text": null,
+   "duration_s": 9.06,
+   "events": []
+  },
+  {
+   "id": "fleurs-2871015398720882976",
+   "group": "fleurs",
+   "text": null,
+   "duration_s": 10.14,
+   "events": []
+  },
+  {
+   "id": "fleurs-2916528444542522707",
+   "group": "fleurs",
+   "text": null,
+   "duration_s": 10.74,
+   "events": []
+  },
+  {
+   "id": "fleurs-3009929680353589233",
+   "group": "fleurs",
+   "text": null,
+   "duration_s": 12.42,
+   "events": []
+  },
+  {
+   "id": "fleurs-3069194344392039495",
+   "group": "fleurs",
+   "text": null,
+   "duration_s": 9.9,
+   "events": []
+  },
+  {
+   "id": "fleurs-3156370309138992027",
+   "group": "fleurs",
+   "text": null,
+   "duration_s": 15.3,
+   "events": []
+  },
+  {
+   "id": "fleurs-3198007100466734105",
+   "group": "fleurs",
+   "text": null,
+   "duration_s": 15.9,
+   "events": []
+  },
+  {
+   "id": "fleurs-3208382705573395150",
+   "group": "fleurs",
+   "text": null,
+   "duration_s": 7.68,
+   "events": []
+  },
+  {
+   "id": "fleurs-3230890028521006914",
+   "group": "fleurs",
+   "text": null,
+   "duration_s": 10.62,
+   "events": []
+  },
+  {
+   "id": "fleurs-3303712440330086924",
+   "group": "fleurs",
+   "text": null,
+   "duration_s": 9.48,
+   "events": [
+    {
+     "word": "agatha",
+     "conf": 0.455,
+     "start_s": 2.91,
+     "end_s": 3.3,
+     "partial_s": 3.744,
+     "text": "agatha"
+    }
+   ]
+  },
+  {
+   "id": "fleurs-3346963065578588660",
+   "group": "fleurs",
+   "text": null,
+   "duration_s": 12.84,
+   "events": []
+  },
+  {
+   "id": "fleurs-3388358451916631012",
+   "group": "fleurs",
+   "text": null,
+   "duration_s": 9.12,
+   "events": []
+  },
+  {
+   "id": "fleurs-3458994494227742326",
+   "group": "fleurs",
+   "text": null,
+   "duration_s": 9.0,
+   "events": []
+  },
+  {
+   "id": "fleurs-3489757294702285589",
+   "group": "fleurs",
+   "text": null,
+   "duration_s": 17.52,
+   "events": []
+  },
+  {
+   "id": "fleurs-3500126156774491760",
+   "group": "fleurs",
+   "text": null,
+   "duration_s": 12.6,
+   "events": []
+  },
+  {
+   "id": "fleurs-3588952532184379049",
+   "group": "fleurs",
+   "text": null,
+   "duration_s": 17.52,
+   "events": []
+  },
+  {
+   "id": "fleurs-361255710189481391",
+   "group": "fleurs",
+   "text": null,
+   "duration_s": 13.26,
+   "events": [
+    {
+     "word": "agatha",
+     "conf": 0.363,
+     "start_s": 11.37,
+     "end_s": 11.7,
+     "partial_s": 11.904,
+     "text": "agatha"
+    }
+   ]
+  },
+  {
+   "id": "fleurs-3632657067668460474",
+   "group": "fleurs",
+   "text": null,
+   "duration_s": 7.26,
+   "events": []
+  },
+  {
+   "id": "fleurs-3636981430438760907",
+   "group": "fleurs",
+   "text": null,
+   "duration_s": 15.72,
+   "events": []
+  },
+  {
+   "id": "fleurs-3657142178140369021",
+   "group": "fleurs",
+   "text": null,
+   "duration_s": 10.5,
+   "events": [
+    {
+     "word": "agatha",
+     "conf": 0.508,
+     "start_s": 4.32,
+     "end_s": 4.59,
+     "partial_s": 1.088,
+     "text": "[unk] [unk] [unk] agatha"
+    }
+   ]
+  },
+  {
+   "id": "fleurs-3663138061544035381",
+   "group": "fleurs",
+   "text": null,
+   "duration_s": 14.34,
+   "events": []
+  },
+  {
+   "id": "fleurs-3666760449928281770",
+   "group": "fleurs",
+   "text": null,
+   "duration_s": 11.94,
+   "events": []
+  },
+  {
+   "id": "fleurs-3698363675734552388",
+   "group": "fleurs",
+   "text": null,
+   "duration_s": 11.94,
+   "events": [
+    {
+     "word": "agatha",
+     "conf": 0.721,
+     "start_s": 3.18,
+     "end_s": 3.45,
+     "partial_s": 2.528,
+     "text": "[unk] agatha"
+    }
+   ]
+  },
+  {
+   "id": "fleurs-3727042440199411219",
+   "group": "fleurs",
+   "text": null,
+   "duration_s": 10.8,
+   "events": []
+  },
+  {
+   "id": "fleurs-3818815652285067180",
+   "group": "fleurs",
+   "text": null,
+   "duration_s": 12.3,
+   "events": [
+    {
+     "word": "agatha",
+     "conf": 0.648,
+     "start_s": 8.01,
+     "end_s": 8.37,
+     "partial_s": 8.768,
+     "text": "agatha"
+    }
+   ]
+  },
+  {
+   "id": "fleurs-3882676591443843152",
+   "group": "fleurs",
+   "text": null,
+   "duration_s": 15.12,
+   "events": []
+  },
+  {
+   "id": "fleurs-3936191607268657086",
+   "group": "fleurs",
+   "text": null,
+   "duration_s": 14.4,
+   "events": []
+  },
+  {
+   "id": "fleurs-3940504976178597837",
+   "group": "fleurs",
+   "text": null,
+   "duration_s": 15.42,
+   "events": []
+  },
+  {
+   "id": "fleurs-3963377673522964852",
+   "group": "fleurs",
+   "text": null,
+   "duration_s": 11.64,
+   "events": []
+  },
+  {
+   "id": "fleurs-4054705248447991548",
+   "group": "fleurs",
+   "text": null,
+   "duration_s": 6.96,
+   "events": []
+  },
+  {
+   "id": "fleurs-4150459610829707564",
+   "group": "fleurs",
+   "text": null,
+   "duration_s": 12.3,
+   "events": []
+  },
+  {
+   "id": "fleurs-4258342358311034186",
+   "group": "fleurs",
+   "text": null,
+   "duration_s": 8.64,
+   "events": []
+  },
+  {
+   "id": "fleurs-4310583430883355765",
+   "group": "fleurs",
+   "text": null,
+   "duration_s": 14.04,
+   "events": []
+  },
+  {
+   "id": "fleurs-4425015061907449675",
+   "group": "fleurs",
+   "text": null,
+   "duration_s": 7.38,
+   "events": []
+  },
+  {
+   "id": "fleurs-4477853205646198741",
+   "group": "fleurs",
+   "text": null,
+   "duration_s": 9.48,
+   "events": []
+  },
+  {
+   "id": "fleurs-4489404331031553786",
+   "group": "fleurs",
+   "text": null,
+   "duration_s": 8.4,
+   "events": []
+  },
+  {
+   "id": "fleurs-4603864562494315480",
+   "group": "fleurs",
+   "text": null,
+   "duration_s": 10.98,
+   "events": []
+  },
+  {
+   "id": "fleurs-4641652054983643386",
+   "group": "fleurs",
+   "text": null,
+   "duration_s": 15.0,
+   "events": []
+  },
+  {
+   "id": "fleurs-4738271291436980165",
+   "group": "fleurs",
+   "text": null,
+   "duration_s": 19.26,
+   "events": [
+    {
+     "word": "agatha",
+     "conf": 0.711,
+     "start_s": 16.29,
+     "end_s": 16.68,
+     "partial_s": 17.184,
+     "text": "agatha"
+    }
+   ]
+  },
+  {
+   "id": "fleurs-4824294892355421530",
+   "group": "fleurs",
+   "text": null,
+   "duration_s": 25.98,
+   "events": []
+  },
+  {
+   "id": "fleurs-492939011400287085",
+   "group": "fleurs",
+   "text": null,
+   "duration_s": 16.56,
+   "events": []
+  },
+  {
+   "id": "fleurs-5077662190809691543",
+   "group": "fleurs",
+   "text": null,
+   "duration_s": 5.64,
+   "events": []
+  },
+  {
+   "id": "fleurs-5103851611728544118",
+   "group": "fleurs",
+   "text": null,
+   "duration_s": 13.08,
+   "events": []
+  },
+  {
+   "id": "fleurs-5187768305781861957",
+   "group": "fleurs",
+   "text": null,
+   "duration_s": 6.78,
+   "events": []
+  },
+  {
+   "id": "fleurs-5203800839162025155",
+   "group": "fleurs",
+   "text": null,
+   "duration_s": 9.12,
+   "events": []
+  },
+  {
+   "id": "fleurs-5204772937759115980",
+   "group": "fleurs",
+   "text": null,
+   "duration_s": 14.64,
+   "events": []
+  },
+  {
+   "id": "fleurs-5227886693918355135",
+   "group": "fleurs",
+   "text": null,
+   "duration_s": 13.02,
+   "events": []
+  },
+  {
+   "id": "fleurs-5315126586563273573",
+   "group": "fleurs",
+   "text": null,
+   "duration_s": 11.82,
+   "events": []
+  },
+  {
+   "id": "fleurs-5344815051966714840",
+   "group": "fleurs",
+   "text": null,
+   "duration_s": 10.32,
+   "events": []
+  },
+  {
+   "id": "fleurs-5382999559523738956",
+   "group": "fleurs",
+   "text": null,
+   "duration_s": 17.76,
+   "events": []
+  },
+  {
+   "id": "fleurs-5484277854107967851",
+   "group": "fleurs",
+   "text": null,
+   "duration_s": 11.64,
+   "events": []
+  },
+  {
+   "id": "fleurs-5546372198253077978",
+   "group": "fleurs",
+   "text": null,
+   "duration_s": 18.42,
+   "events": []
+  },
+  {
+   "id": "fleurs-5581036766732116626",
+   "group": "fleurs",
+   "text": null,
+   "duration_s": 12.48,
+   "events": []
+  },
+  {
+   "id": "fleurs-558752047642912276",
+   "group": "fleurs",
+   "text": null,
+   "duration_s": 10.98,
+   "events": []
+  },
+  {
+   "id": "fleurs-5619138959227786023",
+   "group": "fleurs",
+   "text": null,
+   "duration_s": 12.96,
+   "events": [
+    {
+     "word": "agatha",
+     "conf": 0.988,
+     "start_s": 9.84,
+     "end_s": 10.29,
+     "partial_s": 10.464,
+     "text": "[unk] [unk] [unk] [unk] agatha [unk]"
+    }
+   ]
+  },
+  {
+   "id": "fleurs-5649273802585698774",
+   "group": "fleurs",
+   "text": null,
+   "duration_s": 10.8,
+   "events": []
+  },
+  {
+   "id": "fleurs-5657247343531383909",
+   "group": "fleurs",
+   "text": null,
+   "duration_s": 8.4,
+   "events": []
+  },
+  {
+   "id": "fleurs-566972918211021788",
+   "group": "fleurs",
+   "text": null,
+   "duration_s": 8.52,
+   "events": []
+  },
+  {
+   "id": "fleurs-5670042647841658807",
+   "group": "fleurs",
+   "text": null,
+   "duration_s": 9.66,
+   "events": []
+  },
+  {
+   "id": "fleurs-5688826217879473856",
+   "group": "fleurs",
+   "text": null,
+   "duration_s": 13.32,
+   "events": [
+    {
+     "word": "agatha",
+     "conf": 0.998,
+     "start_s": 1.5,
+     "end_s": 2.07,
+     "partial_s": 1.824,
+     "text": "agatha"
+    },
+    {
+     "word": "agatha",
+     "conf": 0.996,
+     "start_s": 9.87,
+     "end_s": 10.35,
+     "partial_s": 10.688,
+     "text": "[unk] agatha"
+    }
+   ]
+  },
+  {
+   "id": "fleurs-571132148497651365",
+   "group": "fleurs",
+   "text": null,
+   "duration_s": 12.3,
+   "events": []
+  },
+  {
+   "id": "fleurs-5741675051675293793",
+   "group": "fleurs",
+   "text": null,
+   "duration_s": 17.94,
+   "events": []
+  },
+  {
+   "id": "fleurs-5776960217522515025",
+   "group": "fleurs",
+   "text": null,
+   "duration_s": 10.86,
+   "events": []
+  },
+  {
+   "id": "fleurs-5900320804548982509",
+   "group": "fleurs",
+   "text": null,
+   "duration_s": 13.98,
+   "events": []
+  },
+  {
+   "id": "fleurs-5962535208989167907",
+   "group": "fleurs",
+   "text": null,
+   "duration_s": 5.22,
+   "events": []
+  },
+  {
+   "id": "fleurs-598042320649786128",
+   "group": "fleurs",
+   "text": null,
+   "duration_s": 13.14,
+   "events": []
+  },
+  {
+   "id": "fleurs-611377884192820639",
+   "group": "fleurs",
+   "text": null,
+   "duration_s": 12.48,
+   "events": []
+  },
+  {
+   "id": "fleurs-6217705920816115071",
+   "group": "fleurs",
+   "text": null,
+   "duration_s": 13.2,
+   "events": []
+  },
+  {
+   "id": "fleurs-6240356422265195312",
+   "group": "fleurs",
+   "text": null,
+   "duration_s": 12.78,
+   "events": []
+  },
+  {
+   "id": "fleurs-6314416073878600155",
+   "group": "fleurs",
+   "text": null,
+   "duration_s": 16.8,
+   "events": []
+  },
+  {
+   "id": "fleurs-6367795772731068730",
+   "group": "fleurs",
+   "text": null,
+   "duration_s": 14.16,
+   "events": []
+  },
+  {
+   "id": "fleurs-6385612862874419213",
+   "group": "fleurs",
+   "text": null,
+   "duration_s": 26.88,
+   "events": []
+  },
+  {
+   "id": "fleurs-651449505495567705",
+   "group": "fleurs",
+   "text": null,
+   "duration_s": 9.54,
+   "events": []
+  },
+  {
+   "id": "fleurs-656001987193252257",
+   "group": "fleurs",
+   "text": null,
+   "duration_s": 15.54,
+   "events": []
+  },
+  {
+   "id": "fleurs-6586403891845290601",
+   "group": "fleurs",
+   "text": null,
+   "duration_s": 10.44,
+   "events": []
+  },
+  {
+   "id": "fleurs-6587031614402483799",
+   "group": "fleurs",
+   "text": null,
+   "duration_s": 21.84,
+   "events": []
+  },
+  {
+   "id": "fleurs-661581677088379650",
+   "group": "fleurs",
+   "text": null,
+   "duration_s": 12.12,
+   "events": []
+  },
+  {
+   "id": "fleurs-6660712214250973272",
+   "group": "fleurs",
+   "text": null,
+   "duration_s": 11.58,
+   "events": []
+  },
+  {
+   "id": "fleurs-6673962221102391317",
+   "group": "fleurs",
+   "text": null,
+   "duration_s": 10.5,
+   "events": []
+  },
+  {
+   "id": "fleurs-6781778095180602356",
+   "group": "fleurs",
+   "text": null,
+   "duration_s": 8.28,
+   "events": []
+  },
+  {
+   "id": "fleurs-6787762050387056624",
+   "group": "fleurs",
+   "text": null,
+   "duration_s": 7.2,
+   "events": [
+    {
+     "word": "agatha",
+     "conf": 0.829,
+     "start_s": 0.99,
+     "end_s": 1.44,
+     "partial_s": 1.568,
+     "text": "agatha [unk]"
+    }
+   ]
+  },
+  {
+   "id": "fleurs-6796105948661068844",
+   "group": "fleurs",
+   "text": null,
+   "duration_s": 10.5,
+   "events": []
+  },
+  {
+   "id": "fleurs-6845176413831639571",
+   "group": "fleurs",
+   "text": null,
+   "duration_s": 25.92,
+   "events": []
+  },
+  {
+   "id": "fleurs-6851050761978063249",
+   "group": "fleurs",
+   "text": null,
+   "duration_s": 11.76,
+   "events": []
+  },
+  {
+   "id": "fleurs-6901042758825370800",
+   "group": "fleurs",
+   "text": null,
+   "duration_s": 10.92,
+   "events": []
+  },
+  {
+   "id": "fleurs-6920952071246298233",
+   "group": "fleurs",
+   "text": null,
+   "duration_s": 8.28,
+   "events": []
+  },
+  {
+   "id": "fleurs-6941000598363965033",
+   "group": "fleurs",
+   "text": null,
+   "duration_s": 6.96,
+   "events": []
+  },
+  {
+   "id": "fleurs-7024878965372683939",
+   "group": "fleurs",
+   "text": null,
+   "duration_s": 22.08,
+   "events": []
+  },
+  {
+   "id": "fleurs-718683841511908498",
+   "group": "fleurs",
+   "text": null,
+   "duration_s": 13.08,
+   "events": []
+  },
+  {
+   "id": "fleurs-7224870849785318104",
+   "group": "fleurs",
+   "text": null,
+   "duration_s": 23.28,
+   "events": [
+    {
+     "word": "agatha",
+     "conf": 1.0,
+     "start_s": 0.72,
+     "end_s": 1.05,
+     "partial_s": 1.344,
+     "text": "agatha"
+    }
+   ]
+  },
+  {
+   "id": "fleurs-7240488274273884791",
+   "group": "fleurs",
+   "text": null,
+   "duration_s": 13.44,
+   "events": [
+    {
+     "word": "agatha",
+     "conf": 0.824,
+     "start_s": 1.619814,
+     "end_s": 1.83145,
+     "partial_s": 2.048,
+     "text": "agatha"
+    },
+    {
+     "word": "agatha",
+     "conf": 0.998,
+     "start_s": 9.12,
+     "end_s": 9.57,
+     "partial_s": 9.984,
+     "text": "[unk] agatha"
+    }
+   ]
+  },
+  {
+   "id": "fleurs-726772315446984146",
+   "group": "fleurs",
+   "text": null,
+   "duration_s": 6.36,
+   "events": []
+  },
+  {
+   "id": "fleurs-7270075089950892790",
+   "group": "fleurs",
+   "text": null,
+   "duration_s": 9.3,
+   "events": []
+  },
+  {
+   "id": "fleurs-7306106858879478280",
+   "group": "fleurs",
+   "text": null,
+   "duration_s": 7.08,
+   "events": []
+  },
+  {
+   "id": "fleurs-732710362982423298",
+   "group": "fleurs",
+   "text": null,
+   "duration_s": 8.28,
+   "events": []
+  },
+  {
+   "id": "fleurs-7377029495898915434",
+   "group": "fleurs",
+   "text": null,
+   "duration_s": 14.16,
+   "events": []
+  },
+  {
+   "id": "fleurs-7401519748662699811",
+   "group": "fleurs",
+   "text": null,
+   "duration_s": 17.82,
+   "events": []
+  },
+  {
+   "id": "fleurs-7432076560110561939",
+   "group": "fleurs",
+   "text": null,
+   "duration_s": 5.82,
+   "events": []
+  },
+  {
+   "id": "fleurs-7450437965739451777",
+   "group": "fleurs",
+   "text": null,
+   "duration_s": 12.9,
+   "events": []
+  },
+  {
+   "id": "fleurs-7503316393114322388",
+   "group": "fleurs",
+   "text": null,
+   "duration_s": 7.38,
+   "events": []
+  },
+  {
+   "id": "fleurs-7528725649411082568",
+   "group": "fleurs",
+   "text": null,
+   "duration_s": 7.56,
+   "events": []
+  },
+  {
+   "id": "fleurs-7555258103634205331",
+   "group": "fleurs",
+   "text": null,
+   "duration_s": 8.88,
+   "events": []
+  },
+  {
+   "id": "fleurs-765638699227784158",
+   "group": "fleurs",
+   "text": null,
+   "duration_s": 13.02,
+   "events": []
+  },
+  {
+   "id": "fleurs-7779954393151011503",
+   "group": "fleurs",
+   "text": null,
+   "duration_s": 16.44,
+   "events": []
+  },
+  {
+   "id": "fleurs-7846276340528521387",
+   "group": "fleurs",
+   "text": null,
+   "duration_s": 13.86,
+   "events": []
+  },
+  {
+   "id": "fleurs-785230864927518582",
+   "group": "fleurs",
+   "text": null,
+   "duration_s": 21.24,
+   "events": []
+  },
+  {
+   "id": "fleurs-7853770871679655872",
+   "group": "fleurs",
+   "text": null,
+   "duration_s": 7.08,
+   "events": []
+  },
+  {
+   "id": "fleurs-7945638663906171010",
+   "group": "fleurs",
+   "text": null,
+   "duration_s": 14.4,
+   "events": []
+  },
+  {
+   "id": "fleurs-7994449619953167897",
+   "group": "fleurs",
+   "text": null,
+   "duration_s": 8.82,
+   "events": []
+  },
+  {
+   "id": "fleurs-8138757114198992748",
+   "group": "fleurs",
+   "text": null,
+   "duration_s": 13.44,
+   "events": []
+  },
+  {
+   "id": "fleurs-8151192070477108230",
+   "group": "fleurs",
+   "text": null,
+   "duration_s": 16.68,
+   "events": []
+  },
+  {
+   "id": "fleurs-8229558206033876518",
+   "group": "fleurs",
+   "text": null,
+   "duration_s": 13.14,
+   "events": []
+  },
+  {
+   "id": "fleurs-8282479571083413596",
+   "group": "fleurs",
+   "text": null,
+   "duration_s": 10.92,
+   "events": []
+  },
+  {
+   "id": "fleurs-8325681291610132223",
+   "group": "fleurs",
+   "text": null,
+   "duration_s": 13.32,
+   "events": []
+  },
+  {
+   "id": "fleurs-8363463989661215730",
+   "group": "fleurs",
+   "text": null,
+   "duration_s": 15.72,
+   "events": []
+  },
+  {
+   "id": "fleurs-8367636239985161715",
+   "group": "fleurs",
+   "text": null,
+   "duration_s": 12.24,
+   "events": []
+  },
+  {
+   "id": "fleurs-8395171489938785844",
+   "group": "fleurs",
+   "text": null,
+   "duration_s": 10.44,
+   "events": []
+  },
+  {
+   "id": "fleurs-8408579760359921426",
+   "group": "fleurs",
+   "text": null,
+   "duration_s": 7.56,
+   "events": []
+  },
+  {
+   "id": "fleurs-8441657784391235948",
+   "group": "fleurs",
+   "text": null,
+   "duration_s": 10.62,
+   "events": [
+    {
+     "word": "agatha",
+     "conf": 0.98,
+     "start_s": 9.09,
+     "end_s": 9.3,
+     "partial_s": 9.728,
+     "text": "[unk] [unk] [unk] agatha"
+    }
+   ]
+  },
+  {
+   "id": "fleurs-8483155836563590517",
+   "group": "fleurs",
+   "text": null,
+   "duration_s": 14.52,
+   "events": []
+  },
+  {
+   "id": "fleurs-8510533477611443703",
+   "group": "fleurs",
+   "text": null,
+   "duration_s": 13.44,
+   "events": []
+  },
+  {
+   "id": "fleurs-8596602548669644821",
+   "group": "fleurs",
+   "text": null,
+   "duration_s": 8.88,
+   "events": []
+  },
+  {
+   "id": "fleurs-8640867287915516308",
+   "group": "fleurs",
+   "text": null,
+   "duration_s": 12.24,
+   "events": []
+  },
+  {
+   "id": "fleurs-8669448085293436276",
+   "group": "fleurs",
+   "text": null,
+   "duration_s": 13.32,
+   "events": []
+  },
+  {
+   "id": "fleurs-8684860314671012919",
+   "group": "fleurs",
+   "text": null,
+   "duration_s": 8.58,
+   "events": []
+  },
+  {
+   "id": "fleurs-8705898161609684782",
+   "group": "fleurs",
+   "text": null,
+   "duration_s": 9.6,
+   "events": []
+  },
+  {
+   "id": "fleurs-871832193807330248",
+   "group": "fleurs",
+   "text": null,
+   "duration_s": 9.36,
+   "events": []
+  },
+  {
+   "id": "fleurs-8720619529278714478",
+   "group": "fleurs",
+   "text": null,
+   "duration_s": 13.32,
+   "events": []
+  },
+  {
+   "id": "fleurs-8744429348259055476",
+   "group": "fleurs",
+   "text": null,
+   "duration_s": 17.64,
+   "events": []
+  },
+  {
+   "id": "fleurs-8785869569365511463",
+   "group": "fleurs",
+   "text": null,
+   "duration_s": 7.08,
+   "events": []
+  },
+  {
+   "id": "fleurs-8846357540746226839",
+   "group": "fleurs",
+   "text": null,
+   "duration_s": 8.94,
+   "events": []
+  },
+  {
+   "id": "fleurs-8850997720958147818",
+   "group": "fleurs",
+   "text": null,
+   "duration_s": 12.36,
+   "events": []
+  },
+  {
+   "id": "fleurs-8869748271269457510",
+   "group": "fleurs",
+   "text": null,
+   "duration_s": 16.98,
+   "events": []
+  },
+  {
+   "id": "fleurs-8873021224182748456",
+   "group": "fleurs",
+   "text": null,
+   "duration_s": 10.98,
+   "events": []
+  },
+  {
+   "id": "fleurs-8885842589488806354",
+   "group": "fleurs",
+   "text": null,
+   "duration_s": 8.4,
+   "events": []
+  },
+  {
+   "id": "fleurs-8899371669716037365",
+   "group": "fleurs",
+   "text": null,
+   "duration_s": 12.66,
+   "events": [
+    {
+     "word": "agatha",
+     "conf": 0.763,
+     "start_s": 1.8,
+     "end_s": 2.13,
+     "partial_s": 2.304,
+     "text": "[unk] agatha [unk]"
+    }
+   ]
+  },
+  {
+   "id": "fleurs-8917249859288980637",
+   "group": "fleurs",
+   "text": null,
+   "duration_s": 6.96,
+   "events": []
+  },
+  {
+   "id": "fleurs-8932614941580462270",
+   "group": "fleurs",
+   "text": null,
+   "duration_s": 18.24,
+   "events": []
+  },
+  {
+   "id": "fleurs-9031962862605309166",
+   "group": "fleurs",
+   "text": null,
+   "duration_s": 16.56,
+   "events": []
+  },
+  {
+   "id": "fleurs-9044684036950833906",
+   "group": "fleurs",
+   "text": null,
+   "duration_s": 8.7,
+   "events": []
+  },
+  {
+   "id": "fleurs-9045639627909583213",
+   "group": "fleurs",
+   "text": null,
+   "duration_s": 14.52,
+   "events": []
+  },
+  {
+   "id": "fleurs-9078846774637047736",
+   "group": "fleurs",
+   "text": null,
+   "duration_s": 11.76,
+   "events": []
+  },
+  {
+   "id": "fleurs-9131440946753217076",
+   "group": "fleurs",
+   "text": null,
+   "duration_s": 13.44,
+   "events": []
+  },
+  {
+   "id": "fleurs-9184441276156315964",
+   "group": "fleurs",
+   "text": null,
+   "duration_s": 17.82,
+   "events": []
+  },
+  {
+   "id": "fleurs-9200698722661472380",
+   "group": "fleurs",
+   "text": null,
+   "duration_s": 10.86,
+   "events": []
+  },
+  {
+   "id": "fleurs-923053383093135084",
+   "group": "fleurs",
+   "text": null,
+   "duration_s": 18.0,
+   "events": [
+    {
+     "word": "agatha",
+     "conf": 0.866,
+     "start_s": 4.17,
+     "end_s": 4.44,
+     "partial_s": 4.704,
+     "text": "[unk] agatha"
+    }
+   ]
+  },
+  {
+   "id": "fleurs-9234938911431549754",
+   "group": "fleurs",
+   "text": null,
+   "duration_s": 9.6,
+   "events": []
+  },
+  {
+   "id": "fleurs-9252945024457337651",
+   "group": "fleurs",
+   "text": null,
+   "duration_s": 8.1,
+   "events": []
+  },
+  {
+   "id": "fleurs-9305559160781135728",
+   "group": "fleurs",
+   "text": null,
+   "duration_s": 22.68,
+   "events": []
+  },
+  {
+   "id": "fleurs-931734486710274058",
+   "group": "fleurs",
+   "text": null,
+   "duration_s": 12.24,
+   "events": []
+  },
+  {
+   "id": "fleurs-9354178460417624391",
+   "group": "fleurs",
+   "text": null,
+   "duration_s": 10.2,
+   "events": []
+  },
+  {
+   "id": "fleurs-9409513661305932772",
+   "group": "fleurs",
+   "text": null,
+   "duration_s": 12.72,
+   "events": [
+    {
+     "word": "agatha",
+     "conf": 0.97,
+     "start_s": 10.38,
+     "end_s": 10.89,
+     "partial_s": 10.944,
+     "text": "agatha"
+    }
+   ]
+  },
+  {
+   "id": "fleurs-9482481934023246215",
+   "group": "fleurs",
+   "text": null,
+   "duration_s": 10.32,
+   "events": []
+  },
+  {
+   "id": "fleurs-9529495412281962161",
+   "group": "fleurs",
+   "text": null,
+   "duration_s": 6.6,
+   "events": []
+  },
+  {
+   "id": "fleurs-9533284779267639089",
+   "group": "fleurs",
+   "text": null,
+   "duration_s": 15.6,
+   "events": []
+  },
+  {
+   "id": "fleurs-9618303090159622342",
+   "group": "fleurs",
+   "text": null,
+   "duration_s": 15.3,
+   "events": []
+  },
+  {
+   "id": "fleurs-9636078437971867321",
+   "group": "fleurs",
+   "text": null,
+   "duration_s": 33.18,
+   "events": []
+  },
+  {
+   "id": "fleurs-9740163735477149681",
+   "group": "fleurs",
+   "text": null,
+   "duration_s": 5.04,
+   "events": []
+  },
+  {
+   "id": "fleurs-9776935321561977831",
+   "group": "fleurs",
+   "text": null,
+   "duration_s": 5.52,
+   "events": []
+  },
+  {
+   "id": "fleurs-9785454123552928776",
+   "group": "fleurs",
+   "text": null,
+   "duration_s": 13.08,
+   "events": []
+  },
+  {
+   "id": "fleurs-9821995007953074973",
+   "group": "fleurs",
+   "text": null,
+   "duration_s": 6.36,
+   "events": []
+  },
+  {
+   "id": "fleurs-983062890642308037",
+   "group": "fleurs",
+   "text": null,
+   "duration_s": 10.38,
+   "events": []
+  },
+  {
+   "id": "fleurs-9842499327381171850",
+   "group": "fleurs",
+   "text": null,
+   "duration_s": 8.82,
+   "events": []
+  },
+  {
+   "id": "fleurs-9871441612252500580",
+   "group": "fleurs",
+   "text": null,
+   "duration_s": 15.12,
+   "events": []
+  },
+  {
+   "id": "fleurs-995292712609034233",
+   "group": "fleurs",
+   "text": null,
+   "duration_s": 11.82,
+   "events": []
+  },
+  {
+   "id": "fleurs-995364916917181840",
+   "group": "fleurs",
+   "text": null,
+   "duration_s": 12.36,
+   "events": []
+  },
+  {
+   "id": "fleurs-9968428291150792624",
+   "group": "fleurs",
+   "text": null,
+   "duration_s": 18.78,
+   "events": []
+  }
+ ],
+ "audio_s": 5772.4,
+ "cpu_s": 145.4,
+ "wall_s": 145.8,
+ "scores": {
+  "0.5": {
+   "perto": {
+    "recall": 0.975,
+    "n": 40
+   },
+   "variado": {
+    "recall": 0.583,
+    "n": 24
+   },
+   "longe": {
+    "recall": 0.75,
+    "n": 12
+   },
+   "negativas": {
+    "false_fires": 10,
+    "items_fired": 9,
+    "n": 30,
+    "hours": 0.028,
+    "per_hour": 353.3
+   },
+   "eco-fala": {
+    "recall": 0.385,
+    "n": 13
+   },
+   "eco-calado": {
+    "false_fires": 3,
+    "items_fired": 3,
+    "n": 12,
+    "hours": 0.025,
+    "per_hour": 120.7
+   },
+   "ambiente": {
+    "false_fires": 9,
+    "items_fired": 6,
+    "n": 10,
+    "hours": 0.167,
+    "per_hour": 54.0
+   },
+   "fleurs": {
+    "false_fires": 33,
+    "items_fired": 31,
+    "n": 386,
+    "hours": 1.291,
+    "per_hour": 25.6
+   },
+   "recall_sem_eco": 0.816,
+   "disparos_por_hora_fala_comum": 30.4
+  },
+  "0.6": {
+   "perto": {
+    "recall": 0.975,
+    "n": 40
+   },
+   "variado": {
+    "recall": 0.542,
+    "n": 24
+   },
+   "longe": {
+    "recall": 0.75,
+    "n": 12
+   },
+   "negativas": {
+    "false_fires": 10,
+    "items_fired": 9,
+    "n": 30,
+    "hours": 0.028,
+    "per_hour": 353.3
+   },
+   "eco-fala": {
+    "recall": 0.308,
+    "n": 13
+   },
+   "eco-calado": {
+    "false_fires": 3,
+    "items_fired": 3,
+    "n": 12,
+    "hours": 0.025,
+    "per_hour": 120.7
+   },
+   "ambiente": {
+    "false_fires": 7,
+    "items_fired": 4,
+    "n": 10,
+    "hours": 0.167,
+    "per_hour": 42.0
+   },
+   "fleurs": {
+    "false_fires": 31,
+    "items_fired": 29,
+    "n": 386,
+    "hours": 1.291,
+    "per_hour": 24.0
+   },
+   "recall_sem_eco": 0.803,
+   "disparos_por_hora_fala_comum": 27.7
+  },
+  "0.7": {
+   "perto": {
+    "recall": 0.975,
+    "n": 40
+   },
+   "variado": {
+    "recall": 0.458,
+    "n": 24
+   },
+   "longe": {
+    "recall": 0.75,
+    "n": 12
+   },
+   "negativas": {
+    "false_fires": 9,
+    "items_fired": 8,
+    "n": 30,
+    "hours": 0.028,
+    "per_hour": 318.0
+   },
+   "eco-fala": {
+    "recall": 0.308,
+    "n": 13
+   },
+   "eco-calado": {
+    "false_fires": 1,
+    "items_fired": 1,
+    "n": 12,
+    "hours": 0.025,
+    "per_hour": 40.2
+   },
+   "ambiente": {
+    "false_fires": 6,
+    "items_fired": 4,
+    "n": 10,
+    "hours": 0.167,
+    "per_hour": 36.0
+   },
+   "fleurs": {
+    "false_fires": 26,
+    "items_fired": 24,
+    "n": 386,
+    "hours": 1.291,
+    "per_hour": 20.1
+   },
+   "recall_sem_eco": 0.776,
+   "disparos_por_hora_fala_comum": 22.3
+  },
+  "0.8": {
+   "perto": {
+    "recall": 0.975,
+    "n": 40
+   },
+   "variado": {
+    "recall": 0.458,
+    "n": 24
+   },
+   "longe": {
+    "recall": 0.667,
+    "n": 12
+   },
+   "negativas": {
+    "false_fires": 9,
+    "items_fired": 8,
+    "n": 30,
+    "hours": 0.028,
+    "per_hour": 318.0
+   },
+   "eco-fala": {
+    "recall": 0.231,
+    "n": 13
+   },
+   "eco-calado": {
+    "false_fires": 1,
+    "items_fired": 1,
+    "n": 12,
+    "hours": 0.025,
+    "per_hour": 40.2
+   },
+   "ambiente": {
+    "false_fires": 6,
+    "items_fired": 4,
+    "n": 10,
+    "hours": 0.167,
+    "per_hour": 36.0
+   },
+   "fleurs": {
+    "false_fires": 21,
+    "items_fired": 19,
+    "n": 386,
+    "hours": 1.291,
+    "per_hour": 16.3
+   },
+   "recall_sem_eco": 0.763,
+   "disparos_por_hora_fala_comum": 18.9
+  },
+  "0.9": {
+   "perto": {
+    "recall": 0.975,
+    "n": 40
+   },
+   "variado": {
+    "recall": 0.417,
+    "n": 24
+   },
+   "longe": {
+    "recall": 0.583,
+    "n": 12
+   },
+   "negativas": {
+    "false_fires": 7,
+    "items_fired": 6,
+    "n": 30,
+    "hours": 0.028,
+    "per_hour": 247.3
+   },
+   "eco-fala": {
+    "recall": 0.154,
+    "n": 13
+   },
+   "eco-calado": {
+    "false_fires": 1,
+    "items_fired": 1,
+    "n": 12,
+    "hours": 0.025,
+    "per_hour": 40.2
+   },
+   "ambiente": {
+    "false_fires": 4,
+    "items_fired": 4,
+    "n": 10,
+    "hours": 0.167,
+    "per_hour": 24.0
+   },
+   "fleurs": {
+    "false_fires": 12,
+    "items_fired": 11,
+    "n": 386,
+    "hours": 1.291,
+    "per_hour": 9.3
+   },
+   "recall_sem_eco": 0.737,
+   "disparos_por_hora_fala_comum": 11.5
+  },
+  "0.95": {
+   "perto": {
+    "recall": 0.975,
+    "n": 40
+   },
+   "variado": {
+    "recall": 0.333,
+    "n": 24
+   },
+   "longe": {
+    "recall": 0.583,
+    "n": 12
+   },
+   "negativas": {
+    "false_fires": 4,
+    "items_fired": 3,
+    "n": 30,
+    "hours": 0.028,
+    "per_hour": 141.3
+   },
+   "eco-fala": {
+    "recall": 0.154,
+    "n": 13
+   },
+   "eco-calado": {
+    "false_fires": 1,
+    "items_fired": 1,
+    "n": 12,
+    "hours": 0.025,
+    "per_hour": 40.2
+   },
+   "ambiente": {
+    "false_fires": 2,
+    "items_fired": 2,
+    "n": 10,
+    "hours": 0.167,
+    "per_hour": 12.0
+   },
+   "fleurs": {
+    "false_fires": 11,
+    "items_fired": 10,
+    "n": 386,
+    "hours": 1.291,
+    "per_hour": 8.5
+   },
+   "recall_sem_eco": 0.711,
+   "disparos_por_hora_fala_comum": 9.4
+  },
+  "0.99": {
+   "perto": {
+    "recall": 0.85,
+    "n": 40
+   },
+   "variado": {
+    "recall": 0.292,
+    "n": 24
+   },
+   "longe": {
+    "recall": 0.417,
+    "n": 12
+   },
+   "negativas": {
+    "false_fires": 3,
+    "items_fired": 3,
+    "n": 30,
+    "hours": 0.028,
+    "per_hour": 106.0
+   },
+   "eco-fala": {
+    "recall": 0.077,
+    "n": 13
+   },
+   "eco-calado": {
+    "false_fires": 0,
+    "items_fired": 0,
+    "n": 12,
+    "hours": 0.025,
+    "per_hour": 0.0
+   },
+   "ambiente": {
+    "false_fires": 2,
+    "items_fired": 2,
+    "n": 10,
+    "hours": 0.167,
+    "per_hour": 12.0
+   },
+   "fleurs": {
+    "false_fires": 5,
+    "items_fired": 4,
+    "n": 386,
+    "hours": 1.291,
+    "per_hour": 3.9
+   },
+   "recall_sem_eco": 0.605,
+   "disparos_por_hora_fala_comum": 4.7
+  }
+ },
+ "host": {
+  "cpu": "x86_64",
+  "threads": 4
+ }
+}
