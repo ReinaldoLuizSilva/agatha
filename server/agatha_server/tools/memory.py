@@ -3,6 +3,11 @@
 O nome não é "lembrar" porque, em português, "lembrar" também é "recordar": perguntas como "qual
 padrão eu uso, lembra?" faziam o modelo chamar a ferramenta para regravar um fato já guardado.
 Os exemplos usam números que não colidem com os primeiros fatos reais da memória.
+
+O número do fato é interno: o Reinaldo não o conhece. Com "esquece isso" logo depois de guardar, o
+modelo pedia o número a ele (teste de 12/10); a regra agora diz que "isso" é o último fato guardado.
+Medido no bench/tools_bench.py: dizer na descrição que o número "é interno, nunca peça" derrubava
+"apaga aquilo da reunião" de 7/10 para 1/10, por isso ela ficou como estava.
 """
 
 from ..memory import MemoryStore
@@ -28,7 +33,8 @@ def memory_tools(store: MemoryStore) -> list[Tool]:
         try:
             fact_id = int(args.get("numero"))
         except (TypeError, ValueError):
-            return {"erro": "informe o número do fato, como aparece na memória"}
+            return {"erro": "número inválido: use o número do fato na sua memória; se não souber qual é, "
+                            "pergunte do que se trata, sem falar em números"}
         fact = store.forget(fact_id)
         return {"ok": True, "esquecido": fact.text} if fact else {"erro": f"não existe fato número {fact_id}"}
 
@@ -49,7 +55,8 @@ def memory_tools(store: MemoryStore) -> list[Tool]:
             name="esquecer",
             description="Apaga um fato da memória, pelo número com que ele aparece na lista de memória.",
             handler=esquecer,
-            rule="quando ele pedir para esquecer ou apagar algo da memória: use esquecer com o número do fato",
+            rule="quando ele pedir para esquecer ou apagar algo da memória: use esquecer com o número do fato; "
+                 "se ele disser só isso, é o último fato guardado",
             properties={"numero": {"type": "integer", "description": "número do fato na memória"}},
             required=("numero",),
             examples=(Example("Esquece aquilo do notebook.", {"numero": 41},

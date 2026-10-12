@@ -54,13 +54,14 @@ class Chunker:
 # --- Fala incompleta ----------------------------------------------------------------
 
 # Palavras que quase nunca terminam uma frase em português: se a transcrição acaba numa delas,
-# a pessoa provavelmente fez uma pausa no meio da frase.
+# a pessoa provavelmente fez uma pausa no meio da frase. "isso" fica de fora: fecha muitas frases
+# ("esquece isso", "o que é isso").
 _DANGLING = {
     "e", "ou", "mas", "porque", "que", "se", "como", "quando", "onde", "qual", "quais",
     "de", "do", "da", "dos", "das", "em", "no", "na", "nos", "nas", "para", "pra", "pro", "com",
     "sem", "por", "pelo", "pela", "ao", "à", "aos", "às", "entre", "sobre", "até",
     "o", "a", "os", "as", "um", "uma", "uns", "umas", "meu", "minha", "seu", "sua", "esse", "essa",
-    "este", "esta", "isso", "é", "tipo", "então",
+    "este", "esta", "é", "tipo", "então",
 }
 
 

@@ -103,6 +103,7 @@ def test_parece_incompleta(text):
 
 @pytest.mark.parametrize("text", [
     "Que horas são agora?", "Obrigado, Agatha.", "Me fala do Zabbix", "Qual o tamanho da tablespace USERS?", "",
+    "Esquece isso.", "O que é isso?",
 ])
 def test_parece_completa(text):
     assert not looks_incomplete(text)

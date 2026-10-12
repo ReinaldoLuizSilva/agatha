@@ -13,6 +13,7 @@ As variantes anteriores (sem exemplos, regras v1/v2) estão nos resultados `tool
 
 Uso:
     .venv/bin/python bench/tools_bench.py --runs 3
+    .venv/bin/python bench/tools_bench.py --runs 5 --only esquece
 """
 
 import argparse
@@ -86,8 +87,17 @@ def calc_is(value):
     return lambda a: abs(float(evaluate(a["expressao"])) - value) < 0.01
 
 
+# Turno anterior para os casos com histórico: acabou de guardar o fato 3 (como no teste de 12/10)
+JUST_SAVED_3 = [
+    user_message("Lembra que a reunião com o time é na quinta às 10h.", NOW),
+    {"role": "assistant", "content": "", "tool_calls": [{"id": "call_0", "type": "function", "function": {
+        "name": "guardar_fato", "arguments": json.dumps({"fato": FACTS[2]}, ensure_ascii=False)}}]},
+    {"role": "tool", "tool_call_id": "call_0", "content": json.dumps({"ok": True, "numero": 3})},
+    {"role": "assistant", "content": "Pode deixar, guardei."},
+]
+
 # (pergunta, ferramenta esperada ou None, verificação dos argumentos, texto que deve aparecer na resposta,
-#  texto que NÃO pode aparecer na resposta)
+#  texto que NÃO pode aparecer na resposta[, histórico antes da pergunta])
 CASES = [
     ("Quanto é 15% de 240?", "calcular", calc_is(36), "36", None),
     ("Quanto é 1234 vezes 56?", "calcular", calc_is(69104), "69", None),
@@ -104,6 +114,8 @@ CASES = [
     ("Anota aí: o backup roda todo dia às 2h.", "guardar_fato", lambda a: "backup" in a.get("fato", "").lower(), None, None),
     ("Esquece que o banco de produção se chama PRDORA.", "esquecer", lambda a: int(a.get("numero")) == 2, None, None),
     ("Pode apagar aquilo da reunião.", "esquecer", lambda a: int(a.get("numero")) == 3, None, None),
+    ("Esquece isso.", "esquecer", lambda a: int(a.get("numero")) == 3, None, "número", JUST_SAVED_3),
+    ("Na verdade, apaga isso aí.", "esquecer", lambda a: int(a.get("numero")) == 3, None, "número", JUST_SAVED_3),
     ("Oi Agatha, tudo bem?", None, None, None, None),
     ("O que é um trigger no Zabbix?", None, None, None, "não tenho"),
     ("O que é uma tablespace?", None, None, None, None),
@@ -158,9 +170,9 @@ def _try(check, args) -> bool:
         return False
 
 
-def run_case(registry, prefix, question, expected, check, must_contain, must_not_contain) -> dict:
+def run_case(registry, prefix, question, expected, check, must_contain, must_not_contain, history=()) -> dict:
     schemas = registry.schemas()
-    messages = [*prefix, user_message(question, NOW)]
+    messages = [*prefix, *history, user_message(question, NOW)]
     first = stream(messages, schemas)
     call = first["calls"][0] if first["calls"] else None
     got = call["name"] if call else None
@@ -194,7 +206,9 @@ def run_case(registry, prefix, question, expected, check, must_contain, must_not
 def main() -> None:
     parser = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     parser.add_argument("--runs", type=int, default=1)
+    parser.add_argument("--only", help="roda só os casos cuja pergunta contém este texto")
     args = parser.parse_args()
+    cases = [c for c in CASES if not args.only or args.only.lower() in c[0].lower()]
 
     registry, store = build_registry()
     prefix = build_prefix(registry, store)
@@ -202,7 +216,7 @@ def main() -> None:
 
     rows = []
     for run in range(args.runs):
-        for case in CASES:
+        for case in cases:
             r = run_case(registry, prefix, *case)
             r["run"] = run
             rows.append(r)

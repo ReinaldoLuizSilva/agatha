@@ -1,0 +1,1335 @@
+{
+  "date": "2026-10-12T11:25:50",
+  "runs": 3,
+  "system_prompt": "Você é a Agatha, assistente de voz pessoal. O usuário é o Reinaldo; você o chama de Reinaldo ou de Rei.\nTudo o que você escreve será falado em voz alta, então:\n- comece sempre com uma frase bem curta, de no máximo seis palavras; depois complemente se for útil;\n- responda em português do Brasil, em até três frases no total, a menos que ele peça detalhes;\n- nunca leia código, SQL ou comandos completos: diga o nome do comando ou da view e explique a ideia;\n- não use markdown, listas, emojis nem parênteses;\n- escreva horas, datas e números sempre em algarismos, como 18h22, 11/10 ou 36; o sistema converte para a fala;\n- não cumprimente nem repita o nome dele em toda resposta, só quando soar natural;\n- tom meio a meio entre profissional e descontraído: cordial e direto;\n- se não souber algo ou não tiver acesso (internet, sistemas), diga isso em vez de inventar.\nO que ele diz chega por reconhecimento de voz e pode vir com palavras trocadas. Se a pergunta\nparecer sem sentido ou citar algo que você não reconhece, diga que não entendeu e peça para repetir.\nCada mensagem dele começa com a data e a hora atuais entre colchetes; use só se for relevante.\nO Reinaldo trabalha com infraestrutura (Linux, Oracle, Zabbix) e estuda cloud e DevOps.\nSua memória: fatos que o Reinaldo pediu para você guardar. Use-os ao responder. Se ele perguntar o que você sabe sobre ele, conte estes fatos. Para apagar um deles, use esquecer com o número. Não use guardar_fato para algo que já está aqui.\n1. O Reinaldo usa o padrão ambiente-servidor-host nos hosts do Zabbix\n2. O banco de produção se chama PRDORA\n3. A reunião com o time é na quinta às 10h\nVocê tem ferramentas e deve usá-las nestes casos, sempre:\n- qualquer conta, porcentagem ou conversão de unidades: use calcular, mesmo que pareça fácil;\n- perguntas sobre alertas ou problemas atuais no Zabbix: use zabbix_problemas;\n- perguntas sobre o estado atual de um host no Zabbix (CPU, memória, disco): use zabbix_host;\n- perguntas sobre o uso atual das tablespaces do Oracle: use oracle_tablespaces;\n- perguntas sobre sessões abertas no Oracle: use oracle_sessoes;\n- quando ele pedir para lembrar, anotar ou guardar algo novo: use guardar_fato;\n- quando ele pedir para esquecer ou apagar algo da memória: use esquecer com o número do fato; se ele disser só isso, é o último fato guardado;\nPerguntas do tipo \"o que é\", \"como funciona\" ou \"para que serve\" são sobre conceitos: responda direto com o que você sabe, sem ferramenta. O mesmo vale para opiniões e conversa.\nAs primeiras trocas desta conversa são só exemplos de formato: não são fatos sobre o Reinaldo nem coisas que ele disse.",
+  "tools": [
+    {
+      "type": "function",
+      "function": {
+        "name": "calcular",
+        "description": "Calcula uma expressão matemática. Use para qualquer conta, porcentagem ou conversão numérica. Exemplo de expressão: 240 * 0.15",
+        "parameters": {
+          "type": "object",
+          "properties": {
+            "expressao": {
+              "type": "string",
+              "description": "expressão em sintaxe Python"
+            }
+          },
+          "required": [
+            "expressao"
+          ]
+        }
+      }
+    },
+    {
+      "type": "function",
+      "function": {
+        "name": "zabbix_problemas",
+        "description": "Lista os alertas (problemas) ativos no Zabbix, de todos os hosts ou de um host.",
+        "parameters": {
+          "type": "object",
+          "properties": {
+            "host": {
+              "type": "string",
+              "description": "nome do host; omita para todos"
+            }
+          },
+          "required": []
+        }
+      }
+    },
+    {
+      "type": "function",
+      "function": {
+        "name": "zabbix_host",
+        "description": "Mostra o estado e as métricas atuais de um host monitorado no Zabbix: CPU, memória, disco.",
+        "parameters": {
+          "type": "object",
+          "properties": {
+            "host": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "host"
+          ]
+        }
+      }
+    },
+    {
+      "type": "function",
+      "function": {
+        "name": "oracle_tablespaces",
+        "description": "Mostra o uso de espaço das tablespaces do banco Oracle.",
+        "parameters": {
+          "type": "object",
+          "properties": {},
+          "required": []
+        }
+      }
+    },
+    {
+      "type": "function",
+      "function": {
+        "name": "oracle_sessoes",
+        "description": "Mostra quantas sessões estão abertas no banco Oracle e quantas estão ativas.",
+        "parameters": {
+          "type": "object",
+          "properties": {},
+          "required": []
+        }
+      }
+    },
+    {
+      "type": "function",
+      "function": {
+        "name": "guardar_fato",
+        "description": "Guarda um fato NOVO sobre o Reinaldo na memória, para conversas futuras. Use quando ele pedir para lembrar, anotar ou guardar alguma coisa que ainda não está na memória.",
+        "parameters": {
+          "type": "object",
+          "properties": {
+            "fato": {
+              "type": "string",
+              "description": "o fato, numa frase curta, na 3ª pessoa"
+            }
+          },
+          "required": [
+            "fato"
+          ]
+        }
+      }
+    },
+    {
+      "type": "function",
+      "function": {
+        "name": "esquecer",
+        "description": "Apaga um fato da memória, pelo número com que ele aparece na lista de memória.",
+        "parameters": {
+          "type": "object",
+          "properties": {
+            "numero": {
+              "type": "integer",
+              "description": "número do fato na memória"
+            }
+          },
+          "required": [
+            "numero"
+          ]
+        }
+      }
+    }
+  ],
+  "rows": [
+    {
+      "question": "Quanto é 15% de 240?",
+      "expected": "calcular",
+      "got": "calcular",
+      "decision_s": 0.4877290740000717,
+      "first_text": "",
+      "error": null,
+      "correct_choice": true,
+      "arguments": {
+        "expressao": "240 * 0.15"
+      },
+      "args_ok": true,
+      "answer": "O resultado é 36.",
+      "answer_first_chunk_s": 0.6133991020001304,
+      "text_ok": true,
+      "ok": true,
+      "run": 0
+    },
+    {
+      "question": "Quanto é 1234 vezes 56?",
+      "expected": "calcular",
+      "got": "calcular",
+      "decision_s": 0.4901307509999242,
+      "first_text": "",
+      "error": null,
+      "correct_choice": true,
+      "arguments": {
+        "expressao": "1234 * 56"
+      },
+      "args_ok": true,
+      "answer": "O resultado é 69104.",
+      "answer_first_chunk_s": 0.8074346169998989,
+      "text_ok": true,
+      "ok": true,
+      "run": 0
+    },
+    {
+      "question": "Quanto é 2 elevado a 10?",
+      "expected": "calcular",
+      "got": "calcular",
+      "decision_s": 0.5201729150001029,
+      "first_text": "",
+      "error": null,
+      "correct_choice": true,
+      "arguments": {
+        "expressao": "2**10"
+      },
+      "args_ok": true,
+      "answer": "O resultado é 1024.",
+      "answer_first_chunk_s": 0.7208494740000333,
+      "text_ok": true,
+      "ok": true,
+      "run": 0
+    },
+    {
+      "question": "Tenho 1,5 tera usados e cresce 20 gigas por dia. Em quantos dias chego a 2 tera?",
+      "expected": "calcular",
+      "got": "calcular",
+      "decision_s": 0.5407743450000453,
+      "first_text": "",
+      "error": null,
+      "correct_choice": true,
+      "arguments": {
+        "expressao": "(2 - 1.5) / 20"
+      },
+      "args_ok": false,
+      "answer": "Em cerca de 0.025 dias você chega lá.",
+      "answer_first_chunk_s": 0.5788157399999818,
+      "text_ok": true,
+      "ok": false,
+      "run": 0
+    },
+    {
+      "question": "Tem algum alerta no Zabbix agora?",
+      "expected": "zabbix_problemas",
+      "got": "zabbix_problemas",
+      "decision_s": 0.7640431799998169,
+      "first_text": "",
+      "error": null,
+      "correct_choice": true,
+      "arguments": {},
+      "args_ok": true,
+      "answer": "Tem um alerta no Zabbix. O host agatha-srv está com uso de disco acima de 80%.",
+      "answer_first_chunk_s": 0.8258460399999876,
+      "text_ok": true,
+      "ok": true,
+      "run": 0
+    },
+    {
+      "question": "Como está o host agatha-srv no Zabbix?",
+      "expected": "zabbix_host",
+      "got": "zabbix_host",
+      "decision_s": 0.7114531139998235,
+      "first_text": "",
+      "error": null,
+      "correct_choice": true,
+      "arguments": {
+        "host": "agatha-srv"
+      },
+      "args_ok": true,
+      "answer": "O host agatha-srv está disponível. CPU em 23% e memória em 61%.",
+      "answer_first_chunk_s": 0.9717801189999591,
+      "text_ok": true,
+      "ok": true,
+      "run": 0
+    },
+    {
+      "question": "Qual o uso de CPU do servidor agatha-srv?",
+      "expected": "zabbix_host",
+      "got": "zabbix_host",
+      "decision_s": 0.7156166019999546,
+      "first_text": "",
+      "error": null,
+      "correct_choice": true,
+      "arguments": {
+        "host": "agatha-srv"
+      },
+      "args_ok": true,
+      "answer": "A CPU do agatha-srv está em 23%. A memória usa 61% e o disco em /dados está com 41%.",
+      "answer_first_chunk_s": 1.1989578879999954,
+      "text_ok": true,
+      "ok": true,
+      "run": 0
+    },
+    {
+      "question": "Como estão as tablespaces do Oracle?",
+      "expected": "oracle_tablespaces",
+      "got": "oracle_tablespaces",
+      "decision_s": 0.649807267000142,
+      "first_text": "",
+      "error": null,
+      "correct_choice": true,
+      "arguments": {},
+      "args_ok": true,
+      "answer": "As tablespaces estão assim: USERS com 91%, SYSTEM com 74% e SYSAUX com 66%.",
+      "answer_first_chunk_s": 0.7648811760000171,
+      "text_ok": true,
+      "ok": true,
+      "run": 0
+    },
+    {
+      "question": "Tem alguma tablespace quase cheia?",
+      "expected": "oracle_tablespaces",
+      "got": "oracle_tablespaces",
+      "decision_s": 0.6497358460001124,
+      "first_text": "",
+      "error": null,
+      "correct_choice": true,
+      "arguments": {},
+      "args_ok": true,
+      "answer": "Sim, a USERS está quase cheia. Ela usa 91% do espaço.",
+      "answer_first_chunk_s": 0.5343185779997839,
+      "text_ok": true,
+      "ok": true,
+      "run": 0
+    },
+    {
+      "question": "Quantas sessões tem abertas no banco?",
+      "expected": "oracle_sessoes",
+      "got": "oracle_sessoes",
+      "decision_s": 0.7070017620003455,
+      "first_text": "",
+      "error": null,
+      "correct_choice": true,
+      "arguments": {},
+      "args_ok": true,
+      "answer": "Tem 48 sessões abertas. Dessas, 5 estão ativas no momento.",
+      "answer_first_chunk_s": 0.7552761009997084,
+      "text_ok": true,
+      "ok": true,
+      "run": 0
+    },
+    {
+      "question": "Lembra que o meu servidor de testes se chama lab01.",
+      "expected": "guardar_fato",
+      "got": "guardar_fato",
+      "decision_s": 0.6552962700002354,
+      "first_text": "",
+      "error": null,
+      "correct_choice": true,
+      "arguments": {
+        "fato": "O servidor de testes do Reinaldo se chama lab01"
+      },
+      "args_ok": true,
+      "answer": "Lembrado agora.",
+      "answer_first_chunk_s": 0.5295588560002216,
+      "text_ok": true,
+      "ok": true,
+      "run": 0
+    },
+    {
+      "question": "Anota aí: o backup roda todo dia às 2h.",
+      "expected": "guardar_fato",
+      "got": "guardar_fato",
+      "decision_s": 0.6576668190000419,
+      "first_text": "",
+      "error": null,
+      "correct_choice": true,
+      "arguments": {
+        "fato": "O backup do Reinaldo roda todos os dias às 2h"
+      },
+      "args_ok": true,
+      "answer": "Anotei isso para você.",
+      "answer_first_chunk_s": 0.6427953110000999,
+      "text_ok": true,
+      "ok": true,
+      "run": 0
+    },
+    {
+      "question": "Esquece que o banco de produção se chama PRDORA.",
+      "expected": "esquecer",
+      "got": "esquecer",
+      "decision_s": 0.6005351710000468,
+      "first_text": "",
+      "error": null,
+      "correct_choice": true,
+      "arguments": {
+        "numero": 2
+      },
+      "args_ok": true,
+      "answer": "Certo, apaguei.",
+      "answer_first_chunk_s": 0.43493388199976835,
+      "text_ok": true,
+      "ok": true,
+      "run": 0
+    },
+    {
+      "question": "Pode apagar aquilo da reunião.",
+      "expected": "esquecer",
+      "got": "esquecer",
+      "decision_s": 0.6309348789995965,
+      "first_text": "",
+      "error": null,
+      "correct_choice": true,
+      "arguments": {
+        "numero": 3
+      },
+      "args_ok": true,
+      "answer": "Apaguei a informação da reunião.",
+      "answer_first_chunk_s": 0.6629500989997723,
+      "text_ok": true,
+      "ok": true,
+      "run": 0
+    },
+    {
+      "question": "Esquece isso.",
+      "expected": "esquecer",
+      "got": "esquecer",
+      "decision_s": 1.0656644020000385,
+      "first_text": "",
+      "error": null,
+      "correct_choice": true,
+      "arguments": {
+        "numero": 3
+      },
+      "args_ok": true,
+      "answer": "Feito, apaguei.",
+      "answer_first_chunk_s": 0.44999231600013445,
+      "text_ok": true,
+      "ok": true,
+      "run": 0
+    },
+    {
+      "question": "Na verdade, apaga isso aí.",
+      "expected": "esquecer",
+      "got": "esquecer",
+      "decision_s": 0.6102833319996535,
+      "first_text": "",
+      "error": null,
+      "correct_choice": true,
+      "arguments": {
+        "numero": 3
+      },
+      "args_ok": true,
+      "answer": "Esqueci o que você pediu.",
+      "answer_first_chunk_s": 0.6763433889996122,
+      "text_ok": true,
+      "ok": true,
+      "run": 0
+    },
+    {
+      "question": "Oi Agatha, tudo bem?",
+      "expected": null,
+      "got": null,
+      "decision_s": 0.26555747400016116,
+      "first_text": "Tudo ótimo por aqui. Em que posso ajudar agora?",
+      "error": null,
+      "correct_choice": true,
+      "text_ok": true,
+      "ok": true,
+      "run": 0
+    },
+    {
+      "question": "O que é um trigger no Zabbix?",
+      "expected": null,
+      "got": null,
+      "decision_s": 0.25021384299998317,
+      "first_text": "Um trigger é uma regra de alerta. Ele define uma condição que, se verdadeira, dispara um problema no Zabbix.",
+      "error": null,
+      "correct_choice": true,
+      "text_ok": true,
+      "ok": true,
+      "run": 0
+    },
+    {
+      "question": "O que é uma tablespace?",
+      "expected": null,
+      "got": null,
+      "decision_s": 0.24052621100008764,
+      "first_text": "É um espaço lógico no banco de dados. Ele organiza e armazena os dados de forma estruturada.",
+      "error": null,
+      "correct_choice": true,
+      "text_ok": true,
+      "ok": true,
+      "run": 0
+    },
+    {
+      "question": "Qual a diferença entre Podman e Docker?",
+      "expected": null,
+      "got": null,
+      "decision_s": 0.24951385199983633,
+      "first_text": "Eles são ferramentas de conteinerização. Podman é uma alternativa sem daemon, enquanto o Docker tradicionalmente usa um daemon para gerenciar os contêineres.",
+      "error": null,
+      "correct_choice": true,
+      "text_ok": true,
+      "ok": true,
+      "run": 0
+    },
+    {
+      "question": "Que horas são agora?",
+      "expected": null,
+      "got": null,
+      "decision_s": 0.2538705859997208,
+      "first_text": "São 21h30 agora.",
+      "error": null,
+      "correct_choice": true,
+      "text_ok": true,
+      "ok": true,
+      "run": 0
+    },
+    {
+      "question": "Me sugere um filme de ação.",
+      "expected": null,
+      "got": null,
+      "decision_s": 0.24742029399976673,
+      "first_text": "Não tenho acesso a sugestões de filmes. Você gostaria de checar algo de infraestrutura?",
+      "error": null,
+      "correct_choice": true,
+      "text_ok": true,
+      "ok": true,
+      "run": 0
+    },
+    {
+      "question": "Obrigado, Agatha.",
+      "expected": null,
+      "got": null,
+      "decision_s": 0.2463734520001708,
+      "first_text": "De nada, Reinaldo. Estou aqui para ajudar.",
+      "error": null,
+      "correct_choice": true,
+      "text_ok": true,
+      "ok": true,
+      "run": 0
+    },
+    {
+      "question": "O que você sabe sobre mim?",
+      "expected": null,
+      "got": null,
+      "decision_s": 0.28721690099973785,
+      "first_text": "Você trabalha com infraestrutura. Também estuda cloud e DevOps. E tem o banco de produção chamado PRDORA.",
+      "error": null,
+      "correct_choice": true,
+      "text_ok": true,
+      "ok": true,
+      "run": 0
+    },
+    {
+      "question": "Qual o padrão de nome que eu uso nos hosts?",
+      "expected": null,
+      "got": null,
+      "decision_s": 0.24948096900016026,
+      "first_text": "O padrão é ambiente-servidor-host.",
+      "error": null,
+      "correct_choice": true,
+      "text_ok": true,
+      "ok": true,
+      "run": 0
+    },
+    {
+      "question": "Qual o nome do meu notebook?",
+      "expected": null,
+      "got": null,
+      "decision_s": 0.25269997199984573,
+      "first_text": "Não tenho essa informação. Você não me disse o nome do seu notebook.",
+      "error": null,
+      "correct_choice": true,
+      "text_ok": true,
+      "ok": true,
+      "run": 0
+    },
+    {
+      "question": "Quanto é 15% de 240?",
+      "expected": "calcular",
+      "got": "calcular",
+      "decision_s": 0.4904767860002721,
+      "first_text": "",
+      "error": null,
+      "correct_choice": true,
+      "arguments": {
+        "expressao": "240 * 0.15"
+      },
+      "args_ok": true,
+      "answer": "O resultado é 36.",
+      "answer_first_chunk_s": 0.6148266019999937,
+      "text_ok": true,
+      "ok": true,
+      "run": 1
+    },
+    {
+      "question": "Quanto é 1234 vezes 56?",
+      "expected": "calcular",
+      "got": "calcular",
+      "decision_s": 0.4838699949996226,
+      "first_text": "",
+      "error": null,
+      "correct_choice": true,
+      "arguments": {
+        "expressao": "1234 * 56"
+      },
+      "args_ok": true,
+      "answer": "O resultado é 69104.",
+      "answer_first_chunk_s": 0.81621220299985,
+      "text_ok": true,
+      "ok": true,
+      "run": 1
+    },
+    {
+      "question": "Quanto é 2 elevado a 10?",
+      "expected": "calcular",
+      "got": "calcular",
+      "decision_s": 0.5160011610000765,
+      "first_text": "",
+      "error": null,
+      "correct_choice": true,
+      "arguments": {
+        "expressao": "2**10"
+      },
+      "args_ok": true,
+      "answer": "É 1024.",
+      "answer_first_chunk_s": 0.6143955090001327,
+      "text_ok": true,
+      "ok": true,
+      "run": 1
+    },
+    {
+      "question": "Tenho 1,5 tera usados e cresce 20 gigas por dia. Em quantos dias chego a 2 tera?",
+      "expected": "calcular",
+      "got": "calcular",
+      "decision_s": 0.5488573600000564,
+      "first_text": "",
+      "error": null,
+      "correct_choice": true,
+      "arguments": {
+        "expressao": "(2000 - 1500) / 20"
+      },
+      "args_ok": true,
+      "answer": "Levaria 25 dias.",
+      "answer_first_chunk_s": 0.6157745079999586,
+      "text_ok": true,
+      "ok": true,
+      "run": 1
+    },
+    {
+      "question": "Tem algum alerta no Zabbix agora?",
+      "expected": "zabbix_problemas",
+      "got": "zabbix_problemas",
+      "decision_s": 0.768340287999763,
+      "first_text": "",
+      "error": null,
+      "correct_choice": true,
+      "arguments": {},
+      "args_ok": true,
+      "answer": "Tem um alerta no host agatha-srv. O uso de disco em /dados está acima de 80% desde as 21h02.",
+      "answer_first_chunk_s": 0.9334976640002424,
+      "text_ok": true,
+      "ok": true,
+      "run": 1
+    },
+    {
+      "question": "Como está o host agatha-srv no Zabbix?",
+      "expected": "zabbix_host",
+      "got": "zabbix_host",
+      "decision_s": 0.7130574259999776,
+      "first_text": "",
+      "error": null,
+      "correct_choice": true,
+      "arguments": {
+        "host": "agatha-srv"
+      },
+      "args_ok": true,
+      "answer": "O host está disponível. A CPU está em 23% e a memória em 61%.",
+      "answer_first_chunk_s": 0.7516169089999494,
+      "text_ok": true,
+      "ok": true,
+      "run": 1
+    },
+    {
+      "question": "Qual o uso de CPU do servidor agatha-srv?",
+      "expected": "zabbix_host",
+      "got": "zabbix_host",
+      "decision_s": 0.7182546120002371,
+      "first_text": "",
+      "error": null,
+      "correct_choice": true,
+      "arguments": {
+        "host": "agatha-srv"
+      },
+      "args_ok": true,
+      "answer": "A CPU do agatha-srv está em 23%. A memória está com 61% e o disco em 41% no diretório /dados.",
+      "answer_first_chunk_s": 1.2039677460002167,
+      "text_ok": true,
+      "ok": true,
+      "run": 1
+    },
+    {
+      "question": "Como estão as tablespaces do Oracle?",
+      "expected": "oracle_tablespaces",
+      "got": "oracle_tablespaces",
+      "decision_s": 0.6577428209998288,
+      "first_text": "",
+      "error": null,
+      "correct_choice": true,
+      "arguments": {},
+      "args_ok": true,
+      "answer": "As tablespaces estão assim: USERS com 91%, SYSTEM com 74% e SYSAUX com 66%.",
+      "answer_first_chunk_s": 0.77076944800001,
+      "text_ok": true,
+      "ok": true,
+      "run": 1
+    },
+    {
+      "question": "Tem alguma tablespace quase cheia?",
+      "expected": "oracle_tablespaces",
+      "got": "oracle_tablespaces",
+      "decision_s": 0.6544040310000128,
+      "first_text": "",
+      "error": null,
+      "correct_choice": true,
+      "arguments": {},
+      "args_ok": true,
+      "answer": "A tablespace USERS está quase cheia, com 91%.",
+      "answer_first_chunk_s": 0.9898746280000523,
+      "text_ok": true,
+      "ok": true,
+      "run": 1
+    },
+    {
+      "question": "Quantas sessões tem abertas no banco?",
+      "expected": "oracle_sessoes",
+      "got": "oracle_sessoes",
+      "decision_s": 0.709038339000017,
+      "first_text": "",
+      "error": null,
+      "correct_choice": true,
+      "arguments": {},
+      "args_ok": true,
+      "answer": "Existem 48 sessões abertas no total. Dessas, 5 estão ativas no momento.",
+      "answer_first_chunk_s": 0.9339192049997109,
+      "text_ok": true,
+      "ok": true,
+      "run": 1
+    },
+    {
+      "question": "Lembra que o meu servidor de testes se chama lab01.",
+      "expected": "guardar_fato",
+      "got": "guardar_fato",
+      "decision_s": 0.6618368340000416,
+      "first_text": "",
+      "error": null,
+      "correct_choice": true,
+      "arguments": {
+        "fato": "O servidor de testes do Reinaldo se chama lab01"
+      },
+      "args_ok": true,
+      "answer": "Anotei isso.",
+      "answer_first_chunk_s": 0.5284720099998594,
+      "text_ok": true,
+      "ok": true,
+      "run": 1
+    },
+    {
+      "question": "Anota aí: o backup roda todo dia às 2h.",
+      "expected": "guardar_fato",
+      "got": "guardar_fato",
+      "decision_s": 0.6547000129999105,
+      "first_text": "",
+      "error": null,
+      "correct_choice": true,
+      "arguments": {
+        "fato": "O backup roda todos os dias às 2h"
+      },
+      "args_ok": true,
+      "answer": "Anotei isso. O backup roda todos os dias às 2h.",
+      "answer_first_chunk_s": 0.5269023250002647,
+      "text_ok": true,
+      "ok": true,
+      "run": 1
+    },
+    {
+      "question": "Esquece que o banco de produção se chama PRDORA.",
+      "expected": "esquecer",
+      "got": "esquecer",
+      "decision_s": 0.6037780890001159,
+      "first_text": "",
+      "error": null,
+      "correct_choice": true,
+      "arguments": {
+        "numero": 2
+      },
+      "args_ok": true,
+      "answer": "Feito, esqueci esse dado.",
+      "answer_first_chunk_s": 0.44117477700001473,
+      "text_ok": true,
+      "ok": true,
+      "run": 1
+    },
+    {
+      "question": "Pode apagar aquilo da reunião.",
+      "expected": "esquecer",
+      "got": "esquecer",
+      "decision_s": 0.6302892849998898,
+      "first_text": "",
+      "error": null,
+      "correct_choice": true,
+      "arguments": {
+        "numero": 3
+      },
+      "args_ok": true,
+      "answer": "Apaguei o que você pediu.",
+      "answer_first_chunk_s": 0.6629696090003563,
+      "text_ok": true,
+      "ok": true,
+      "run": 1
+    },
+    {
+      "question": "Esquece isso.",
+      "expected": "esquecer",
+      "got": "esquecer",
+      "decision_s": 1.0645441189999474,
+      "first_text": "",
+      "error": null,
+      "correct_choice": true,
+      "arguments": {
+        "numero": 3
+      },
+      "args_ok": true,
+      "answer": "Feito, eu esqueci.",
+      "answer_first_chunk_s": 0.4509614630001124,
+      "text_ok": true,
+      "ok": true,
+      "run": 1
+    },
+    {
+      "question": "Na verdade, apaga isso aí.",
+      "expected": "esquecer",
+      "got": "esquecer",
+      "decision_s": 0.6087508299997353,
+      "first_text": "",
+      "error": null,
+      "correct_choice": true,
+      "arguments": {
+        "numero": 3
+      },
+      "args_ok": true,
+      "answer": "Apagado.",
+      "answer_first_chunk_s": 0.4499388799999906,
+      "text_ok": true,
+      "ok": true,
+      "run": 1
+    },
+    {
+      "question": "Oi Agatha, tudo bem?",
+      "expected": null,
+      "got": null,
+      "decision_s": 0.26587113400000817,
+      "first_text": "Tudo ótimo por aqui. Como posso ajudar, Rei?",
+      "error": null,
+      "correct_choice": true,
+      "text_ok": true,
+      "ok": true,
+      "run": 1
+    },
+    {
+      "question": "O que é um trigger no Zabbix?",
+      "expected": null,
+      "got": null,
+      "decision_s": 0.24922832199990808,
+      "first_text": "É uma regra de alerta. Ele dispara quando uma condição monitorada é atingida. Assim, você é avisado sobre problemas.",
+      "error": null,
+      "correct_choice": true,
+      "text_ok": true,
+      "ok": true,
+      "run": 1
+    },
+    {
+      "question": "O que é uma tablespace?",
+      "expected": null,
+      "got": null,
+      "decision_s": 0.2394854120002492,
+      "first_text": "É um espaço lógico no banco de dados. Ele agrupa objetos de dados como tabelas e índices.",
+      "error": null,
+      "correct_choice": true,
+      "text_ok": true,
+      "ok": true,
+      "run": 1
+    },
+    {
+      "question": "Qual a diferença entre Podman e Docker?",
+      "expected": null,
+      "got": null,
+      "decision_s": 0.24850887200000216,
+      "first_text": "Eles são ferramentas de container. Ambos gerenciam containers de forma eficiente. Podman é focado em ser daemonless, enquanto o Docker usa um daemon.",
+      "error": null,
+      "correct_choice": true,
+      "text_ok": true,
+      "ok": true,
+      "run": 1
+    },
+    {
+      "question": "Que horas são agora?",
+      "expected": null,
+      "got": null,
+      "decision_s": 0.25323108900010993,
+      "first_text": "Agora são 21h30.",
+      "error": null,
+      "correct_choice": true,
+      "text_ok": true,
+      "ok": true,
+      "run": 1
+    },
+    {
+      "question": "Me sugere um filme de ação.",
+      "expected": null,
+      "got": null,
+      "decision_s": 0.248970776999613,
+      "first_text": "Eu não tenho acesso a recomendações de filmes. Você gostaria de checar algum status do Zabbix ou Oracle?",
+      "error": null,
+      "correct_choice": true,
+      "text_ok": true,
+      "ok": true,
+      "run": 1
+    },
+    {
+      "question": "Obrigado, Agatha.",
+      "expected": null,
+      "got": null,
+      "decision_s": 0.23988503300006414,
+      "first_text": "De nada, Reinaldo. Estou aqui para ajudar.",
+      "error": null,
+      "correct_choice": true,
+      "text_ok": true,
+      "ok": true,
+      "run": 1
+    },
+    {
+      "question": "O que você sabe sobre mim?",
+      "expected": null,
+      "got": null,
+      "decision_s": 0.28172090399993976,
+      "first_text": "Você trabalha com infraestrutura. Também estuda cloud e DevOps. E tem um banco de produção chamado PRDORA.",
+      "error": null,
+      "correct_choice": true,
+      "text_ok": true,
+      "ok": true,
+      "run": 1
+    },
+    {
+      "question": "Qual o padrão de nome que eu uso nos hosts?",
+      "expected": null,
+      "got": "zabbix_host",
+      "decision_s": 0.7084771089998867,
+      "first_text": "",
+      "error": null,
+      "correct_choice": false,
+      "arguments": {},
+      "args_ok": false,
+      "answer": "Você usa o padrão ambiente-servidor-host. Por exemplo, PROD-WEB-01.",
+      "answer_first_chunk_s": 1.0877147339997464,
+      "text_ok": true,
+      "ok": false,
+      "run": 1
+    },
+    {
+      "question": "Qual o nome do meu notebook?",
+      "expected": null,
+      "got": null,
+      "decision_s": 0.2540881879999688,
+      "first_text": "Não tenho esse dado. Você não me disse o nome do seu notebook.",
+      "error": null,
+      "correct_choice": true,
+      "text_ok": true,
+      "ok": true,
+      "run": 1
+    },
+    {
+      "question": "Quanto é 15% de 240?",
+      "expected": "calcular",
+      "got": "calcular",
+      "decision_s": 0.48471275199972297,
+      "first_text": "",
+      "error": null,
+      "correct_choice": true,
+      "arguments": {
+        "expressao": "240 * 0.15"
+      },
+      "args_ok": true,
+      "answer": "O resultado é 36.",
+      "answer_first_chunk_s": 0.6053559659999337,
+      "text_ok": true,
+      "ok": true,
+      "run": 2
+    },
+    {
+      "question": "Quanto é 1234 vezes 56?",
+      "expected": "calcular",
+      "got": "calcular",
+      "decision_s": 0.4815055129997745,
+      "first_text": "",
+      "error": null,
+      "correct_choice": true,
+      "arguments": {
+        "expressao": "1234 * 56"
+      },
+      "args_ok": true,
+      "answer": "O resultado é 69104.",
+      "answer_first_chunk_s": 0.8112636959999691,
+      "text_ok": true,
+      "ok": true,
+      "run": 2
+    },
+    {
+      "question": "Quanto é 2 elevado a 10?",
+      "expected": "calcular",
+      "got": "calcular",
+      "decision_s": 0.5143586900003356,
+      "first_text": "",
+      "error": null,
+      "correct_choice": true,
+      "arguments": {
+        "expressao": "2**10"
+      },
+      "args_ok": true,
+      "answer": "É 1024.",
+      "answer_first_chunk_s": 0.6083188090001386,
+      "text_ok": true,
+      "ok": true,
+      "run": 2
+    },
+    {
+      "question": "Tenho 1,5 tera usados e cresce 20 gigas por dia. Em quantos dias chego a 2 tera?",
+      "expected": "calcular",
+      "got": "calcular",
+      "decision_s": 0.5404906050002865,
+      "first_text": "",
+      "error": null,
+      "correct_choice": true,
+      "arguments": {
+        "expressao": "(2 - 1.5) / 20"
+      },
+      "args_ok": false,
+      "answer": "Você chegará em cerca de 0.025 dias.",
+      "answer_first_chunk_s": 0.7513937270000497,
+      "text_ok": true,
+      "ok": false,
+      "run": 2
+    },
+    {
+      "question": "Tem algum alerta no Zabbix agora?",
+      "expected": "zabbix_problemas",
+      "got": "zabbix_problemas",
+      "decision_s": 0.7648107679997338,
+      "first_text": "",
+      "error": null,
+      "correct_choice": true,
+      "arguments": {},
+      "args_ok": true,
+      "answer": "Tem um alerta ativo. O host agatha-srv está com uso de disco em /dados acima de 80%.",
+      "answer_first_chunk_s": 0.6569968040003005,
+      "text_ok": true,
+      "ok": true,
+      "run": 2
+    },
+    {
+      "question": "Como está o host agatha-srv no Zabbix?",
+      "expected": "zabbix_host",
+      "got": "zabbix_host",
+      "decision_s": 0.7161598580000827,
+      "first_text": "",
+      "error": null,
+      "correct_choice": true,
+      "arguments": {
+        "host": "agatha-srv"
+      },
+      "args_ok": true,
+      "answer": "O host agatha-srv está disponível. A CPU está em 23% e a memória em 61%.",
+      "answer_first_chunk_s": 0.9713531080001303,
+      "text_ok": true,
+      "ok": true,
+      "run": 2
+    },
+    {
+      "question": "Qual o uso de CPU do servidor agatha-srv?",
+      "expected": "zabbix_host",
+      "got": "zabbix_host",
+      "decision_s": 0.7112955640000109,
+      "first_text": "",
+      "error": null,
+      "correct_choice": true,
+      "arguments": {
+        "host": "agatha-srv"
+      },
+      "args_ok": true,
+      "answer": "A CPU do agatha-srv está em 23%. A memória está em 61% e o disco em 41% no diretório /dados.",
+      "answer_first_chunk_s": 1.202392916000008,
+      "text_ok": true,
+      "ok": true,
+      "run": 2
+    },
+    {
+      "question": "Como estão as tablespaces do Oracle?",
+      "expected": "oracle_tablespaces",
+      "got": "oracle_tablespaces",
+      "decision_s": 0.6514777699999286,
+      "first_text": "",
+      "error": null,
+      "correct_choice": true,
+      "arguments": {},
+      "args_ok": true,
+      "answer": "As tablespaces estão assim. USERS está com 91%, SYSTEM com 74% e SYSAUX com 66%.",
+      "answer_first_chunk_s": 0.7106645569997454,
+      "text_ok": true,
+      "ok": true,
+      "run": 2
+    },
+    {
+      "question": "Tem alguma tablespace quase cheia?",
+      "expected": "oracle_tablespaces",
+      "got": "oracle_tablespaces",
+      "decision_s": 0.6525606569998672,
+      "first_text": "",
+      "error": null,
+      "correct_choice": true,
+      "arguments": {},
+      "args_ok": true,
+      "answer": "A tablespace USERS está quase cheia com 91%. As outras estão mais tranquilas.",
+      "answer_first_chunk_s": 1.164077559999896,
+      "text_ok": true,
+      "ok": true,
+      "run": 2
+    },
+    {
+      "question": "Quantas sessões tem abertas no banco?",
+      "expected": "oracle_sessoes",
+      "got": "oracle_sessoes",
+      "decision_s": 0.7073520500002815,
+      "first_text": "",
+      "error": null,
+      "correct_choice": true,
+      "arguments": {},
+      "args_ok": true,
+      "answer": "Tem 48 sessões abertas. Destas, 5 estão ativas no momento.",
+      "answer_first_chunk_s": 0.7569373010001073,
+      "text_ok": true,
+      "ok": true,
+      "run": 2
+    },
+    {
+      "question": "Lembra que o meu servidor de testes se chama lab01.",
+      "expected": "guardar_fato",
+      "got": "guardar_fato",
+      "decision_s": 0.6624425869999868,
+      "first_text": "",
+      "error": null,
+      "correct_choice": true,
+      "arguments": {
+        "fato": "O servidor de testes do Reinaldo se chama lab01"
+      },
+      "args_ok": true,
+      "answer": "Anotei essa informação.",
+      "answer_first_chunk_s": 0.5874422430001687,
+      "text_ok": true,
+      "ok": true,
+      "run": 2
+    },
+    {
+      "question": "Anota aí: o backup roda todo dia às 2h.",
+      "expected": "guardar_fato",
+      "got": "guardar_fato",
+      "decision_s": 0.6543317050000041,
+      "first_text": "",
+      "error": null,
+      "correct_choice": true,
+      "arguments": {
+        "fato": "O backup do Reinaldo roda todo dia às 2h"
+      },
+      "args_ok": true,
+      "answer": "Anotei, Rei. O backup roda todo dia às 2h.",
+      "answer_first_chunk_s": 0.5306809170001543,
+      "text_ok": true,
+      "ok": true,
+      "run": 2
+    },
+    {
+      "question": "Esquece que o banco de produção se chama PRDORA.",
+      "expected": "esquecer",
+      "got": "esquecer",
+      "decision_s": 0.5990355090002595,
+      "first_text": "",
+      "error": null,
+      "correct_choice": true,
+      "arguments": {
+        "numero": 2
+      },
+      "args_ok": true,
+      "answer": "Esqueci o nome do banco de produção.",
+      "answer_first_chunk_s": 0.7854668539998784,
+      "text_ok": true,
+      "ok": true,
+      "run": 2
+    },
+    {
+      "question": "Pode apagar aquilo da reunião.",
+      "expected": "esquecer",
+      "got": "esquecer",
+      "decision_s": 0.6302347239998198,
+      "first_text": "",
+      "error": null,
+      "correct_choice": true,
+      "arguments": {
+        "numero": 3
+      },
+      "args_ok": true,
+      "answer": "Apaguei a informação da reunião.",
+      "answer_first_chunk_s": 0.6631709779999255,
+      "text_ok": true,
+      "ok": true,
+      "run": 2
+    },
+    {
+      "question": "Esquece isso.",
+      "expected": "esquecer",
+      "got": "esquecer",
+      "decision_s": 1.0696682679999867,
+      "first_text": "",
+      "error": null,
+      "correct_choice": true,
+      "arguments": {
+        "numero": 3
+      },
+      "args_ok": true,
+      "answer": "Esqueci o que você pediu.",
+      "answer_first_chunk_s": 0.6770847440002399,
+      "text_ok": true,
+      "ok": true,
+      "run": 2
+    },
+    {
+      "question": "Na verdade, apaga isso aí.",
+      "expected": "esquecer",
+      "got": "esquecer",
+      "decision_s": 0.6109741020000001,
+      "first_text": "",
+      "error": null,
+      "correct_choice": true,
+      "arguments": {
+        "numero": 3
+      },
+      "args_ok": true,
+      "answer": "Desfiz o que você pediu.",
+      "answer_first_chunk_s": 0.6192811259998052,
+      "text_ok": true,
+      "ok": true,
+      "run": 2
+    },
+    {
+      "question": "Oi Agatha, tudo bem?",
+      "expected": null,
+      "got": null,
+      "decision_s": 0.26722529300013775,
+      "first_text": "Tudo ótimo, Reinaldo. Como posso ajudar?",
+      "error": null,
+      "correct_choice": true,
+      "text_ok": true,
+      "ok": true,
+      "run": 2
+    },
+    {
+      "question": "O que é um trigger no Zabbix?",
+      "expected": null,
+      "got": null,
+      "decision_s": 0.24997968299976492,
+      "first_text": "Um trigger é uma condição que dispara um alerta. Ele monitora um dado e avisa quando ele atinge um limite predefinido.",
+      "error": null,
+      "correct_choice": true,
+      "text_ok": true,
+      "ok": true,
+      "run": 2
+    },
+    {
+      "question": "O que é uma tablespace?",
+      "expected": null,
+      "got": null,
+      "decision_s": 0.2408266120000917,
+      "first_text": "É um espaço lógico de armazenamento no Oracle. Ele agrupa objetos de banco de dados como tabelas e índices.",
+      "error": null,
+      "correct_choice": true,
+      "text_ok": true,
+      "ok": true,
+      "run": 2
+    },
+    {
+      "question": "Qual a diferença entre Podman e Docker?",
+      "expected": null,
+      "got": null,
+      "decision_s": 0.2486126920002789,
+      "first_text": "São ambas tecnologias de containers. O Podman roda containers sem depender de um daemon central.",
+      "error": null,
+      "correct_choice": true,
+      "text_ok": true,
+      "ok": true,
+      "run": 2
+    },
+    {
+      "question": "Que horas são agora?",
+      "expected": null,
+      "got": null,
+      "decision_s": 0.2536860830000478,
+      "first_text": "São 21h30 agora.",
+      "error": null,
+      "correct_choice": true,
+      "text_ok": true,
+      "ok": true,
+      "run": 2
+    },
+    {
+      "question": "Me sugere um filme de ação.",
+      "expected": null,
+      "got": null,
+      "decision_s": 0.24936351199994533,
+      "first_text": "Sugiro Mad Max: Estrada da Fúria. É um clássico de ação.",
+      "error": null,
+      "correct_choice": true,
+      "text_ok": true,
+      "ok": true,
+      "run": 2
+    },
+    {
+      "question": "Obrigado, Agatha.",
+      "expected": null,
+      "got": null,
+      "decision_s": 0.24176285300018208,
+      "first_text": "De nada, Rei. Sempre à disposição.",
+      "error": null,
+      "correct_choice": true,
+      "text_ok": true,
+      "ok": true,
+      "run": 2
+    },
+    {
+      "question": "O que você sabe sobre mim?",
+      "expected": null,
+      "got": null,
+      "decision_s": 0.2818455050000921,
+      "first_text": "Você usa padrão ambiente-servidor-host no Zabbix. O banco de produção é PRDORA. E tem uma reunião na quinta às 10h.",
+      "error": null,
+      "correct_choice": true,
+      "text_ok": true,
+      "ok": true,
+      "run": 2
+    },
+    {
+      "question": "Qual o padrão de nome que eu uso nos hosts?",
+      "expected": null,
+      "got": "zabbix_host",
+      "decision_s": 0.7158876729999974,
+      "first_text": "",
+      "error": null,
+      "correct_choice": false,
+      "arguments": {
+        "host": "ambiente-servidor-host"
+      },
+      "args_ok": false,
+      "answer": "Você usa o padrão ambiente-servidor-host. Por exemplo, algo como prod-web-01.",
+      "answer_first_chunk_s": 1.0851179750002302,
+      "text_ok": true,
+      "ok": false,
+      "run": 2
+    },
+    {
+      "question": "Qual o nome do meu notebook?",
+      "expected": null,
+      "got": null,
+      "decision_s": 0.25438399199993,
+      "first_text": "Não tenho essa informação. Você não me disse o nome do seu notebook.",
+      "error": null,
+      "correct_choice": true,
+      "text_ok": true,
+      "ok": true,
+      "run": 2
+    }
+  ]
+}
