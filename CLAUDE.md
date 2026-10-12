@@ -92,44 +92,19 @@ agatha/
       - fala descartada se ele continua falando depois que a resposta começa (half-duplex; barge-in no futuro)
       - respostas inventadas quando a pergunta chega mal transcrita (limite do 4B; ferramentas ajudam)
       - voz "dii" provisória (ele quer uma mais limpa)
-- [ ] Fase 3: wake word "Agatha", memória de contexto, primeiras ferramentas — **em andamento**:
-      feito: vocabulário do STT, wake word pela transcrição + modo conversa 20 s (ADR-008), ferramentas via
-      tool calling com exemplos no prompt + calculadora (ADR-009), memória explícita guardar_fato/esquecer em
-      SQLite (ADR-010), correção do STT sem VRAM em fala ruidosa, Zabbix 7.0 de laboratório (pod `zabbix` +
-      agent2 em container, `deploy/zabbix/`) com ferramentas somente leitura zabbix_problemas/zabbix_host
-      (ADR-011), Oracle 23ai Free de laboratório (container `oracle-free`, `deploy/oracle/`) com ferramentas
-      somente leitura oracle_tablespaces/oracle_sessoes (ADR-012). Falta decidir: fechar a fase ou fazer os
-      opcionais (openWakeWord — caminho para aperfeiçoar a wake word, decisão do Reinaldo; transcrição parcial
-      para perguntas longas).
-      Atenção ao contexto: prefixo fixo do prompt tem ~1670 tokens de 4096 com 7 ferramentas (2283 com a
+- [x] Fase 3: wake word "Agatha", memória e primeiras ferramentas (fechada em 12/10). Vocabulário do STT +
+      `AGATHA_STT_NAMES` para nomes do ambiente, wake word pela transcrição + modo conversa 20 s (ADR-008), tool
+      calling com exemplos no prompt + calculadora (ADR-009), memória explícita guardar_fato/esquecer em SQLite
+      (ADR-010), Zabbix 7.0 de laboratório com zabbix_problemas/zabbix_host (ADR-011), Oracle 23ai Free de
+      laboratório com oracle_tablespaces/oracle_sessoes (ADR-012). 3 testes no Windows em 12/10; o último, com
+      13 falas, passou inteiro: 1º som mediana 1,95 s, máx 2,17 s. `bench/tools_bench.py`: 92/105.
+      Atenção ao contexto: prefixo fixo do prompt tem ~1670 tokens de 4096 com 7 ferramentas (~2300 com a
       memória cheia); cada ferramenta nova cresce o prompt e o tempo de pré-aquecimento (~6 s).
-      **Teste do Reinaldo no Windows em 12/10 (15 falas): tudo funcionou** (wake word, calculadora com contexto,
-      memória guardar/consultar/esquecer, Zabbix, Oracle, conceito sem ferramenta). 1º som ~1,8–2,1 s na maioria.
-      Pendências desse teste, resolvidas em 12/10 (pod já com a versão nova; falta o Reinaldo testar no Windows):
-      1. lentidão de "que horas são" (3,5 s) e "o que você lembra de mim" (3,3 s): o modelo às vezes repetia o
-         carimbo "[segunda-feira, …]" antes de responder (~25 tokens, ~1,4 s; o filtro só escondia da fala).
-         Não era o pré-aquecimento. Correção: `logit_bias` proíbe "[" (llm.py)
-      2. "esquece isso": regra do `esquecer` diz que "isso" é o último fato guardado (bench: 0/5 → 9/10); "isso"
-         deixou de segurar a fala como incompleta
-      3. RAM no Zabbix: o template do 7.0 usa a chave `vm.memory.util`, não `vm.memory.utilization` (agent2 ok)
-      4. calculadora devolve decimal com vírgula ("62,5" → "vírgula")
-      5. nomes no STT: `AGATHA_STT_NAMES` (no `server/.env`: agatha-srv, PRDORA); voz sintética 0/10 → 7/10
-      **2º teste do Reinaldo no Windows em 12/10 (17 falas):** 1º som mediana 2,1 s, máx 2,5 s (sem os 3,3–3,5 s);
-      PRDORA e RAM ok. Falhas corrigidas depois (pod já atualizado, falta testar):
-      - "Esqueça essa informação." → pediu o número: exemplo de `esquecer` com referência vaga + regra "use o
-        último fato da lista" (bench: casos de memória 29/50 → 52/60)
-      - "que horas roda o backup?" chamou zabbix_problemas; "qual é mesmo o nome do meu banco?" chamava
-        guardar_fato: perguntas sobre a memória são respondidas direto
-      - "agatha-srv" ainda transcrito "Agatha, server" com a voz dele; a busca de host compara com as partes do
-        nome ("server" ≈ "srv"), só se apontar um único host
-      Não testados com a voz dele: calculadora (62,5; 10/3), tablespaces, alertas do Zabbix.
-      Observações (sem correção): pergunta logo após guardar/esquecer fato ainda pode esperar o recálculo do cache
-      (7–9 s, ADR-010); "pode esquecer o que eu te falei" depois de outro assunto faz ela perguntar qual;
-      conversão tera/giga na calculadora erra ~6/10 (antigo).
-      **3º teste no Windows em 12/10 (13 falas): tudo funcionou.** 1º som mediana 1,95 s, máx 2,17 s. Esquecer com
-      referência vaga, agatha-srv transcrito certo, RAM, calculadora (62,5 · contexto 18% → 45 · 10/3 → "3,33"),
-      tablespaces e alertas ok. Resíduo: "qual é o nome do meu banco de produção?" logo depois de guardar o fato
-      chamou guardar_fato de novo (ja_sabia; resposta certa, só o "deixa eu ver" à toa). Reproduzido no bench (~5/10
-      certos); três contraexemplos no few-shot testados, nenhum resolveu sem piorar o esquecer vago: fica como está.
-      Próximo passo: o Reinaldo decide fechar a Fase 3 ou fazer os opcionais.
+      Pontos fracos conhecidos (no bench, sem correção): pergunta sobre um fato logo depois de guardá-lo às vezes
+      chama guardar_fato de novo (só um "deixa eu ver" à toa; 3 contraexemplos testados pioravam o esquecer
+      vago); "pode esquecer o que eu te falei" depois de outro assunto faz ela perguntar qual; conversão
+      tera/giga na calculadora erra ~6/10; pergunta logo após guardar/esquecer espera o recálculo do cache
+      (7–9 s, ADR-010).
+      Opcionais adiados para depois da Fase 4 (decisão do Reinaldo): openWakeWord no cliente; transcrição
+      parcial para perguntas longas.
 - [ ] Fase 4: serviço systemd, logs, testes, README final
