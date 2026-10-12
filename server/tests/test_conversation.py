@@ -225,7 +225,7 @@ def test_limite_de_rodadas_de_ferramenta():
 def test_memoria_entra_no_prompt_e_muda_so_no_turno_seguinte():
     mem = MemoryStore(MemoryConfig(db=":memory:"))
     tools = ToolRegistry(memory_tools(mem))
-    conv, llm, _ = make(("tool", "lembrar", '{"fato": "O banco de produção se chama PRDORA"}'), "Guardei.", "Ok.",
+    conv, llm, _ = make(("tool", "guardar_fato", '{"fato": "O banco de produção se chama PRDORA"}'), "Guardei.", "Ok.",
                         tools=tools, memory=mem)
 
     async def scenario():
@@ -236,7 +236,7 @@ def test_memoria_entra_no_prompt_e_muda_so_no_turno_seguinte():
 
     asyncio.run(scenario())
     first_round, second_round, next_turn = llm.calls
-    assert "nada guardado ainda" in first_round[0]["content"]
+    assert "memória sobre o Reinaldo está vazia" in first_round[0]["content"]
     # dentro do mesmo turno o prompt não muda (senão o llama.cpp reprocessaria tudo no meio)
     assert second_round[0] == first_round[0]
     # no turno seguinte, o fato aparece numerado

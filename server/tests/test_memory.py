@@ -44,10 +44,10 @@ def test_versao_muda_a_cada_alteracao():
 
 def test_ferramentas():
     s = store()
-    lembrar, esquecer = memory_tools(s)
-    assert lembrar.handler({"fato": "Reunião na quinta às 10h"}) == {"ok": True, "numero": 1}
-    assert lembrar.handler({"fato": "reunião na quinta às 10h"})["ja_sabia"] is True
-    assert "erro" in lembrar.handler({"fato": ""})
+    guardar, esquecer = memory_tools(s)
+    assert guardar.handler({"fato": "Reunião na quinta às 10h"}) == {"ok": True, "numero": 1}
+    assert guardar.handler({"fato": "reunião na quinta às 10h"})["ja_sabia"] is True
+    assert "erro" in guardar.handler({"fato": ""})
     assert esquecer.handler({"numero": 1}) == {"ok": True, "esquecido": "Reunião na quinta às 10h"}
     assert "não existe" in esquecer.handler({"numero": 1})["erro"]
     assert "número" in esquecer.handler({"numero": "aquilo"})["erro"]
@@ -55,7 +55,7 @@ def test_ferramentas():
 
 def test_bloco_de_memoria_no_prompt():
     s = store()
-    assert memory_block(s.facts()) == "Memória: nada guardado ainda."
+    assert "vazia" in memory_block(s.facts())
     s.add("O banco de produção se chama PRDORA")
     assert "1. O banco de produção se chama PRDORA" in system_message(None, s.facts())["content"]
-    assert "Memória" not in system_message(None, None)["content"]  # memória desligada
+    assert "memória" not in system_message(None, None)["content"].lower()  # memória desligada
