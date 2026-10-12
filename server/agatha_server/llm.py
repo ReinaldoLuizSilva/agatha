@@ -17,6 +17,10 @@ class LLMConfig:
     max_tokens: int = 200
 
 
+class ContextOverflow(Exception):
+    """O prompt não cabe no contexto do llama-server (exceed_context_size_error)."""
+
+
 @dataclass(frozen=True)
 class TextDelta:
     text: str
@@ -59,6 +63,8 @@ class LLMClient:
         async with self._client.stream("POST", "/v1/chat/completions", json=body) as response:
             if response.is_error:
                 await response.aread()
+                if "exceed_context_size" in response.text:
+                    raise ContextOverflow(response.text[:200])
                 raise httpx.HTTPStatusError(
                     f"llama-server respondeu {response.status_code}: {response.text[:200]}",
                     request=response.request, response=response,

@@ -6,7 +6,7 @@ from datetime import datetime
 import pytest
 
 from agatha_server.conversation import FILLERS, Audio, Conversation, ConversationConfig, Done, TextChunk
-from agatha_server.llm import TextDelta, ToolCallDelta
+from agatha_server.llm import ContextOverflow, TextDelta, ToolCallDelta
 from agatha_server.memory import MemoryConfig, MemoryStore
 from agatha_server.tools.memory import memory_tools
 from agatha_server.prompts import describe_now
@@ -244,3 +244,36 @@ def test_memoria_entra_no_prompt_e_muda_so_no_turno_seguinte():
     # e o cache do novo prompt foi recalculado em segundo plano, com as ferramentas
     messages, schemas = llm.prefills[-1]
     assert messages[0] == next_turn[0] and schemas
+
+
+class OverflowLLM(FakeLLM):
+    """Recusa o prompt se ele tiver mais que `limit` mensagens (simula o contexto estourado)."""
+
+    def __init__(self, limit: int, *replies):
+        super().__init__(*replies)
+        self.limit = limit
+
+    async def stream_chat(self, messages, tools=None):
+        if len(messages) > self.limit:
+            self.calls.append(messages)
+            raise ContextOverflow("request exceeds the available context size")
+        async for d in super().stream_chat(messages, tools):
+            yield d
+
+
+def test_contexto_estourado_corta_o_historico_e_tenta_de_novo():
+    llm, synth = OverflowLLM(7, "Ok."), FakeSynth()
+    conv = Conversation(llm, synth, ThreadPoolExecutor(1), ConversationConfig(history_turns=12),
+                        clock=lambda: 1.0, now=lambda: NOW)
+    for i in range(3):  # sistema + 3 turnos × 2 mensagens = 7 mensagens: ainda cabe
+        run(conv, f"pergunta {i}")
+    events = run(conv, "pergunta 3")  # 9 mensagens: estoura, corta para 2 turnos e responde
+    assert events[-1].reason == "done"
+    assert len(conv.history) == 3  # os 2 que ficaram + o turno atual
+    assert len(llm.calls[-1]) == 6  # sistema + 2 turnos + pergunta
+
+
+def test_contexto_estourado_sem_historico_e_erro():
+    llm, synth = OverflowLLM(1, "Ok."), FakeSynth()
+    conv = Conversation(llm, synth, ThreadPoolExecutor(1), clock=lambda: 1.0, now=lambda: NOW)
+    assert run(conv, "pergunta")[-1].reason == "error"

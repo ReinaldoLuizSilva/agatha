@@ -18,7 +18,7 @@ from datetime import datetime
 from itertools import cycle
 from typing import Protocol
 
-from .llm import TextDelta, ToolCallDelta
+from .llm import ContextOverflow, TextDelta, ToolCallDelta
 from .memory import MemoryStore
 from .prompts import few_shot_messages, system_message, user_message
 from .text import Chunker, LeadingTimestampFilter, clean, normalize_for_speech
@@ -172,6 +172,16 @@ class Conversation:
                 for raw_chunk in [*chunker.feed(head.flush()), *chunker.flush()]:
                     async for event in speak(raw_chunk):
                         yield event
+            except ContextOverflow:
+                if self.history and not spoken:
+                    # O prompt não coube (prefixo grande + histórico longo): fica com os 2 últimos turnos
+                    log.warning("prompt maior que o contexto do LLM; cortando o histórico de %d para 2 turnos",
+                                len(self.history))
+                    self.history = self.history[-2:]
+                    continue
+                log.exception("prompt maior que o contexto do LLM, mesmo sem histórico")
+                yield Done("error", " ".join(spoken), timings, used_tools)
+                return
             except Exception:
                 if tools is not None and not calls and not raw:
                     # ex.: argumento com JSON degenerado → HTTP 500 no llama-server; tenta sem ferramentas

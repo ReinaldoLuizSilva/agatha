@@ -1,8 +1,8 @@
 """Memória explícita da Agatha (ADR-010): fatos que o Reinaldo pede para lembrar.
 
 Os fatos ficam num SQLite em /dados/agatha/data (fora do git), valem entre sessões e reinícios, e
-entram numerados no prompt de sistema. O LLM grava com a ferramenta `lembrar` e apaga com
-`esquecer`, pelo número.
+entram numerados no prompt de sistema. O LLM grava com a ferramenta `guardar_fato` e apaga
+com `esquecer`, pelo número.
 
 Administração pelo terminal:
     python -m agatha_server.memory list
@@ -26,7 +26,8 @@ DEFAULT_DB = "/dados/agatha/data/memory/agatha.db"
 @dataclass(frozen=True)
 class MemoryConfig:
     db: str = DEFAULT_DB
-    max_facts: int = 50
+    # cada fato custa ~20-25 tokens no prompt; 30 fatos ≈ 700 tokens dos 4096 de contexto (ADR-010)
+    max_facts: int = 30
     max_chars: int = 200
 
 
