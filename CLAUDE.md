@@ -122,3 +122,14 @@ agatha/
       saudável, VRAM 3,66 GB) e o teste de fumaça passou (fim da fala → 1º áudio p50 1,96 s, máx 2,18 s).
       Repositório fica privado por enquanto; licença (Piper GPL, voz "dii" CC BY-NC-ND, ADR-005) só se um dia
       ficar público. Não levantar de novo antes disso.
+- [ ] Fase 5: wake word no cliente + barge-in — **em andamento** (escopo aprovado em 12/10). Plano: 1 coleta de
+      amostras (`python -m agatha_client.record`), 2 comparar detectores (openWakeWord treinado × Vosk PT-BR com
+      gramática) → ADR-014, 3 wake word no cliente (envia só após o nome ou no modo conversa; o servidor continua
+      confirmando pela transcrição; protocolo v3), 4 barge-in (`interrupt`, cancelar LLM/TTS, "Agatha, para" sem
+      LLM; meta nome → silêncio < 300 ms), 5 cancelamento de eco (AEC do WebRTC com a referência do que tocou),
+      6 teste real no Windows. Decisões do Reinaldo: treino no agatha-srv (sem Colab nem serviço externo; parar o
+      pod durante o treino); ele usa as **caixas de som do notebook**, então o AEC é obrigatório nesta fase.
+      Porcupine descartado (fechado, chave online). Não existe modelo pronto de "Agatha"; a voz dele nas
+      amostras é o que mais vale (usuário único).
+      feito: 1. gravador guiado no cliente; respostas reais da Agatha para a parte eco em
+      /dados/agatha/data/wakeword/respostas. Falta o Reinaldo gravar e mandar para /dados/agatha/data/wakeword/.
