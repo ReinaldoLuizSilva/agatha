@@ -12,6 +12,7 @@ from agatha_server.tools.zabbix import ZabbixClient, ZabbixConfig, _uptime, zabb
 NOW = int(time.time())
 STALE = False  # simula agente fora do ar: só valores velhos
 MEMORY_KEY = "vm.memory.util"  # chave do template do Zabbix 7.0
+EXTRA_HOSTS: list[dict] = []  # outros hosts monitorados, além do agatha-srv
 
 
 def fake_api(request: httpx.Request) -> httpx.Response:
@@ -20,7 +21,7 @@ def fake_api(request: httpx.Request) -> httpx.Response:
     method, params = body["method"], body["params"]
     if method == "host.get":
         hosts = [{"hostid": "10", "host": "agatha-srv", "name": "agatha-srv",
-                  "interfaces": [{"available": "1", "error": ""}]}]
+                  "interfaces": [{"available": "1", "error": ""}]}, *EXTRA_HOSTS]
         term = (params.get("search") or {}).get("host")
         result = [h for h in hosts if term is None or term in h["host"]]
     elif method == "trigger.get":
@@ -102,6 +103,17 @@ def test_desligado_sem_configuracao():
 def test_host_com_nome_trocado_pelo_stt_acha_por_semelhanca():
     _, host = tools()
     assert asyncio.run(host.handler({"host": "Agatha CRV"}))["host"] == "agatha-srv"
+
+
+def test_host_por_parte_do_nome_so_se_for_unico():
+    # teste de 12/10: "agatha-srv" chegou como "Agatha, server" e o modelo pediu só "server"
+    _, host = tools()
+    assert asyncio.run(host.handler({"host": "server"}))["host"] == "agatha-srv"
+    EXTRA_HOSTS.append({"hostid": "11", "host": "web-srv", "name": "web-srv", "interfaces": [{"available": "1"}]})
+    try:
+        assert "hosts_monitorados" in asyncio.run(host.handler({"host": "server"}))  # ambíguo: pergunta
+    finally:
+        EXTRA_HOSTS.clear()
 
 
 def test_valor_velho_nao_e_apresentado_como_atual():

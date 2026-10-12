@@ -8,6 +8,7 @@ O token pertence a um usuário com permissão só de leitura (deploy/zabbix/setu
 
 import difflib
 import logging
+import re
 from dataclasses import dataclass
 from datetime import datetime
 
@@ -58,7 +59,8 @@ class ZabbixClient:
         """Busca por nome técnico ou visível, sem exigir o nome exato ("agatha" acha "agatha-srv").
 
         Se a busca por trecho não achar nada, tenta por semelhança: o nome chega pelo reconhecimento
-        de voz e pode vir trocado ("agatha crv" → "agatha-srv").
+        de voz e pode vir trocado ("agatha crv" → "agatha-srv"). Por último, compara com as partes do
+        nome ("server" ≈ "srv" em "agatha-srv"; teste de 12/10), mas só se apontar um único host.
         """
         term = name.strip().lower().replace("servidor ", "").replace(" ", "-")
         fields = {"output": ["hostid", "host", "name"], "selectInterfaces": ["available", "error"]}
@@ -67,7 +69,10 @@ class ZabbixClient:
             return found
         hosts = await self.call("host.get", fields)
         close = difflib.get_close_matches(term, [h["host"].lower() for h in hosts], n=1, cutoff=0.6)
-        return [h for h in hosts if close and h["host"].lower() == close[0]]
+        if close:
+            return [h for h in hosts if h["host"].lower() == close[0]]
+        by_part = [h for h in hosts if difflib.get_close_matches(term, re.split(r"[-_.]", h["host"].lower()), cutoff=0.6)]
+        return by_part if len(by_part) == 1 else []
 
     async def aclose(self) -> None:
         await self._client.aclose()
