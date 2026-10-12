@@ -5,11 +5,13 @@ import json
 import time
 
 import httpx
+import pytest
 
-from agatha_server.tools.zabbix import ZabbixClient, ZabbixConfig, zabbix_tools
+from agatha_server.tools.zabbix import ZabbixClient, ZabbixConfig, _uptime, zabbix_tools
 
 NOW = int(time.time())
 STALE = False  # simula agente fora do ar: só valores velhos
+MEMORY_KEY = "vm.memory.util"  # chave do template do Zabbix 7.0
 
 
 def fake_api(request: httpx.Request) -> httpx.Response:
@@ -32,8 +34,9 @@ def fake_api(request: httpx.Request) -> httpx.Response:
         result = []
     elif method == "item.get" and "filter" in params:
         result = [{"key_": "system.cpu.util", "lastvalue": "23.456", "lastclock": str(NOW)},
-                  {"key_": "vm.memory.utilization", "lastvalue": "61.04", "lastclock": str(NOW)},
+                  {"key_": MEMORY_KEY, "lastvalue": "61.04", "lastclock": str(NOW)},
                   {"key_": "system.uptime", "lastvalue": "190000", "lastclock": str(NOW)}]
+        result = [i for i in result if i["key_"] in params["filter"]["key_"]]
     elif method == "item.get":
         result = [{"key_": "vfs.fs.dependent.size[/dados,pused]", "lastvalue": "41.27", "lastclock": str(NOW)},
                   {"key_": "vfs.fs.dependent.size[/boot,pused]", "lastvalue": "", "lastclock": "0"}]
@@ -66,6 +69,23 @@ def test_estado_do_host_por_nome_aproximado():
     result = asyncio.run(host.handler({"host": "servidor agatha"}))
     assert result == {"host": "agatha-srv", "disponivel": True, "cpu_pct": 23.5, "memoria_pct": 61.0,
                       "ligado_ha": "2 dias e 4 horas", "disco_pct": {"/dados": 41.3}}
+
+
+def test_memoria_com_a_chave_dos_templates_antigos():
+    global MEMORY_KEY
+    MEMORY_KEY = "vm.memory.utilization"
+    try:
+        _, host = tools()
+        assert asyncio.run(host.handler({"host": "agatha-srv"}))["memoria_pct"] == 61.0
+    finally:
+        MEMORY_KEY = "vm.memory.util"
+
+
+@pytest.mark.parametrize("seconds,expected", [
+    (190000, "2 dias e 4 horas"), (90000, "1 dia e 1 hora"), (7300, "2 horas"), (720, "12 minutos"),
+])
+def test_tempo_ligado(seconds, expected):
+    assert _uptime(seconds) == expected
 
 
 def test_host_desconhecido_lista_os_monitorados():

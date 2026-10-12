@@ -19,6 +19,9 @@ log = logging.getLogger(__name__)
 
 SEVERITIES = ["não classificada", "informação", "atenção", "média", "alta", "desastre"]
 STALE_S = 300  # valor mais velho que isso não é "atual" (ex.: agente fora do ar)
+# Uso de memória em %: o template "Linux by Zabbix agent" do 7.0 tem vm.memory.util (dependente de
+# vm.memory.size[pavailable]); templates antigos usam a chave nativa do agente, vm.memory.utilization.
+MEMORY_KEYS = ("vm.memory.util", "vm.memory.utilization")
 
 
 @dataclass(frozen=True)
@@ -76,10 +79,17 @@ def _since(clock: str | int, now: datetime | None = None) -> str:
     return f"{when.hour}h{when.minute:02d}" if when.date() == now.date() else f"{when:%d/%m} às {when.hour}h{when.minute:02d}"
 
 
+def _plural(n: int, word: str) -> str:
+    return f"{n} {word}{'' if n == 1 else 's'}"
+
+
 def _uptime(seconds: float) -> str:
     days, rest = divmod(int(seconds), 86400)
     hours = rest // 3600
-    return f"{days} dias e {hours} horas" if days else f"{hours} horas"
+    if days:
+        return f"{_plural(days, 'dia')} e {_plural(hours, 'hora')}"
+    # recém-ligado: "0 horas" (teste de 12/10) não diz nada
+    return _plural(hours, "hora") if hours else _plural(int(seconds) // 60, "minuto")
 
 
 def zabbix_tools(client: ZabbixClient) -> list[Tool]:
@@ -109,7 +119,7 @@ def zabbix_tools(client: ZabbixClient) -> list[Tool]:
         host = hosts[0]
         items = await client.call("item.get", {
             "hostids": [host["hostid"]], "output": ["key_", "lastvalue", "lastclock"],
-            "filter": {"key_": ["system.cpu.util", "vm.memory.utilization", "system.uptime"]},
+            "filter": {"key_": ["system.cpu.util", *MEMORY_KEYS, "system.uptime"]},
         })
         disks = await client.call("item.get", {
             "hostids": [host["hostid"]], "output": ["key_", "lastvalue", "lastclock"],
@@ -131,8 +141,8 @@ def zabbix_tools(client: ZabbixClient) -> list[Tool]:
             result["sem_dados_recentes"] = f"última coleta {_since(last)}"
         if "system.cpu.util" in values:
             result["cpu_pct"] = round(values["system.cpu.util"], 1)
-        if "vm.memory.utilization" in values:
-            result["memoria_pct"] = round(values["vm.memory.utilization"], 1)
+        if (memory := next((values[k] for k in MEMORY_KEYS if k in values), None)) is not None:
+            result["memoria_pct"] = round(memory, 1)
         if "system.uptime" in values:
             result["ligado_ha"] = _uptime(values["system.uptime"])
         fs = {}
