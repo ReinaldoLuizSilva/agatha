@@ -27,7 +27,9 @@ def _normalize(word: str) -> str:
 
 
 def is_addressed(text: str, config: WakeConfig) -> bool:
-    words = [w for w in (_normalize(w) for w in text.split()) if w]
+    # hífen separa: com "agatha-srv" no vocabulário (AGATHA_STT_NAMES), "Agatha, chega" já saiu
+    # do Whisper como "Agatha-srv" (benchmark da wake word, Fase 5)
+    words = [w for w in (_normalize(w) for w in re.split(r"[\s\-‐–—]+", text)) if w]
     if not words:
         return False
     names = {_normalize(w) for w in config.words}

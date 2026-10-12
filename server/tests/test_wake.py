@@ -12,6 +12,7 @@ CONFIG = WakeConfig()
     "Ei Ágata, me ajuda aqui",          # sem acento/variação
     "Ok, muito obrigado, Agatha.",       # no fim
     "Agatha consegue me validar o horário?",
+    "Agatha-srv.",                      # o Whisper juntou o nome a um termo do vocabulário
 ])
 def test_chamou_a_agatha(text):
     assert is_addressed(text, CONFIG)
