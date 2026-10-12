@@ -238,7 +238,7 @@ def resample(pcm: np.ndarray, rate_in: int, rate_out: int) -> np.ndarray:
         cutoff = 0.45 * rate_out / rate_in  # fração da taxa de entrada
         n = np.arange(-64, 65)
         taps = 2 * cutoff * np.sinc(2 * cutoff * n) * np.hamming(len(n))
-        x = np.convolve(x, taps / taps.sum(), mode="same")
+        x = np.convolve(x, taps / taps.sum())[len(n) // 2 : len(n) // 2 + len(x)]  # "same" erra se x < filtro
     t_out = np.arange(int(len(x) * rate_out / rate_in)) * rate_in / rate_out
     y = np.interp(t_out, np.arange(len(x)), x)
     return np.clip(np.round(y), -32768, 32767).astype("<i2")

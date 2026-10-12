@@ -9,8 +9,10 @@ Filtro adaptativo em blocos no domínio da frequência (PBFDAF, overlap-save), c
 o eco é estimado como a referência (o que foi tocado) passada por um filtro de `tail_ms`, depois
 de um atraso fixo `delay_ms` (saída de som → ar → microfone). A adaptação é normalizada pela
 potência da referência e congela quando a referência está em silêncio ou quando parece haver
-alguém falando por cima (o erro fica bem maior que o eco estimado), para a voz não desajustar o
-filtro.
+alguém falando por cima, para a voz não desajustar o filtro. A fala por cima é detectada pelo erro
+subindo muito acima do resíduo de costume do filtro já ajustado (não acima do eco: a voz chega
+mais baixa que o eco). O congelamento dura no máximo `dtd_hold_s`, para o filtro não travar se a
+sala mudar (o resíduo sobe e pareceria fala para sempre).
 """
 
 import numpy as np
@@ -24,12 +26,13 @@ class EchoCanceller:
     """
 
     def __init__(self, sample_rate: int = 16000, block: int = 256, tail_ms: float = 128.0,
-                 delay_ms: float = 0.0, mu: float = 1.0, dtd_ratio: float = 2.0):
+                 delay_ms: float = 0.0, mu: float = 1.0, dtd_ratio: float = 4.0, dtd_hold_s: float = 1.5):
         self.n = block
         self.parts = max(1, int(np.ceil(tail_ms * sample_rate / 1000 / block)))
         self.delay = int(round(delay_ms * sample_rate / 1000))
         self.mu = mu
         self.dtd_ratio = dtd_ratio
+        self.dtd_hold_blocks = int(dtd_hold_s * sample_rate / block)
         self.reset()
 
     def reset(self) -> None:
@@ -43,8 +46,9 @@ class EchoCanceller:
         self._mic_buf = np.zeros(0)
         self._ref_buf = np.zeros(0)
         self._out_buf = np.zeros(self.n)  # latência fixa de um bloco: sempre há saída pronta
-        self._echo_level = 0.0
-        self._err_level = 0.0
+        self._echo_level = 0.0  # média do eco estimado
+        self._err_level = 0.0  # média do resíduo quando não há fala por cima
+        self._frozen = 0  # blocos seguidos com a adaptação congelada por fala por cima
 
     def process(self, mic: np.ndarray, ref: np.ndarray) -> np.ndarray:
         if len(mic) != len(ref):
@@ -73,11 +77,15 @@ class EchoCanceller:
 
         self._power = 0.9 * self._power + 0.1 * np.abs(X) ** 2
         ref_energy = float(np.mean(x * x))
+        err = float(np.mean(e * e))
         self._echo_level = 0.95 * self._echo_level + 0.05 * float(np.mean(y * y))
-        self._err_level = 0.95 * self._err_level + 0.05 * float(np.mean(e * e))
-        # alguém falando por cima: o erro dispara em relação ao eco já estimado
-        double_talk = self._echo_level > 1.0 and float(np.mean(e * e)) > self.dtd_ratio * max(
-            self._err_level, self._echo_level)
+        converged = self._echo_level > 4 * self._err_level > 0  # já tira pelo menos 6 dB
+        double_talk = converged and err > self.dtd_ratio * self._err_level and self._frozen < self.dtd_hold_blocks
+        if double_talk:
+            self._frozen += 1
+        else:
+            self._frozen = 0
+            self._err_level = 0.95 * self._err_level + 0.05 * err if self._err_level else err
         if ref_energy > 1.0 and not double_talk:
             E = np.fft.rfft(np.concatenate([np.zeros(n), e]))
             norm = self.parts * self._power + 1e-6 * self._power.max() + 1e-9
