@@ -143,3 +143,12 @@ agatha/
       falsos disparos em áudio comum sobem (modelo final 10–23/h na validação; só importa durante a fala dela).
       ATENÇÃO: treino e testes pesados sempre com `systemd-run --user --scope -p MemoryMax=5G -p
       MemorySwapMax=0 nice -n 19` — um teste sem teto jogou o LLM no swap (1º áudio 34 s).
+      4. em andamento no branch `wip/barge-in` (12/10): servidor pronto e testado (reamostragem 16 kHz em
+      `audio.py`, `interruption_kind` em `wake.py`, `output_rate` no hello, `interrupt` na conversa, estado
+      "confirmando" no `app.py`); AEC com detector de fala por cima novo (`dtd_ratio` 4, `dtd_hold_s` 1,5):
+      nas gravações reais 85%/85% (0,5/0,9), mas ERLE caiu de ~13 para ~5,7 dB — a varredura de `dtd_ratio`
+      8/16/32 (scratchpad `aec_persist.py`) foi interrompida pela queda. Falta: essa varredura, ADR-016 (o
+      código já cita), cliente duplex + `barge_in`, depois o passo 5.
+      **HARDWARE (12/10, 20:35): kernel panic `Bad pagetable`** — 1 bit trocado (bit 39) numa PTE, padrão de
+      RAM com defeito (sem ECC); dump em /var/crash/127.0.0.1-2026-10-12-20:36:18. Até o memtest86+ passar,
+      NADA de testes pesados (varredura, treino). Aviso `timerqueue.c:38` no boot: ver se repete (pode ser driver).
