@@ -47,8 +47,12 @@ e no trabalho (infra, Oracle, Zabbix). Também é peça de portfólio Cloud/DevO
 
 ## Operação (agatha-srv)
 
-- Subir/derrubar tudo: `deploy/up.sh` / `deploy/down.sh` (pod `agatha`: `agatha-llm` + `agatha-server`).
-- Logs: `podman logs -f agatha-server`. Mudou código do servidor → rebuild da imagem (ver `deploy/README.md`).
+- Serviço do systemd do usuário via Quadlet (ADR-013): `deploy/install-systemd.sh` instala `deploy/quadlet/`;
+  `deploy/up.sh` / `deploy/down.sh` sobem/derrubam (pod `agatha`: `agatha-llm` + `agatha-server`);
+  `systemctl --user status|restart agatha-server`. Linger precisa ser ligado pelo Reinaldo (root).
+- Logs: `podman logs -f agatha-server` (o journald não serve: volátil e sem acesso do usuário).
+  Mudou código do servidor → rebuild da imagem + `systemctl --user restart agatha-server` (`deploy/README.md`).
+- Testes ponta a ponta NUNCA podem mexer na memória real (fatos do Reinaldo em /dados/agatha/data).
 - Zabbix de laboratório: `deploy/zabbix/up.sh` / `down.sh`; frontend em :8081 (senha do Admin em
   `/dados/agatha/lab/zabbix/admin-password`). De dentro dos containers, o host é `host.containers.internal`.
 - Oracle de laboratório: `deploy/oracle/up.sh` / `down.sh`; PDB FREEPDB1 :1521 (fechada no firewall);
@@ -107,4 +111,7 @@ agatha/
       (7–9 s, ADR-010).
       Opcionais adiados para depois da Fase 4 (decisão do Reinaldo): openWakeWord no cliente; transcrição
       parcial para perguntas longas.
-- [ ] Fase 4: serviço systemd, logs, testes, README final
+- [ ] Fase 4: serviço systemd, logs, testes, README final — **em andamento** (plano: 1 systemd, 2 logs em
+      /dados/agatha/logs + JSONL por resposta, 3 teste de fumaça + CI no GitHub Actions, 4 README final).
+      feito: 1. Quadlet no systemd do usuário (ADR-013), reinício em falha testado. Falta o Reinaldo rodar
+      `sudo loginctl enable-linger agatha` e testar um reboot.

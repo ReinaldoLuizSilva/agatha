@@ -1,0 +1,30 @@
+# LLM da Agatha (ADR-004): llama-server com Gemma 4 E4B Q4_K_M na GPU, contexto 4096.
+# 2 threads de CPU bastam (todas as camadas na GPU) e deixam núcleos para o Piper.
+# Notify=healthy: o serviço só fica "ativo" quando o /health responde (o servidor depende disso
+# para pôr o prompt de sistema no cache logo ao subir).
+
+[Unit]
+Description=Agatha: LLM (llama-server, Gemma 4 E4B)
+
+[Container]
+ContainerName=agatha-llm
+Pod=agatha.pod
+Image=localhost/agatha-llama:b11205
+Pull=never
+AddDevice=nvidia.com/gpu=all
+Timezone=local
+Volume=/dados/agatha/models/llm:/models:ro,z
+Exec=-m /models/gemma-4-E4B-it-Q4_K_M.gguf --host 0.0.0.0 --port 8080 -t 2 -ngl 99 -c 4096 -np 1 --jinja --reasoning-budget 0
+HealthCmd=curl -fsS http://127.0.0.1:8080/health
+HealthInterval=10s
+HealthStartPeriod=120s
+Notify=healthy
+StopTimeout=10
+
+[Service]
+Restart=on-failure
+RestartSec=5
+TimeoutStartSec=300
+
+[Install]
+WantedBy=default.target

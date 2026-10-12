@@ -55,10 +55,11 @@ scripts/
 tests/
 ```
 
-## Rodar em produção (pod Podman)
+## Rodar em produção (pod Podman + systemd)
 
-O jeito normal de rodar é o pod `agatha`, com o LLM e este servidor em containers. Veja
-[`deploy/README.md`](../deploy/README.md):
+O jeito normal de rodar é o pod `agatha`, com o LLM e este servidor em containers, como serviço do
+systemd do usuário. Veja [`deploy/README.md`](../deploy/README.md) e o
+[ADR-013](../docs/adr/0013-systemd-quadlet.md):
 
 ```bash
 deploy/up.sh                    # sobe tudo
@@ -79,7 +80,8 @@ O extra `gpu` instala o cuBLAS 12 e o cuDNN 9 via pip, dentro do venv. O host fi
 driver NVIDIA (branch 580).
 
 Para rodar o servidor pelo venv, o LLM precisa estar no ar (pelo pod, com `deploy/up.sh`, e
-depois `podman stop agatha-server` para liberar a porta 8765 e a VRAM do STT):
+depois `systemctl --user stop agatha-server` para liberar a porta 8765 e a VRAM do STT; um
+`podman stop` não basta, porque o systemd religaria o container):
 
 ```bash
 cd server

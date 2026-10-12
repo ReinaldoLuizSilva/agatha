@@ -1,0 +1,32 @@
+# Servidor da Agatha: núcleo, VAD, STT (GPU), TTS (CPU) e ferramentas.
+# Sobe depois do LLM saudável. Fica "ativo" quando a porta 8765 abre, o que só acontece depois de
+# carregar STT e TTS e de pôr o prompt de sistema no cache do LLM (~20 s).
+# Mudou o código: reconstrua a imagem e reinicie (deploy/README.md).
+
+[Unit]
+Description=Agatha: servidor (WebSocket :8765)
+Wants=agatha-llm.service
+After=agatha-llm.service
+
+[Container]
+ContainerName=agatha-server
+Pod=agatha.pod
+Image=localhost/agatha-server:0.2.0
+Pull=never
+AddDevice=nvidia.com/gpu=all
+Timezone=local
+# token e configurações locais (fora do git); veja server/.env.example
+EnvironmentFile=%h/agatha/server/.env
+Volume=/dados/agatha/models:/models:ro,z
+Volume=/dados/agatha/data:/data:z
+HealthInterval=10s
+Notify=healthy
+StopTimeout=10
+
+[Service]
+Restart=on-failure
+RestartSec=5
+TimeoutStartSec=300
+
+[Install]
+WantedBy=default.target

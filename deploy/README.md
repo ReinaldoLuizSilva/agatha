@@ -1,11 +1,13 @@
 # deploy/
 
-Implantação da Agatha no `agatha-srv`: preparação do host, imagens e o pod que roda tudo.
-Os serviços systemd (subir no boot, reiniciar em falha) entram na Fase 4.
+Implantação da Agatha no `agatha-srv`: preparação do host, imagens e o pod que roda tudo, como
+serviço do systemd do usuário `agatha` ([ADR-013](../docs/adr/0013-systemd-quadlet.md)).
 
 ```
 deploy/
-├── up.sh                # sobe o pod "agatha" (LLM + servidor)
+├── install-systemd.sh   # instala as units do Quadlet e sobe o pod
+├── quadlet/             # agatha.pod, agatha-llm.container, agatha-server.container
+├── up.sh                # sobe (ou reinicia) o pod "agatha" pelo systemd
 ├── down.sh              # derruba o pod
 ├── llama/Containerfile  # imagem do llama-server (CUDA 12, sm_61)
 ├── server/Containerfile # imagem do servidor da Agatha
@@ -16,11 +18,21 @@ deploy/
 ## Rodando a Agatha
 
 ```bash
-deploy/up.sh                    # sobe (ou recria) o pod e espera os dois serviços
+deploy/install-systemd.sh       # uma vez (e a cada mudança em deploy/quadlet/)
+sudo loginctl enable-linger agatha   # uma vez, como root: sobe no boot sem sessão aberta
+
+deploy/up.sh                    # sobe (ou reinicia) e espera os dois serviços ficarem saudáveis
 podman logs -f agatha-server    # transcrições, respostas e tempos de cada etapa
 podman logs -f agatha-llm       # llama-server
+systemctl --user status agatha-server agatha-llm
+systemctl --user restart agatha-server   # ex.: depois de reconstruir a imagem do servidor
 deploy/down.sh                  # derruba
 ```
+
+O systemd religa um container que cair (`Restart=on-failure`) e só considera o serviço no ar
+quando o healthcheck passa (`Notify=healthy`): o servidor sobe depois de o LLM responder. Os logs
+ficam no driver padrão do Podman, não no journald (o journal do host é volátil e o usuário
+`agatha` não o lê; ver ADR-013).
 
 | container | imagem | GPU | o que faz |
 |---|---|---|---|
@@ -33,9 +45,9 @@ deploy/down.sh                  # derruba
 - **Modelos:** `/dados/agatha/models` é montado **somente leitura**. Nada de modelo dentro das imagens.
 - **Dados:** `/dados/agatha/data` é montado **com escrita** em `/data` no servidor: é onde fica a
   memória da Agatha (`memory/agatha.db`, [ADR-010](../docs/adr/0010-memoria-explicita.md)).
-- **Configuração:** o token vem de `server/.env` (`--env-file`); os caminhos dos modelos já estão
+- **Configuração:** o token vem de `server/.env` (`EnvironmentFile=` na unit); os caminhos dos modelos já estão
   na imagem do servidor.
-- **Fuso horário:** `--tz=local`. Sem isso, os containers ficam em UTC e a Agatha erra a hora.
+- **Fuso horário:** `Timezone=local`. Sem isso, os containers ficam em UTC e a Agatha erra a hora.
 - **VRAM:** o pico com os dois serviços é de ~3,66 GB de 4 GB. Pare o pod antes de rodar os
   benchmarks de STT e LLM, ou os testes de STT, que precisam da GPU livre.
 
@@ -47,7 +59,7 @@ Zabbix 7.0 LTS monitorando o próprio agatha-srv, para as ferramentas da Agatha
 ```bash
 deploy/zabbix/up.sh                          # pod "zabbix" (postgres, server, web) + agent2
 .venv/bin/python deploy/zabbix/setup.py      # 1ª vez: senha do Admin, host, usuário/token só leitura
-deploy/up.sh                                 # recria o pod da Agatha para ler o token do server/.env
+systemctl --user restart agatha-server       # relê o server/.env com o token
 deploy/zabbix/down.sh                        # derruba (os dados ficam)
 ```
 
@@ -72,7 +84,7 @@ Oracle Database 23ai Free (imagem `gvenzl/oracle-free:23.9`) para as ferramentas
 ```bash
 deploy/oracle/up.sh                          # container oracle-free (1ª partida extrai o banco, ~20 s)
 .venv/bin/python deploy/oracle/setup.py      # 1ª vez: usuário AGATHA_RO + tablespace DADOS_APP ~85%
-deploy/up.sh                                 # recria o pod da Agatha para ler a conexão do server/.env
+systemctl --user restart agatha-server       # relê o server/.env com a conexão
 deploy/oracle/down.sh                        # derruba com shutdown limpo (os dados ficam)
 ```
 
@@ -90,7 +102,7 @@ podman build --format docker -t localhost/agatha-llama:b11205 deploy/llama
 # servidor (a cada mudança de código; o contexto é a pasta server/)
 podman build --format docker -f deploy/server/Containerfile -t localhost/agatha-server:0.2.0 server
 podman image prune -f           # remove as camadas antigas
-deploy/up.sh
+systemctl --user restart agatha-server
 ```
 
 `--format docker` preserva o `HEALTHCHECK`, que o formato OCI ignora. A imagem do servidor

@@ -1,0 +1,16 @@
+# Pod da Agatha (ADR-013): agatha-llm + agatha-server, gerenciados pelo systemd do usuário agatha.
+# Instalação: deploy/install-systemd.sh. O systemd gera o serviço agatha-pod.service.
+#
+# Portas: 8765 (WebSocket, aberta para a LAN pelo firewall) e 8080 (llama-server, só em 127.0.0.1
+# do host, para os benchmarks). Dentro do pod, o servidor fala com o LLM por 127.0.0.1.
+
+[Unit]
+Description=Agatha: pod (LLM + servidor)
+
+[Pod]
+PodName=agatha
+PublishPort=8765:8765
+PublishPort=127.0.0.1:8080:8080
+
+[Install]
+WantedBy=default.target
