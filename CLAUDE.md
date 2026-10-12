@@ -123,10 +123,11 @@ agatha/
       Repositório fica privado por enquanto; licença (Piper GPL, voz "dii" CC BY-NC-ND, ADR-005) só se um dia
       ficar público. Não levantar de novo antes disso.
 - [ ] Fase 5: barge-in com wake word no cliente — **em andamento** (escopo aprovado em 12/10). Plano revisto
-      pelo ADR-014: 1 coleta ✔, 2 detectores ✔, 3 cancelamento de eco (AEC do WebRTC com a referência do que
-      tocou; o eco chega com atraso fixo de 289 ms), 4 barge-in (`interrupt`, cancelar LLM/TTS, "Agatha, para"
-      sem LLM; meta nome → silêncio < 300 ms), 5 teste real no Windows. Ele usa as **caixas de som do
-      notebook**: sem AEC o detector acerta só ~25% com ela falando.
+      pelo ADR-014: 1 coleta ✔, 2 detectores ✔, 3 cancelamento de eco ✔ (ADR-015), 4 barge-in no cliente e no
+      servidor: stream duplex (mic + saída no mesmo stream, atraso medido no início), detector só durante a fala
+      dela, ao ouvir "Agatha" PAUSA a fala e o servidor confirma pela transcrição (retoma se não era com ela),
+      `interrupt` cancela LLM/TTS, "Agatha, para" sem LLM; meta nome → silêncio < 300 ms. 5 teste real no
+      Windows. Ele usa as **caixas de som do notebook**.
       Decisões do Reinaldo: treino no agatha-srv, sem Colab nem serviço externo; opção A do ADR-014 — o
       detector do cliente serve SÓ para o barge-in, a chamada normal continua pela transcrição no servidor
       (ADR-008). Guardar o áudio das falas do dia a dia para retreinar NÃO está autorizado (perguntar antes).
@@ -136,5 +137,9 @@ agatha/
       (perto/variado/longe), 2,7 falsos/h; Vosk descartado; openWakeWord treinado só com a voz dele
       (`client/wakeword/train.py`, CPU) 90/79/75%, ~1–3 falsos/h → /dados/agatha/models/wakeword/agatha.onnx.
       Sintéticos do Piper não ajudaram (desligados). Bug do hífen ("Agatha-srv") corrigido e no ar.
+      3. AEC (ADR-015, `bench/aec_bench.py`): o AEC3 do WebRTC tira ~30 dB mas apaga a voz dele (31% de acerto);
+      AEC linear próprio (`client/agatha_client/aec.py`, numpy, filtro persistente, atraso 289−16 ms) tira ~13 dB
+      e preserva a voz; detector treinado com eco simulado: 85% (0,5) / 77% (0,9) das interrupções; preço:
+      falsos disparos em áudio comum sobem (modelo final 10–23/h na validação; só importa durante a fala dela).
       ATENÇÃO: treino e testes pesados sempre com `systemd-run --user --scope -p MemoryMax=5G -p
       MemorySwapMax=0 nice -n 19` — um teste sem teto jogou o LLM no swap (1º áudio 34 s).

@@ -115,6 +115,7 @@ consequências:
 | [011](docs/adr/0011-zabbix-laboratorio.md) / [012](docs/adr/0012-oracle-laboratorio.md) | laboratórios Zabbix e Oracle, ferramentas somente leitura |
 | [013](docs/adr/0013-systemd-quadlet.md) | serviço do systemd com Quadlet |
 | [014](docs/adr/0014-wake-word-no-cliente-para-barge-in.md) | wake word no cliente só para o barge-in |
+| [015](docs/adr/0015-cancelamento-de-eco-linear.md) | cancelamento de eco linear no cliente e detector treinado com eco |
 
 ## Qualidade e operação
 
