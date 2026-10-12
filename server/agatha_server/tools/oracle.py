@@ -69,6 +69,15 @@ class OracleClient:
             await self._pool.close(force=True)
 
 
+def _human(mb: int) -> str:
+    """Tamanho com a unidade que soa natural ("9 MB", "883 GB", "32 TB"), pronto para a fala."""
+    if mb < 1024:
+        return f"{mb} MB"
+    if mb < 1024 * 1024:
+        return f"{round(mb / 1024)} GB"
+    return f"{round(mb / 1024 / 1024)} TB"
+
+
 def _db_error(e: Exception) -> dict:
     first = str(e).splitlines()[0] if str(e) else type(e).__name__
     return {"erro": f"não consegui consultar o Oracle: {first}"}
@@ -81,10 +90,11 @@ def oracle_tools(query: Query) -> list[Tool]:
         except Exception as e:
             log.warning("oracle_tablespaces falhou: %s", e)
             return _db_error(e)
+        # Espaço livre e máximo já calculados e com unidade: sem isso o modelo tentava fazer a conta
+        # (e misturava MB com GB). Com autoextend ilimitado, o máximo é o espaço livre do disco.
         return {"tablespaces": [
-            # limite em GB: com autoextend ilimitado ele vira o espaço livre do disco (centenas de
-            # milhares de MB), ruim de ouvir
-            {"nome": name, "usado_pct": float(pct), "usado_mb": int(used), "limite_gb": round(int(size) / 1024, 1)}
+            {"nome": name, "usado_pct": float(pct), "usado": _human(int(used)), "livre": _human(int(size) - int(used)),
+             "maximo": _human(int(size))}
             for name, pct, used, size in rows
         ]}
 

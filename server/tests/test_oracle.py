@@ -20,8 +20,8 @@ async def failing_query(sql: str):
 def test_tablespaces():
     tablespaces, _ = oracle_tools(fake_query)
     assert asyncio.run(tablespaces.handler({})) == {"tablespaces": [
-        {"nome": "DADOS_APP", "usado_pct": 85.2, "usado_mb": 55, "limite_gb": 0.1},
-        {"nome": "SYSTEM", "usado_pct": 74.0, "usado_mb": 520, "limite_gb": 32.0},
+        {"nome": "DADOS_APP", "usado_pct": 85.2, "usado": "55 MB", "livre": "9 MB", "maximo": "64 MB"},
+        {"nome": "SYSTEM", "usado_pct": 74.0, "usado": "520 MB", "livre": "31 GB", "maximo": "32 GB"},
     ]}
 
 
@@ -39,3 +39,8 @@ def test_falha_de_conexao_vira_erro_explicavel():
 def test_desligado_sem_configuracao():
     assert not OracleConfig().enabled
     assert OracleConfig(dsn="d", user="u", password="p").enabled
+
+
+def test_tamanhos_legiveis():
+    from agatha_server.tools.oracle import _human
+    assert [_human(9), _human(904809), _human(33554432)] == ["9 MB", "884 GB", "32 TB"]
