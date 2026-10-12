@@ -102,6 +102,7 @@ CASES = [
     ("Quanto é 15% de 240?", "calcular", calc_is(36), "36", None),
     ("Quanto é 1234 vezes 56?", "calcular", calc_is(69104), "69", None),
     ("Quanto é 2 elevado a 10?", "calcular", calc_is(1024), "1024", None),
+    ("Quanto é 25% de 250?", "calcular", calc_is(62.5), "62,5", "62.5"),
     ("Tenho 1,5 tera usados e cresce 20 gigas por dia. Em quantos dias chego a 2 tera?", "calcular",
      lambda a: 24 <= float(evaluate(a["expressao"])) <= 26.5, "2", None),
     ("Tem algum alerta no Zabbix agora?", "zabbix_problemas", lambda a: True, "disco", None),

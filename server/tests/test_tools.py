@@ -36,6 +36,12 @@ def test_recusa_o_que_nao_e_aritmetica(expr):
         evaluate(expr)
 
 
+def test_resultado_decimal_vem_com_virgula():
+    # o modelo copia o resultado: "62.5" seria falado como versão ("ponto cinco")
+    assert calculator.handler({"expressao": "250 * 0.25"}) == {"resultado": "62,5"}
+    assert calculator.handler({"expressao": "250 * 0.18"}) == {"resultado": 45}
+
+
 def test_ferramenta_devolve_erro_em_vez_de_quebrar():
     assert calculator.handler({"expressao": "1/0"})["erro"].startswith("não consegui calcular")
     assert calculator.handler({"expressao": "abc"})["erro"]

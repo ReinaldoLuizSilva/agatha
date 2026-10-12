@@ -43,9 +43,16 @@ def evaluate(expression) -> float | int:
     return round(result, 6) if isinstance(result, float) else result
 
 
+def _brazilian(value: float | int) -> str | int:
+    """Decimal com vírgula ("62,5"): o modelo copia o resultado, e "62.5" seria falado como versão
+    ("sessenta e dois ponto cinco"; teste de 12/10). Inteiro continua número."""
+    text = repr(value)
+    return text.replace(".", ",") if isinstance(value, float) and "e" not in text else value
+
+
 def _calcular(args: dict) -> dict:
     try:
-        return {"resultado": evaluate(args.get("expressao", ""))}
+        return {"resultado": _brazilian(evaluate(args.get("expressao", "")))}
     except (ValueError, SyntaxError, ZeroDivisionError, OverflowError, TypeError) as e:
         return {"erro": f"não consegui calcular: {e}"}
 
