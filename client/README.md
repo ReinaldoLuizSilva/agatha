@@ -68,6 +68,51 @@ Para testar sem microfone, envie um arquivo WAV de 16 kHz:
 .venv\Scripts\python -m agatha_client --wav frase.wav
 ```
 
+## Gravar amostras para a wake word (Fase 5)
+
+O `agatha_client.record` é um gravador guiado. Ele mostra uma frase, você fala, e cada fala vira
+um WAV de 16 kHz em `gravacoes\`, com um `manifest.jsonl` descrevendo tudo. Essas amostras servem
+para escolher e treinar o detector de "Agatha" no cliente e para testar a interrupção com as
+caixas de som. São ~140 falas, cerca de 30 min. Dá para parar com `q` a qualquer momento: rodar de
+novo continua de onde parou.
+
+1. **Baixe as respostas da Agatha** (usadas na parte `eco`, em que ela fala e você a interrompe):
+
+   ```powershell
+   scp -r root@192.168.1.25:/dados/agatha/data/wakeword/respostas .
+   ```
+
+2. **Grave** com o microfone e as caixas de som do notebook, no volume de sempre:
+
+   ```powershell
+   .venv\Scripts\python -m agatha_client.record --list --replies respostas   # o roteiro
+   .venv\Scripts\python -m agatha_client.record --replies respostas          # grava tudo
+   .venv\Scripts\python -m agatha_client.record --part longe                 # só uma parte
+   ```
+
+   | parte | o que fazer |
+   |---|---|
+   | `perto` | "Agatha" em frases variadas, a ~50 cm do notebook, voz normal |
+   | `variado` | o jeito vem indicado em cada frase: baixinho, rápido, firme, chamando... |
+   | `longe` | a 2–3 m do notebook, como chamaria de outro canto do cômodo |
+   | `negativas` | frases **sem** o nome, inclusive as parecidas ("a gata", "agora") |
+   | `eco` | a Agatha fala pelas caixas; quando pedir, diga a frase **no meio da fala dela**, ou fique calado |
+   | `ambiente` | 10 min de TV, rádio ou podcast tocando **em outro aparelho**; ninguém chama a Agatha |
+
+   Depois de cada fala ele mostra o pico do som. Se avisar que ficou baixo ou estourado, ele
+   oferece gravar de novo.
+
+3. **Envie a pasta** para o servidor:
+
+   ```powershell
+   scp -r gravacoes root@192.168.1.25:/dados/agatha/data/wakeword/
+   ```
+
+   No servidor, como root: `chown -R agatha:agatha /dados/agatha/data/wakeword`.
+
+As gravações têm a sua voz: ficam só no notebook e em `/dados`, nunca no git (`*.wav` está no
+`.gitignore`).
+
 ## Problemas comuns
 
 | sintoma | o que verificar |
@@ -78,4 +123,5 @@ Para testar sem microfone, envie um arquivo WAV de 16 kHz:
 | nada acontece ao falar | confira o microfone padrão em Configurações › Som, ou escolha um com `--device` |
 | transcreve o som do PC (vídeo, música) | o microfone padrão pode ser um dispositivo de loopback ("Stereo Mix"); escolha o microfone do headset com `--device` |
 | `não foi possível abrir a saída de som a 22050 Hz` | escolha outra saída com `--output-device` (as do tipo `[MME]` convertem a taxa) |
+| gravador, parte `eco`: `não foi possível abrir microfone e caixas juntos` | escolha os dois do mesmo tipo, de preferência `[MME]`: `--device N --output-device M` (veja `--list-devices`) |
 | a Agatha não volta a ouvir | o servidor espera o fim da reprodução; se o cliente travar, ele volta sozinho depois de ~15 s |
