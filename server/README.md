@@ -49,9 +49,11 @@ agatha_server/
 ├── tts.py           # Piper com threads ajustadas
 ├── wake.py          # wake word pela transcrição
 ├── memory.py        # memória explícita (SQLite) + CLI de administração
+├── turnlog.py       # registro de falas e respostas em JSONL (AGATHA_LOG_DIR)
 └── tools/           # ferramentas do LLM: base (registro), calc, memory, zabbix, oracle
 scripts/
-└── send_wav.py      # cliente simulado: conversa usando WAVs, mede a latência de ponta a ponta
+├── send_wav.py      # cliente simulado: conversa usando WAVs, mede a latência de ponta a ponta
+└── smoke.py         # teste de fumaça com a Agatha no ar (voz sintética, sem memória)
 tests/
 ```
 
@@ -120,6 +122,7 @@ cd server
 Os testes do protocolo, das sessões e da conversa usam VAD, STT, LLM e TTS falsos. Os do Silero e
 do STT usam os modelos reais e o FLEURS (`/dados/agatha/data/fleurs`). Os de STT precisam de
 ~0,7 GB de VRAM livre e são **pulados** quando o pod está no ar, porque a GPU fica quase cheia.
+Sem GPU e sem o FLEURS, como na CI do GitHub Actions, o resto passa normalmente.
 
 ## Conversa de teste sem microfone
 

@@ -30,6 +30,19 @@ systemctl --user restart agatha-server   # ex.: depois de reconstruir a imagem d
 deploy/down.sh                  # derruba
 ```
 
+### Teste de fumaça
+
+Depois de subir ou de reconstruir a imagem, confira que a Agatha ouve, entende, usa ferramenta e
+responde em voz:
+
+```bash
+.venv/bin/python server/scripts/smoke.py      # ~20 s; sai com código 1 se algo falhar
+```
+
+Ele gera duas perguntas com o Piper ("quanto é 15% de 240?" e "para que serve um backup
+incremental?"), manda pelo WebSocket como o cliente faria e confere a transcrição, a calculadora,
+a resposta com áudio e o 1º áudio abaixo de 3 s. Não toca na memória nem nos laboratórios.
+
 ### Logs
 
 | onde | o que tem |
