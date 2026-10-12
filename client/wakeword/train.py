@@ -24,6 +24,7 @@ para não atrapalhar a Agatha:
 """
 
 import argparse
+import copy
 import json
 import sys
 import time
@@ -34,6 +35,7 @@ from pathlib import Path
 import numpy as np
 
 ROOT = Path(__file__).resolve().parents[2]
+sys.path.insert(0, str(ROOT / "client"))  # agatha_client.aec: o mesmo cancelamento de eco do cliente
 DATA = Path("/dados/agatha/data/wakeword")
 RECORDINGS = DATA / "gravacoes"
 SYNTHETIC = DATA / "sintetico"
@@ -52,6 +54,10 @@ FIRST_END_S = 0.76  # o 1º embedding cobre o áudio até ~0,76 s
 # Silêncio antes e depois de cada gravação: a 1ª janela completa só termina em ~1,96 s, e o nome
 # costuma terminar antes disso. No cliente o microfone é contínuo e sempre há áudio antes.
 LEAD_S, TAIL_S = 1.5, 0.5
+# Cancelamento de eco (bench/aec_bench.py): o eco chega ~289 ms depois do que foi tocado; o filtro
+# começa 16 ms antes, porque não modela eco que chegue antes do atraso informado.
+AEC_DELAY_MS, AEC_MU = 273, 1.0
+ECHO_GROUPS = ("eco-fala", "eco-calado")
 THRESHOLDS = (0.5, 0.7, 0.8, 0.9, 0.95, 0.98, 0.99)
 REFRACTORY_S = 2.0
 POS_GROUPS = ("perto", "variado", "longe", "eco-fala")
@@ -169,7 +175,8 @@ def load_recordings() -> list[dict]:
             rows[row["id"]] = row
     group = {"no_wake": "negativas", "echo_wake": "eco-fala", "echo_only": "eco-calado", "ambient": "ambiente"}
     items = [{"id": r["id"], "group": group.get(r["label"], r["part"]), "text": r["text"],
-              "path": RECORDINGS / r["file"]} for r in rows.values()]
+              "path": RECORDINGS / r["file"], "ref": RECORDINGS / r["ref_file"] if r.get("ref_file") else None}
+             for r in rows.values()]
     items += [{"id": f"fleurs-{p.stem}", "group": "fleurs", "text": None, "path": p}
               for p in sorted(FLEURS.glob("*.wav"))]
     return items
@@ -210,7 +217,53 @@ def is_test(item: dict, fold: int | None) -> bool:
         if fold == 0:
             return g == "longe" or (g == "variado" and num > 12)
         return (g == "perto" and num <= 20) or (g == "variado" and num <= 12)
+    if g == "eco-calado":  # são todas pares (o roteiro alterna interrupção e silêncio): 6 para cada lado
+        return (num // 2) % 2 == fold
     return num % 2 == fold
+
+
+# --- Cancelamento de eco ---------------------------------------------------------------
+
+def run_aec(ec, mic: np.ndarray, ref: np.ndarray) -> np.ndarray:
+    """Passa microfone e referência pelo AEC em blocos de 10 ms, como o cliente."""
+    n = min(len(mic), len(ref)) // 160 * 160
+    out = np.concatenate([ec.process(mic[i : i + 160], ref[i : i + 160]) for i in range(0, n, 160)])
+    return np.roll(out, -ec.n).astype(np.float32)  # o AEC devolve com 1 bloco de atraso
+
+
+_warm_aec = None
+
+
+def warm_aec(items: list[dict]):
+    """AEC já adaptado à sala (passou por todas as gravações de eco calado), como no meio de uma
+    sessão do cliente. Devolve uma cópia: cada uso parte do mesmo estado."""
+    global _warm_aec
+    if _warm_aec is None:
+        from agatha_client.aec import EchoCanceller
+
+        _warm_aec = EchoCanceller(delay_ms=AEC_DELAY_MS, mu=AEC_MU)
+        for it in items:
+            if it["group"] == "eco-calado":
+                run_aec(_warm_aec, read(it["path"]), read(it["ref"]))
+    return copy.deepcopy(_warm_aec)
+
+
+def echo_mix(voice: np.ndarray, voice_bounds: tuple[float, float], echo: dict, ser_db: float,
+             ec) -> tuple[np.ndarray, float]:
+    """A voz do Reinaldo por cima de um trecho de eco real, já com o AEC. Devolve (áudio, início da voz)."""
+    mic, ref = read(echo["path"]), read(echo["ref"])
+    pre, lead = int(0.5 * SR), int(0.5 * SR)  # 0,5 s para encher a fila de atraso do AEC + 0,5 s antes da voz
+    total = pre + lead + len(voice)
+    if len(mic) < total:
+        reps = total // len(mic) + 1
+        mic, ref = np.tile(mic, reps), np.tile(ref, reps)
+    start = rng.integers(0, len(mic) - total + 1)
+    m, r = mic[start : start + total].copy(), ref[start : start + total]
+    a, b = (int(t * SR) for t in voice_bounds)
+    v_energy = float(np.mean(voice[a:b] ** 2)) + 1e-9
+    e_energy = float(np.mean(m[pre + lead + a : pre + lead + b] ** 2)) + 1e-9
+    m[pre + lead :] += voice * np.sqrt(e_energy / v_energy * 10 ** (ser_db / 10))
+    return run_aec(ec, m, r)[pre:], lead / SR
 
 
 # --- Cache de embeddings ---------------------------------------------------------------
@@ -237,10 +290,12 @@ def recording_features(items: list[dict]) -> dict:
             out[it["id"]] = embed_padded(x)
             ne = name_end(it, x) if it["group"] in ("perto", "variado", "longe") else None
             out[f"{it['id']}::meta"] = np.array([len(x) / SR, -1 if ne is None else ne])
+            if it["group"] in ECHO_GROUPS:  # o que o detector do cliente vê: depois do AEC
+                out[f"{it['id']}::aec"] = embed_padded(run_aec(warm_aec(items), x, read(it["ref"])))
             if n % 100 == 0:
                 print(f"  gravações {n}/{len(items)}", file=sys.stderr, flush=True)
         return out
-    return cached("gravacoes-v2", build)
+    return cached("gravacoes-v4", build)
 
 
 def synthetic_rows() -> list[dict]:
@@ -389,9 +444,11 @@ def count_fires(scores: np.ndarray, end_s: np.ndarray, thr: float) -> int:
 
 # --- Montagem dos conjuntos e avaliação ------------------------------------------------
 
-def recording_windows(items, feats, fold, noise: NoiseBank, pos_copies: int = 8):
-    """Positivos (janelas no fim do nome, com cópias aumentadas) e negativos das gravações de treino."""
+def recording_windows(items, feats, fold, noise: NoiseBank, pos_copies: int = 8, echo_copies: int = 4):
+    """Positivos (janelas no fim do nome, com cópias aumentadas e cópias por cima do eco da Agatha,
+    já com o AEC) e negativos das gravações de treino."""
     pos, neg = [], []
+    echo_takes = [it for it in items if it["group"] == "eco-calado" and not is_test(it, fold)]
     for it in items:
         if is_test(it, fold) or it["group"] == "eco-fala":
             continue
@@ -416,6 +473,19 @@ def recording_windows(items, feats, fold, noise: NoiseBank, pos_copies: int = 8)
                     win = window_at(e2, LEAD_S + ne / speed + jitter)
                     if win is not None:
                         pos.append(win[None])
+            bounds = speech_bounds(x)
+            for _ in range(echo_copies if bounds else 0):
+                ser = rng.uniform(-10, 0)  # medido nas interrupções reais: voz 0 a 10 dB abaixo do eco
+                mixed, voice_at = echo_mix(x, bounds, echo_takes[rng.integers(len(echo_takes))], ser,
+                                           warm_aec(items))
+                e3 = embed_padded(mixed)
+                for jitter in (-STEP_S, 0.0):
+                    win = window_at(e3, LEAD_S + voice_at + ne + jitter)
+                    if win is not None:
+                        pos.append(win[None])
+        elif it["group"] == "eco-calado":
+            neg.append(w)
+            neg.append(windows(feats[f"{it['id']}::aec"])[0])  # a voz dela que sobra depois do AEC
         else:
             if it["group"] == "fleurs" and len(w) > 60:
                 w = w[rng.choice(len(w), 60, replace=False)]
@@ -437,7 +507,8 @@ def evaluate(model, items, feats, fold) -> dict:
     for it in items:
         if not is_test(it, fold):
             continue
-        w, end_s = windows(feats[it["id"]])
+        key = f"{it['id']}::aec" if it["group"] in ECHO_GROUPS else it["id"]
+        w, end_s = windows(feats[key])
         scores = predict(model, w)
         end_s = end_s - LEAD_S
         dur = feats[f"{it['id']}::meta"][0]
@@ -500,12 +571,10 @@ def main() -> int:
     agatha_voice = sorted((SYNTHETIC / "negativos").glob("resp-*.wav"))[:150]
 
     def datasets(variant: str):
-        # Na avaliação o ruído de fundo é só a voz da Agatha e ruído branco/rosa: o ambiente e o
-        # FLEURS gravados são teste em alguma das dobras. O modelo final usa tudo.
-        paths = list(agatha_voice)
-        if variant == "final":
-            paths += [it["path"] for it in items if it["group"] in ("ambiente", "fleurs")]
-        noise = NoiseBank(paths)
+        # Ruído de fundo: só a voz da Agatha e ruído branco/rosa, na avaliação e no modelo final.
+        # O ambiente e o FLEURS são teste nas dobras; e com o FLEURS por baixo dos positivos o modelo
+        # final disparava 12–30 vezes por hora na validação (contra 3–9 na avaliação).
+        noise = NoiseBank(list(agatha_voice))
         syn_pos = synthetic_positive_windows(noise, variant)
         syn_neg = synthetic_negative_windows(noise, variant)
         print(f"sintéticos ({variant}): {len(syn_pos)} positivos, {len(syn_neg)} negativos; ACAV: {len(acav)}",
@@ -533,7 +602,7 @@ def main() -> int:
         out.with_suffix(".json").write_text(json.dumps({"evals": evals, "validation": vals}, indent=1), encoding="utf-8")
         print(f"→ {out.with_suffix('.md')}")
     if args.final:
-        noise, syn_pos, syn_neg = datasets("final")
+        noise, syn_pos, syn_neg = datasets("eval")  # mesma configuração que foi avaliada
         rec_pos, rec_neg = recording_windows(items, feats, None, noise)
         model = fit(rec_pos, syn_pos, np.concatenate([syn_neg, rec_neg]), acav, args)
         export_onnx(model, MODEL_OUT)
