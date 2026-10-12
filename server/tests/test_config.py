@@ -37,7 +37,7 @@ def test_valor_invalido(tmp_path):
 def test_wake_word(tmp_path):
     base = {"AGATHA_TOKEN": "x", "AGATHA_ENV_FILE": str(tmp_path / "x")}
     config = load_config(base)
-    assert config.wake.enabled and "agatha" in config.wake.words and config.wake.conversation_s == 10
+    assert config.wake.enabled and "agatha" in config.wake.words and config.wake.conversation_s == 20
     config = load_config({**base, "AGATHA_REQUIRE_WAKE_WORD": "false", "AGATHA_WAKE_WORDS": "jarvis, sexta",
                           "AGATHA_CONVERSATION_S": "5"})
     assert (config.wake.enabled, config.wake.words, config.wake.conversation_s) == (False, ("jarvis", "sexta"), 5.0)

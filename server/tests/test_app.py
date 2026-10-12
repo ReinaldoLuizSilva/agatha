@@ -389,3 +389,30 @@ def test_modo_conversa_expira():
     with_server(scenario, conversation_s=0.2,
                 transcriber=SequenceTranscriber(["agatha, oi", "e o zabbix?", "agatha, e o zabbix?"]))
     assert FakeConversation.heard == ["agatha, oi", "agatha, e o zabbix?"]
+
+
+class FailingTranscriber:
+    """Falha na 1ª chamada (como um CUDA out of memory) e funciona depois."""
+
+    def __init__(self):
+        self.calls = 0
+
+    def transcribe(self, audio: np.ndarray) -> str:
+        self.calls += 1
+        if self.calls == 1:
+            raise RuntimeError("CUDA failed with error out of memory")
+        return "agatha, tudo bem?"
+
+
+def test_falha_no_stt_nao_derruba_a_sessao():
+    async def scenario(ws):
+        await start(ws)
+        await send_all(ws, utterance())  # STT falha: transcrição vazia
+        first = await recv_until(ws, "transcript")
+        await send_all(ws, utterance())  # a sessão continua funcionando
+        rest = await recv_until(ws, "response_end")
+        return first[-1], rest
+
+    failed, rest = with_server(scenario, transcriber=FailingTranscriber())
+    assert failed["text"] == ""
+    assert FakeConversation.heard == ["agatha, tudo bem?"]

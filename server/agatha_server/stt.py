@@ -20,6 +20,12 @@ class STTConfig:
     language: str = "pt"
     models_dir: str = "/dados/agatha/models/whisper"
     cpu_threads: int = 4
+    # Fallback de temperatura: quando a transcrição sai com pouca confiança (ruído, fala confusa),
+    # o Whisper tenta de novo com temperatura maior. O padrão do faster-whisper (best_of=5, até 5
+    # novas tentativas) gera 5 candidatos em paralelo e estourava a VRAM com o LLM carregado
+    # (CUDA out of memory, Fase 3). Aqui: 1 candidato e no máximo 1 nova tentativa.
+    best_of: int = 1
+    temperatures: tuple[float, ...] = (0.0, 0.4)
     # Vocabulário que ajuda o Whisper com nomes e jargão (plano B do ADR-002). Medido na Fase 2:
     # "Agatha" deixou de virar "Álvaro" e o tempo de transcrição não mudou. Na Fase 3 entraram os
     # termos que o teste real no Windows errou ("hosts" virava "roaches"/"roxas").
@@ -98,6 +104,8 @@ class Transcriber:
             audio,
             language=self.config.language,
             beam_size=self.config.beam_size,
+            best_of=self.config.best_of,
+            temperature=list(self.config.temperatures),
             initial_prompt=self.config.initial_prompt,
             vad_filter=False,  # a segmentação já foi feita pelo Segmenter
             without_timestamps=True,

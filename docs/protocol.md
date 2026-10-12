@@ -71,7 +71,7 @@ Antes do `ready`, o servidor rejeita qualquer áudio.
   "protocol": 2,
   "session": "3f9c2a71",
   "output_audio": {"encoding": "pcm_s16le", "sample_rate": 22050, "channels": 1},
-  "wake": {"enabled": true, "words": ["agatha", "agata", "agatah"], "conversation_s": 10},
+  "wake": {"enabled": true, "words": ["agatha", "agata", "agatah"], "conversation_s": 20},
   "vad": {
     "threshold": 0.5,
     "min_silence_ms": 500,

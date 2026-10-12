@@ -29,8 +29,9 @@ uma wake word ("Agatha") detectada no cliente pelo openWakeWord. No levantamento
    A comparação ignora acentos e maiúsculas e aceita variações de grafia (`agatha`, `agata`,
    `agatah`). Uma menção no meio de uma frase longa ("o livro da Agatha Christie...") não conta.
 
-2. **Modo conversa:** depois de cada resposta, por **10 s** (`AGATHA_CONVERSATION_S`), falas sem o
-   nome também são aceitas. Vale o momento em que a fala **começou**, então uma pergunta longa
+2. **Modo conversa:** depois de cada resposta, por **20 s** (`AGATHA_CONVERSATION_S`), falas sem o
+   nome também são aceitas. Começou com 10 s, mas no teste real o Reinaldo levou ~11 s para fazer a
+   pergunta seguinte, e ela foi ignorada. Vale o momento em que a fala **começou**, então uma pergunta longa
    iniciada dentro da janela conta. Cada resposta renova a janela.
 
 3. **Frase cortada por pausa (ADR-007):** a continuação de uma fala que chamou a Agatha também
@@ -68,5 +69,5 @@ uma wake word ("Agatha") detectada no cliente pelo openWakeWord. No levantamento
   vocabulário do Whisper ajuda, e na Fase 2 o nome passou a ser reconhecido de forma consistente.
 - **O vocabulário pode favorecer "Agatha" demais:** o `initial_prompt` pode levar o Whisper a
   "ouvir" o nome em sons parecidos. Precisa ser acompanhado nos logs.
-- **O modo conversa aceita qualquer fala por 10 s**, inclusive uma conversa paralela logo depois
+- **O modo conversa aceita qualquer fala por 20 s**, inclusive uma conversa paralela logo depois
   de uma resposta.

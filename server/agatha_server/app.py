@@ -190,7 +190,14 @@ class Session:
 
     async def _transcribe(self, event: SpeechEnd) -> None:
         submitted = time.monotonic()
-        started, text, finished = await self.server.transcribe(event.audio)
+        try:
+            started, text, finished = await self.server.transcribe(event.audio)
+        except Exception:
+            # Uma falha no STT (ex.: falta de VRAM) não pode sumir em silêncio nem derrubar a sessão:
+            # registra e trata a fala como vazia.
+            log.exception("[%s] #%d falha na transcrição", self.id, event.segment)
+            started = finished = time.monotonic()
+            text = ""
         timings = {
             "speech_ms": event.speech_ms,
             "endpoint_ms": round(event.endpoint_ms),

@@ -16,7 +16,7 @@ class WakeConfig:
     enabled: bool = True
     # comparadas sem acento e em minúsculas ("Ágata" vira "agata")
     words: tuple[str, ...] = ("agatha", "agata", "agatah")
-    conversation_s: float = 10.0
+    conversation_s: float = 20.0  # 10 s foi curto no teste real (pausa de ~11 s para pensar)
     first_words: int = 4  # o nome conta se estiver entre as primeiras N palavras...
     last_words: int = 2   # ...ou entre as últimas N
 
