@@ -129,6 +129,7 @@ agatha/
       **3º teste no Windows em 12/10 (13 falas): tudo funcionou.** 1º som mediana 1,95 s, máx 2,17 s. Esquecer com
       referência vaga, agatha-srv transcrito certo, RAM, calculadora (62,5 · contexto 18% → 45 · 10/3 → "3,33"),
       tablespaces e alertas ok. Resíduo: "qual é o nome do meu banco de produção?" logo depois de guardar o fato
-      chamou guardar_fato de novo (ja_sabia; resposta certa, só o "deixa eu ver" à toa).
+      chamou guardar_fato de novo (ja_sabia; resposta certa, só o "deixa eu ver" à toa). Reproduzido no bench (~5/10
+      certos); três contraexemplos no few-shot testados, nenhum resolveu sem piorar o esquecer vago: fica como está.
       Próximo passo: o Reinaldo decide fechar a Fase 3 ou fazer os opcionais.
 - [ ] Fase 4: serviço systemd, logs, testes, README final

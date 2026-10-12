@@ -95,6 +95,16 @@ JUST_SAVED_3 = [
     {"role": "tool", "tool_call_id": "call_0", "content": json.dumps({"ok": True, "numero": 3})},
     {"role": "assistant", "content": "Pode deixar, guardei."},
 ]
+# Acabou de guardar o fato 2 (3º teste de 12/10: a pergunta seguinte sobre ele chamou guardar_fato de novo)
+JUST_SAVED_2 = [
+    user_message("Lembra que meu banco de produção se chama PRDORA.", NOW),
+    {"role": "assistant", "content": "", "tool_calls": [{"id": "call_0", "type": "function", "function": {
+        "name": "guardar_fato", "arguments": json.dumps({"fato": "O banco de produção do Reinaldo se chama PRDORA"},
+                                                        ensure_ascii=False)}}]},
+    {"role": "tool", "tool_call_id": "call_0", "content": json.dumps({"ok": True, "numero": 2})},
+    {"role": "assistant", "content": "Guardei. O banco de produção é PRDORA."},
+]
+
 # Guardou o fato 3 e depois perguntou sobre ele (teste de 12/10 à tarde: "Esqueça essa informação." → pediu número)
 SAVED_THEN_ASKED_3 = [
     *JUST_SAVED_3,
@@ -147,6 +157,8 @@ CASES = [
     ("Qual o padrão de nome que eu uso nos hosts?", None, None, "ambiente", None),
     ("Que horas é a reunião com o time?", None, None, "10", None),  # teste de 12/10: virou zabbix_problemas
     ("Qual é mesmo o nome do meu banco de produção?", None, None, "PRDORA", None),
+    ("Qual é o nome do meu banco de produção?", None, None, "PRDORA", None, JUST_SAVED_2),
+    ("Quando é mesmo a reunião com o time?", None, None, "10", None, JUST_SAVED_3),
     ("Qual o nome do meu notebook?", None, None, None, "rei-note"),  # só existe no exemplo do prompt
 ]
 
