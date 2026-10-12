@@ -7,6 +7,8 @@ import pytest
 
 from agatha_server.conversation import FILLERS, Audio, Conversation, ConversationConfig, Done, TextChunk
 from agatha_server.llm import TextDelta, ToolCallDelta
+from agatha_server.memory import MemoryConfig, MemoryStore
+from agatha_server.tools.memory import memory_tools
 from agatha_server.prompts import describe_now
 from agatha_server.tools import Example, Tool, ToolRegistry
 
@@ -65,10 +67,11 @@ def run(conversation: Conversation, text: str) -> list:
     return asyncio.run(collect())
 
 
-def make(*replies, tools: ToolRegistry | None = None, **kwargs) -> tuple[Conversation, FakeLLM, FakeSynth]:
+def make(*replies, tools: ToolRegistry | None = None, memory: MemoryStore | None = None,
+         **kwargs) -> tuple[Conversation, FakeLLM, FakeSynth]:
     llm, synth = FakeLLM(*replies, **kwargs), FakeSynth()
     conv = Conversation(llm, synth, ThreadPoolExecutor(1), ConversationConfig(history_turns=4),
-                        clock=lambda: 1.0, now=lambda: NOW, tools=tools)
+                        clock=lambda: 1.0, now=lambda: NOW, tools=tools, memory=memory)
     return conv, llm, synth
 
 
@@ -215,3 +218,29 @@ def test_limite_de_rodadas_de_ferramenta():
     assert len(executed) == 2
     assert llm.tools_seen[2] is None
     assert events[-1].text.endswith("Pronto.")
+
+
+# --- Memória (ADR-010) -----------------------------------------------------------------
+
+def test_memoria_entra_no_prompt_e_muda_so_no_turno_seguinte():
+    mem = MemoryStore(MemoryConfig(db=":memory:"))
+    tools = ToolRegistry(memory_tools(mem))
+    conv, llm, _ = make(("tool", "lembrar", '{"fato": "O banco de produção se chama PRDORA"}'), "Guardei.", "Ok.",
+                        tools=tools, memory=mem)
+
+    async def scenario():
+        events = [e async for e in conv.respond("Lembra que o banco se chama PRDORA", t_ref=0.0)]
+        await conv._prefill_task  # pré-aquecimento disparado pela mudança na memória
+        events2 = [e async for e in conv.respond("O que você sabe sobre mim?", t_ref=0.0)]
+        return events, events2
+
+    asyncio.run(scenario())
+    first_round, second_round, next_turn = llm.calls
+    assert "nada guardado ainda" in first_round[0]["content"]
+    # dentro do mesmo turno o prompt não muda (senão o llama.cpp reprocessaria tudo no meio)
+    assert second_round[0] == first_round[0]
+    # no turno seguinte, o fato aparece numerado
+    assert "1. O banco de produção se chama PRDORA" in next_turn[0]["content"]
+    # e o cache do novo prompt foi recalculado em segundo plano, com as ferramentas
+    messages, schemas = llm.prefills[-1]
+    assert messages[0] == next_turn[0] and schemas

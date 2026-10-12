@@ -28,8 +28,10 @@ from websockets.exceptions import ConnectionClosed
 from . import protocol
 from .config import ServerConfig
 from .conversation import Audio, Conversation, Done, TextChunk, build_prefix
+from .memory import MemoryStore
 from .tools import ToolRegistry
 from .tools.calc import calculator
+from .tools.memory import memory_tools
 from .text import looks_incomplete
 from .wake import is_addressed
 from .vad import Segmenter, SileroVAD, SpeechEnd, SpeechStart
@@ -346,18 +348,21 @@ class Session:
         self._awake_until = time.monotonic() + self.server.config.wake.conversation_s
 
 
-def build_tools() -> ToolRegistry:
-    return ToolRegistry([calculator])
+def build_tools(memory: MemoryStore) -> ToolRegistry:
+    return ToolRegistry([calculator, *memory_tools(memory)])
 
 
 async def run(config: ServerConfig, transcriber: SupportsTranscribe, llm, synthesizer) -> None:
     tts_executor = ThreadPoolExecutor(max_workers=1, thread_name_prefix="tts")
-    tools = build_tools()
-    log.info("ferramentas: %s", ", ".join(tools.tools) or "nenhuma")
+    memory = MemoryStore(config.memory)
+    tools = build_tools(memory)
+    log.info("ferramentas: %s · memória: %d fatos em %s", ", ".join(tools.tools), len(memory.facts()),
+             config.memory.db)
     server = AgathaServer(
         config,
         transcriber,
-        conversation_factory=lambda: Conversation(llm, synthesizer, tts_executor, config.conversation, tools=tools),
+        conversation_factory=lambda: Conversation(llm, synthesizer, tts_executor, config.conversation,
+                                                  tools=tools, memory=memory),
         output_sample_rate=synthesizer.sample_rate,
     )
     if await llm.healthy():
@@ -366,7 +371,7 @@ async def run(config: ServerConfig, transcriber: SupportsTranscribe, llm, synthe
         # isso, a 1ª pergunta depois de subir o LLM paga ~1,5 s processando o prompt inteiro.
         t0 = time.monotonic()
         try:
-            await llm.prefill(build_prefix(tools), tools.schemas() or None)
+            await llm.prefill(build_prefix(tools, memory), tools.schemas() or None)
             log.info("prompt de sistema no cache do LLM (%.0f ms)", (time.monotonic() - t0) * 1000)
         except Exception as e:
             log.warning("falha ao pré-carregar o prompt no LLM: %s", e)
@@ -385,4 +390,5 @@ async def run(config: ServerConfig, transcriber: SupportsTranscribe, llm, synthe
     finally:
         server.shutdown()
         tts_executor.shutdown(wait=False, cancel_futures=True)
+        memory.close()
         await llm.aclose()

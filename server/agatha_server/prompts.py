@@ -54,12 +54,28 @@ _CONCEPT_EXAMPLES = [
 _EXAMPLE_NOW = datetime(2026, 10, 10, 9, 0)
 
 
-def system_message(tools=None) -> dict:
-    """Prompt de sistema; com ferramentas, inclui as regras de quando usar cada uma."""
+_EXAMPLES_NOTE = ("As primeiras trocas desta conversa são só exemplos de formato: não são fatos sobre o "
+                  "Reinaldo nem coisas que ele disse.")
+
+
+def memory_block(facts) -> str:
+    """Fatos da memória (ADR-010), numerados como a ferramenta `esquecer` espera."""
+    if not facts:
+        return "Memória: nada guardado ainda."
+    lines = "\n".join(f"{f.id}. {f.text}" for f in facts)
+    return f"Memória (fatos que o Reinaldo pediu para você lembrar; use quando forem relevantes):\n{lines}"
+
+
+def system_message(tools=None, facts=None) -> dict:
+    """Prompt de sistema; com ferramentas, inclui as regras de quando usar cada uma; com memória
+    (`facts` não None), inclui os fatos guardados."""
     content = SYSTEM_PROMPT
     if tools:
         rules = "\n".join(f"- {t.rule};" for t in tools.tools.values())
         content += f"\nVocê tem ferramentas e deve usá-las nestes casos, sempre:\n{rules}\n{_CONCEPTS_RULE}"
+        content += f"\n{_EXAMPLES_NOTE}"
+    if facts is not None:
+        content += f"\n{memory_block(facts)}"
     return {"role": "system", "content": content}
 
 

@@ -43,3 +43,10 @@ def test_wake_word(tmp_path):
     assert (config.wake.enabled, config.wake.words, config.wake.conversation_s) == (False, ("jarvis", "sexta"), 5.0)
     with pytest.raises(ConfigError, match="REQUIRE_WAKE_WORD"):
         load_config({**base, "AGATHA_REQUIRE_WAKE_WORD": "talvez"})
+
+
+def test_memoria(tmp_path):
+    base = {"AGATHA_TOKEN": "x", "AGATHA_ENV_FILE": str(tmp_path / "x")}
+    assert load_config(base).memory.db == "/dados/agatha/data/memory/agatha.db"
+    config = load_config({**base, "AGATHA_MEMORY_DB": "/tmp/m.db", "AGATHA_MEMORY_MAX_FACTS": "10"})
+    assert (config.memory.db, config.memory.max_facts) == ("/tmp/m.db", 10)

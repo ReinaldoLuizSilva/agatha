@@ -19,6 +19,7 @@ from itertools import cycle
 from typing import Protocol
 
 from .llm import TextDelta, ToolCallDelta
+from .memory import MemoryStore
 from .prompts import few_shot_messages, system_message, user_message
 from .text import Chunker, LeadingTimestampFilter, clean, normalize_for_speech
 from .tools import ToolRegistry
@@ -70,9 +71,11 @@ class Done:
     tools: list[str] = field(default_factory=list)  # ferramentas usadas, na ordem
 
 
-def build_prefix(tools: ToolRegistry | None) -> list[dict]:
-    """Começo fixo do prompt: sistema (+ regras das ferramentas) e exemplos. Entra no cache do LLM."""
-    return [system_message(tools), *few_shot_messages(tools)]
+def build_prefix(tools: ToolRegistry | None, memory: MemoryStore | None = None) -> list[dict]:
+    """Começo do prompt: sistema (+ regras das ferramentas + memória) e exemplos. Entra no cache do
+    LLM; só muda quando a memória muda."""
+    facts = memory.facts() if memory is not None else None
+    return [system_message(tools, facts), *few_shot_messages(tools)]
 
 
 class Conversation:
@@ -85,6 +88,7 @@ class Conversation:
         clock: Callable[[], float] = time.monotonic,
         now: Callable[[], datetime] = datetime.now,
         tools: ToolRegistry | None = None,
+        memory: MemoryStore | None = None,
     ):
         self._llm = llm
         self._synth = synthesizer
@@ -94,7 +98,9 @@ class Conversation:
         self._now = now
         self._tools = tools or ToolRegistry([])
         self._schemas = self._tools.schemas() or None
-        self._prefix = build_prefix(self._tools)
+        self._memory = memory
+        self._prefix = build_prefix(self._tools, memory)
+        self._prefix_version = memory.version if memory else 0
         self._fillers = cycle(FILLERS)
         self.history: list[list[dict]] = []  # um item por turno: as mensagens exatas daquele turno
         self._prefill_task: asyncio.Task | None = None
@@ -102,8 +108,19 @@ class Conversation:
     def _flat_history(self) -> list[dict]:
         return [m for turn in self.history for m in turn]
 
+    def _refresh_prefix(self) -> bool:
+        """Refaz o começo do prompt se a memória mudou. Devolve True se mudou."""
+        if self._memory is None or self._memory.version == self._prefix_version:
+            return False
+        self._prefix = build_prefix(self._tools, self._memory)
+        self._prefix_version = self._memory.version
+        return True
+
     async def respond(self, user_text: str, t_ref: float) -> AsyncIterator[TextChunk | Audio | Done]:
         """Gera a resposta trecho a trecho. `t_ref` é o instante do fim da fala (relógio monotônico)."""
+        # O começo do prompt fica congelado durante o turno: se a memória mudar agora (lembrar,
+        # esquecer), a mudança vale a partir do próximo turno, sem reprocessar o prompt no meio.
+        self._refresh_prefix()
         turn: list[dict] = [user_message(user_text, self._now())]
         timings: dict = {}
         spoken: list[str] = []
@@ -192,18 +209,25 @@ class Conversation:
         # Guarda exatamente o que foi enviado e gerado (inclusive chamadas e resultados de
         # ferramentas): qualquer diferença no prefixo do prompt obriga o llama.cpp a reprocessar.
         self.history.append(turn)
+        reasons = []
         if len(self.history) > self.config.history_turns:
             keep = max(1, self.config.history_turns // 2)
             self.history = self.history[-keep:]
-            # O corte invalida o cache do llama.cpp. Enquanto a resposta ainda está sendo falada
-            # (vários segundos), recalcula o cache do prompt cortado em segundo plano, para a
-            # próxima pergunta não pagar ~2 s de reprocessamento.
-            self._prefill_task = asyncio.create_task(self._prefill([*self._prefix, *self._flat_history()]))
+            reasons.append("corte do histórico")
+        if self._refresh_prefix():
+            reasons.append("memória alterada")
+        if reasons:
+            # O cache do llama.cpp foi invalidado. Enquanto a resposta ainda está sendo falada
+            # (vários segundos), recalcula o novo prompt em segundo plano, para a próxima pergunta
+            # não pagar ~2-3 s de reprocessamento.
+            self._prefill_task = asyncio.create_task(
+                self._prefill([*self._prefix, *self._flat_history()], " e ".join(reasons))
+            )
 
-    async def _prefill(self, messages: list[dict]) -> None:
+    async def _prefill(self, messages: list[dict], reason: str) -> None:
         t0 = self._clock()
         try:
             await self._llm.prefill(messages, self._schemas)
-            log.info("cache do LLM recalculado após o corte do histórico (%.0f ms)", (self._clock() - t0) * 1000)
+            log.info("cache do LLM recalculado após %s (%.0f ms)", reason, (self._clock() - t0) * 1000)
         except Exception as e:
             log.warning("falha ao recalcular o cache do LLM: %s", e)

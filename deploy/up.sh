@@ -14,12 +14,14 @@ set -euo pipefail
 REPO=$(cd "$(dirname "$0")/.." && pwd)
 POD=agatha
 MODELS=${AGATHA_MODELS_DIR:-/dados/agatha/models}
+DATA=${AGATHA_DATA_DIR:-/dados/agatha/data}   # memória (SQLite), com escrita
 LLM_IMAGE=${AGATHA_LLM_IMAGE:-localhost/agatha-llama:b11205}
 LLM_MODEL=${AGATHA_LLM_MODEL:-gemma-4-E4B-it-Q4_K_M.gguf}
 SERVER_IMAGE=${AGATHA_SERVER_IMAGE:-localhost/agatha-server:0.2.0}
 ENV_FILE=${AGATHA_ENV_FILE:-$REPO/server/.env}
 
 [ -f "$ENV_FILE" ] || { echo "falta $ENV_FILE (veja server/.env.example)"; exit 1; }
+mkdir -p "$DATA/memory"
 
 podman pod rm -f "$POD" >/dev/null 2>&1 || true
 podman pod create --name "$POD" -p 8765:8765 -p 127.0.0.1:8080:8080 >/dev/null
@@ -53,6 +55,7 @@ podman run -d --pod "$POD" --name agatha-server --tz=local \
     --device nvidia.com/gpu=all \
     --env-file "$ENV_FILE" \
     -v "$MODELS:/models:ro,z" \
+    -v "$DATA:/data:z" \
     "$SERVER_IMAGE" >/dev/null
 
 wait_for agatha-server "podman logs agatha-server 2>&1 | grep -q 'ouvindo em'"

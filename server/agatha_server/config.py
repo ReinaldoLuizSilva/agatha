@@ -6,6 +6,7 @@ from pathlib import Path
 
 from .conversation import ConversationConfig
 from .llm import LLMConfig
+from .memory import MemoryConfig
 from .stt import STTConfig
 from .tts import TTSConfig
 from .vad import VADConfig
@@ -28,6 +29,7 @@ class ServerConfig:
     tts: TTSConfig
     conversation: ConversationConfig
     wake: WakeConfig = WakeConfig()
+    memory: MemoryConfig = MemoryConfig()
 
 
 def load_env_file(path: Path, env: dict) -> None:
@@ -69,6 +71,7 @@ def load_config(env: dict | None = None) -> ServerConfig:
     tts_defaults = TTSConfig()
     conv_defaults = ConversationConfig()
     wake_defaults = WakeConfig()
+    memory_defaults = MemoryConfig()
 
     def flag(name: str, default: bool) -> bool:
         value = env.get(f"AGATHA_{name}")
@@ -121,5 +124,9 @@ def load_config(env: dict | None = None) -> ServerConfig:
             enabled=flag("REQUIRE_WAKE_WORD", wake_defaults.enabled),
             words=tuple(w.strip() for w in words.split(",") if w.strip()) if words else wake_defaults.words,
             conversation_s=get("CONVERSATION_S", wake_defaults.conversation_s, float),
+        ),
+        memory=MemoryConfig(
+            db=get("MEMORY_DB", memory_defaults.db),
+            max_facts=get("MEMORY_MAX_FACTS", memory_defaults.max_facts, int),
         ),
     )
