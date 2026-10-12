@@ -7,8 +7,13 @@ import pytest
 
 from agatha_client import record
 from agatha_client.record import (
-    Take, build_plan, levels, level_warning, load_done, read_wav, resample, write_wav,
+    Take, build_plan, levels, level_warning, load_done, read_wav, resample, select_redo, write_wav,
 )
+
+
+def voice_like(frames):
+    """Ruído com pico bem acima do RMS, como a voz (um tom puro tem só 3 dB de diferença)."""
+    return np.clip(np.random.default_rng(0).normal(0, 1000, frames), -32768, 32767).astype("<i2")
 
 
 def tone(freq, rate, seconds=1.0, amp=0.5):
@@ -89,6 +94,25 @@ def test_levels_and_warnings():
     assert level_warning(peak, rms, "wake").startswith("muito baixo")
     assert level_warning(peak, rms, "ambient") is None  # ambiente pode ser baixo
     assert levels(np.zeros(0, dtype="<i2")) == (-120.0, -120.0)
+    assert level_warning(*levels(voice_like(32000)), "wake") is None
+
+
+def test_warns_on_constant_noise_not_voice():
+    # estalo do conector do microfone: decai devagar, pico quase igual ao RMS
+    pop = np.round(-8000 * np.exp(-np.arange(32000) / 8000)).astype("<i2")
+    peak, rms = levels(pop)
+    assert level_warning(peak, rms, "wake").startswith("não parece voz")
+    assert level_warning(peak, rms, "echo_only") is None
+
+
+def test_select_redo_ids_and_ranges():
+    plan = build_plan(["perto", "longe"])
+    chosen = select_redo(plan, ["perto-003..perto-005", "longe-002"])
+    assert [t.id for t in chosen] == ["perto-003", "perto-004", "perto-005", "longe-002"]
+    with pytest.raises(record.FatalError, match="não está no roteiro"):
+        select_redo(plan, ["perto-999"])
+    with pytest.raises(record.FatalError, match="invertido"):
+        select_redo(plan, ["perto-005..perto-003"])
 
 
 class FakeSD:
@@ -104,11 +128,11 @@ class FakeSD:
         return {"name": f"falso ({kind})"}
 
     def rec(self, frames, samplerate, channels, dtype, device):
-        return np.full((frames, 1), 1000, dtype="<i2")
+        return voice_like(frames).reshape(-1, 1)
 
     def playrec(self, data, samplerate, channels, dtype, device):
         self.played.append(data)
-        return np.full((len(data), 1), 1000, dtype="<i2")
+        return voice_like(len(data)).reshape(-1, 1)
 
     def wait(self):
         pass
@@ -179,3 +203,13 @@ def test_eco_duplex_error_is_explained(recorder, tmp_path, monkeypatch):
     answers(monkeypatch, "")
     with pytest.raises(record.FatalError, match="mesmo tipo"):
         recorder.run(plan)
+
+
+def test_run_redo_records_again_even_if_done(recorder, tmp_path, monkeypatch):
+    plan = [Take(f"perto-00{i}", "perto", "wake", "Agatha", "voz normal", 2.5) for i in (1, 2, 3)]
+    answers(monkeypatch, "", "", "")
+    recorder.run(plan)
+    answers(monkeypatch, "", "")
+    recorder.run(plan, redo=select_redo(plan, ["perto-002..perto-003"]))
+    ids = [json.loads(line)["id"] for line in (tmp_path / "manifest.jsonl").read_text(encoding="utf-8").splitlines()]
+    assert ids == ["perto-001", "perto-002", "perto-003", "perto-002", "perto-003"]

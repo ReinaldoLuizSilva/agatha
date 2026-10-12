@@ -16,8 +16,10 @@ Uso (no notebook, dentro de client/):
     python -m agatha_client.record --out gravacoes --part perto longe   # só algumas
     python -m agatha_client.record --out gravacoes --part eco --replies respostas
     python -m agatha_client.record --list                               # mostra o roteiro
+    python -m agatha_client.record --out gravacoes --redo perto-001..perto-020   # regrava estas
 
-Pode parar a qualquer momento (q): rodar de novo continua de onde parou.
+Pode parar a qualquer momento (q): rodar de novo continua de onde parou. Uma fala regravada ganha
+uma linha nova no manifest.jsonl; vale a última linha de cada id.
 """
 
 import argparse
@@ -260,9 +262,30 @@ def levels(pcm: np.ndarray) -> tuple[float, float]:
 def level_warning(peak_db: float, rms_db: float, label: str) -> str | None:
     if peak_db >= -0.1:
         return "estourou (som saturado): fale um pouco mais longe ou baixe o ganho do microfone"
-    if label in ("wake", "no_wake") and rms_db < -40:
-        return "muito baixo: confira se o microfone certo está selecionado (--device)"
+    if label in ("wake", "no_wake"):
+        if rms_db < -40:
+            return "muito baixo: confira se o microfone certo está selecionado (--device)"
+        # Voz tem pico ~8–15 dB acima do RMS; estalo ou chiado constante fica a 1–2 dB.
+        if peak_db - rms_db < 4:
+            return "não parece voz (estalo ou ruído constante): confira o conector do microfone"
     return None
+
+
+def select_redo(plan: list[Take], specs: list[str]) -> list[Take]:
+    """Falas a regravar: ids ("perto-003") ou intervalos na ordem do roteiro ("perto-001..perto-020")."""
+    ids = [t.id for t in plan]
+    chosen: set[str] = set()
+    for spec in specs:
+        first, _, last = spec.partition("..")
+        last = last or first
+        for name in (first, last):
+            if name not in ids:
+                raise FatalError(f"--redo: {name} não está no roteiro (veja --list)")
+        a, b = ids.index(first), ids.index(last)
+        if a > b:
+            raise FatalError(f"--redo: intervalo invertido: {spec}")
+        chosen.update(ids[a : b + 1])
+    return [t for t in plan if t.id in chosen]
 
 
 # --- Manifest --------------------------------------------------------------------------
@@ -337,15 +360,19 @@ class Recorder:
         entry["peak_db"], entry["rms_db"] = levels(mic)
         return entry
 
-    def run(self, plan: list[Take]) -> None:
-        done = load_done(self.manifest)
-        todo = [t for t in plan if t.id not in done]
-        if not todo:
-            print("Nada a gravar: tudo já está no manifest.")
-            return
+    def run(self, plan: list[Take], redo: list[Take] | None = None) -> None:
         print(f"Microfone: {self.device_name}")
-        print(f"{len(plan) - len(todo)} de {len(plan)} já gravadas; faltam {len(todo)} "
-              f"(~{sum(t.duration_s + 3 for t in todo) / 60:.0f} min).\n")
+        if redo:
+            todo = redo
+            print(f"Regravando {len(todo)} falas.\n")
+        else:
+            done = load_done(self.manifest)
+            todo = [t for t in plan if t.id not in done]
+            if not todo:
+                print("Nada a gravar: tudo já está no manifest.")
+                return
+            print(f"{len(plan) - len(todo)} de {len(plan)} já gravadas; faltam {len(todo)} "
+                  f"(~{sum(t.duration_s + 3 for t in todo) / 60:.0f} min).\n")
         part = None
         i = 0
         while i < len(todo):
@@ -392,6 +419,8 @@ def main() -> int:
     parser.add_argument("--output-device", help="índice ou nome da saída de som (parte eco)")
     parser.add_argument("--list-devices", action="store_true")
     parser.add_argument("--list", action="store_true", help="mostra o roteiro e sai")
+    parser.add_argument("--redo", nargs="+", metavar="ID",
+                        help="regrava estas falas: ids ou intervalos (ex.: perto-001..perto-020)")
     args = parser.parse_args()
 
     from .__main__ import device_arg
@@ -401,7 +430,7 @@ def main() -> int:
         replies = sorted(p for p in Path(args.replies).glob("*.wav") if not p.name.endswith(".ref.wav"))
         if not replies:
             parser.error(f"nenhum .wav em {args.replies}")
-    elif "eco" in args.part and not (args.list or args.list_devices):
+    elif "eco" in args.part and not (args.list or args.list_devices or args.redo):
         parser.error("a parte eco precisa de --replies (pasta com as respostas da Agatha); "
                      "para pular, escolha as partes com --part")
     try:
@@ -414,8 +443,9 @@ def main() -> int:
                 print(f"{t.id:14s} {t.label:9s} {t.duration_s:5.1f} s  {t.text or '-'}  ({t.hint})")
             print(f"\n{len(plan)} gravações, ~{sum(t.duration_s + 3 for t in plan) / 60:.0f} min")
             return 0
+        redo = select_redo(plan, args.redo) if args.redo else None
         Recorder(Path(args.out), device_arg(args.device), device_arg(args.output_device),
-                 Path(args.replies) if args.replies else None).run(plan)
+                 Path(args.replies) if args.replies else None).run(plan, redo)
     except FatalError as e:
         print(f"erro: {e}", file=sys.stderr)
         return 1

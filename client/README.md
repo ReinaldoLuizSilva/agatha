@@ -99,8 +99,13 @@ novo continua de onde parou.
    | `eco` | a Agatha fala pelas caixas; quando pedir, diga a frase **no meio da fala dela**, ou fique calado |
    | `ambiente` | 10 min de TV, rádio ou podcast tocando **em outro aparelho**; ninguém chama a Agatha |
 
-   Depois de cada fala ele mostra o pico do som. Se avisar que ficou baixo ou estourado, ele
-   oferece gravar de novo.
+   Depois de cada fala ele mostra o pico do som. Se avisar que ficou baixo, estourado ou que "não
+   parece voz" (estalo de conector mal encaixado), ele oferece gravar de novo. Para regravar falas
+   que já foram salvas, use `--redo` com ids ou intervalos:
+
+   ```powershell
+   .venv\Scripts\python -m agatha_client.record --redo perto-001..perto-020
+   ```
 
 3. **Envie a pasta** para o servidor:
 
