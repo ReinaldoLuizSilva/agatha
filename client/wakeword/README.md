@@ -60,3 +60,7 @@ O que a avaliação ensinou:
   costuma terminar antes; sem os 1,5 s de silêncio não havia janela no fim do nome.
 - **Peso alto nos negativos (até 100) e mineração de negativos difíceis** levaram os falsos
   disparos na validação de 10–20/h para ~1–3/h.
+- **Eco simulado** (ADR-015): cada fala com o nome ganha 4 cópias por cima de trechos reais da
+  Agatha saindo pelas caixas, já com o cancelamento de eco do cliente (`agatha_client.aec`). O
+  acerto nas interrupções reais foi de 62% para 85%; em troca, os falsos disparos em áudio comum
+  sobem (o detector só fica ligado enquanto ela fala).
