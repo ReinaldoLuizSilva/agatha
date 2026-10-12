@@ -91,7 +91,9 @@ class SimulatedClient:
             t = msg["timings"]
             print(f"  ✎ #{msg['segment']} {msg['text']!r} (stt {t['stt_ms']} ms · total {t['total_ms']} ms)", flush=True)
             self.transcripts.append(msg)
-            if not msg["text"]:
+            if not msg.get("addressed", True):
+                print(f"     (ignorada: não chamou a Agatha)", flush=True)
+            if not msg["text"] or not msg.get("addressed", True):
                 self._pending_segments.discard(msg["segment"])
         elif kind == "response_start":
             self.can_send.clear()
