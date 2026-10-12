@@ -55,7 +55,9 @@ def windows(e):
 def speech_bounds(x):
     f = x.astype(float).reshape(-1, 320)[: len(x) // 320]
     db = 10 * np.log10((f ** 2).mean(1) + 1)
-    floor = np.percentile(db, 10)
+    live = db[db > 3]  # sem os ~300 ms de zeros do começo de cada gravação
+    if not len(live): return None
+    floor = np.percentile(live, 10)
     on = np.where(db > floor + 15)[0]
     if not len(on): return None
     return on[0] * 0.02, (on[-1] + 1) * 0.02
