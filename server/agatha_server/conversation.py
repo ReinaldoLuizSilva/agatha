@@ -1,37 +1,49 @@
 """Orquestra uma resposta: LLM em streaming → trechos → limpeza → TTS, com histórico curto.
 
+Com ferramentas (ADR-009): se o LLM pede uma ferramenta, a Agatha fala uma frase curta de espera
+("Deixa eu ver."), executa a ferramenta e volta ao LLM com o resultado, até `max_tool_rounds`.
+
 Cada sessão (conexão) tem a sua `Conversation`. O histórico vive só na memória e é perdido
-quando a conexão fecha; memória de longo prazo fica para a Fase 3.
+quando a conexão fecha.
 """
 
 import asyncio
+import json
 import logging
 import time
 from collections.abc import AsyncIterator, Callable
 from concurrent.futures import Executor
 from dataclasses import dataclass, field
 from datetime import datetime
+from itertools import cycle
 from typing import Protocol
 
-from .prompts import system_message, user_message
-from .text import Chunker, clean, normalize_for_speech
+from .llm import TextDelta, ToolCallDelta
+from .prompts import few_shot_messages, system_message, user_message
+from .text import Chunker, LeadingTimestampFilter, clean, normalize_for_speech
+from .tools import ToolRegistry
 
 log = logging.getLogger(__name__)
+
+# Frases ditas enquanto uma ferramenta roda (alternadas para não soar repetitivo)
+FILLERS = ("Deixa eu ver.", "Um instante.", "Só um momento.")
 
 
 @dataclass(frozen=True)
 class ConversationConfig:
-    # Pares pergunta/resposta mantidos no contexto. O corte é em bloco: ao passar de
-    # `history_turns`, volta para a metade. Cortar uma troca por turno mudaria o começo do prompt
-    # a cada turno, e o llama.cpp reprocessaria tudo (Gemma 4 usa sliding window attention):
-    # medido no teste do Windows, 525 tokens em 2,1 s na 8ª pergunta.
+    # Trocas (turnos) mantidas no contexto. O corte é em bloco: ao passar de `history_turns`,
+    # volta para a metade. Cortar uma troca por turno mudaria o começo do prompt a cada turno, e o
+    # llama.cpp reprocessaria tudo (Gemma 4 usa sliding window attention): medido no teste do
+    # Windows, 525 tokens em 2,1 s na 8ª pergunta.
     history_turns: int = 12
+    max_tool_rounds: int = 2  # idas ao LLM com resultado de ferramenta, por resposta
 
 
 class SupportsStreamChat(Protocol):
-    def stream_chat(self, messages: list[dict]) -> AsyncIterator[str]: ...
+    def stream_chat(self, messages: list[dict], tools: list[dict] | None = None
+                    ) -> AsyncIterator[TextDelta | ToolCallDelta]: ...
 
-    async def prefill(self, messages: list[dict]) -> None: ...
+    async def prefill(self, messages: list[dict], tools: list[dict] | None = None) -> None: ...
 
 
 class SupportsSynthesize(Protocol):
@@ -55,6 +67,12 @@ class Done:
     reason: str  # "done" | "error"
     text: str
     timings: dict = field(default_factory=dict)  # ms a partir da referência (fim da fala)
+    tools: list[str] = field(default_factory=list)  # ferramentas usadas, na ordem
+
+
+def build_prefix(tools: ToolRegistry | None) -> list[dict]:
+    """Começo fixo do prompt: sistema (+ regras das ferramentas) e exemplos. Entra no cache do LLM."""
+    return [system_message(tools), *few_shot_messages(tools)]
 
 
 class Conversation:
@@ -66,6 +84,7 @@ class Conversation:
         config: ConversationConfig = ConversationConfig(),
         clock: Callable[[], float] = time.monotonic,
         now: Callable[[], datetime] = datetime.now,
+        tools: ToolRegistry | None = None,
     ):
         self._llm = llm
         self._synth = synthesizer
@@ -73,18 +92,24 @@ class Conversation:
         self.config = config
         self._clock = clock
         self._now = now
-        self.history: list[dict] = []
+        self._tools = tools or ToolRegistry([])
+        self._schemas = self._tools.schemas() or None
+        self._prefix = build_prefix(self._tools)
+        self._fillers = cycle(FILLERS)
+        self.history: list[list[dict]] = []  # um item por turno: as mensagens exatas daquele turno
         self._prefill_task: asyncio.Task | None = None
+
+    def _flat_history(self) -> list[dict]:
+        return [m for turn in self.history for m in turn]
 
     async def respond(self, user_text: str, t_ref: float) -> AsyncIterator[TextChunk | Audio | Done]:
         """Gera a resposta trecho a trecho. `t_ref` é o instante do fim da fala (relógio monotônico)."""
-        user = user_message(user_text, self._now())
-        messages = [system_message(), *self.history, user]
-        chunker = Chunker()
+        turn: list[dict] = [user_message(user_text, self._now())]
         timings: dict = {}
         spoken: list[str] = []
-        raw: list[str] = []  # texto exato do modelo, para o histórico bater com o cache do llama.cpp
+        used_tools: list[str] = []
         loop = asyncio.get_running_loop()
+        tools_allowed = self._schemas is not None
 
         def ms_since_ref() -> int:
             return round((self._clock() - t_ref) * 1000)
@@ -94,51 +119,91 @@ class Conversation:
             if not text:
                 return
             spoken.append(text)
-            if "first_chunk_ms" not in timings:
-                timings["first_chunk_ms"] = ms_since_ref()
+            timings.setdefault("first_chunk_ms", ms_since_ref())
             yield TextChunk(text)
             t0 = self._clock()
             pcm = await loop.run_in_executor(self._tts_executor, self._synth.synthesize, normalize_for_speech(text))
-            if "tts_first_ms" not in timings:
-                timings["tts_first_ms"] = round((self._clock() - t0) * 1000)
+            timings.setdefault("tts_first_ms", round((self._clock() - t0) * 1000))
             if pcm:
                 yield Audio(pcm)
 
-        try:
-            async for delta in self._llm.stream_chat(messages):
-                raw.append(delta)
-                if "llm_first_token_ms" not in timings:
-                    timings["llm_first_token_ms"] = ms_since_ref()
-                for raw_chunk in chunker.feed(delta):
+        rounds = 0
+        while True:
+            messages = [*self._prefix, *self._flat_history(), *turn]
+            tools = self._schemas if tools_allowed and rounds < self.config.max_tool_rounds else None
+            chunker = Chunker()
+            head = LeadingTimestampFilter()  # o modelo às vezes repete o carimbo de data da pergunta
+            raw: list[str] = []  # texto exato do modelo, para o histórico bater com o cache do llama.cpp
+            calls: dict[int, dict] = {}
+            try:
+                async for delta in self._llm.stream_chat(messages, tools):
+                    timings.setdefault("llm_first_token_ms", ms_since_ref())
+                    if isinstance(delta, TextDelta):
+                        raw.append(delta.text)
+                        for raw_chunk in chunker.feed(head.feed(delta.text)):
+                            async for event in speak(raw_chunk):
+                                yield event
+                        continue
+                    first_piece = not calls
+                    call = calls.setdefault(delta.index, {"id": None, "name": "", "arguments": ""})
+                    call["id"] = call["id"] or delta.id
+                    call["name"] += delta.name or ""
+                    call["arguments"] += delta.arguments
+                    if first_piece and not spoken:  # vai consultar algo: não deixa o silêncio no ar
+                        async for event in speak(next(self._fillers)):
+                            yield event
+                for raw_chunk in [*chunker.feed(head.flush()), *chunker.flush()]:
                     async for event in speak(raw_chunk):
                         yield event
-            for raw_chunk in chunker.flush():
-                async for event in speak(raw_chunk):
-                    yield event
-        except Exception:
-            log.exception("falha ao gerar a resposta")
-            yield Done("error", " ".join(spoken), timings)
-            return
+            except Exception:
+                if tools is not None and not calls and not raw:
+                    # ex.: argumento com JSON degenerado → HTTP 500 no llama-server; tenta sem ferramentas
+                    log.exception("falha do LLM com ferramentas; tentando sem")
+                    tools_allowed = False
+                    continue
+                log.exception("falha ao gerar a resposta")
+                yield Done("error", " ".join(spoken), timings, used_tools)
+                return
 
-        self._remember(user, "".join(raw))
-        yield Done("done", " ".join(spoken), timings)
+            if not calls:
+                turn.append({"role": "assistant", "content": "".join(raw)})
+                break
 
-    def _remember(self, user: dict, raw_answer: str) -> None:
-        # Guarda exatamente o que foi enviado e gerado: qualquer diferença no prefixo do prompt
-        # obriga o llama.cpp a reprocessar (ver prompts.py).
-        self.history += [user, {"role": "assistant", "content": raw_answer}]
-        if len(self.history) > 2 * self.config.history_turns:
+            tool_calls = [
+                {"id": c["id"] or f"call_{rounds}_{i}", "type": "function",
+                 "function": {"name": c["name"], "arguments": c["arguments"]}}
+                for i, c in sorted(calls.items())
+            ]
+            turn.append({"role": "assistant", "content": "".join(raw), "tool_calls": tool_calls})
+            t0 = self._clock()
+            for tc in tool_calls:
+                name, args = tc["function"]["name"], tc["function"]["arguments"]
+                result = await self._tools.execute(name, args)
+                used_tools.append(name)
+                log.info("ferramenta %s(%s) → %s", name, args, json.dumps(result, ensure_ascii=False)[:300])
+                turn.append({"role": "tool", "tool_call_id": tc["id"], "content": json.dumps(result, ensure_ascii=False)})
+            timings["tool_ms"] = timings.get("tool_ms", 0) + round((self._clock() - t0) * 1000)
+            rounds += 1
+
+        self._remember(turn)
+        yield Done("done", " ".join(spoken), timings, used_tools)
+
+    def _remember(self, turn: list[dict]) -> None:
+        # Guarda exatamente o que foi enviado e gerado (inclusive chamadas e resultados de
+        # ferramentas): qualquer diferença no prefixo do prompt obriga o llama.cpp a reprocessar.
+        self.history.append(turn)
+        if len(self.history) > self.config.history_turns:
             keep = max(1, self.config.history_turns // 2)
-            self.history = self.history[-2 * keep:]
+            self.history = self.history[-keep:]
             # O corte invalida o cache do llama.cpp. Enquanto a resposta ainda está sendo falada
             # (vários segundos), recalcula o cache do prompt cortado em segundo plano, para a
             # próxima pergunta não pagar ~2 s de reprocessamento.
-            self._prefill_task = asyncio.create_task(self._prefill([system_message(), *self.history]))
+            self._prefill_task = asyncio.create_task(self._prefill([*self._prefix, *self._flat_history()]))
 
     async def _prefill(self, messages: list[dict]) -> None:
         t0 = self._clock()
         try:
-            await self._llm.prefill(messages)
+            await self._llm.prefill(messages, self._schemas)
             log.info("cache do LLM recalculado após o corte do histórico (%.0f ms)", (self._clock() - t0) * 1000)
         except Exception as e:
             log.warning("falha ao recalcular o cache do LLM: %s", e)

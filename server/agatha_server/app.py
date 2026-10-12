@@ -27,8 +27,9 @@ from websockets.exceptions import ConnectionClosed
 
 from . import protocol
 from .config import ServerConfig
-from .conversation import Audio, Conversation, Done, TextChunk
-from .prompts import system_message
+from .conversation import Audio, Conversation, Done, TextChunk, build_prefix
+from .tools import ToolRegistry
+from .tools.calc import calculator
 from .text import looks_incomplete
 from .wake import is_addressed
 from .vad import Segmenter, SileroVAD, SpeechEnd, SpeechStart
@@ -297,8 +298,9 @@ class Session:
             "first_audio_ms": round((first_audio_at - t_ref) * 1000) if first_audio_at else None,
             "audio_ms": round(audio_s * 1000),
         }
-        await self._send(protocol.response_end(n, done.reason, done.text, timings))
-        log.info("[%s] resposta %d (%s) %r | %s", self.id, n, done.reason, done.text,
+        await self._send(protocol.response_end(n, done.reason, done.text, timings, done.tools))
+        tools = f" [ferramentas: {', '.join(done.tools)}]" if done.tools else ""
+        log.info("[%s] resposta %d (%s)%s %r | %s", self.id, n, done.reason, tools, done.text,
                  " · ".join(f"{k.removesuffix('_ms')} {v} ms" for k, v in timings.items() if v is not None))
         # prazo de segurança: se o playback_end não chegar, volta a ouvir sozinho
         self._resume_timer = asyncio.get_running_loop().call_later(
@@ -344,21 +346,27 @@ class Session:
         self._awake_until = time.monotonic() + self.server.config.wake.conversation_s
 
 
+def build_tools() -> ToolRegistry:
+    return ToolRegistry([calculator])
+
+
 async def run(config: ServerConfig, transcriber: SupportsTranscribe, llm, synthesizer) -> None:
     tts_executor = ThreadPoolExecutor(max_workers=1, thread_name_prefix="tts")
+    tools = build_tools()
+    log.info("ferramentas: %s", ", ".join(tools.tools) or "nenhuma")
     server = AgathaServer(
         config,
         transcriber,
-        conversation_factory=lambda: Conversation(llm, synthesizer, tts_executor, config.conversation),
+        conversation_factory=lambda: Conversation(llm, synthesizer, tts_executor, config.conversation, tools=tools),
         output_sample_rate=synthesizer.sample_rate,
     )
     if await llm.healthy():
         log.info("LLM disponível em %s", config.llm.url)
-        # Deixa o prompt de sistema no cache do llama.cpp: sem isso, a 1ª pergunta depois de
-        # subir o LLM paga ~1,5 s processando o prompt inteiro.
+        # Deixa o começo fixo do prompt (sistema, exemplos e ferramentas) no cache do llama.cpp: sem
+        # isso, a 1ª pergunta depois de subir o LLM paga ~1,5 s processando o prompt inteiro.
         t0 = time.monotonic()
         try:
-            await llm.prefill([system_message()])
+            await llm.prefill(build_prefix(tools), tools.schemas() or None)
             log.info("prompt de sistema no cache do LLM (%.0f ms)", (time.monotonic() - t0) * 1000)
         except Exception as e:
             log.warning("falha ao pré-carregar o prompt no LLM: %s", e)

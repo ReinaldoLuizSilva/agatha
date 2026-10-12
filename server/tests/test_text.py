@@ -1,6 +1,6 @@
 import pytest
 
-from agatha_server.text import Chunker, clean, looks_incomplete, normalize_for_speech
+from agatha_server.text import Chunker, LeadingTimestampFilter, clean, looks_incomplete, normalize_for_speech
 
 
 def stream(text: str, chunker: Chunker | None = None, step: int = 3) -> list[str]:
@@ -102,3 +102,22 @@ def test_parece_incompleta(text):
 ])
 def test_parece_completa(text):
     assert not looks_incomplete(text)
+
+
+# --- Carimbo de data repetido pelo modelo --------------------------------------------
+
+def filtered(text: str, step: int = 3) -> str:
+    f = LeadingTimestampFilter()
+    return "".join(f.feed(text[i : i + step]) for i in range(0, len(text), step)) + f.flush()
+
+
+@pytest.mark.parametrize("raw, expected", [
+    ("[domingo, 11/10/2026, 21h30] São 21h30 agora.", "São 21h30 agora."),
+    ("  [domingo, 11/10/2026, 9h05]Oi.", "Oi."),
+    ("São 21h30 agora.", "São 21h30 agora."),
+    ("[nota] isso não é carimbo", "[nota] isso não é carimbo"),
+    ("[" + "x" * 80, "[" + "x" * 80),  # colchete que nunca fecha: libera depois do limite
+    ("[domingo", "[domingo"),            # resposta que acaba no meio: flush libera
+])
+def test_filtro_de_carimbo(raw, expected):
+    assert filtered(raw) == expected

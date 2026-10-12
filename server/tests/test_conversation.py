@@ -1,29 +1,46 @@
 import asyncio
+import json
 from concurrent.futures import ThreadPoolExecutor
 from datetime import datetime
 
 import pytest
 
-from agatha_server.conversation import Audio, Conversation, ConversationConfig, Done, TextChunk
+from agatha_server.conversation import FILLERS, Audio, Conversation, ConversationConfig, Done, TextChunk
+from agatha_server.llm import TextDelta, ToolCallDelta
 from agatha_server.prompts import describe_now
+from agatha_server.tools import Example, Tool, ToolRegistry
 
 
 class FakeLLM:
-    def __init__(self, reply: str, fail_after: int | None = None):
-        self.reply = reply
+    """LLM falso. Cada resposta do roteiro é um texto ou ("tool", nome, argumentos_json)."""
+
+    def __init__(self, *replies, fail_after: int | None = None, fail_with_tools: bool = False):
+        self.replies = list(replies)
         self.fail_after = fail_after
+        self.fail_with_tools = fail_with_tools
         self.calls: list[list[dict]] = []
-        self.prefills: list[list[dict]] = []
+        self.tools_seen: list = []
+        self.prefills: list[tuple[list[dict], list | None]] = []
 
-    async def prefill(self, messages):
-        self.prefills.append(messages)
+    async def prefill(self, messages, tools=None):
+        self.prefills.append((messages, tools))
 
-    async def stream_chat(self, messages):
+    async def stream_chat(self, messages, tools=None):
         self.calls.append(messages)
-        for i in range(0, len(self.reply), 4):  # pedaços de 4 caracteres, como tokens
+        self.tools_seen.append(tools)
+        if self.fail_with_tools and tools:
+            raise RuntimeError("HTTP 500: Failed to parse tool call arguments as JSON")
+        reply = self.replies.pop(0) if len(self.replies) > 1 else self.replies[0]
+        if isinstance(reply, tuple):
+            _, name, args = reply
+            yield ToolCallDelta(0, "call_x", name, "")
+            for i in range(0, len(args), 5):
+                yield ToolCallDelta(0, None, None, args[i : i + 5])
+            return
+        for i in range(0, len(reply), 4):  # pedaços de 4 caracteres, como tokens
             if self.fail_after is not None and i >= self.fail_after:
                 raise ConnectionError("llm caiu")
-            yield self.reply[i : i + 4]
+            yield TextDelta(reply[i : i + 4])
 
 
 class FakeSynth:
@@ -38,6 +55,7 @@ class FakeSynth:
 
 
 NOW = datetime(2026, 10, 11, 17, 55)
+STAMP = "[domingo, 11/10/2026, 17h55]"
 
 
 def run(conversation: Conversation, text: str) -> list:
@@ -47,10 +65,10 @@ def run(conversation: Conversation, text: str) -> list:
     return asyncio.run(collect())
 
 
-def make(reply: str, **kwargs) -> tuple[Conversation, FakeLLM, FakeSynth]:
-    llm, synth = FakeLLM(reply, **kwargs), FakeSynth()
+def make(*replies, tools: ToolRegistry | None = None, **kwargs) -> tuple[Conversation, FakeLLM, FakeSynth]:
+    llm, synth = FakeLLM(*replies, **kwargs), FakeSynth()
     conv = Conversation(llm, synth, ThreadPoolExecutor(1), ConversationConfig(history_turns=4),
-                        clock=lambda: 1.0, now=lambda: NOW)
+                        clock=lambda: 1.0, now=lambda: NOW, tools=tools)
     return conv, llm, synth
 
 
@@ -62,6 +80,7 @@ def test_eventos_em_ordem():
     done = events[-1]
     assert done.reason == "done"
     assert done.text == "Oi, Rei. Tudo certo por aqui."
+    assert done.tools == []
     assert set(done.timings) == {"llm_first_token_ms", "first_chunk_ms", "tts_first_ms"}
     assert done.timings["first_chunk_ms"] == 1000  # relógio falso: sempre 1 s após a referência
 
@@ -73,43 +92,41 @@ def test_tts_recebe_texto_limpo_e_normalizado():
     assert synth.spoken == ["Use o top.", "O disco está com oitenta e cinco por cento."]
 
 
+def test_carimbo_de_data_repetido_pelo_modelo_nao_e_falado():
+    conv, _, synth = make(f"{STAMP} São 17h55 agora.")
+    run(conv, "Que horas são?")
+    assert synth.spoken == ["São dezessete e cinquenta e cinco agora."]
+
+
 def test_data_e_hora_vao_na_mensagem_do_usuario():
     conv, llm, _ = make("Ok.")
     run(conv, "Que horas são?")
     system, user = llm.calls[0]
     assert system["role"] == "system"
     assert describe_now(NOW) not in system["content"]  # prefixo estável para o cache do llama.cpp
-    assert user == {"role": "user", "content": "[domingo, 11/10/2026, 17h55] Que horas são?"}
+    assert user == {"role": "user", "content": f"{STAMP} Que horas são?"}
 
 
 def test_historico_guarda_o_texto_exato_e_corta_em_bloco():
     conv, llm, _ = make("Resposta **bruta**.\n")
-    stamp = "[domingo, 11/10/2026, 17h55]"
     sizes, prefills = [], []
     for i in range(6):
         run(conv, f"pergunta {i}")
-        sizes.append(len(conv.history) // 2)
+        sizes.append(len(conv.history))
         prefills.append(len(llm.prefills))
+    # history_turns=4: cresce até 4 turnos; no 5º, volta para os 2 mais recentes de uma vez
+    assert sizes == [1, 2, 3, 4, 2, 3]
+    raw = "Resposta **bruta**.\n"
+    assert [[m["content"] for m in turn] for turn in conv.history] == [
+        [f"{STAMP} pergunta 3", raw], [f"{STAMP} pergunta 4", raw], [f"{STAMP} pergunta 5", raw],
+    ]
     # o cache só é pré-aquecido depois do corte (5ª resposta), com o prompt já cortado
     assert prefills == [0, 0, 0, 0, 1, 1]
-    assert llm.prefills[0][0]["role"] == "system"
-    assert [m["content"] for m in llm.prefills[0][1:]] == [
-        f"{stamp} pergunta 3", "Resposta **bruta**.\n", f"{stamp} pergunta 4", "Resposta **bruta**.\n",
-    ]
-    # history_turns=4: cresce até 4 trocas; na 5ª, volta para as 2 mais recentes de uma vez
-    assert sizes == [1, 2, 3, 4, 2, 3]
-    assert [m["content"] for m in conv.history] == [
-        f"{stamp} pergunta 3", "Resposta **bruta**.\n", f"{stamp} pergunta 4", "Resposta **bruta**.\n",
-        f"{stamp} pergunta 5", "Resposta **bruta**.\n",
-    ]
-    # a 3ª chamada viu o sistema + as 2 trocas anteriores, idênticas ao que foi enviado/gerado, + a pergunta
-    raw = "Resposta **bruta**.\n"
-    assert [m["content"] for m in llm.calls[2][1:]] == [
-        f"{stamp} pergunta 0", raw, f"{stamp} pergunta 1", raw, f"{stamp} pergunta 2",
-    ]
-    # entre dois cortes, cada chamada começa exatamente com a anterior: o prefixo não muda e o
-    # llama.cpp reaproveita o cache (chamadas 0 a 4; o corte acontece depois da 5ª resposta)
-    for i in range(1, 5):
+    messages, _ = llm.prefills[0]
+    assert messages[0]["role"] == "system"
+    assert [m["content"] for m in messages[1:]] == [f"{STAMP} pergunta 3", raw, f"{STAMP} pergunta 4", raw]
+    # entre dois cortes, cada chamada começa exatamente com a anterior: o prefixo não muda
+    for i in range(1, 4):
         assert llm.calls[i][: len(llm.calls[i - 1])] == llm.calls[i - 1]
 
 
@@ -127,3 +144,74 @@ def test_resposta_so_com_emoji_nao_gera_audio():
     events = run(conv, "oi")
     assert [type(e) for e in events] == [Done]
     assert synth.spoken == []
+
+
+# --- Ferramentas -----------------------------------------------------------------------
+
+def echo_tools(calls: list) -> ToolRegistry:
+    def handler(args):
+        calls.append(args)
+        return {"resultado": 36}
+
+    return ToolRegistry([Tool(
+        name="calcular", description="calcula", handler=handler, rule="contas: use calcular",
+        properties={"expressao": {"type": "string"}}, required=("expressao",),
+        examples=(Example("Quanto é 18% de 350?", {"expressao": "350 * 0.18"}, {"resultado": 63}, "Dá 63."),),
+    )])
+
+
+def test_ferramenta_fala_espera_executa_e_responde_com_o_resultado():
+    executed = []
+    conv, llm, synth = make(("tool", "calcular", '{"expressao": "240 * 0.15"}'), "É 36.",
+                            tools=echo_tools(executed))
+    events = run(conv, "Quanto é 15% de 240?")
+    texts = [e.text for e in events if isinstance(e, TextChunk)]
+    assert texts[0] in FILLERS  # fala algo assim que percebe a chamada
+    assert texts[1:] == ["É 36."]
+    assert executed == [{"expressao": "240 * 0.15"}]
+    done = events[-1]
+    assert done.tools == ["calcular"]
+    assert "tool_ms" in done.timings
+    # 1ª ida com ferramentas; 2ª ida recebe a chamada e o resultado
+    assert llm.tools_seen[0] and llm.tools_seen[0][0]["function"]["name"] == "calcular"
+    second = llm.calls[1]
+    assert second[-2]["tool_calls"][0]["function"] == {"name": "calcular", "arguments": '{"expressao": "240 * 0.15"}'}
+    assert second[-1] == {"role": "tool", "tool_call_id": "call_x", "content": json.dumps({"resultado": 36})}
+    # o turno inteiro (pergunta, chamada, resultado, resposta) vai para o histórico, exatamente
+    assert [m["role"] for m in conv.history[0]] == ["user", "assistant", "tool", "assistant"]
+
+
+def test_prefixo_tem_regras_e_exemplos_das_ferramentas():
+    conv, llm, _ = make("Oi.", tools=echo_tools([]))
+    run(conv, "oi")
+    messages = llm.calls[0]
+    assert "contas: use calcular" in messages[0]["content"]
+    roles = [m["role"] for m in messages[1:-1]]
+    assert roles[:4] == ["user", "assistant", "tool", "assistant"]  # exemplo de chamada da ferramenta
+    assert messages[2]["tool_calls"][0]["function"]["name"] == "calcular"
+
+
+def test_sem_ferramentas_nao_envia_tools():
+    conv, llm, _ = make("Oi.")
+    run(conv, "oi")
+    assert llm.tools_seen == [None]
+    assert len(llm.calls[0]) == 2  # sistema + pergunta, sem exemplos
+
+
+def test_falha_com_ferramentas_tenta_de_novo_sem():
+    conv, llm, synth = make("Não consegui calcular, mas dá uns 36.", tools=echo_tools([]), fail_with_tools=True)
+    events = run(conv, "Quanto é 15% de 240?")
+    assert events[-1].reason == "done"
+    assert llm.tools_seen[0] is not None and llm.tools_seen[1] is None
+    assert synth.spoken[0].startswith("Não consegui calcular")
+
+
+def test_limite_de_rodadas_de_ferramenta():
+    executed = []
+    # o modelo insiste em chamar a ferramenta; depois de 2 rodadas, a 3ª ida vai sem ferramentas
+    conv, llm, _ = make(("tool", "calcular", '{"expressao": "1+1"}'), ("tool", "calcular", '{"expressao": "2+2"}'),
+                        "Pronto.", tools=echo_tools(executed))
+    events = run(conv, "conta aí")
+    assert len(executed) == 2
+    assert llm.tools_seen[2] is None
+    assert events[-1].text.endswith("Pronto.")

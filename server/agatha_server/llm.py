@@ -17,23 +17,52 @@ class LLMConfig:
     max_tokens: int = 200
 
 
+@dataclass(frozen=True)
+class TextDelta:
+    text: str
+
+
+@dataclass(frozen=True)
+class ToolCallDelta:
+    """Pedaço de uma chamada de ferramenta; o 1º traz `name`, os seguintes trazem `arguments`."""
+
+    index: int
+    id: str | None
+    name: str | None
+    arguments: str
+
+
 class LLMClient:
     def __init__(self, config: LLMConfig):
         self.config = config
         self._client = httpx.AsyncClient(base_url=config.url, timeout=httpx.Timeout(60.0, connect=5.0))
 
-    async def stream_chat(self, messages: list[dict]) -> AsyncIterator[str]:
-        """Gera os pedaços de texto da resposta à medida que o modelo produz."""
+    def _body(self, messages: list[dict], tools: list[dict] | None, **extra) -> dict:
         body = {
             "messages": messages,
-            "stream": True,
-            "max_tokens": self.config.max_tokens,
-            "temperature": self.config.temperature,
-            "cache_prompt": True,  # reaproveita o prompt de sistema já processado
+            "cache_prompt": True,  # reaproveita o prefixo do prompt já processado
             "chat_template_kwargs": {"enable_thinking": False},
+            **extra,
         }
+        if tools:
+            # as ferramentas entram no prompt pelo template: precisam ser sempre as mesmas para o cache valer
+            body["tools"] = tools
+            body["parallel_tool_calls"] = False
+        return body
+
+    async def stream_chat(
+        self, messages: list[dict], tools: list[dict] | None = None
+    ) -> AsyncIterator[TextDelta | ToolCallDelta]:
+        """Gera os pedaços da resposta (texto ou chamada de ferramenta) à medida que o modelo produz."""
+        body = self._body(messages, tools, stream=True, max_tokens=self.config.max_tokens,
+                          temperature=self.config.temperature)
         async with self._client.stream("POST", "/v1/chat/completions", json=body) as response:
-            response.raise_for_status()
+            if response.is_error:
+                await response.aread()
+                raise httpx.HTTPStatusError(
+                    f"llama-server respondeu {response.status_code}: {response.text[:200]}",
+                    request=response.request, response=response,
+                )
             async for line in response.aiter_lines():
                 if not line.startswith("data: "):
                     continue
@@ -41,19 +70,17 @@ class LLMClient:
                 if data == "[DONE]":
                     break
                 choices = json.loads(data).get("choices") or []
-                delta = choices[0].get("delta", {}).get("content") if choices else None
-                if delta:
-                    yield delta
+                delta = choices[0].get("delta", {}) if choices else {}
+                if delta.get("content"):
+                    yield TextDelta(delta["content"])
+                for call in delta.get("tool_calls") or []:
+                    function = call.get("function") or {}
+                    yield ToolCallDelta(call.get("index", 0), call.get("id"), function.get("name"),
+                                        function.get("arguments") or "")
 
-    async def prefill(self, messages: list[dict]) -> None:
+    async def prefill(self, messages: list[dict], tools: list[dict] | None = None) -> None:
         """Processa um prompt só para deixá-lo no cache do llama.cpp (gera 1 token e descarta)."""
-        body = {
-            "messages": messages,
-            "max_tokens": 1,
-            "cache_prompt": True,
-            "chat_template_kwargs": {"enable_thinking": False},
-        }
-        response = await self._client.post("/v1/chat/completions", json=body)
+        response = await self._client.post("/v1/chat/completions", json=self._body(messages, tools, max_tokens=1))
         response.raise_for_status()
 
     async def healthy(self) -> bool:

@@ -88,7 +88,48 @@ _MARKDOWN = [
 ]
 
 
+# carimbo de data/hora que o modelo às vezes repete no começo da resposta ("[domingo, 11/10/2026, 21h30]")
+_TIMESTAMP = re.compile(r"\[[^\]]*\d{1,2}h\d{2}[^\]]*\]")
+
+
+class LeadingTimestampFilter:
+    """Tira o carimbo de data/hora do começo de uma resposta em streaming.
+
+    Precisa agir antes do Chunker: ele cortaria na vírgula de dentro do carimbo
+    ("[domingo, 11/10/2026, ...") e a limpeza por trecho não o reconheceria.
+    """
+
+    def __init__(self, max_hold: int = 60):
+        self._buffer = ""
+        self._done = False
+        self._max_hold = max_hold
+
+    def feed(self, delta: str) -> str:
+        if self._done:
+            return delta
+        self._buffer += delta
+        head = self._buffer.lstrip()
+        if not head:
+            return ""
+        if not head.startswith("["):
+            return self._release(self._buffer)
+        if "]" in head:
+            return self._release(_TIMESTAMP.sub("", self._buffer, count=1).lstrip())
+        if len(head) > self._max_hold:  # colchete que não é carimbo
+            return self._release(self._buffer)
+        return ""
+
+    def flush(self) -> str:
+        return "" if self._done else self._release(self._buffer)
+
+    def _release(self, text: str) -> str:
+        self._done = True
+        self._buffer = ""
+        return text
+
+
 def clean(text: str) -> str:
+    text = _TIMESTAMP.sub(" ", text)
     for pattern, repl in _MARKDOWN:
         text = pattern.sub(repl, text)
     # emoji e pictogramas (categoria So) e caracteres de controle

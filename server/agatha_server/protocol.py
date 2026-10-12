@@ -133,8 +133,9 @@ def audio_end(response: int) -> str:
     return _dump({"type": "audio_end", "response": response})
 
 
-def response_end(response: int, reason: str, text: str, timings: dict) -> str:
-    return _dump({"type": "response_end", "response": response, "reason": reason, "text": text, "timings": timings})
+def response_end(response: int, reason: str, text: str, timings: dict, tools: list[str] | None = None) -> str:
+    return _dump({"type": "response_end", "response": response, "reason": reason, "text": text,
+                  "tools": tools or [], "timings": timings})
 
 
 def audio_frames(pcm: bytes) -> list[bytes]:

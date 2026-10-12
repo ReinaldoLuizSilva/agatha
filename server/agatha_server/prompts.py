@@ -7,8 +7,12 @@ Evolução (a v2 foi medida no ADR-004):
   na mensagem do usuário em vez do prompt de sistema, para o prefixo do prompt nunca mudar e o
   llama.cpp reaproveitar o cache (o Gemma 4 usa sliding window attention: se o começo muda, o
   prompt inteiro é reprocessado).
+- ferramentas (ADR-009): nota com regras explícitas de quando usar cada uma + exemplos de conversa
+  no começo (few-shot), montados a partir das ferramentas registradas. Sem os exemplos, o Gemma 4
+  E4B chamava as ferramentas em ~50% dos casos; com eles, 42/42 no bench/tools_bench.py.
 """
 
+import json
 from datetime import datetime
 
 SYSTEM_PROMPT = """\
@@ -35,8 +39,48 @@ def describe_now(now: datetime) -> str:
     return f"{_WEEKDAYS[now.weekday()]}, {now:%d/%m/%Y}, {now.hour}h{now.minute:02d}"
 
 
-def system_message() -> dict:
-    return {"role": "system", "content": SYSTEM_PROMPT}
+_CONCEPTS_RULE = (
+    'Perguntas do tipo "o que é", "como funciona" ou "para que serve" são sobre conceitos: responda direto '
+    "com o que você sabe, sem ferramenta. O mesmo vale para opiniões e conversa."
+)
+
+# Exemplos de perguntas conceituais respondidas sem ferramenta (evitam que o modelo ache que tudo
+# sobre Zabbix ou Oracle precisa de ferramenta: sem eles, "o que é um trigger?" virava "não sei").
+_CONCEPT_EXAMPLES = [
+    ("O que é um índice num banco de dados?", "É uma estrutura que acelera as buscas. Funciona como o índice de um livro."),
+    ("Para que serve um template no Zabbix?",
+     "Ele agrupa itens, triggers e gráficos prontos. Você aplica em vários hosts de uma vez, sem configurar um por um."),
+]
+_EXAMPLE_NOW = datetime(2026, 10, 10, 9, 0)
+
+
+def system_message(tools=None) -> dict:
+    """Prompt de sistema; com ferramentas, inclui as regras de quando usar cada uma."""
+    content = SYSTEM_PROMPT
+    if tools:
+        rules = "\n".join(f"- {t.rule};" for t in tools.tools.values())
+        content += f"\nVocê tem ferramentas e deve usá-las nestes casos, sempre:\n{rules}\n{_CONCEPTS_RULE}"
+    return {"role": "system", "content": content}
+
+
+def few_shot_messages(tools) -> list[dict]:
+    """Conversa de exemplo que vai fixa no começo do prompt (entra no cache do prefixo)."""
+    if not tools:
+        return []
+    messages: list[dict] = []
+    for tool in tools.tools.values():
+        for i, ex in enumerate(tool.examples):
+            call_id = f"exemplo_{tool.name}_{i}"
+            messages += [
+                user_message(ex.question, _EXAMPLE_NOW),
+                {"role": "assistant", "content": "", "tool_calls": [{"id": call_id, "type": "function", "function": {
+                    "name": tool.name, "arguments": json.dumps(ex.arguments, ensure_ascii=False)}}]},
+                {"role": "tool", "tool_call_id": call_id, "content": json.dumps(ex.result, ensure_ascii=False)},
+                {"role": "assistant", "content": ex.answer},
+            ]
+    for question, answer in _CONCEPT_EXAMPLES:
+        messages += [user_message(question, _EXAMPLE_NOW), {"role": "assistant", "content": answer}]
+    return messages
 
 
 def user_message(text: str, now: datetime) -> dict:
