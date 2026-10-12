@@ -87,7 +87,11 @@ def load_config(env: dict | None = None) -> ServerConfig:
             return False
         raise ConfigError(f"AGATHA_{name}={value!r} inválido (use true/false)")
 
-    words = get("WAKE_WORDS", None)
+    def items(name: str) -> tuple[str, ...] | None:
+        value = get(name, None)
+        return tuple(w.strip() for w in value.split(",") if w.strip()) if value else None
+
+    words = items("WAKE_WORDS")
     return ServerConfig(
         host=get("HOST", "0.0.0.0"),
         port=get("PORT", 8765, int),
@@ -102,6 +106,7 @@ def load_config(env: dict | None = None) -> ServerConfig:
             models_dir=get("STT_MODELS_DIR", stt_defaults.models_dir),
             cpu_threads=get("STT_CPU_THREADS", stt_defaults.cpu_threads, int),
             initial_prompt=get("STT_INITIAL_PROMPT", stt_defaults.initial_prompt),
+            names=items("STT_NAMES") or stt_defaults.names,
         ),
         vad=VADConfig(
             threshold=get("VAD_THRESHOLD", vad_defaults.threshold, float),
@@ -126,7 +131,7 @@ def load_config(env: dict | None = None) -> ServerConfig:
         ),
         wake=WakeConfig(
             enabled=flag("REQUIRE_WAKE_WORD", wake_defaults.enabled),
-            words=tuple(w.strip() for w in words.split(",") if w.strip()) if words else wake_defaults.words,
+            words=words or wake_defaults.words,
             conversation_s=get("CONVERSATION_S", wake_defaults.conversation_s, float),
         ),
         memory=MemoryConfig(

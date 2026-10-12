@@ -33,6 +33,13 @@ class STTConfig:
         "Agatha, Zabbix, Oracle, trigger, tablespace, host, hosts, template, item, Grafana, "
         "PostgreSQL, housekeeping, Linux, Podman"
     )
+    # Nomes do ambiente (hosts, bancos), acrescentados ao vocabulário. Teste de 12/10: "PRDORA" virava
+    # "PR Dora" e "agatha-srv", "Agatha Server". Com os nomes, 7/10 em vez de 0/10 (voz sintética,
+    # sem nenhum nome vazando nas frases de controle nem no ruído).
+    names: tuple[str, ...] = ()
+
+    def vocabulary(self) -> str | None:
+        return ", ".join(t for t in (self.initial_prompt, *self.names) if t) or None
 
 
 def preload_cuda_libs() -> None:
@@ -106,7 +113,7 @@ class Transcriber:
             beam_size=self.config.beam_size,
             best_of=self.config.best_of,
             temperature=list(self.config.temperatures),
-            initial_prompt=self.config.initial_prompt,
+            initial_prompt=self.config.vocabulary(),
             vad_filter=False,  # a segmentação já foi feita pelo Segmenter
             without_timestamps=True,
             condition_on_previous_text=False,

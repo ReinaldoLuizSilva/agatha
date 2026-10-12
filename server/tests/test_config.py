@@ -50,3 +50,11 @@ def test_memoria(tmp_path):
     assert load_config(base).memory.db == "/dados/agatha/data/memory/agatha.db"
     config = load_config({**base, "AGATHA_MEMORY_DB": "/tmp/m.db", "AGATHA_MEMORY_MAX_FACTS": "10"})
     assert (config.memory.db, config.memory.max_facts) == ("/tmp/m.db", 10)
+
+
+def test_nomes_no_vocabulario_do_stt(tmp_path):
+    base = {"AGATHA_TOKEN": "x", "AGATHA_ENV_FILE": str(tmp_path / "x")}
+    assert load_config(base).stt.vocabulary().endswith("Podman")
+    config = load_config({**base, "AGATHA_STT_NAMES": "PRDORA, agatha-srv"})
+    assert config.stt.names == ("PRDORA", "agatha-srv")
+    assert config.stt.vocabulary().endswith("Podman, PRDORA, agatha-srv")
