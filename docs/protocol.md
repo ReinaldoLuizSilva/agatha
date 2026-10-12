@@ -186,6 +186,7 @@ de cada vez, todo frame binário entre `audio_start` e `audio_end` pertence a el
   "response": 1,
   "reason": "done",
   "text": "Oi, Rei. Tudo certo por aqui.",
+  "tools": [],
   "timings": {
     "stt_ms": 853,
     "llm_first_token_ms": 1121,
@@ -200,7 +201,8 @@ de cada vez, todo frame binário entre `audio_start` e `audio_end` pertence a el
 | campo    | descrição                                                             |
 |----------|-----------------------------------------------------------------------|
 | `reason` | `done` (resposta completa) ou `error` (falha no LLM ou no TTS)        |
-| `text`   | texto completo da resposta, limpo                                     |
+| `text`   | texto completo da resposta, limpo (inclui a frase de espera, se houve ferramenta) |
+| `tools`  | ferramentas usadas, na ordem ([ADR-009](adr/0009-ferramentas-tool-calling.md)); `[]` se nenhuma |
 
 Tempos, em ms, **contados a partir do último bloco com fala** (o mesmo ponto do `speech_end_ms`),
 no relógio do servidor:
@@ -211,6 +213,7 @@ no relógio do servidor:
 | `llm_first_token_ms` | primeiro token do LLM                               |
 | `first_chunk_ms`     | primeiro trecho de texto pronto para o TTS          |
 | `tts_first_ms`       | duração da síntese desse primeiro trecho (não acumulado) |
+| `tool_ms`            | só com ferramenta: tempo total executando ferramentas (não acumulado) |
 | `first_audio_ms`     | primeiro frame de áudio enviado                     |
 | `audio_ms`           | duração total do áudio da resposta                  |
 
@@ -261,4 +264,4 @@ descartada, e o histórico da conversa daquela sessão é perdido.
 |--------|------|----------|
 | 1      | 1    | versão inicial: microfone → transcrições |
 | 2      | 2    | respostas faladas (`response_*`, `audio_*`, áudio binário do servidor), half-duplex com `playback_end`, `speech_end_ms` no `vad end`, `output_audio` no `ready`, medição de ponta a ponta no cliente |
-| 2 (+)  | 2–3  | campos opcionais, compatíveis: `continuation_ms` no `ready.vad` (frase cortada), `wake` no `ready` e `addressed` no `transcript` (wake word) |
+| 2 (+)  | 2–3  | campos opcionais, compatíveis: `continuation_ms` no `ready.vad` (frase cortada), `wake` no `ready` e `addressed` no `transcript` (wake word), `tools` e `timings.tool_ms` no `response_end` (ferramentas) |
