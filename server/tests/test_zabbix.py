@@ -9,6 +9,7 @@ import httpx
 from agatha_server.tools.zabbix import ZabbixClient, ZabbixConfig, zabbix_tools
 
 NOW = int(time.time())
+STALE = False  # simula agente fora do ar: só valores velhos
 
 
 def fake_api(request: httpx.Request) -> httpx.Response:
@@ -25,6 +26,10 @@ def fake_api(request: httpx.Request) -> httpx.Response:
                    "hosts": [{"host": "agatha-srv", "name": "agatha-srv"}]}]
         if params.get("hostids") == ["999"]:
             result = []
+    elif method == "item.get" and "filter" in params and STALE:
+        result = [{"key_": "system.cpu.util", "lastvalue": "25.5", "lastclock": str(NOW - 900)}]
+    elif method == "item.get" and STALE:
+        result = []
     elif method == "item.get" and "filter" in params:
         result = [{"key_": "system.cpu.util", "lastvalue": "23.456", "lastclock": str(NOW)},
                   {"key_": "vm.memory.utilization", "lastvalue": "61.04", "lastclock": str(NOW)},
@@ -77,3 +82,15 @@ def test_desligado_sem_configuracao():
 def test_host_com_nome_trocado_pelo_stt_acha_por_semelhanca():
     _, host = tools()
     assert asyncio.run(host.handler({"host": "Agatha CRV"}))["host"] == "agatha-srv"
+
+
+def test_valor_velho_nao_e_apresentado_como_atual():
+    global STALE
+    STALE = True
+    try:
+        _, host = tools()
+        result = asyncio.run(host.handler({"host": "agatha"}))
+    finally:
+        STALE = False
+    assert "cpu_pct" not in result
+    assert result["sem_dados_recentes"].startswith("última coleta")

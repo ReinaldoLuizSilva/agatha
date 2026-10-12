@@ -18,6 +18,7 @@ from .base import Example, Tool
 log = logging.getLogger(__name__)
 
 SEVERITIES = ["não classificada", "informação", "atenção", "média", "alta", "desastre"]
+STALE_S = 300  # valor mais velho que isso não é "atual" (ex.: agente fora do ar)
 
 
 @dataclass(frozen=True)
@@ -114,11 +115,20 @@ def zabbix_tools(client: ZabbixClient) -> list[Tool]:
             "hostids": [host["hostid"]], "output": ["key_", "lastvalue", "lastclock"],
             "search": {"key_": ",pused]"},
         })
-        values = {i["key_"]: float(i["lastvalue"]) for i in items if i["lastclock"] != "0" and i["lastvalue"] != ""}
+        now = datetime.now().timestamp()
+
+        def fresh(item) -> bool:
+            return item["lastvalue"] != "" and now - int(item["lastclock"]) <= STALE_S
+
+        values = {i["key_"]: float(i["lastvalue"]) for i in items if fresh(i)}
+        last = max((int(i["lastclock"]) for i in [*items, *disks]), default=0)
         iface = (host.get("interfaces") or [{}])[0]
         result = {"host": host["name"], "disponivel": iface.get("available") == "1"}
         if iface.get("available") == "2":
             result["erro_agente"] = iface.get("error", "")
+        if not values and last:
+            # sem dado recente: não apresentar o último valor como se fosse atual
+            result["sem_dados_recentes"] = f"última coleta {_since(last)}"
         if "system.cpu.util" in values:
             result["cpu_pct"] = round(values["system.cpu.util"], 1)
         if "vm.memory.utilization" in values:
@@ -127,7 +137,7 @@ def zabbix_tools(client: ZabbixClient) -> list[Tool]:
             result["ligado_ha"] = _uptime(values["system.uptime"])
         fs = {}
         for d in disks:
-            if d["lastclock"] != "0" and d["lastvalue"] != "":
+            if fresh(d):
                 mount = d["key_"].split("[", 1)[1].split(",", 1)[0]
                 fs[mount] = round(float(d["lastvalue"]), 1)
         if fs:
