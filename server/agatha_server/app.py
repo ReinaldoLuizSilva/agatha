@@ -32,6 +32,7 @@ from .memory import MemoryStore
 from .tools import ToolRegistry
 from .tools.calc import calculator
 from .tools.memory import memory_tools
+from .tools.zabbix import ZabbixClient, zabbix_tools
 from .text import looks_incomplete
 from .wake import is_addressed
 from .vad import Segmenter, SileroVAD, SpeechEnd, SpeechStart
@@ -348,14 +349,18 @@ class Session:
         self._awake_until = time.monotonic() + self.server.config.wake.conversation_s
 
 
-def build_tools(memory: MemoryStore) -> ToolRegistry:
-    return ToolRegistry([calculator, *memory_tools(memory)])
+def build_tools(memory: MemoryStore, zabbix: ZabbixClient | None = None) -> ToolRegistry:
+    tools = [calculator, *memory_tools(memory)]
+    if zabbix is not None:
+        tools += zabbix_tools(zabbix)
+    return ToolRegistry(tools)
 
 
 async def run(config: ServerConfig, transcriber: SupportsTranscribe, llm, synthesizer) -> None:
     tts_executor = ThreadPoolExecutor(max_workers=1, thread_name_prefix="tts")
     memory = MemoryStore(config.memory)
-    tools = build_tools(memory)
+    zabbix = ZabbixClient(config.zabbix) if config.zabbix.enabled else None
+    tools = build_tools(memory, zabbix)
     log.info("ferramentas: %s · memória: %d fatos em %s", ", ".join(tools.tools), len(memory.facts()),
              config.memory.db)
     server = AgathaServer(
@@ -391,4 +396,6 @@ async def run(config: ServerConfig, transcriber: SupportsTranscribe, llm, synthe
         server.shutdown()
         tts_executor.shutdown(wait=False, cancel_futures=True)
         memory.close()
+        if zabbix is not None:
+            await zabbix.aclose()
         await llm.aclose()

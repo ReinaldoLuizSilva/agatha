@@ -1,0 +1,146 @@
+"""Ferramentas do Zabbix (ADR-011): somente leitura, pela API com o token do usuário "agatha".
+
+- zabbix_problemas(host?): triggers em estado de problema agora, com severidade e desde quando;
+- zabbix_host(host): disponibilidade do agente e métricas atuais (CPU, memória, discos, uptime).
+
+O token pertence a um usuário com permissão só de leitura (deploy/zabbix/setup.py).
+"""
+
+import logging
+from dataclasses import dataclass
+from datetime import datetime
+
+import httpx
+
+from .base import Example, Tool
+
+log = logging.getLogger(__name__)
+
+SEVERITIES = ["não classificada", "informação", "atenção", "média", "alta", "desastre"]
+
+
+@dataclass(frozen=True)
+class ZabbixConfig:
+    url: str = ""    # ex.: http://host.containers.internal:8081/api_jsonrpc.php
+    token: str = ""
+
+    @property
+    def enabled(self) -> bool:
+        return bool(self.url and self.token)
+
+
+class ZabbixError(Exception):
+    pass
+
+
+class ZabbixClient:
+    def __init__(self, config: ZabbixConfig, transport: httpx.AsyncBaseTransport | None = None):
+        self._client = httpx.AsyncClient(
+            timeout=httpx.Timeout(8.0, connect=3.0), transport=transport,
+            headers={"Authorization": f"Bearer {config.token}", "Content-Type": "application/json-rpc"},
+        )
+        self._url = config.url
+
+    async def call(self, method: str, params: dict):
+        response = await self._client.post(self._url, json={"jsonrpc": "2.0", "method": method, "params": params, "id": 1})
+        response.raise_for_status()
+        reply = response.json()
+        if "error" in reply:
+            raise ZabbixError(reply["error"].get("data") or reply["error"].get("message"))
+        return reply["result"]
+
+    async def find_hosts(self, name: str) -> list[dict]:
+        """Busca por nome técnico ou visível, sem exigir o nome exato ("agatha" acha "agatha-srv")."""
+        term = name.strip().lower().replace("servidor ", "").replace(" ", "-")
+        return await self.call("host.get", {
+            "output": ["hostid", "host", "name"], "search": {"host": term, "name": term}, "searchByAny": True,
+            "selectInterfaces": ["available", "error"],
+        })
+
+    async def aclose(self) -> None:
+        await self._client.aclose()
+
+
+def _since(clock: str | int, now: datetime | None = None) -> str:
+    when = datetime.fromtimestamp(int(clock))
+    now = now or datetime.now()
+    return f"{when.hour}h{when.minute:02d}" if when.date() == now.date() else f"{when:%d/%m} às {when.hour}h{when.minute:02d}"
+
+
+def _uptime(seconds: float) -> str:
+    days, rest = divmod(int(seconds), 86400)
+    hours = rest // 3600
+    return f"{days} dias e {hours} horas" if days else f"{hours} horas"
+
+
+def zabbix_tools(client: ZabbixClient) -> list[Tool]:
+    async def problemas(args: dict) -> dict:
+        params = {"output": ["description", "priority", "lastchange"], "only_true": True, "monitored": True,
+                  "active": True, "skipDependent": True, "filter": {"value": 1}, "expandDescription": True,
+                  "selectHosts": ["host", "name"], "sortfield": "priority", "sortorder": "DESC", "limit": 10}
+        host = (args.get("host") or "").strip()
+        if host:
+            hosts = await client.find_hosts(host)
+            if not hosts:
+                return {"erro": f"não achei nenhum host parecido com {host!r} no Zabbix"}
+            params["hostids"] = [h["hostid"] for h in hosts]
+        triggers = await client.call("trigger.get", params)
+        return {"problemas": [
+            {"host": t["hosts"][0]["name"] if t.get("hosts") else "?", "severidade": SEVERITIES[int(t["priority"])],
+             "descricao": t["description"], "desde": _since(t["lastchange"])}
+            for t in triggers
+        ]}
+
+    async def host_status(args: dict) -> dict:
+        name = (args.get("host") or "").strip()
+        hosts = await client.find_hosts(name) if name else []
+        if not hosts:
+            known = [h["name"] for h in await client.call("host.get", {"output": ["name"]})]
+            return {"erro": f"não achei o host {name!r}", "hosts_monitorados": known}
+        host = hosts[0]
+        items = await client.call("item.get", {
+            "hostids": [host["hostid"]], "output": ["key_", "lastvalue", "lastclock"],
+            "filter": {"key_": ["system.cpu.util", "vm.memory.utilization", "system.uptime"]},
+        })
+        disks = await client.call("item.get", {
+            "hostids": [host["hostid"]], "output": ["key_", "lastvalue", "lastclock"],
+            "search": {"key_": ",pused]"},
+        })
+        values = {i["key_"]: float(i["lastvalue"]) for i in items if i["lastclock"] != "0" and i["lastvalue"] != ""}
+        iface = (host.get("interfaces") or [{}])[0]
+        result = {"host": host["name"], "disponivel": iface.get("available") == "1"}
+        if iface.get("available") == "2":
+            result["erro_agente"] = iface.get("error", "")
+        if "system.cpu.util" in values:
+            result["cpu_pct"] = round(values["system.cpu.util"], 1)
+        if "vm.memory.utilization" in values:
+            result["memoria_pct"] = round(values["vm.memory.utilization"], 1)
+        if "system.uptime" in values:
+            result["ligado_ha"] = _uptime(values["system.uptime"])
+        fs = {}
+        for d in disks:
+            if d["lastclock"] != "0" and d["lastvalue"] != "":
+                mount = d["key_"].split("[", 1)[1].split(",", 1)[0]
+                fs[mount] = round(float(d["lastvalue"]), 1)
+        if fs:
+            result["disco_pct"] = fs
+        return result
+
+    return [
+        Tool(
+            name="zabbix_problemas",
+            description="Lista os alertas (problemas) ativos no Zabbix, de todos os hosts ou de um host.",
+            handler=problemas,
+            rule="perguntas sobre alertas ou problemas atuais no Zabbix: use zabbix_problemas",
+            properties={"host": {"type": "string", "description": "nome do host; omita para todos"}},
+            examples=(Example("Tem algum alerta no Zabbix?", {}, {"problemas": []}, "Nenhum alerta ativo agora."),),
+        ),
+        Tool(
+            name="zabbix_host",
+            description="Mostra o estado e as métricas atuais de um host monitorado no Zabbix: CPU, memória, disco.",
+            handler=host_status,
+            rule="perguntas sobre o estado atual de um host no Zabbix (CPU, memória, disco): use zabbix_host",
+            properties={"host": {"type": "string"}},
+            required=("host",),
+        ),
+    ]

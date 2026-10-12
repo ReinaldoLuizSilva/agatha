@@ -2,8 +2,8 @@
 
 Usa o llama-server no ar (pod `agatha`, porta 8080 do host) com EXATAMENTE o prompt que o servidor
 monta (regras das ferramentas, exemplos e bloco de memória: `conversation.build_prefix`). As
-ferramentas são as reais (calculadora, guardar_fato, esquecer), mais Zabbix e Oracle simulados enquanto
-os laboratórios não existem. Para cada pergunta, mede:
+ferramentas são as reais (calculadora, guardar_fato, esquecer, Zabbix) com resultados simulados, mais o
+Oracle simulado enquanto o laboratório não existe. Para cada pergunta, mede:
 - se o modelo decidiu certo: chamar a ferramenta esperada, ou responder direto quando não precisa;
 - se os argumentos fazem sentido (verificação por pergunta);
 - tempo até a decisão (1º token de texto ou 1º delta de tool_call);
@@ -33,6 +33,7 @@ from agatha_server.prompts import user_message
 from agatha_server.tools import Example, Tool, ToolRegistry
 from agatha_server.tools.calc import calculator, evaluate
 from agatha_server.tools.memory import memory_tools
+from agatha_server.tools.zabbix import ZabbixClient, ZabbixConfig, zabbix_tools
 
 URL = "http://127.0.0.1:8080/v1/chat/completions"
 RESULTS_DIR = Path(__file__).parent / "results"
@@ -50,17 +51,16 @@ def fake(result: dict):
     return lambda args: result
 
 
+_ZABBIX_FAKE = {
+    "zabbix_problemas": {"problemas": [{"host": "agatha-srv", "severidade": "média",
+                                        "descricao": "Uso de disco em /dados acima de 80%", "desde": "21h02"}]},
+    "zabbix_host": {"host": "agatha-srv", "disponivel": True, "cpu_pct": 23, "memoria_pct": 61,
+                    "ligado_ha": "8 horas", "disco_pct": {"/dados": 41}},
+}
 ZABBIX_ORACLE = [
-    Tool("zabbix_problemas", "Lista os alertas (problemas) ativos no Zabbix, de todos os hosts ou de um host.",
-         fake({"problemas": [{"host": "agatha-srv", "severidade": "média",
-                              "descricao": "Uso de disco em /dados acima de 80%", "desde": "21h02"}]}),
-         rule="perguntas sobre alertas ou problemas atuais no Zabbix: use zabbix_problemas",
-         properties={"host": {"type": "string", "description": "nome do host; omita para todos"}},
-         examples=(Example("Tem algum alerta no Zabbix?", {}, {"problemas": []}, "Nenhum alerta ativo agora."),)),
-    Tool("zabbix_host", "Mostra o estado e as métricas atuais de um host monitorado no Zabbix: CPU, memória, disco.",
-         fake({"host": "agatha-srv", "disponivel": True, "cpu_pct": 23, "memoria_pct": 61, "disco_raiz_pct": 41}),
-         rule="perguntas sobre o estado atual de um host no Zabbix (CPU, memória, disco): use zabbix_host",
-         properties={"host": {"type": "string"}}, required=("host",)),
+    # Zabbix: definições reais do servidor (esquema, regra, exemplo), com resultado simulado
+    *[dataclasses.replace(t, handler=fake(_ZABBIX_FAKE[t.name]))
+      for t in zabbix_tools(ZabbixClient(ZabbixConfig(url="http://x", token="x")))],
     Tool("oracle_tablespaces", "Mostra o uso de espaço das tablespaces do banco Oracle.",
          fake({"tablespaces": [{"nome": "USERS", "usado_pct": 91}, {"nome": "SYSTEM", "usado_pct": 74},
                                {"nome": "SYSAUX", "usado_pct": 66}]}),

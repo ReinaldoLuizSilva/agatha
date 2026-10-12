@@ -7,6 +7,7 @@ from pathlib import Path
 from .conversation import ConversationConfig
 from .llm import LLMConfig
 from .memory import MemoryConfig
+from .tools.zabbix import ZabbixConfig
 from .stt import STTConfig
 from .tts import TTSConfig
 from .vad import VADConfig
@@ -30,6 +31,7 @@ class ServerConfig:
     conversation: ConversationConfig
     wake: WakeConfig = WakeConfig()
     memory: MemoryConfig = MemoryConfig()
+    zabbix: ZabbixConfig = ZabbixConfig()
 
 
 def load_env_file(path: Path, env: dict) -> None:
@@ -129,4 +131,5 @@ def load_config(env: dict | None = None) -> ServerConfig:
             db=get("MEMORY_DB", memory_defaults.db),
             max_facts=get("MEMORY_MAX_FACTS", memory_defaults.max_facts, int),
         ),
+        zabbix=ZabbixConfig(url=get("ZABBIX_URL", ""), token=get("ZABBIX_TOKEN", "")),
     )
