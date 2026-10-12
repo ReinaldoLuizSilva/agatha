@@ -57,6 +57,10 @@ class SequenceTranscriber:
 
 class FakeConversation:
     heard: list[str] = []  # textos que chegaram para resposta (ordem de chegada)
+    interrupted: list[str] = []  # o que foi ouvido de cada resposta interrompida (barge-in)
+
+    def interrupt(self, spoken_text):
+        FakeConversation.interrupted.append(spoken_text)
 
     async def respond(self, user_text, t_ref):
         FakeConversation.heard.append(user_text)
@@ -83,9 +87,11 @@ def utterance() -> list[bytes]:
 
 
 def with_server(scenario, transcript: str = "olá agatha", hello_timeout: float = 5.0, grace: float = 15.0,
-                transcriber=None, continuation_ms: int = 300, conversation_s: float = 10.0, turn_log=None):
+                transcriber=None, continuation_ms: int = 300, conversation_s: float = 10.0, turn_log=None,
+                conversation=None, barge_confirm_s: float = 5.0):
     """Sobe o servidor numa porta livre, roda o cenário do cliente e devolve o resultado."""
     FakeConversation.heard = []
+    FakeConversation.interrupted = []
     config = dataclasses.replace(
         CONFIG,
         vad=dataclasses.replace(CONFIG.vad, continuation_ms=continuation_ms),
@@ -94,8 +100,9 @@ def with_server(scenario, transcript: str = "olá agatha", hello_timeout: float 
 
     async def main():
         app = AgathaServer(
-            config, transcriber or FakeTranscriber(transcript), FakeConversation, RATE,
+            config, transcriber or FakeTranscriber(transcript), conversation or FakeConversation, RATE,
             vad_factory=EnergyVAD, hello_timeout=hello_timeout, playback_grace_s=grace, turn_log=turn_log,
+            barge_in_confirm_s=barge_confirm_s,
         )
         async with serve(app.handler, "127.0.0.1", 0) as server:
             port = server.sockets[0].getsockname()[1]
@@ -119,8 +126,8 @@ async def recv_until(ws, msg_type: str) -> list[dict | bytes]:
             return msgs
 
 
-async def start(ws) -> dict:
-    await ws.send(hello())
+async def start(ws, **hello_fields) -> dict:
+    await ws.send(hello(**hello_fields))
     return await recv(ws)
 
 
@@ -160,6 +167,8 @@ async def expect_rejection(ws) -> tuple[dict, int]:
         (hello(token=None), "unauthorized", 1008),
         (hello(protocol=1), "unsupported_protocol", 1002),
         (hello(audio={"encoding": "pcm_f32le", "sample_rate": 16000, "channels": 1}), "unsupported_audio", 1003),
+        (hello(output_audio={"sample_rate": 8000}), "unsupported_audio", 1003),
+        (hello(output_audio="16k"), "unsupported_audio", 1003),
         ("não é json", "bad_message", 1002),
         (json.dumps({"type": "outra"}), "bad_message", 1002),
         (b"\x00\x00", "audio_before_ready", 1008),
@@ -453,3 +462,148 @@ def test_registro_guarda_resposta_mesmo_se_o_cliente_cai(tmp_path):
     [path] = tmp_path.glob("turns-*.jsonl")
     last = json.loads(path.read_text().splitlines()[-1])
     assert (last["event"], last["e2e_ms"], last["playback"]) == ("response", None, "disconnected")
+
+
+# --- Barge-in (ADR-016) -----------------------------------------------------------------
+
+def barge_in(n: int, played_ms: float) -> str:
+    return json.dumps({"type": "barge_in", "response": n, "played_ms": played_ms})
+
+
+def test_resposta_em_16_khz_quando_o_cliente_pede():
+    async def scenario(ws):
+        ready = await start(ws, output_audio={"sample_rate": 16000})
+        await send_all(ws, utterance())
+        return ready, await recv_until(ws, "response_end")
+
+    ready, msgs = with_server(scenario)
+    assert ready["output_audio"]["sample_rate"] == 16000
+    assert ready["barge_in"] == {"enabled": True, "confirm_s": 5.0}
+    audio_start = next(m for m in msgs if isinstance(m, dict) and m["type"] == "audio_start")
+    assert audio_start["sample_rate"] == 16000
+    samples = sum(len(m) for m in msgs if isinstance(m, bytes)) // 2
+    assert abs(samples - 5100 * 16000 / RATE) <= 2  # cada trecho reamostrado inteiro
+    assert msgs[-1]["timings"]["audio_ms"] == round(5100 / RATE * 1000)
+
+
+def scenario_barge_in(played_ms: float, then_send_audio: bool = True):
+    async def scenario(ws):
+        await start(ws)
+        await send_all(ws, utterance())
+        await recv_until(ws, "response_end")
+        await ws.send(barge_in(1, played_ms))
+        if then_send_audio:
+            await send_all(ws, utterance())  # "Agatha, ..." (o cliente manda desde antes do nome)
+        return await recv_until(ws, "barge_in_end")
+    return scenario
+
+
+def test_barge_in_para():
+    msgs = with_server(scenario_barge_in(150), transcriber=SequenceTranscriber(["olá agatha", "Agatha, para."]))
+    transcript = next(m for m in msgs if isinstance(m, dict) and m["type"] == "transcript")
+    assert transcript["addressed"] is True
+    assert msgs[-1] == {"type": "barge_in_end", "response": 1, "action": "stop", "segment": 2}
+    # 150 ms tocados: só o 1º trecho ("Oi, Rei.", até ~227 ms) foi ouvido
+    assert FakeConversation.interrupted == ["Oi, Rei."]
+    assert FakeConversation.heard == ["olá agatha"]  # parar não vai ao LLM
+
+
+def test_depois_de_parar_fica_no_modo_conversa():
+    async def scenario(ws):
+        await scenario_barge_in(300)(ws)
+        await send_all(ws, utterance())  # sem o nome, logo depois
+        return await recv_until(ws, "response_end")
+
+    with_server(scenario, transcriber=SequenceTranscriber(["olá agatha", "Agatha, chega", "e o zabbix?"]))
+    assert FakeConversation.interrupted == ["Oi, Rei. Tudo bem."]
+    assert FakeConversation.heard == ["olá agatha", "e o zabbix?"]
+
+
+def test_barge_in_com_pergunta_nova():
+    async def scenario(ws):
+        msgs = await scenario_barge_in(0)(ws)
+        return msgs + await recv_until(ws, "response_end")
+
+    msgs = with_server(scenario, transcriber=SequenceTranscriber(["olá agatha", "Agatha, e o host do banco?"]))
+    assert kinds(msgs)[-10:-8] == ["barge_in_end", "response_start"]
+    assert next(m for m in msgs if isinstance(m, dict) and m["type"] == "response_start")["response"] == 2
+    assert FakeConversation.interrupted == [""]  # nada tinha sido tocado
+    assert FakeConversation.heard == ["olá agatha", "Agatha, e o host do banco?"]
+
+
+def test_barge_in_falso_retoma_a_resposta():
+    async def scenario(ws):
+        end = (await scenario_barge_in(500)(ws))[-1]
+        await send_all(ws, utterance()[:30])  # de volta ao half-duplex: ignorado
+        await ws.send(playback_end(1))
+        await send_all(ws, utterance())
+        return end, await recv(ws)
+
+    end, first_after = with_server(scenario, transcriber=SequenceTranscriber(["olá agatha", "a gata subiu"]))
+    assert end == {"type": "barge_in_end", "response": 1, "action": "resume", "segment": None}
+    assert FakeConversation.interrupted == []
+    assert first_after["type"] == "vad" and first_after["segment"] == 3  # o ignorado não virou frase
+
+
+def test_barge_in_sem_fala_retoma_no_prazo():
+    msgs = with_server(scenario_barge_in(500, then_send_audio=False), barge_confirm_s=0.3)
+    assert msgs[-1]["action"] == "resume"
+    assert FakeConversation.interrupted == []
+
+
+def test_barge_in_sem_resposta_em_andamento():
+    async def scenario(ws):
+        await start(ws)
+        await ws.send(barge_in(7, 0))
+        return await recv(ws)
+
+    assert with_server(scenario)["action"] == "resume"
+
+
+def test_barge_in_mal_formado():
+    async def scenario(ws):
+        await start(ws)
+        await ws.send(json.dumps({"type": "barge_in", "response": 1, "played_ms": -5}))
+        return await recv(ws)
+
+    assert with_server(scenario)["code"] == "bad_message"
+
+
+class SlowConversation(FakeConversation):
+    """Fala um trecho e fica "gerando" o resto: o barge-in chega com o LLM ainda rodando."""
+
+    cancelled = False
+
+    async def respond(self, user_text, t_ref):
+        FakeConversation.heard.append(user_text)
+        yield TextChunk("Vamos lá.")
+        yield Audio(REPLY_AUDIO[1])
+        try:
+            await asyncio.sleep(30)
+            yield TextChunk("nunca chega")
+        finally:
+            SlowConversation.cancelled = True
+
+
+def test_barge_in_cancela_a_geracao(tmp_path):
+    async def scenario(ws):
+        await start(ws)
+        await send_all(ws, utterance())
+        await recv_until(ws, "audio_start")
+        await recv(ws)  # o único frame de áudio
+        await ws.send(barge_in(1, 10))
+        await send_all(ws, utterance())
+        return await recv_until(ws, "barge_in_end")
+
+    SlowConversation.cancelled = False
+    msgs = with_server(scenario, transcriber=SequenceTranscriber(["olá agatha", "Agatha, para"]),
+                       conversation=SlowConversation, turn_log=TurnLog(tmp_path))
+    assert "response_end" not in kinds(msgs)
+    assert msgs[-1]["action"] == "stop"
+    assert SlowConversation.cancelled  # o gerador foi fechado: o LLM para de gerar
+    assert FakeConversation.interrupted == ["Vamos lá."]
+    [path] = tmp_path.glob("turns-*.jsonl")
+    events = [json.loads(line) for line in path.read_text().splitlines()]
+    response = next(e for e in events if e["event"] == "response")
+    assert (response["reason"], response["heard"], response["playback"]) == ("interrupted", "Vamos lá.", "interrupted")
+    assert ("transcript", "barge_in_stop") in [(e["event"], e.get("outcome")) for e in events]

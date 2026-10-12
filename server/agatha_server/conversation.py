@@ -103,6 +103,7 @@ class Conversation:
         self._prefix_version = memory.version if memory else 0
         self._fillers = cycle(FILLERS)
         self.history: list[list[dict]] = []  # um item por turno: as mensagens exatas daquele turno
+        self._in_progress: list[dict] | None = None  # turno sendo gerado (para o barge-in)
         self._prefill_task: asyncio.Task | None = None
 
     def _flat_history(self) -> list[dict]:
@@ -122,6 +123,7 @@ class Conversation:
         # esquecer), a mudança vale a partir do próximo turno, sem reprocessar o prompt no meio.
         self._refresh_prefix()
         turn: list[dict] = [user_message(user_text, self._now())]
+        self._in_progress = turn
         timings: dict = {}
         spoken: list[str] = []
         used_tools: list[str] = []
@@ -180,6 +182,7 @@ class Conversation:
                     self.history = self.history[-2:]
                     continue
                 log.exception("prompt maior que o contexto do LLM, mesmo sem histórico")
+                self._in_progress = None
                 yield Done("error", " ".join(spoken), timings, used_tools)
                 return
             except Exception:
@@ -189,6 +192,7 @@ class Conversation:
                     tools_allowed = False
                     continue
                 log.exception("falha ao gerar a resposta")
+                self._in_progress = None
                 yield Done("error", " ".join(spoken), timings, used_tools)
                 return
 
@@ -212,8 +216,26 @@ class Conversation:
             timings["tool_ms"] = timings.get("tool_ms", 0) + round((self._clock() - t0) * 1000)
             rounds += 1
 
+        self._in_progress = None
         self._remember(turn)
         yield Done("done", " ".join(spoken), timings, used_tools)
+
+    def interrupt(self, spoken_text: str) -> None:
+        """Barge-in: o histórico fica só com o que a pessoa chegou a ouvir (ADR-016).
+
+        Se a resposta ainda estava sendo gerada (cancelada no meio), guarda a pergunta e o trecho
+        falado. Se já tinha terminado, troca o texto da última fala da Agatha. O começo do prompt
+        não muda: o llama.cpp só reprocessa o fim do último turno.
+        """
+        content = spoken_text or "…"
+        if self._in_progress is not None:
+            user, self._in_progress = self._in_progress[0], None
+            self._remember([user, {"role": "assistant", "content": content}])
+        elif self.history:
+            for msg in reversed(self.history[-1]):
+                if msg["role"] == "assistant" and not msg.get("tool_calls"):
+                    msg["content"] = content
+                    break
 
     def _remember(self, turn: list[dict]) -> None:
         # Guarda exatamente o que foi enviado e gerado (inclusive chamadas e resultados de

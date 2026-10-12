@@ -1,4 +1,4 @@
-"""Mensagens do protocolo cliente ↔ servidor, versão 2 (ver docs/protocol.md e ADR-006)."""
+"""Mensagens do protocolo cliente ↔ servidor, versão 2 (ver docs/protocol.md, ADR-006 e ADR-016)."""
 
 import hmac
 import json
@@ -11,6 +11,9 @@ from .wake import WakeConfig
 PROTOCOL_VERSION = 2
 AUDIO_FORMAT = {"encoding": "pcm_s16le", "sample_rate": 16000, "channels": 1}
 OUTPUT_FRAME_SAMPLES = 4096  # tamanho máximo de cada frame de áudio da resposta
+# Taxas que o cliente pode pedir para a resposta, além da nativa da voz: 16 kHz para o barge-in,
+# que usa microfone e saída de som no mesmo stream (ADR-015)
+OUTPUT_RATES = (16000,)
 
 # Códigos de fechamento WebSocket (RFC 6455)
 CLOSE_PROTOCOL_ERROR = 1002
@@ -61,6 +64,11 @@ def parse_hello(raw: str | bytes, token: str) -> dict:
         raise ProtocolError(
             "unsupported_audio", f"formato de áudio aceito: {AUDIO_FORMAT}", CLOSE_UNSUPPORTED_DATA
         )
+    requested = msg.get("output_audio")
+    if requested is not None and (not isinstance(requested, dict)
+                                  or not isinstance(requested.get("sample_rate"), int)):
+        raise ProtocolError("unsupported_audio", "'output_audio' deve ter 'sample_rate' inteiro",
+                            CLOSE_UNSUPPORTED_DATA)
     given = msg.get("token")
     if not isinstance(given, str) or not hmac.compare_digest(given.encode(), token.encode()):
         raise ProtocolError("unauthorized", "token ausente ou inválido", CLOSE_POLICY_VIOLATION)
@@ -81,13 +89,15 @@ def output_audio_format(sample_rate: int) -> dict:
     return {"encoding": "pcm_s16le", "sample_rate": sample_rate, "channels": 1}
 
 
-def ready(session: str, vad: VADConfig, output_sample_rate: int, wake: WakeConfig = WakeConfig()) -> str:
+def ready(session: str, vad: VADConfig, output_sample_rate: int, wake: WakeConfig = WakeConfig(),
+          barge_in_confirm_s: float = 5.0) -> str:
     return _dump({
         "type": "ready",
         "protocol": PROTOCOL_VERSION,
         "session": session,
         "output_audio": output_audio_format(output_sample_rate),
         "wake": {"enabled": wake.enabled, "words": list(wake.words), "conversation_s": wake.conversation_s},
+        "barge_in": {"enabled": True, "confirm_s": barge_in_confirm_s},
         "vad": {
             "threshold": vad.threshold,
             "min_silence_ms": vad.min_silence_ms,
@@ -150,6 +160,20 @@ def parse_playback_end(msg: dict) -> tuple[int, float | None]:
     if not isinstance(response, int) or (e2e is not None and not isinstance(e2e, (int, float))):
         raise ProtocolError("bad_message", "playback_end requer 'response' inteiro e 'e2e_ms' numérico ou null")
     return response, e2e
+
+
+def parse_barge_in(msg: dict) -> tuple[int, float]:
+    response = msg.get("response")
+    played = msg.get("played_ms")
+    if not isinstance(response, int) or not isinstance(played, (int, float)) or played < 0:
+        raise ProtocolError("bad_message", "barge_in requer 'response' inteiro e 'played_ms' >= 0")
+    return response, float(played)
+
+
+def barge_in_end(response: int, action: str, segment: int | None = None) -> str:
+    """Fim da interrupção: "resume" (não era com ela: o cliente volta a tocar) ou "stop" (descarta o
+    resto; se veio pergunta nova, a resposta a ela começa em seguida)."""
+    return _dump({"type": "barge_in_end", "response": response, "action": action, "segment": segment})
 
 
 def error(code: str, message: str) -> str:

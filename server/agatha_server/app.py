@@ -10,6 +10,12 @@ Se a transcrição parecer cortada no meio (`looks_incomplete`), ela é segurada
 
 Wake word (ADR-008): só responde a falas que chamam "Agatha" pelo nome, ou que começam dentro do
 "modo conversa" (alguns segundos depois de cada resposta).
+
+Barge-in (ADR-016): enquanto ela fala, o cliente pode avisar que ouviu "Agatha" (`barge_in`). A
+sessão passa a "confirmando": volta a ouvir sem cancelar nada, e a primeira frase transcrita decide.
+Se chamou a Agatha (ou mandou parar), a resposta é cancelada, o histórico fica só com o que foi
+ouvido e o cliente recebe `barge_in_end` "stop"; se era pergunta nova, a resposta a ela começa em
+seguida. Se não era com ela (ou o prazo acabou sem fala), "resume": o cliente volta a tocar.
 """
 
 import asyncio
@@ -26,6 +32,7 @@ from websockets.asyncio.server import ServerConnection, serve
 from websockets.exceptions import ConnectionClosed
 
 from . import protocol
+from .audio import resample
 from .config import ServerConfig
 from .conversation import Audio, Conversation, Done, TextChunk, build_prefix
 from .memory import MemoryStore
@@ -36,13 +43,14 @@ from .tools.oracle import OracleClient, oracle_tools
 from .tools.zabbix import ZabbixClient, zabbix_tools
 from .text import looks_incomplete
 from .turnlog import TurnLog
-from .wake import is_addressed
+from .wake import interruption_kind, is_addressed
 from .vad import Segmenter, SileroVAD, SpeechEnd, SpeechStart
 
 log = logging.getLogger(__name__)
 
 HELLO_TIMEOUT_S = 5.0
 PLAYBACK_GRACE_S = 15.0  # prazo extra, além da duração do áudio, para o cliente mandar playback_end
+BARGE_IN_CONFIRM_S = 5.0  # depois de um barge_in, quanto esperar o começo de uma fala para confirmar
 
 
 class SupportsTranscribe(Protocol):
@@ -51,6 +59,8 @@ class SupportsTranscribe(Protocol):
 
 class SupportsRespond(Protocol):
     def respond(self, user_text: str, t_ref: float) -> AsyncIterator[TextChunk | Audio | Done]: ...
+
+    def interrupt(self, spoken_text: str) -> None: ...
 
 
 class AgathaServer:
@@ -64,6 +74,7 @@ class AgathaServer:
         hello_timeout: float = HELLO_TIMEOUT_S,
         playback_grace_s: float = PLAYBACK_GRACE_S,
         turn_log: TurnLog | None = None,
+        barge_in_confirm_s: float = BARGE_IN_CONFIRM_S,
     ):
         self.config = config
         self.conversation_factory = conversation_factory
@@ -71,6 +82,7 @@ class AgathaServer:
         self.vad_factory = vad_factory
         self.playback_grace_s = playback_grace_s
         self.turn_log = turn_log
+        self.barge_in_confirm_s = barge_in_confirm_s
         self._transcriber = transcriber
         self._hello_timeout = hello_timeout
         # Um único worker: a GPU transcreve uma frase por vez, em ordem de chegada.
@@ -89,7 +101,8 @@ class AgathaServer:
         log.info("[%s] conectado: %s (%s)", session_id, peer, client)
         if self.turn_log is not None:
             self.turn_log.write("connect", session=session_id, client=client, peer=peer)
-        await Session(self, ws, session_id).run()
+        rate = (hello.get("output_audio") or {}).get("sample_rate", self.output_sample_rate)
+        await Session(self, ws, session_id, rate).run()
 
     async def transcribe(self, audio: np.ndarray) -> tuple[float, str, float]:
         """Transcreve na thread do STT; devolve (início, texto, fim) no relógio monotônico."""
@@ -105,6 +118,12 @@ class AgathaServer:
         try:
             raw = await asyncio.wait_for(ws.recv(), self._hello_timeout)
             hello = protocol.parse_hello(raw, self.config.token)
+            rate = (hello.get("output_audio") or {}).get("sample_rate", self.output_sample_rate)
+            if rate not in (self.output_sample_rate, *protocol.OUTPUT_RATES):
+                raise protocol.ProtocolError(
+                    "unsupported_audio",
+                    f"taxa de saída {rate} não suportada (aceitas: {self.output_sample_rate}, "
+                    f"{', '.join(map(str, protocol.OUTPUT_RATES))})", protocol.CLOSE_UNSUPPORTED_DATA)
         except TimeoutError:
             await self._reject(ws, protocol.ProtocolError(
                 "hello_timeout", f"nenhum 'hello' em {self._hello_timeout:g} s", protocol.CLOSE_POLICY_VIOLATION
@@ -113,7 +132,7 @@ class AgathaServer:
         except protocol.ProtocolError as e:
             await self._reject(ws, e)
             return None
-        await ws.send(protocol.ready(session_id, self.config.vad, self.output_sample_rate, self.config.wake))
+        await ws.send(protocol.ready(session_id, self.config.vad, rate, self.config.wake, self.barge_in_confirm_s))
         return hello
 
     async def _reject(self, ws: ServerConnection, e: protocol.ProtocolError) -> None:
@@ -128,11 +147,13 @@ class AgathaServer:
 class Session:
     LISTENING = "ouvindo"
     RESPONDING = "respondendo"
+    CONFIRMING = "confirmando"  # barge-in: ouvindo de novo, com a resposta pausada no cliente
 
-    def __init__(self, server: AgathaServer, ws: ServerConnection, session_id: str):
+    def __init__(self, server: AgathaServer, ws: ServerConnection, session_id: str, output_rate: int | None = None):
         self.server = server
         self.ws = ws
         self.id = session_id
+        self.output_rate = output_rate or server.output_sample_rate
         self.segmenter = Segmenter(server.config.vad, server.vad_factory())
         self.conversation = server.conversation_factory()
         self.state = self.LISTENING
@@ -147,6 +168,11 @@ class Session:
         self._awake_until = 0.0  # fim do "modo conversa" (relógio monotônico)
         self._pending_turn: dict | None = None  # resposta à espera do playback_end para ir ao registro
         self._tasks: set[asyncio.Task] = set()
+        # resposta atual: (texto do trecho, onde o áudio dele começa em ms) e a duração total
+        self._chunks: list[tuple[str, float]] = []
+        self._audio_ms = 0.0
+        self._barge: dict | None = None  # barge-in em confirmação: {"response", "played_ms"}
+        self._barge_timer: asyncio.TimerHandle | None = None
 
     async def run(self) -> None:
         try:
@@ -159,7 +185,7 @@ class Session:
             pass
         finally:
             self._log_response(None, "disconnected")
-            for timer in (self._resume_timer, self._hold_timer):
+            for timer in (self._resume_timer, self._hold_timer, self._barge_timer):
                 if timer:
                     timer.cancel()
             for task in self._tasks:
@@ -186,7 +212,7 @@ class Session:
         except protocol.ProtocolError as e:
             await self._send(protocol.error(e.code, e.message))
             return
-        if self.state != self.LISTENING:
+        if self.state == self.RESPONDING:
             self.segmenter.discard(len(samples))  # half-duplex: conta a posição, mas não ouve
             return
         for event in self.segmenter.feed(samples):
@@ -230,6 +256,9 @@ class Session:
             self._log("transcript", segment=event.segment, text=text, addressed=addressed, outcome=outcome,
                       timings=timings)
 
+        if self.state == self.CONFIRMING and self._barge is not None:
+            await self._decide_barge_in(event, text, finished, record)
+            return
         if self.state != self.LISTENING:
             if text:
                 log.info("[%s] #%d ignorada: resposta em andamento (half-duplex)", self.id, event.segment)
@@ -264,8 +293,13 @@ class Session:
         self._start_response(event, text, finished)
 
     def _addressed(self, event: SpeechEnd, text: str) -> bool:
-        """A fala é para a Agatha? Nome no começo/fim, modo conversa ou continuação de uma que era."""
+        """A fala é para a Agatha? Nome no começo/fim, modo conversa ou continuação de uma que era.
+
+        Num barge-in vale só o nome ou um comando de parar: o modo conversa não conta.
+        """
         wake = self.server.config.wake
+        if self.state == self.CONFIRMING:
+            return bool(text) and (is_addressed(text, wake) or interruption_kind(text, wake) == "stop")
         if not wake.enabled or self._held is not None:
             return True
         started_at = event.last_speech_at - event.speech_ms / 1000
@@ -283,33 +317,42 @@ class Session:
     def _start_response(self, event: SpeechEnd, text: str, stt_done_at: float) -> None:
         self.state = self.RESPONDING
         self.segmenter.reset()  # descarta o que estava sendo ouvido; a posição continua contando
+        self._chunks, self._audio_ms = [], 0.0
         self.response_count += 1
         self.current_response = self.response_count
         self._response_task = self._spawn(self._respond(self.response_count, event, text, stt_done_at))
 
     async def _respond(self, n: int, event: SpeechEnd, text: str, stt_done_at: float) -> None:
         t_ref = event.last_speech_at
-        rate = self.server.output_sample_rate
+        rate = self.output_rate
+        native = self.server.output_sample_rate
         await self._send(protocol.response_start(n, event.segment))
         audio_bytes = 0
         first_audio_at = None
         done = Done("error", "")
+        stream = self.conversation.respond(text, t_ref)
         try:
-            async for item in self.conversation.respond(text, t_ref):
+            async for item in stream:
                 if isinstance(item, TextChunk):
+                    self._chunks.append((item.text, audio_bytes / 2 / rate * 1000))
                     await self._send(protocol.response_text(n, item.text))
                 elif isinstance(item, Audio):
+                    pcm = resample(item.pcm, native, rate)
                     if audio_bytes == 0:
                         await self._send(protocol.audio_start(n, rate))
-                    for frame in protocol.audio_frames(item.pcm):
+                    for frame in protocol.audio_frames(pcm):
                         await self._send(frame)
                         if first_audio_at is None:
                             first_audio_at = time.monotonic()
-                    audio_bytes += len(item.pcm)
+                    audio_bytes += len(pcm)
+                    self._audio_ms = audio_bytes / 2 / rate * 1000
                 elif isinstance(item, Done):
                     done = item
         except Exception:
             log.exception("[%s] resposta %d falhou", self.id, n)
+        finally:
+            # cancelada (barge-in): fecha o gerador já, para o llama.cpp parar de gerar
+            await stream.aclose()
         if audio_bytes:
             await self._send(protocol.audio_end(n))
 
@@ -334,13 +377,107 @@ class Session:
     async def _on_text(self, raw: str) -> None:
         try:
             msg = protocol.parse_message(raw)
-            if msg["type"] != "playback_end":
+            if msg["type"] == "playback_end":
+                self._on_playback_end(*protocol.parse_playback_end(msg))
+            elif msg["type"] == "barge_in":
+                await self._on_barge_in(*protocol.parse_barge_in(msg))
+            else:
                 raise protocol.ProtocolError("bad_message", f"tipo de mensagem inesperado: {msg['type']!r}")
-            n, e2e_ms = protocol.parse_playback_end(msg)
         except protocol.ProtocolError as e:
             await self._send(protocol.error(e.code, e.message))
+
+    # --- Barge-in ---------------------------------------------------------------------
+
+    async def _on_barge_in(self, n: int, played_ms: float) -> None:
+        if self.state != self.RESPONDING or n != self.current_response:
+            log.info("[%s] barge_in %d sem resposta em andamento (estado %s); retomando", self.id, n, self.state)
+            await self._send(protocol.barge_in_end(n, "resume"))
             return
-        self._on_playback_end(n, e2e_ms)
+        log.info("[%s] barge-in na resposta %d após %.0f ms de áudio; confirmando", self.id, n, played_ms)
+        self.state = self.CONFIRMING
+        self._barge = {"response": n, "played_ms": played_ms}
+        self.segmenter.reset()  # o cliente manda em seguida o áudio desde antes do nome
+        self._arm_barge_timer(self.server.barge_in_confirm_s)
+
+    def _arm_barge_timer(self, delay: float) -> None:
+        if self._barge_timer:
+            self._barge_timer.cancel()
+        self._barge_timer = asyncio.get_running_loop().call_later(delay, self._barge_timeout)
+
+    def _barge_timeout(self) -> None:
+        self._barge_timer = None
+        if self.state != self.CONFIRMING:
+            return
+        if self._speaking:  # ainda falando: espera a frase terminar
+            self._arm_barge_timer(1.0)
+            return
+        log.info("[%s] barge-in sem fala para confirmar; retomando", self.id)
+        self._log("barge_in", response=self._barge["response"], played_ms=round(self._barge["played_ms"]),
+                  outcome="timeout")
+        self._spawn(self._end_barge_in("resume"))
+
+    async def _decide_barge_in(self, event: SpeechEnd, text: str, finished: float, record) -> None:
+        barge, wake = self._barge, self.server.config.wake
+        n, played_ms = barge["response"], barge["played_ms"]
+        if not (text and (is_addressed(text, wake) or interruption_kind(text, wake) == "stop")):
+            log.info("[%s] #%d não era com a Agatha (%r); retomando a resposta %d", self.id, event.segment, text, n)
+            record("barge_in_resumed")
+            await self._end_barge_in("resume")
+            return
+        kind = interruption_kind(text, wake)
+        await self._stop_response(n, played_ms)
+        await self._send(protocol.barge_in_end(n, "stop", event.segment))
+        if kind == "stop":
+            log.info("[%s] #%d barge-in: parar (%r)", self.id, event.segment, text)
+            record("barge_in_stop")
+            self.state = self.LISTENING
+            self.segmenter.reset()
+            self._awake_until = time.monotonic() + wake.conversation_s
+        else:
+            log.info("[%s] #%d barge-in: pergunta nova (%r)", self.id, event.segment, text)
+            record("response")
+            self._start_response(event, text, finished)
+
+    async def _end_barge_in(self, action: str) -> None:
+        """Não era com ela: a resposta continua de onde parou."""
+        n, played_ms = self._barge["response"], self._barge["played_ms"]
+        self._barge = None
+        if self._barge_timer:
+            self._barge_timer.cancel()
+            self._barge_timer = None
+        self.state = self.RESPONDING
+        self.segmenter.reset()
+        await self._send(protocol.barge_in_end(n, action))
+        if self._response_task and self._response_task.done():
+            # o prazo do playback_end conta o que falta tocar a partir de agora
+            remaining_s = max(0.0, self._audio_ms - played_ms) / 1000
+            if self._resume_timer:
+                self._resume_timer.cancel()
+            self._resume_timer = asyncio.get_running_loop().call_later(
+                remaining_s + self.server.playback_grace_s, self._resume_after_timeout, n)
+
+    async def _stop_response(self, n: int, played_ms: float) -> None:
+        """Cancela o que ainda estiver sendo gerado e deixa no histórico só o que foi ouvido."""
+        self._barge = None
+        if self._barge_timer:
+            self._barge_timer.cancel()
+            self._barge_timer = None
+        if self._resume_timer:
+            self._resume_timer.cancel()
+            self._resume_timer = None
+        task = self._response_task
+        if task and not task.done():
+            task.cancel()
+            await asyncio.gather(task, return_exceptions=True)
+        spoken = " ".join(text for text, start_ms in self._chunks if start_ms < played_ms)
+        self.conversation.interrupt(spoken)
+        if self._pending_turn is not None:
+            self._pending_turn.update(reason="interrupted", heard=spoken, played_ms=round(played_ms))
+            self._log_response(None, "interrupted")
+        else:
+            self._log("response", response=n, reason="interrupted", text=spoken, heard=spoken,
+                      played_ms=round(played_ms), playback="interrupted")
+        self.current_response = None
 
     def _on_playback_end(self, n: int, e2e_ms: float | None) -> None:
         if self.state != self.RESPONDING or n != self.current_response:

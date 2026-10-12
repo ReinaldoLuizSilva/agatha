@@ -31,3 +31,20 @@ def test_nao_chamou(text):
 def test_palavras_configuraveis():
     assert is_addressed("Jarvis, abre o painel", WakeConfig(words=("jarvis",)))
     assert not is_addressed("Agatha, abre o painel", WakeConfig(words=("jarvis",)))
+
+
+@pytest.mark.parametrize("text, kind", [
+    ("Agatha, para.", "stop"),
+    ("Agatha!", "stop"),
+    ("Agatha, chega por hoje", "stop"),
+    ("Agatha, pode parar", "stop"),
+    ("Agatha, cala a boca", "stop"),
+    ("Para.", "stop"),
+    ("Agatha, para que serve um backup?", "question"),
+    ("Agatha, e o host do banco?", "question"),
+    ("Agatha, pode me explicar o que é um trigger?", "question"),
+])
+def test_tipo_de_interrupcao(text, kind):
+    from agatha_server.wake import interruption_kind
+
+    assert interruption_kind(text, CONFIG) == kind

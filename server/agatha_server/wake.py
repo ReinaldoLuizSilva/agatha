@@ -1,5 +1,7 @@
 """Wake word pela transcrição (ADR-008): a Agatha só responde quando é chamada pelo nome.
 
+Também reconhece os comandos de parar do barge-in ("Agatha, para", "chega"; ADR-016).
+
 O nome precisa aparecer no começo da frase ("Agatha, que horas são?", "Ok, Agatha, ...") ou no
 fim ("Obrigado, Agatha"). Menções no meio de uma frase longa (a TV falando de "Agatha Christie")
 não contam. Depois de cada resposta há um "modo conversa": por `conversation_s` segundos, falas
@@ -35,3 +37,25 @@ def is_addressed(text: str, config: WakeConfig) -> bool:
     names = {_normalize(w) for w in config.words}
     candidates = words[: config.first_words] + words[-config.last_words:]
     return any(w in names for w in candidates)
+
+
+# Barge-in: "Agatha, para", "chega", "cancela"... Curtos de propósito: "Agatha, para que serve um
+# backup?" é pergunta, não comando.
+STOP_WORDS = {"para", "pare", "parar", "chega", "cancela", "cancelar", "silencio", "cala", "quieta",
+              "basta", "esquece", "deixa", "stop"}
+STOP_MAX_WORDS = 3
+LEADING_FILLERS = {"pode", "ok", "ta", "ja", "ei", "oi", "ah", "olha", "agora"}  # "Agatha, pode parar"
+
+
+def interruption_kind(text: str, config: WakeConfig) -> str:
+    """O que uma fala por cima da Agatha pede: "stop" (parar e ouvir) ou "question" (nova pergunta).
+
+    Só o nome ("Agatha!") também é "stop": quem chama quer que ela pare e ouça.
+    """
+    names = {_normalize(w) for w in config.words}
+    words = [w for w in (_normalize(w) for w in re.split(r"[\s\-‐–—]+", text)) if w and w not in names]
+    while words and words[0] in LEADING_FILLERS:
+        words = words[1:]
+    if not words or (len(words) <= STOP_MAX_WORDS and words[0] in STOP_WORDS):
+        return "stop"
+    return "question"
