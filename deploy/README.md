@@ -8,7 +8,8 @@ deploy/
 ├── up.sh                # sobe o pod "agatha" (LLM + servidor)
 ├── down.sh              # derruba o pod
 ├── llama/Containerfile  # imagem do llama-server (CUDA 12, sm_61)
-└── server/Containerfile # imagem do servidor da Agatha
+├── server/Containerfile # imagem do servidor da Agatha
+└── zabbix/              # Zabbix de laboratório: up.sh, down.sh, setup.py (ADR-011)
 ```
 
 ## Rodando a Agatha
@@ -36,6 +37,31 @@ deploy/down.sh                  # derruba
 - **Fuso horário:** `--tz=local`. Sem isso, os containers ficam em UTC e a Agatha erra a hora.
 - **VRAM:** o pico com os dois serviços é de ~3,66 GB de 4 GB. Pare o pod antes de rodar os
   benchmarks de STT e LLM, ou os testes de STT, que precisam da GPU livre.
+
+## Zabbix de laboratório
+
+Zabbix 7.0 LTS monitorando o próprio agatha-srv, para as ferramentas da Agatha
+([ADR-011](../docs/adr/0011-zabbix-laboratorio.md)):
+
+```bash
+deploy/zabbix/up.sh                          # pod "zabbix" (postgres, server, web) + agent2
+.venv/bin/python deploy/zabbix/setup.py      # 1ª vez: senha do Admin, host, usuário/token só leitura
+deploy/up.sh                                 # recria o pod da Agatha para ler o token do server/.env
+deploy/zabbix/down.sh                        # derruba (os dados ficam)
+```
+
+- **Frontend:** `http://192.168.1.25:8081`, usuário `Admin`, senha em
+  `/dados/agatha/lab/zabbix/admin-password`.
+- **Firewall** (uma vez, com sudo):
+
+  ```bash
+  sudo firewall-cmd --permanent --zone=public \
+    --add-rich-rule='rule family="ipv4" source address="192.168.1.0/24" port port="8081" protocol="tcp" accept'
+  sudo firewall-cmd --reload
+  ```
+- **Rede:** de dentro dos containers, o host é `host.containers.internal`. O IP da LAN aponta para
+  o próprio container na rede pasta do Podman sem root.
+- **RAM:** ~300 MB. Não usa GPU.
 
 ### Construir as imagens
 

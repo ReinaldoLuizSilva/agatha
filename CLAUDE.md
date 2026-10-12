@@ -49,6 +49,8 @@ e no trabalho (infra, Oracle, Zabbix). Também é peça de portfólio Cloud/DevO
 
 - Subir/derrubar tudo: `deploy/up.sh` / `deploy/down.sh` (pod `agatha`: `agatha-llm` + `agatha-server`).
 - Logs: `podman logs -f agatha-server`. Mudou código do servidor → rebuild da imagem (ver `deploy/README.md`).
+- Zabbix de laboratório: `deploy/zabbix/up.sh` / `down.sh`; frontend em :8081 (senha do Admin em
+  `/dados/agatha/lab/zabbix/admin-password`). De dentro dos containers, o host é `host.containers.internal`.
 - Benchmarks de GPU e testes de STT precisam do pod parado (VRAM fica em ~3,66 de 4 GB).
 - Cache do LLM: o prefixo do prompt (sistema + histórico) não pode mudar entre turnos (ADR-007).
 
@@ -91,8 +93,9 @@ agatha/
 - [ ] Fase 3: wake word "Agatha", memória de contexto, primeiras ferramentas — **em andamento**:
       feito: vocabulário do STT, wake word pela transcrição + modo conversa 20 s (ADR-008), ferramentas via
       tool calling com exemplos no prompt + calculadora (ADR-009), memória explícita guardar_fato/esquecer em
-      SQLite (ADR-010), correção do STT sem VRAM em fala ruidosa. Falta: Zabbix de laboratório + ferramenta,
-      Oracle de laboratório + ferramenta; opcional: openWakeWord (decisão do Reinaldo: caminho para
-      aperfeiçoar a wake word) e transcrição parcial para perguntas longas.
+      SQLite (ADR-010), correção do STT sem VRAM em fala ruidosa, Zabbix 7.0 de laboratório (pod `zabbix` +
+      agent2 em container, `deploy/zabbix/`) com ferramentas somente leitura zabbix_problemas/zabbix_host
+      (ADR-011). Falta: Oracle de laboratório + ferramenta; opcional: openWakeWord (decisão do Reinaldo:
+      caminho para aperfeiçoar a wake word) e transcrição parcial para perguntas longas.
       Atenção ao contexto: prefixo fixo do prompt já tem ~1160 tokens de 4096 (cresce com cada ferramenta).
 - [ ] Fase 4: serviço systemd, logs, testes, README final
