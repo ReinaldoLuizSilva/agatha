@@ -41,7 +41,8 @@ def describe_now(now: datetime) -> str:
 
 _CONCEPTS_RULE = (
     'Perguntas do tipo "o que é", "como funciona" ou "para que serve" são sobre conceitos: responda direto '
-    "com o que você sabe, sem ferramenta. O mesmo vale para opiniões e conversa."
+    "com o que você sabe, sem ferramenta. O mesmo vale para opiniões, conversa e perguntas sobre o que já está "
+    "na sua memória."
 )
 
 # Exemplos de perguntas conceituais respondidas sem ferramenta (evitam que o modelo ache que tudo

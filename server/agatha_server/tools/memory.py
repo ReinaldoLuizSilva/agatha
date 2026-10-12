@@ -4,10 +4,15 @@ O nome não é "lembrar" porque, em português, "lembrar" também é "recordar":
 padrão eu uso, lembra?" faziam o modelo chamar a ferramenta para regravar um fato já guardado.
 Os exemplos usam números que não colidem com os primeiros fatos reais da memória.
 
-O número do fato é interno: o Reinaldo não o conhece. Com "esquece isso" logo depois de guardar, o
-modelo pedia o número a ele (teste de 12/10); a regra agora diz que "isso" é o último fato guardado.
-Medido no bench/tools_bench.py: dizer na descrição que o número "é interno, nunca peça" derrubava
-"apaga aquilo da reunião" de 7/10 para 1/10, por isso ela ficou como estava.
+O número do fato é interno: o Reinaldo não o conhece. Com "esquece isso" ou "esqueça essa
+informação", o modelo pedia o número a ele (testes de 12/10). O que resolveu, medido no
+bench/tools_bench.py: o exemplo de `esquecer` com referência vaga ("Esquece essa informação.", logo
+depois do exemplo de `guardar_fato`) e a regra "se ele não disser qual, use o último fato da lista".
+Só a regra não bastava quando havia outro turno no meio (0/5). Dizer na descrição que o número "é
+interno, nunca peça" derrubava "apaga aquilo da reunião" de 7/10 para 1/10.
+
+Perguntas sobre fatos já guardados ("qual é mesmo o nome do meu banco?") viravam `guardar_fato` (3/5):
+a regra diz que pergunta nunca é pedido para guardar.
 """
 
 from ..memory import MemoryStore
@@ -44,7 +49,8 @@ def memory_tools(store: MemoryStore) -> list[Tool]:
             description="Guarda um fato NOVO sobre o Reinaldo na memória, para conversas futuras. Use quando "
                         "ele pedir para lembrar, anotar ou guardar alguma coisa que ainda não está na memória.",
             handler=guardar_fato,
-            rule="quando ele pedir para lembrar, anotar ou guardar algo novo: use guardar_fato",
+            rule="quando ele pedir para lembrar, anotar ou guardar algo novo: use guardar_fato; uma pergunta "
+                 "nunca é pedido para guardar",
             properties={"fato": {"type": "string", "description": "o fato, numa frase curta, na 3ª pessoa"}},
             required=("fato",),
             examples=(Example("Lembra que meu notebook se chama rei-note.",
@@ -56,10 +62,10 @@ def memory_tools(store: MemoryStore) -> list[Tool]:
             description="Apaga um fato da memória, pelo número com que ele aparece na lista de memória.",
             handler=esquecer,
             rule="quando ele pedir para esquecer ou apagar algo da memória: use esquecer com o número do fato; "
-                 "se ele disser só isso, é o último fato guardado",
+                 "se ele não disser qual, como em isso ou essa informação, use o último fato da lista",
             properties={"numero": {"type": "integer", "description": "número do fato na memória"}},
             required=("numero",),
-            examples=(Example("Esquece aquilo do notebook.", {"numero": 41},
+            examples=(Example("Esquece essa informação.", {"numero": 41},
                               {"ok": True, "esquecido": "O notebook do Reinaldo se chama rei-note"},
                               "Pronto, esqueci."),),
         ),

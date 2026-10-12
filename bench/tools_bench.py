@@ -13,7 +13,7 @@ As variantes anteriores (sem exemplos, regras v1/v2) estão nos resultados `tool
 
 Uso:
     .venv/bin/python bench/tools_bench.py --runs 3
-    .venv/bin/python bench/tools_bench.py --runs 5 --only esquece
+    .venv/bin/python bench/tools_bench.py --runs 5 --only 'esque|mesmo'
 """
 
 import argparse
@@ -95,6 +95,18 @@ JUST_SAVED_3 = [
     {"role": "tool", "tool_call_id": "call_0", "content": json.dumps({"ok": True, "numero": 3})},
     {"role": "assistant", "content": "Pode deixar, guardei."},
 ]
+# Guardou o fato 3 e depois perguntou sobre ele (teste de 12/10 à tarde: "Esqueça essa informação." → pediu número)
+SAVED_THEN_ASKED_3 = [
+    *JUST_SAVED_3,
+    user_message("Quando é a reunião mesmo?", NOW),
+    {"role": "assistant", "content": "É na quinta, às 10h."},
+]
+# Como na sessão real: guardou, e a fala seguinte veio estragada pelo STT
+SAVED_THEN_MISHEARD_3 = [
+    *JUST_SAVED_3,
+    user_message("Esqueça isso de formatão ainda.", NOW),
+    {"role": "assistant", "content": "Não entendi o que você quer dizer com formatão. Você pode repetir, por favor?"},
+]
 
 # (pergunta, ferramenta esperada ou None, verificação dos argumentos, texto que deve aparecer na resposta,
 #  texto que NÃO pode aparecer na resposta[, histórico antes da pergunta])
@@ -117,6 +129,13 @@ CASES = [
     ("Pode apagar aquilo da reunião.", "esquecer", lambda a: int(a.get("numero")) == 3, None, None),
     ("Esquece isso.", "esquecer", lambda a: int(a.get("numero")) == 3, None, "número", JUST_SAVED_3),
     ("Na verdade, apaga isso aí.", "esquecer", lambda a: int(a.get("numero")) == 3, None, "número", JUST_SAVED_3),
+    ("Esqueça essa informação.", "esquecer", lambda a: int(a.get("numero")) == 3, None, "número", JUST_SAVED_3),
+    ("Esqueça essa informação.", "esquecer", lambda a: int(a.get("numero")) == 3, None, "número",
+     SAVED_THEN_ASKED_3),
+    ("Esqueça essa informação.", "esquecer", lambda a: int(a.get("numero")) == 3, None, "número",
+     SAVED_THEN_MISHEARD_3),
+    ("Pode esquecer o que eu te falei.", "esquecer", lambda a: int(a.get("numero")) == 3, None, "número",
+     SAVED_THEN_ASKED_3),
     ("Oi Agatha, tudo bem?", None, None, None, None),
     ("O que é um trigger no Zabbix?", None, None, None, "não tenho"),
     ("O que é uma tablespace?", None, None, None, None),
@@ -126,6 +145,8 @@ CASES = [
     ("Obrigado, Agatha.", None, None, None, None),
     ("O que você sabe sobre mim?", None, None, "PRDORA", None),
     ("Qual o padrão de nome que eu uso nos hosts?", None, None, "ambiente", None),
+    ("Que horas é a reunião com o time?", None, None, "10", None),  # teste de 12/10: virou zabbix_problemas
+    ("Qual é mesmo o nome do meu banco de produção?", None, None, "PRDORA", None),
     ("Qual o nome do meu notebook?", None, None, None, "rei-note"),  # só existe no exemplo do prompt
 ]
 
@@ -207,9 +228,10 @@ def run_case(registry, prefix, question, expected, check, must_contain, must_not
 def main() -> None:
     parser = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     parser.add_argument("--runs", type=int, default=1)
-    parser.add_argument("--only", help="roda só os casos cuja pergunta contém este texto")
+    parser.add_argument("--only", help="roda só os casos cuja pergunta contém um destes textos (separados por |)")
     args = parser.parse_args()
-    cases = [c for c in CASES if not args.only or args.only.lower() in c[0].lower()]
+    only = [t.strip().lower() for t in (args.only or "").split("|") if t.strip()]
+    cases = [c for c in CASES if not only or any(t in c[0].lower() for t in only)]
 
     registry, store = build_registry()
     prefix = build_prefix(registry, store)
