@@ -173,6 +173,6 @@ Modelos, memória e logs ficam fora do repositório, em `/dados/agatha/{models,d
 - [x] **Fase 1**: servidor ouve, transcreve e imprime (PT-BR)
 - [x] **Fase 2**: conversa ponta a ponta com streaming e medição de latência
 - [x] **Fase 3**: wake word, memória e primeiras ferramentas (Zabbix, Oracle, calculadora)
-- [ ] **Fase 4**: serviço systemd, logs, testes e documentação (em validação: subida no boot)
+- [x] **Fase 4**: serviço systemd, logs, testes e documentação
 - [ ] Próximos: wake word dedicada no cliente ([openWakeWord](https://github.com/dscripka/openWakeWord)),
       transcrição parcial para perguntas longas, interromper a Agatha enquanto ela fala (barge-in)

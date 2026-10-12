@@ -115,13 +115,10 @@ agatha/
       (7–9 s, ADR-010).
       Opcionais adiados para depois da Fase 4 (decisão do Reinaldo): openWakeWord no cliente; transcrição
       parcial para perguntas longas.
-- [ ] Fase 4: serviço systemd, logs, testes, README final — **em andamento** (plano: 1 systemd, 2 logs em
-      /dados/agatha/logs + JSONL por resposta, 3 teste de fumaça + CI no GitHub Actions, 4 README final).
-      feito: 1. Quadlet no systemd do usuário (ADR-013), reinício em falha testado. 2. logs em arquivo +
-      registro de turnos JSONL + bench/turns_report.py. 3. teste de fumaça (server/scripts/smoke.py) e CI no
-      GitHub Actions (passa num venv limpo sem GPU; ainda não rodou no GitHub: depende do push do Reinaldo).
-      4. README final (arquitetura em Mermaid, latência por etapa, índice dos ADRs).
-      Para fechar: Reinaldo liga o linger, testa um reboot (Agatha sobe sozinha) e dá push (CI roda).
+- [x] Fase 4: serviço systemd, logs, testes, README final (fechada em 12/10). Quadlet no systemd do usuário
+      (ADR-013), reinício em falha testado; logs em arquivo + registro de turnos JSONL + bench/turns_report.py;
+      teste de fumaça (server/scripts/smoke.py) e CI no GitHub Actions; README final (arquitetura em Mermaid,
+      latência por etapa, índice dos ADRs). Linger ligado em 12/10; após reboot a Agatha subiu sozinha (pod
+      saudável, VRAM 3,66 GB) e o teste de fumaça passou (fim da fala → 1º áudio p50 1,96 s, máx 2,18 s).
       Repositório fica privado por enquanto; licença (Piper GPL, voz "dii" CC BY-NC-ND, ADR-005) só se um dia
-      ficar público. Não levantar de novo antes disso. Falta o Reinaldo rodar
-      `sudo loginctl enable-linger agatha` e testar um reboot.
+      ficar público. Não levantar de novo antes disso.
