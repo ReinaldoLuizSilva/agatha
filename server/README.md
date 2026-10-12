@@ -11,6 +11,9 @@ llama.cpp, em outro container) e a devolve falada (Piper na CPU), em streaming e
 | LLM | Gemma 4 E4B Q4_K_M no llama-server | [ADR-004](../docs/adr/0004-llm-gemma-4-e4b.md) |
 | TTS | Piper, voz feminina "dii", CPU | [ADR-005](../docs/adr/0005-tts-piper-dii.md) |
 | ajustes de latência | cache do prompt, threads, prompt v3, fim da fala | [ADR-007](../docs/adr/0007-ajustes-latencia-conversa.md) |
+| wake word | "Agatha" na transcrição + modo conversa | [ADR-008](../docs/adr/0008-wake-word-pela-transcricao.md) |
+| ferramentas | tool calling com exemplos no prompt; calculadora | [ADR-009](../docs/adr/0009-ferramentas-tool-calling.md) |
+| memória | fatos guardados por pedido, SQLite | [ADR-010](../docs/adr/0010-memoria-explicita.md) |
 
 ## Como uma resposta acontece
 
@@ -39,9 +42,12 @@ agatha_server/
 ├── stt.py           # faster-whisper (carrega cuBLAS/cuDNN do pip)
 ├── conversation.py  # orquestra uma resposta: LLM → trechos → TTS, histórico, cache
 ├── llm.py           # cliente do llama-server (streaming, pré-aquecimento do cache)
-├── prompts.py       # prompt de sistema v3 e data/hora
+├── prompts.py       # prompt de sistema, regras das ferramentas, exemplos, memória, data/hora
 ├── text.py          # divisão em trechos, limpeza, normalização para a fala, frase incompleta
-└── tts.py           # Piper com threads ajustadas
+├── tts.py           # Piper com threads ajustadas
+├── wake.py          # wake word pela transcrição
+├── memory.py        # memória explícita (SQLite) + CLI de administração
+└── tools/           # ferramentas do LLM: base (registro), calc, memory
 scripts/
 └── send_wav.py      # cliente simulado: conversa usando WAVs, mede a latência de ponta a ponta
 tests/
@@ -76,6 +82,15 @@ depois `podman stop agatha-server` para liberar a porta 8765 e a VRAM do STT):
 ```bash
 cd server
 ../.venv/bin/python -m agatha_server
+```
+
+## Memória
+
+Os fatos que a Agatha guarda ficam em `/dados/agatha/data/memory/agatha.db`. Para ver ou editar:
+
+```bash
+podman exec agatha-server python3.12 -m agatha_server.memory list
+podman exec agatha-server python3.12 -m agatha_server.memory forget 3
 ```
 
 ## Configuração

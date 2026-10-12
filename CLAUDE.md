@@ -88,5 +88,11 @@ agatha/
       - fala descartada se ele continua falando depois que a resposta começa (half-duplex; barge-in no futuro)
       - respostas inventadas quando a pergunta chega mal transcrita (limite do 4B; ferramentas ajudam)
       - voz "dii" provisória (ele quer uma mais limpa)
-- [ ] Fase 3: wake word "Agatha", memória de contexto, primeiras ferramentas
+- [ ] Fase 3: wake word "Agatha", memória de contexto, primeiras ferramentas — **em andamento**:
+      feito: vocabulário do STT, wake word pela transcrição + modo conversa 20 s (ADR-008), ferramentas via
+      tool calling com exemplos no prompt + calculadora (ADR-009), memória explícita guardar_fato/esquecer em
+      SQLite (ADR-010), correção do STT sem VRAM em fala ruidosa. Falta: Zabbix de laboratório + ferramenta,
+      Oracle de laboratório + ferramenta; opcional: openWakeWord (decisão do Reinaldo: caminho para
+      aperfeiçoar a wake word) e transcrição parcial para perguntas longas.
+      Atenção ao contexto: prefixo fixo do prompt já tem ~1160 tokens de 4096 (cresce com cada ferramenta).
 - [ ] Fase 4: serviço systemd, logs, testes, README final

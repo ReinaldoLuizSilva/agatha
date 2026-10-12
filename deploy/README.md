@@ -29,6 +29,8 @@ deploy/down.sh                  # derruba
   porta **8765** (WebSocket, liberada no firewall só para a LAN) e a **8080** apenas em
   `127.0.0.1` do host, para os benchmarks.
 - **Modelos:** `/dados/agatha/models` é montado **somente leitura**. Nada de modelo dentro das imagens.
+- **Dados:** `/dados/agatha/data` é montado **com escrita** em `/data` no servidor: é onde fica a
+  memória da Agatha (`memory/agatha.db`, [ADR-010](../docs/adr/0010-memoria-explicita.md)).
 - **Configuração:** o token vem de `server/.env` (`--env-file`); os caminhos dos modelos já estão
   na imagem do servidor.
 - **Fuso horário:** `--tz=local`. Sem isso, os containers ficam em UTC e a Agatha erra a hora.
