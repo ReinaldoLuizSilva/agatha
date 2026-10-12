@@ -131,5 +131,9 @@ agatha/
       pod durante o treino); ele usa as **caixas de som do notebook**, então o AEC é obrigatório nesta fase.
       Porcupine descartado (fechado, chave online). Não existe modelo pronto de "Agatha"; a voz dele nas
       amostras é o que mais vale (usuário único).
-      feito: 1. gravador guiado no cliente; respostas reais da Agatha para a parte eco em
-      /dados/agatha/data/wakeword/respostas. Falta o Reinaldo gravar e mandar para /dados/agatha/data/wakeword/.
+      feito: 1. coleta (12/10): gravador guiado (`python -m agatha_client.record`, `--redo` para regravar);
+      141 falas em /dados/agatha/data/wakeword/gravacoes (manifest.jsonl: vale a última linha de cada id):
+      76 com o nome, 30 negativas, 25 de eco (mic + *.ref.wav do que tocou), 10 min de ambiente. Microfone
+      "Microfone Externo (Realtek)" do notebook; 1ª rodada de perto-001..020 perdida (estalo do conector,
+      regravada). Eco das caixas chega com atraso fixo de 289 ms (stream duplex). "a gata"/"agora"/"a garrafa"
+      viram "Agatha" no Whisper: negativas difíceis de verdade.
