@@ -17,6 +17,8 @@ dependencies = [
     "num2words==0.5.14",
     # GPL-3.0: ver ADR-005 (pesa na escolha da licença do repositório)
     "piper-tts==1.8.0",
+    # Oracle de laboratório (ADR-012): modo thin, sem Instant Client
+    "oracledb==26.0.1",
 ]
 
 [project.optional-dependencies]

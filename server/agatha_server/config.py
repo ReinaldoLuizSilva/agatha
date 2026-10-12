@@ -7,6 +7,7 @@ from pathlib import Path
 from .conversation import ConversationConfig
 from .llm import LLMConfig
 from .memory import MemoryConfig
+from .tools.oracle import OracleConfig
 from .tools.zabbix import ZabbixConfig
 from .stt import STTConfig
 from .tts import TTSConfig
@@ -32,6 +33,7 @@ class ServerConfig:
     wake: WakeConfig = WakeConfig()
     memory: MemoryConfig = MemoryConfig()
     zabbix: ZabbixConfig = ZabbixConfig()
+    oracle: OracleConfig = OracleConfig()
 
 
 def load_env_file(path: Path, env: dict) -> None:
@@ -132,4 +134,6 @@ def load_config(env: dict | None = None) -> ServerConfig:
             max_facts=get("MEMORY_MAX_FACTS", memory_defaults.max_facts, int),
         ),
         zabbix=ZabbixConfig(url=get("ZABBIX_URL", ""), token=get("ZABBIX_TOKEN", "")),
+        oracle=OracleConfig(dsn=get("ORACLE_DSN", ""), user=get("ORACLE_USER", ""),
+                            password=get("ORACLE_PASSWORD", "")),
     )

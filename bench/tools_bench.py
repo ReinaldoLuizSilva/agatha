@@ -2,8 +2,7 @@
 
 Usa o llama-server no ar (pod `agatha`, porta 8080 do host) com EXATAMENTE o prompt que o servidor
 monta (regras das ferramentas, exemplos e bloco de memória: `conversation.build_prefix`). As
-ferramentas são as reais (calculadora, guardar_fato, esquecer, Zabbix) com resultados simulados, mais o
-Oracle simulado enquanto o laboratório não existe. Para cada pergunta, mede:
+ferramentas são as reais (calculadora, guardar_fato, esquecer, Zabbix, Oracle), com resultados simulados. Para cada pergunta, mede:
 - se o modelo decidiu certo: chamar a ferramenta esperada, ou responder direto quando não precisa;
 - se os argumentos fazem sentido (verificação por pergunta);
 - tempo até a decisão (1º token de texto ou 1º delta de tool_call);
@@ -33,6 +32,7 @@ from agatha_server.prompts import user_message
 from agatha_server.tools import Example, Tool, ToolRegistry
 from agatha_server.tools.calc import calculator, evaluate
 from agatha_server.tools.memory import memory_tools
+from agatha_server.tools.oracle import oracle_tools
 from agatha_server.tools.zabbix import ZabbixClient, ZabbixConfig, zabbix_tools
 
 URL = "http://127.0.0.1:8080/v1/chat/completions"
@@ -57,19 +57,17 @@ _ZABBIX_FAKE = {
     "zabbix_host": {"host": "agatha-srv", "disponivel": True, "cpu_pct": 23, "memoria_pct": 61,
                     "ligado_ha": "8 horas", "disco_pct": {"/dados": 41}},
 }
+_ORACLE_FAKE = {
+    "oracle_tablespaces": {"tablespaces": [{"nome": "USERS", "usado_pct": 91}, {"nome": "SYSTEM", "usado_pct": 74},
+                                           {"nome": "SYSAUX", "usado_pct": 66}]},
+    "oracle_sessoes": {"total": 48, "ativas": 5},
+}
 ZABBIX_ORACLE = [
     # Zabbix: definições reais do servidor (esquema, regra, exemplo), com resultado simulado
     *[dataclasses.replace(t, handler=fake(_ZABBIX_FAKE[t.name]))
       for t in zabbix_tools(ZabbixClient(ZabbixConfig(url="http://x", token="x")))],
-    Tool("oracle_tablespaces", "Mostra o uso de espaço das tablespaces do banco Oracle.",
-         fake({"tablespaces": [{"nome": "USERS", "usado_pct": 91}, {"nome": "SYSTEM", "usado_pct": 74},
-                               {"nome": "SYSAUX", "usado_pct": 66}]}),
-         rule="perguntas sobre o uso atual das tablespaces do Oracle: use oracle_tablespaces",
-         examples=(Example("Como está o uso das tablespaces?", {}, {"tablespaces": [{"nome": "DADOS", "usado_pct": 52}]},
-                           "Tudo tranquilo. A DADOS está com 52%."),)),
-    Tool("oracle_sessoes", "Mostra quantas sessões estão abertas no banco Oracle e quantas estão ativas.",
-         fake({"total": 48, "ativas": 5}),
-         rule="perguntas sobre sessões abertas no Oracle: use oracle_sessoes"),
+    # Oracle: definições reais do servidor, com resultado simulado
+    *[dataclasses.replace(t, handler=fake(_ORACLE_FAKE[t.name])) for t in oracle_tools(None)],
 ]
 
 
