@@ -4,6 +4,7 @@
 #   `gpu` do pyproject, as mesmas versões validadas no desenvolvimento (ADR-002).
 # - Os modelos NÃO entram na imagem: são montados somente leitura em /models.
 # - A memória (SQLite) fica em /data, montado com escrita a partir de /dados/agatha/data.
+# - Logs em /logs (server.log com rotação e turns-AAAA-MM.jsonl), montado de /dados/agatha/logs.
 # - O token vem do --env-file, nunca da imagem.
 #
 #   podman build --format docker -f deploy/server/Containerfile -t localhost/agatha-server:0.2.0 server
@@ -27,6 +28,7 @@ LABEL org.opencontainers.image.title="agatha-server" \
 # Caminhos dentro do container (modelos montados em /models; o LLM no mesmo pod)
 ENV AGATHA_STT_MODELS_DIR=/models/whisper \
     AGATHA_MEMORY_DB=/data/memory/agatha.db \
+    AGATHA_LOG_DIR=/logs \
     AGATHA_TTS_VOICE=/models/tts/piper/dii_pt-BR.onnx \
     AGATHA_LLM_URL=http://127.0.0.1:8080 \
     PYTHONUNBUFFERED=1

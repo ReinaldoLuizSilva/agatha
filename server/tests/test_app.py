@@ -18,6 +18,7 @@ from agatha_server.llm import LLMConfig
 from agatha_server.protocol import AUDIO_FORMAT
 from agatha_server.stt import STTConfig
 from agatha_server.tts import TTSConfig
+from agatha_server.turnlog import TurnLog
 from agatha_server.vad import FRAME_MS, FRAME_SAMPLES, VADConfig
 
 TOKEN = "segredo-de-teste"
@@ -82,7 +83,7 @@ def utterance() -> list[bytes]:
 
 
 def with_server(scenario, transcript: str = "olá agatha", hello_timeout: float = 5.0, grace: float = 15.0,
-                transcriber=None, continuation_ms: int = 300, conversation_s: float = 10.0):
+                transcriber=None, continuation_ms: int = 300, conversation_s: float = 10.0, turn_log=None):
     """Sobe o servidor numa porta livre, roda o cenário do cliente e devolve o resultado."""
     FakeConversation.heard = []
     config = dataclasses.replace(
@@ -94,7 +95,7 @@ def with_server(scenario, transcript: str = "olá agatha", hello_timeout: float 
     async def main():
         app = AgathaServer(
             config, transcriber or FakeTranscriber(transcript), FakeConversation, RATE,
-            vad_factory=EnergyVAD, hello_timeout=hello_timeout, playback_grace_s=grace,
+            vad_factory=EnergyVAD, hello_timeout=hello_timeout, playback_grace_s=grace, turn_log=turn_log,
         )
         async with serve(app.handler, "127.0.0.1", 0) as server:
             port = server.sockets[0].getsockname()[1]
@@ -416,3 +417,39 @@ def test_falha_no_stt_nao_derruba_a_sessao():
     failed, rest = with_server(scenario, transcriber=FailingTranscriber())
     assert failed["text"] == ""
     assert FakeConversation.heard == ["agatha, tudo bem?"]
+
+
+def test_registro_de_turnos(tmp_path):
+    async def scenario(ws):
+        await start(ws)
+        await send_all(ws, utterance())  # não chamou: só a transcrição vai para o registro
+        await send_all(ws, utterance())
+        await recv_until(ws, "response_end")
+        await ws.send(json.dumps({"type": "playback_end", "response": 1, "e2e_ms": 1850.4}))
+        await asyncio.sleep(0.1)
+
+    with_server(scenario, transcriber=SequenceTranscriber(["que horas são?", "agatha, que horas são?"]),
+                turn_log=TurnLog(tmp_path))
+    [path] = tmp_path.glob("turns-*.jsonl")
+    events = [json.loads(line) for line in path.read_text().splitlines()]
+    assert [(e["event"], e.get("outcome")) for e in events] == [
+        ("connect", None), ("transcript", "not_addressed"), ("transcript", "response"), ("response", None)]
+    assert events[0]["client"] == "teste"
+    response = events[-1]
+    assert response["user_text"] == "agatha, que horas são?"
+    assert response["text"] == "Oi, Rei. Tudo bem."
+    assert response["e2e_ms"] == 1850 and response["playback"] == "played"
+    assert {"stt_ms", "first_audio_ms", "audio_ms"} <= set(response["timings"])
+    assert len({e["session"] for e in events}) == 1
+
+
+def test_registro_guarda_resposta_mesmo_se_o_cliente_cai(tmp_path):
+    async def scenario(ws):
+        await start(ws)
+        await send_all(ws, utterance())
+        await recv_until(ws, "response_end")  # sai sem mandar playback_end
+
+    with_server(scenario, turn_log=TurnLog(tmp_path))
+    [path] = tmp_path.glob("turns-*.jsonl")
+    last = json.loads(path.read_text().splitlines()[-1])
+    assert (last["event"], last["e2e_ms"], last["playback"]) == ("response", None, "disconnected")

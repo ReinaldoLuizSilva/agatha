@@ -24,10 +24,26 @@ sudo loginctl enable-linger agatha   # uma vez, como root: sobe no boot sem sess
 deploy/up.sh                    # sobe (ou reinicia) e espera os dois serviços ficarem saudáveis
 podman logs -f agatha-server    # transcrições, respostas e tempos de cada etapa
 podman logs -f agatha-llm       # llama-server
+tail -f /dados/agatha/logs/server.log   # o mesmo, persistente
 systemctl --user status agatha-server agatha-llm
 systemctl --user restart agatha-server   # ex.: depois de reconstruir a imagem do servidor
 deploy/down.sh                  # derruba
 ```
+
+### Logs
+
+| onde | o que tem |
+|---|---|
+| `podman logs agatha-server` | o mesmo log do arquivo abaixo, mas só do container atual (some se ele for recriado) |
+| `/dados/agatha/logs/server.log` | log do servidor, com rotação (10 MB × 5 arquivos) |
+| `/dados/agatha/logs/turns-AAAA-MM.jsonl` | uma linha por conexão, transcrição e resposta, com todos os tempos e o 1º som medido no cliente |
+
+```bash
+.venv/bin/python bench/turns_report.py --client agatha-client /dados/agatha/logs/turns-*.jsonl
+```
+
+O relatório mostra a latência por sessão (p50, p90, máx), as falas ignoradas, as ferramentas e as
+respostas mais lentas. `--client agatha-client` deixa de fora os testes com `send_wav`.
 
 O systemd religa um container que cair (`Restart=on-failure`) e só considera o serviço no ar
 quando o healthcheck passa (`Notify=healthy`): o servidor sobe depois de o LLM responder. Os logs
@@ -45,6 +61,7 @@ ficam no driver padrão do Podman, não no journald (o journal do host é volát
 - **Modelos:** `/dados/agatha/models` é montado **somente leitura**. Nada de modelo dentro das imagens.
 - **Dados:** `/dados/agatha/data` é montado **com escrita** em `/data` no servidor: é onde fica a
   memória da Agatha (`memory/agatha.db`, [ADR-010](../docs/adr/0010-memoria-explicita.md)).
+- **Logs:** `/dados/agatha/logs` é montado com escrita em `/logs` (`AGATHA_LOG_DIR`).
 - **Configuração:** o token vem de `server/.env` (`EnvironmentFile=` na unit); os caminhos dos modelos já estão
   na imagem do servidor.
 - **Fuso horário:** `Timezone=local`. Sem isso, os containers ficam em UTC e a Agatha erra a hora.

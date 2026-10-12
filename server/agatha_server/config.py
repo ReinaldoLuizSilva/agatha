@@ -34,6 +34,7 @@ class ServerConfig:
     memory: MemoryConfig = MemoryConfig()
     zabbix: ZabbixConfig = ZabbixConfig()
     oracle: OracleConfig = OracleConfig()
+    log_dir: str | None = None  # server.log (com rotação) e turns-AAAA-MM.jsonl; None: só no stderr
 
 
 def load_env_file(path: Path, env: dict) -> None:
@@ -97,6 +98,7 @@ def load_config(env: dict | None = None) -> ServerConfig:
         port=get("PORT", 8765, int),
         token=token,
         log_level=get("LOG_LEVEL", "INFO").upper(),
+        log_dir=get("LOG_DIR", None),
         stt=STTConfig(
             model=get("STT_MODEL", stt_defaults.model),
             device=get("STT_DEVICE", stt_defaults.device),

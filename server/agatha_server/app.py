@@ -35,6 +35,7 @@ from .tools.memory import memory_tools
 from .tools.oracle import OracleClient, oracle_tools
 from .tools.zabbix import ZabbixClient, zabbix_tools
 from .text import looks_incomplete
+from .turnlog import TurnLog
 from .wake import is_addressed
 from .vad import Segmenter, SileroVAD, SpeechEnd, SpeechStart
 
@@ -62,12 +63,14 @@ class AgathaServer:
         vad_factory: Callable[[], Callable[[np.ndarray], float]] = SileroVAD,
         hello_timeout: float = HELLO_TIMEOUT_S,
         playback_grace_s: float = PLAYBACK_GRACE_S,
+        turn_log: TurnLog | None = None,
     ):
         self.config = config
         self.conversation_factory = conversation_factory
         self.output_sample_rate = output_sample_rate
         self.vad_factory = vad_factory
         self.playback_grace_s = playback_grace_s
+        self.turn_log = turn_log
         self._transcriber = transcriber
         self._hello_timeout = hello_timeout
         # Um único worker: a GPU transcreve uma frase por vez, em ordem de chegada.
@@ -82,7 +85,10 @@ class AgathaServer:
             return
         if hello is None:
             return
-        log.info("[%s] conectado: %s (%s)", session_id, peer, hello.get("client", "cliente sem nome"))
+        client = hello.get("client", "cliente sem nome")
+        log.info("[%s] conectado: %s (%s)", session_id, peer, client)
+        if self.turn_log is not None:
+            self.turn_log.write("connect", session=session_id, client=client, peer=peer)
         await Session(self, ws, session_id).run()
 
     async def transcribe(self, audio: np.ndarray) -> tuple[float, str, float]:
@@ -139,6 +145,7 @@ class Session:
         self._hold_timer: asyncio.TimerHandle | None = None
         self._speaking = False  # há uma frase confirmada em andamento (entre vad start e end)
         self._awake_until = 0.0  # fim do "modo conversa" (relógio monotônico)
+        self._pending_turn: dict | None = None  # resposta à espera do playback_end para ir ao registro
         self._tasks: set[asyncio.Task] = set()
 
     async def run(self) -> None:
@@ -151,6 +158,7 @@ class Session:
         except ConnectionClosed:
             pass
         finally:
+            self._log_response(None, "disconnected")
             for timer in (self._resume_timer, self._hold_timer):
                 if timer:
                     timer.cancel()
@@ -217,16 +225,24 @@ class Session:
         )
         addressed = self._addressed(event, text)
         await self._send(protocol.transcript(event.segment, text, timings, addressed))
+
+        def record(outcome: str) -> None:
+            self._log("transcript", segment=event.segment, text=text, addressed=addressed, outcome=outcome,
+                      timings=timings)
+
         if self.state != self.LISTENING:
             if text:
                 log.info("[%s] #%d ignorada: resposta em andamento (half-duplex)", self.id, event.segment)
+            record("busy")
             return
         if not text:
+            record("empty")
             if self._held and self._hold_timer is None:  # a "continuação" era só ruído
                 self._release_held()
             return
         if not addressed:
             log.info("[%s] #%d ignorada: não chamou a Agatha", self.id, event.segment)
+            record("not_addressed")
             return
         if self._held:
             text = f"{self._held[1]} {text}"
@@ -242,7 +258,9 @@ class Session:
             # próxima transcrição em vez de um prazo fixo.
             if not self._speaking:
                 self._hold_timer = asyncio.get_running_loop().call_later(continuation / 1000, self._release_held)
+            record("held")
             return
+        record("response")
         self._start_response(event, text, finished)
 
     def _addressed(self, event: SpeechEnd, text: str) -> bool:
@@ -303,6 +321,8 @@ class Session:
             "audio_ms": round(audio_s * 1000),
         }
         await self._send(protocol.response_end(n, done.reason, done.text, timings, done.tools))
+        self._pending_turn = {"response": n, "segment": event.segment, "user_text": text, "reason": done.reason,
+                              "text": done.text, "tools": done.tools, "timings": timings}
         tools = f" [ferramentas: {', '.join(done.tools)}]" if done.tools else ""
         log.info("[%s] resposta %d (%s)%s %r | %s", self.id, n, done.reason, tools, done.text,
                  " · ".join(f"{k.removesuffix('_ms')} {v} ms" for k, v in timings.items() if v is not None))
@@ -332,12 +352,24 @@ class Session:
             return
         e2e = f"{e2e_ms:.0f} ms" if e2e_ms is not None else "n/d"
         log.info("[%s] resposta %d tocada · fim da fala → primeiro som (cliente): %s", self.id, n, e2e)
+        self._log_response(e2e_ms, "played")
         self._resume()
 
     def _resume_after_timeout(self, n: int) -> None:
         if self.state == self.RESPONDING and self.current_response == n:
             log.warning("[%s] playback_end %d não chegou; voltando a ouvir", self.id, n)
+            self._log_response(None, "timeout")
             self._resume()
+
+    def _log(self, event: str, **fields) -> None:
+        if self.server.turn_log is not None:
+            self.server.turn_log.write(event, session=self.id, **fields)
+
+    def _log_response(self, e2e_ms: float | None, playback: str) -> None:
+        """Registra a resposta pendente, com o tempo medido no cliente (se veio) e como terminou."""
+        if self._pending_turn is not None:
+            turn, self._pending_turn = self._pending_turn, None
+            self._log("response", **turn, e2e_ms=round(e2e_ms) if e2e_ms is not None else None, playback=playback)
 
     def _resume(self) -> None:
         if self._resume_timer:
@@ -368,12 +400,16 @@ async def run(config: ServerConfig, transcriber: SupportsTranscribe, llm, synthe
     tools = build_tools(memory, zabbix, oracle)
     log.info("ferramentas: %s · memória: %d fatos em %s", ", ".join(tools.tools), len(memory.facts()),
              config.memory.db)
+    turn_log = TurnLog(config.log_dir) if config.log_dir else None
+    if turn_log:
+        log.info("registro de turnos em %s", config.log_dir)
     server = AgathaServer(
         config,
         transcriber,
         conversation_factory=lambda: Conversation(llm, synthesizer, tts_executor, config.conversation,
                                                   tools=tools, memory=memory),
         output_sample_rate=synthesizer.sample_rate,
+        turn_log=turn_log,
     )
     if await llm.healthy():
         log.info("LLM disponível em %s", config.llm.url)

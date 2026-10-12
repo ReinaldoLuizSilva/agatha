@@ -19,6 +19,8 @@ Timezone=local
 EnvironmentFile=%h/agatha/server/.env
 Volume=/dados/agatha/models:/models:ro,z
 Volume=/dados/agatha/data:/data:z
+# server.log (com rotação) e turns-AAAA-MM.jsonl: sobrevivem à troca do container
+Volume=/dados/agatha/logs:/logs:z
 HealthInterval=10s
 Notify=healthy
 StopTimeout=10
