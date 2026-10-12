@@ -1,0 +1,37 @@
+# Testes automáticos (Fase 4). Rodam sem GPU e sem os modelos: o que depende deles (STT na GPU,
+# FLEURS) se pula sozinho. O teste ponta a ponta com a Agatha no ar é o server/scripts/smoke.py,
+# que roda no agatha-srv.
+name: testes
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  servidor:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+          cache-dependency-path: server/pyproject.toml
+      - run: pip install "./server[dev]"
+      - run: pytest -q
+        working-directory: server
+
+  cliente:
+    # o cliente roda no Windows do Reinaldo
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+          cache-dependency-path: client/pyproject.toml
+      - run: pip install "./client[dev]"
+      - run: pytest -q
+        working-directory: client
