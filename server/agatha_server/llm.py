@@ -17,6 +17,12 @@ class LLMConfig:
     max_tokens: int = 200
 
 
+# Colchetes proibidos na resposta. O modelo às vezes repete o carimbo "[segunda-feira, 12/10/2026, 10h59]"
+# da pergunta antes de responder: ~25 tokens (~1,4 s) gerados e jogados fora antes do 1º som. A fala
+# nunca usa colchetes. Em string, o llama-server tokeniza com o vocabulário do modelo carregado.
+NO_BRACKETS = [[s, False] for s in ("[", " [", "[[", " [[")]
+
+
 class ContextOverflow(Exception):
     """O prompt não cabe no contexto do llama-server (exceed_context_size_error)."""
 
@@ -59,7 +65,7 @@ class LLMClient:
     ) -> AsyncIterator[TextDelta | ToolCallDelta]:
         """Gera os pedaços da resposta (texto ou chamada de ferramenta) à medida que o modelo produz."""
         body = self._body(messages, tools, stream=True, max_tokens=self.config.max_tokens,
-                          temperature=self.config.temperature)
+                          temperature=self.config.temperature, logit_bias=NO_BRACKETS)
         async with self._client.stream("POST", "/v1/chat/completions", json=body) as response:
             if response.is_error:
                 await response.aread()

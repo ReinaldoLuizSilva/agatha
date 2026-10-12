@@ -27,6 +27,7 @@ from datetime import datetime
 from pathlib import Path
 
 from agatha_server.conversation import build_prefix
+from agatha_server.llm import NO_BRACKETS
 from agatha_server.memory import MemoryConfig, MemoryStore
 from agatha_server.prompts import user_message
 from agatha_server.tools import Example, Tool, ToolRegistry
@@ -118,7 +119,8 @@ CASES = [
 
 def stream(messages: list[dict], tools: list[dict]) -> dict:
     body = {"messages": messages, "tools": tools, "parallel_tool_calls": False, "stream": True, "max_tokens": 200,
-            "temperature": 0.6, "cache_prompt": True, "chat_template_kwargs": {"enable_thinking": False}}
+            "temperature": 0.6, "cache_prompt": True, "chat_template_kwargs": {"enable_thinking": False},
+            "logit_bias": NO_BRACKETS}
     t0 = time.perf_counter()
     decision_at = first_chunk_at = None
     text, calls = "", {}
