@@ -105,15 +105,16 @@ agatha/
       memória cheia); cada ferramenta nova cresce o prompt e o tempo de pré-aquecimento (~6 s).
       **Teste do Reinaldo no Windows em 12/10 (15 falas): tudo funcionou** (wake word, calculadora com contexto,
       memória guardar/consultar/esquecer, Zabbix, Oracle, conceito sem ferramenta). 1º som ~1,8–2,1 s na maioria.
-      Pendências encontradas nesse teste (próxima sessão começa por aqui):
-      1. lentidão pontual: "que horas são" levou 3,5 s logo após o início (causa desconhecida; investigar nos
-         logs de agatha-server/agatha-llm); "o que você lembra de mim" 3,3 s logo após guardar fato (pré-aquecimento
-         de ~6 s em andamento — conhecido, ADR-010)
-      2. "esquece isso" → pediu "o número do fato": deveria entender o fato recém-guardado e não expor detalhe interno
-      3. Zabbix: item de memória RAM (vm.memory.utilization) sem dados → zabbix_host não informa RAM (agent2 em container?)
-      4. "62.5" da calculadora seria falado "sessenta e dois ponto cinco": normalizador trata decimal com ponto
-         sem unidade como versão (text.py)
-      5. STT de nomes: "PRDORA" → "PR Dora", "agatha-srv" → "Agatha Server" (busca por semelhança salvou o host);
-         avaliar pôr nomes de hosts/bancos no vocabulário do Whisper
-      Depois das pendências: decidir com o Reinaldo fechar a Fase 3 ou fazer os opcionais.
+      Pendências desse teste, resolvidas em 12/10 (pod já com a versão nova; falta o Reinaldo testar no Windows):
+      1. lentidão de "que horas são" (3,5 s) e "o que você lembra de mim" (3,3 s): o modelo às vezes repetia o
+         carimbo "[segunda-feira, …]" antes de responder (~25 tokens, ~1,4 s; o filtro só escondia da fala).
+         Não era o pré-aquecimento. Correção: `logit_bias` proíbe "[" (llm.py)
+      2. "esquece isso": regra do `esquecer` diz que "isso" é o último fato guardado (bench: 0/5 → 9/10); "isso"
+         deixou de segurar a fala como incompleta
+      3. RAM no Zabbix: o template do 7.0 usa a chave `vm.memory.util`, não `vm.memory.utilization` (agent2 ok)
+      4. calculadora devolve decimal com vírgula ("62,5" → "vírgula")
+      5. nomes no STT: `AGATHA_STT_NAMES` (no `server/.env`: agatha-srv, PRDORA); voz sintética 0/10 → 7/10
+      Observações (sem correção): pergunta logo após guardar/esquecer fato ainda pode esperar o recálculo do cache
+      (~7 s, ADR-010); raramente (~1/10) "o que é uma trigger" chama zabbix_problemas.
+      Próximo passo: teste do Reinaldo no Windows e decidir fechar a Fase 3 ou fazer os opcionais.
 - [ ] Fase 4: serviço systemd, logs, testes, README final
