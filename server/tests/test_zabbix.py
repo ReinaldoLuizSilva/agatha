@@ -72,3 +72,8 @@ def test_host_desconhecido_lista_os_monitorados():
 def test_desligado_sem_configuracao():
     assert not ZabbixConfig().enabled
     assert ZabbixConfig(url="u", token="t").enabled
+
+
+def test_host_com_nome_trocado_pelo_stt_acha_por_semelhanca():
+    _, host = tools()
+    assert asyncio.run(host.handler({"host": "Agatha CRV"}))["host"] == "agatha-srv"

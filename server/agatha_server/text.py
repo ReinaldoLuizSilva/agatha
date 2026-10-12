@@ -183,7 +183,7 @@ _IP = re.compile(r"\b(\d{1,3})\.(\d{1,3})\.(\d{1,3})\.(\d{1,3})\b")
 _DATE = re.compile(r"\b(0?[1-9]|[12]\d|3[01])/(0?[1-9]|1[0-2])(?:/(\d{4}|\d{2}))?\b")
 _TIME = re.compile(r"\b([01]?\d|2[0-3])(?::|h)([0-5]\d)\b")
 _HOURS = re.compile(r"\b([01]?\d|2[0-3])h\b")
-_PERCENT = re.compile(r"(\d+(?:,\d+)?)\s?%")
+_PERCENT = re.compile(r"(\d+(?:[.,]\d+)?)\s?%")
 _MONEY = re.compile(r"R\$\s?(\d{1,3}(?:\.\d{3})*|\d+)(?:,(\d{2}))?")
 _ORDINAL = re.compile(r"\b(\d+)\s?[ºª°]")
 _UNIT = re.compile(r"\b(\d+(?:[.,]\d+)?)\s?(" + "|".join(UNITS) + r")\b")
@@ -215,6 +215,17 @@ def _date(m: re.Match) -> str:
     return words
 
 
+def _measure(token: str) -> str:
+    """Número de uma medida (porcentagem, unidade): ponto é decimal, como nos resultados das
+    ferramentas ("25.1%"), e ",0" no fim some ("4.0%" → "quatro")."""
+    token = token.replace(".", ",") if token.count(".") == 1 else token
+    if "," in token:
+        whole, frac = token.split(",", 1)
+        if not frac.strip("0"):
+            token = whole
+    return _number(token)
+
+
 def normalize_for_speech(text: str) -> str:
     text = _IP.sub(lambda m: " ponto ".join(_int(int(g)) for g in m.groups()), text)
     text = _DATE.sub(_date, text)
@@ -225,9 +236,9 @@ def normalize_for_speech(text: str) -> str:
     )
     text = _TIME.sub(lambda m: f"{_int(int(m[1]))} e {_int(int(m[2]))}" if int(m[2]) else f"{_int(int(m[1]))} horas", text)
     text = _HOURS.sub(lambda m: f"{_int(int(m[1]))} horas", text)
-    text = _PERCENT.sub(lambda m: f"{_number(m[1])} por cento", text)
+    text = _PERCENT.sub(lambda m: f"{_measure(m[1])} por cento", text)
     text = _ORDINAL.sub(lambda m: num2words(int(m[1]), lang="pt_BR", to="ordinal"), text)
-    text = _UNIT.sub(lambda m: f"{_number(m[1])} {UNITS[m[2]]}", text)
+    text = _UNIT.sub(lambda m: f"{_measure(m[1])} {UNITS[m[2]]}", text)
     text = _THOUSANDS.sub(lambda m: _number(m[0]), text)
     text = _DECIMAL.sub(lambda m: _number(m[0]), text)
     text = _VERSION.sub(lambda m: _number(m[0]), text)

@@ -80,6 +80,10 @@ def test_clean(raw, expected):
     ("A CPU está alta.", "A cê pê u está alta."),
     ("Quinze por cento.", "Quinze por cento."),
     ("Hoje é 11/10/2026.", "Hoje é onze de outubro de dois mil e vinte e seis."),
+    ("A CPU está em 25.1%.", "A cê pê u está em vinte e cinco vírgula um por cento."),
+    ("Disco com 4.0%.", "Disco com quatro por cento."),
+    ("Memória em 61.04%.", "Memória em sessenta e um vírgula zero quatro por cento."),
+    ("Tem 1.5 GB livres.", "Tem um vírgula cinco gigabytes livres."),
     ("Vence em 1/3.", "Vence em primeiro de março."),
     ("Backup de 05/01/26 ok.", "Backup de cinco de janeiro de dois mil e vinte e seis ok."),
 ])

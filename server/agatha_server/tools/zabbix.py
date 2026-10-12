@@ -6,6 +6,7 @@
 O token pertence a um usuário com permissão só de leitura (deploy/zabbix/setup.py).
 """
 
+import difflib
 import logging
 from dataclasses import dataclass
 from datetime import datetime
@@ -50,12 +51,19 @@ class ZabbixClient:
         return reply["result"]
 
     async def find_hosts(self, name: str) -> list[dict]:
-        """Busca por nome técnico ou visível, sem exigir o nome exato ("agatha" acha "agatha-srv")."""
+        """Busca por nome técnico ou visível, sem exigir o nome exato ("agatha" acha "agatha-srv").
+
+        Se a busca por trecho não achar nada, tenta por semelhança: o nome chega pelo reconhecimento
+        de voz e pode vir trocado ("agatha crv" → "agatha-srv").
+        """
         term = name.strip().lower().replace("servidor ", "").replace(" ", "-")
-        return await self.call("host.get", {
-            "output": ["hostid", "host", "name"], "search": {"host": term, "name": term}, "searchByAny": True,
-            "selectInterfaces": ["available", "error"],
-        })
+        fields = {"output": ["hostid", "host", "name"], "selectInterfaces": ["available", "error"]}
+        found = await self.call("host.get", {**fields, "search": {"host": term, "name": term}, "searchByAny": True})
+        if found:
+            return found
+        hosts = await self.call("host.get", fields)
+        close = difflib.get_close_matches(term, [h["host"].lower() for h in hosts], n=1, cutoff=0.6)
+        return [h for h in hosts if close and h["host"].lower() == close[0]]
 
     async def aclose(self) -> None:
         await self._client.aclose()
