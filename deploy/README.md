@@ -9,7 +9,8 @@ deploy/
 ├── down.sh              # derruba o pod
 ├── llama/Containerfile  # imagem do llama-server (CUDA 12, sm_61)
 ├── server/Containerfile # imagem do servidor da Agatha
-└── zabbix/              # Zabbix de laboratório: up.sh, down.sh, setup.py (ADR-011)
+├── zabbix/              # Zabbix de laboratório: up.sh, down.sh, setup.py (ADR-011)
+└── oracle/              # Oracle 23ai Free de laboratório: up.sh, down.sh, setup.py (ADR-012)
 ```
 
 ## Rodando a Agatha
@@ -62,6 +63,23 @@ deploy/zabbix/down.sh                        # derruba (os dados ficam)
 - **Rede:** de dentro dos containers, o host é `host.containers.internal`. O IP da LAN aponta para
   o próprio container na rede pasta do Podman sem root.
 - **RAM:** ~300 MB. Não usa GPU.
+
+## Oracle de laboratório
+
+Oracle Database 23ai Free (imagem `gvenzl/oracle-free:23.9`) para as ferramentas da Agatha
+([ADR-012](../docs/adr/0012-oracle-laboratorio.md)):
+
+```bash
+deploy/oracle/up.sh                          # container oracle-free (1ª partida extrai o banco, ~20 s)
+.venv/bin/python deploy/oracle/setup.py      # 1ª vez: usuário AGATHA_RO + tablespace DADOS_APP ~85%
+deploy/up.sh                                 # recria o pod da Agatha para ler a conexão do server/.env
+deploy/oracle/down.sh                        # derruba com shutdown limpo (os dados ficam)
+```
+
+- **Conexão:** PDB `FREEPDB1` na porta 1521, **sem liberação no firewall** (só os containers do
+  servidor conectam, por `host.containers.internal`). Senhas em `/dados/agatha/lab/oracle`
+  (modo 600): `system-password` (SYS/SYSTEM) e `agatha_ro-password`.
+- **RAM:** ~2,1 GB. **Disco:** ~2,9 GB. Não usa GPU.
 
 ### Construir as imagens
 

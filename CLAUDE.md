@@ -51,6 +51,8 @@ e no trabalho (infra, Oracle, Zabbix). Também é peça de portfólio Cloud/DevO
 - Logs: `podman logs -f agatha-server`. Mudou código do servidor → rebuild da imagem (ver `deploy/README.md`).
 - Zabbix de laboratório: `deploy/zabbix/up.sh` / `down.sh`; frontend em :8081 (senha do Admin em
   `/dados/agatha/lab/zabbix/admin-password`). De dentro dos containers, o host é `host.containers.internal`.
+- Oracle de laboratório: `deploy/oracle/up.sh` / `down.sh`; PDB FREEPDB1 :1521 (fechada no firewall);
+  senhas em `/dados/agatha/lab/oracle`. RAM total dos laboratórios ~2,4 GB.
 - Benchmarks de GPU e testes de STT precisam do pod parado (VRAM fica em ~3,66 de 4 GB).
 - Cache do LLM: o prefixo do prompt (sistema + histórico) não pode mudar entre turnos (ADR-007).
 
@@ -95,7 +97,10 @@ agatha/
       tool calling com exemplos no prompt + calculadora (ADR-009), memória explícita guardar_fato/esquecer em
       SQLite (ADR-010), correção do STT sem VRAM em fala ruidosa, Zabbix 7.0 de laboratório (pod `zabbix` +
       agent2 em container, `deploy/zabbix/`) com ferramentas somente leitura zabbix_problemas/zabbix_host
-      (ADR-011). Falta: Oracle de laboratório + ferramenta; opcional: openWakeWord (decisão do Reinaldo:
-      caminho para aperfeiçoar a wake word) e transcrição parcial para perguntas longas.
-      Atenção ao contexto: prefixo fixo do prompt já tem ~1160 tokens de 4096 (cresce com cada ferramenta).
+      (ADR-011), Oracle 23ai Free de laboratório (container `oracle-free`, `deploy/oracle/`) com ferramentas
+      somente leitura oracle_tablespaces/oracle_sessoes (ADR-012). Falta decidir: fechar a fase ou fazer os
+      opcionais (openWakeWord — caminho para aperfeiçoar a wake word, decisão do Reinaldo; transcrição parcial
+      para perguntas longas).
+      Atenção ao contexto: prefixo fixo do prompt tem ~1630 tokens de 4096 com 7 ferramentas (2283 com a
+      memória cheia); cada ferramenta nova cresce o prompt e o tempo de pré-aquecimento (~6 s).
 - [ ] Fase 4: serviço systemd, logs, testes, README final

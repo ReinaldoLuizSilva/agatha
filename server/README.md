@@ -14,6 +14,8 @@ llama.cpp, em outro container) e a devolve falada (Piper na CPU), em streaming e
 | wake word | "Agatha" na transcrição + modo conversa | [ADR-008](../docs/adr/0008-wake-word-pela-transcricao.md) |
 | ferramentas | tool calling com exemplos no prompt; calculadora | [ADR-009](../docs/adr/0009-ferramentas-tool-calling.md) |
 | memória | fatos guardados por pedido, SQLite | [ADR-010](../docs/adr/0010-memoria-explicita.md) |
+| Zabbix | alertas e estado de hosts, somente leitura | [ADR-011](../docs/adr/0011-zabbix-laboratorio.md) |
+| Oracle | tablespaces e sessões, somente leitura | [ADR-012](../docs/adr/0012-oracle-laboratorio.md) |
 
 ## Como uma resposta acontece
 
@@ -47,7 +49,7 @@ agatha_server/
 ├── tts.py           # Piper com threads ajustadas
 ├── wake.py          # wake word pela transcrição
 ├── memory.py        # memória explícita (SQLite) + CLI de administração
-└── tools/           # ferramentas do LLM: base (registro), calc, memory
+└── tools/           # ferramentas do LLM: base (registro), calc, memory, zabbix, oracle
 scripts/
 └── send_wav.py      # cliente simulado: conversa usando WAVs, mede a latência de ponta a ponta
 tests/
