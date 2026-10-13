@@ -101,3 +101,14 @@ def test_set_delay_restarts_the_filter():
     run(ec, mic[: SR], ref[: SR])  # aprende algo com o atraso errado
     ec.set_delay(290)
     assert erle(mic[-SR:], run(ec, mic, ref)[-SR:]) > 25
+
+
+def test_recovers_when_the_echo_disappears():
+    # o Windows passou a tirar o eco no meio da sessão (teste real de 13/10): o filtro tinha
+    # aprendido o eco forte e a saída ficava ~40 dB acima do microfone, cobrindo a voz
+    rng = np.random.default_rng(6)
+    ref = rng.normal(0, 3000, SR * 10)
+    mic = room(ref)
+    mic[SR * 4 :] = rng.normal(0, 10, SR * 6)  # o eco some
+    out = run(EchoCanceller(), mic, ref)
+    assert erle(mic[SR * 5 :], out[SR * 5 :]) > -1  # nunca mais alto que o microfone

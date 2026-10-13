@@ -11,8 +11,13 @@ de um atraso fixo `delay_ms` (saída de som → ar → microfone). A adaptação
 potência da referência e congela quando a referência está em silêncio ou quando parece haver
 alguém falando por cima, para a voz não desajustar o filtro. A fala por cima é detectada pelo erro
 subindo muito acima do resíduo de costume do filtro já ajustado (não acima do eco: a voz chega
-mais baixa que o eco). O congelamento dura no máximo `dtd_hold_s`, para o filtro não travar se a
-sala mudar (o resíduo sobe e pareceria fala para sempre).
+mais baixa que o eco). O congelamento dura no máximo `dtd_hold_s`; depois o erro atual vira o novo
+"normal", para o filtro não travar se a sala mudar (o resíduo sobe e pareceria fala para sempre).
+
+Salvaguarda: um filtro certo nunca deixa a saída mais alta que o microfone (com fala por cima, a
+saída é a voz e um resto de eco, menos que o microfone). Se a saída passar do microfone, o filtro
+está errado (o eco mudou ou sumiu: no notebook do Reinaldo, o próprio Windows passou a tirar o eco
+no meio da sessão), então ele adapta sem congelar e, enquanto isso, devolve o microfone cru.
 
 O atraso depende do dispositivo e da latência do stream; `estimate_delay` o mede pela própria fala
 da Agatha (correlação cruzada GCC-PHAT entre o microfone e o que foi tocado), sem tocar bipe.
@@ -87,12 +92,16 @@ class EchoCanceller:
         self._power = 0.9 * self._power + 0.1 * np.abs(X) ** 2
         ref_energy = float(np.mean(x * x))
         err = float(np.mean(e * e))
+        diverged = err > float(np.mean(d * d))  # a saída passou do microfone: o filtro está errado
         self._echo_level = 0.95 * self._echo_level + 0.05 * float(np.mean(y * y))
         converged = self._echo_level > 4 * self._err_level > 0  # já tira pelo menos 6 dB
-        double_talk = converged and err > self.dtd_ratio * self._err_level and self._frozen < self.dtd_hold_blocks
+        double_talk = (converged and not diverged and err > self.dtd_ratio * self._err_level
+                       and self._frozen < self.dtd_hold_blocks)
         if double_talk:
             self._frozen += 1
         else:
+            if self._frozen >= self.dtd_hold_blocks:
+                self._err_level = err  # congelado demais: o eco mudou, este erro é o novo normal
             self._frozen = 0
             self._err_level = 0.95 * self._err_level + 0.05 * err if self._err_level else err
         if ref_energy > 1.0 and not double_talk:
@@ -102,7 +111,7 @@ class EchoCanceller:
                 g = np.fft.irfft(self.mu * np.conj(self._x[m]) * E / norm)
                 g[n:] = 0.0  # restrição de gradiente: o filtro continua com n coeficientes
                 self._w[m] += np.fft.rfft(g)
-        return e
+        return d if diverged else e
 
 
 def estimate_delay(mic: np.ndarray, ref: np.ndarray, sample_rate: int = 16000,
