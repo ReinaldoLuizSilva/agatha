@@ -6,8 +6,9 @@ a detecção de fala acontece no servidor, inclusive a wake word "Agatha", recon
 transcrição ([ADR-008](../docs/adr/0008-wake-word-pela-transcricao.md)).
 
 A conversa é **half-duplex** ([ADR-006](../docs/adr/0006-protocolo-v2-half-duplex.md)): enquanto
-a Agatha pensa e fala, o microfone não é enviado. Ela volta a ouvir quando termina de falar. Por
-enquanto não dá para interrompê-la.
+a Agatha pensa e fala, o microfone não é enviado. Ela volta a ouvir quando termina de falar. A
+exceção é o **barge-in** ([ADR-016](../docs/adr/0016-barge-in.md)): dizer "Agatha" enquanto ela
+fala a interrompe (veja abaixo).
 
 ## Instalação no Windows
 
@@ -28,6 +29,17 @@ enquanto não dá para interrompê-la.
    ```
 
    O `sounddevice` já traz o PortAudio no pacote para Windows, então não há nada mais a instalar.
+
+   Para o **barge-in**, instale o extra e copie os modelos do detector (ficam fora do git):
+
+   ```powershell
+   .venv\Scripts\pip install -e ".[barge-in]"
+   mkdir models
+   scp root@192.168.1.25:/dados/agatha/models/wakeword/*.onnx models\
+   ```
+
+   São três arquivos: `agatha.onnx` (treinado com a sua voz), `melspectrogram.onnx` e
+   `embedding_model.onnx`. Sem eles, o cliente avisa e funciona como antes, sem interromper.
 
 3. **Token:** copie o `.env.example` para `.env` e preencha `AGATHA_TOKEN` com o mesmo valor do
    servidor (`~/agatha/server/.env` no `agatha-srv`):
@@ -60,6 +72,40 @@ Pode falar. Ctrl+C para sair.
 
 O `⏱` é a meta do projeto (menos de 2 s): do fim da sua fala até o primeiro som da resposta sair
 na placa, medido no relógio do próprio PC. Se a conexão cair, o cliente tenta de novo a cada 3 s.
+
+### Interromper a Agatha (barge-in)
+
+Com o extra `[barge-in]` e os modelos, o cliente abre o microfone e as caixas **no mesmo stream**
+e continua ouvindo enquanto ela fala: o cancelamento de eco tira a voz dela do microfone
+([ADR-015](../docs/adr/0015-cancelamento-de-eco-linear.md)) e o detector procura "Agatha". Ao
+ouvir o nome, a fala **pausa na hora** e o servidor confere pela transcrição:
+
+| você diz | o que acontece |
+|---|---|
+| "Agatha, para" / "Agatha, chega" / só "Agatha!" | ela para e fica ouvindo (modo conversa) |
+| "Agatha, e o host do banco?" | ela para e responde à pergunta nova |
+| (disparo falso: não era com ela) | ela continua de onde parou |
+
+```
+  agatha: O tablespace DADOS_APP está com 85% de uso. Ele tem
+  ✋ ouvi "Agatha" (0.97): pausando...
+  ▶ ouvindo... (#3)
+  #3 você: Agatha, para.  [stt 401 ms]
+  ■ interrompida
+```
+
+Nos primeiros ~2 s em que ela fala, o cliente **mede o atraso do eco** (aparece
+`barge-in: eco medido, atraso ... ms`); antes disso o detector ainda não dispara. Opções:
+
+| opção | para quê |
+|---|---|
+| `--barge-threshold 0.5` | interrompe mais fácil (acerta ~85% em vez de ~77%), mas dispara mais à toa com a voz dela |
+| `--echo-delay-ms 120` | usa um atraso fixo em vez de medir |
+| `--no-barge-in` | volta ao modo antigo, sem ouvir durante a resposta |
+| `--wake-model PASTA` | outra pasta com os três `.onnx` (padrão: `models`) |
+
+O detector foi treinado com o **"Microfone Externo (Realtek)" do notebook** e as caixas dele; use
+os mesmos dispositivos, de preferência os dois do tipo `[MME]`.
 
 Para testar sem microfone, envie um arquivo WAV de 16 kHz:
 
@@ -130,3 +176,8 @@ As gravações têm a sua voz: ficam só no notebook e em `/dados`, nunca no git
 | `não foi possível abrir a saída de som a 22050 Hz` | escolha outra saída com `--output-device` (as do tipo `[MME]` convertem a taxa) |
 | gravador, parte `eco`: `não foi possível abrir microfone e caixas juntos` | escolha os dois do mesmo tipo, de preferência `[MME]`: `--device N --output-device M` (veja `--list-devices`) |
 | a Agatha não volta a ouvir | o servidor espera o fim da reprodução; se o cliente travar, ele volta sozinho depois de ~15 s |
+| `barge-in desligado: faltam em models ...` | copie os três `.onnx` (Instalação, passo 2) ou indique a pasta com `--wake-model` |
+| `barge-in desligado: No module named 'openwakeword'` | `.venv\Scripts\pip install -e ".[barge-in]"` |
+| `microfone e saída de som precisam aceitar 16000 Hz` | escolha os dois `[MME]` com `--device` e `--output-device`, ou use `--no-barge-in` |
+| ela pausa sozinha às vezes (`✋` sem você falar) | disparo falso com a voz dela; o servidor confere e ela continua. Se for frequente, suba `--barge-threshold` (ex.: 0.95) |
+| diz "Agatha" e ela não para | fale um pouco mais alto ou mais perto; ou baixe `--barge-threshold` (ex.: 0.5) |

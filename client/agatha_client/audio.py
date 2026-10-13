@@ -1,4 +1,4 @@
-"""Áudio do cliente: captura (microfone ou WAV) e reprodução das respostas."""
+"""Áudio do cliente: captura (microfone ou WAV), reprodução das respostas e o stream duplex do barge-in."""
 
 import asyncio
 import threading
@@ -178,6 +178,138 @@ class Player:
     def close(self) -> None:
         self._stream.stop()
         self._stream.close()
+
+
+class DuplexAudio:
+    """Microfone e saída de som no mesmo stream, a 16 kHz, para o barge-in (ADR-015/016).
+
+    É ao mesmo tempo a fonte (`frames` devolve o microfone e o que foi tocado no mesmo bloco, a
+    referência do cancelamento de eco) e o player das respostas, com `pause`/`resume`/`stop`: ao
+    ouvir "Agatha" a fala pausa na hora, e o servidor decide se retoma ou descarta o resto.
+    """
+
+    finite = False
+
+    def __init__(self, device: int | str | None, output_device: int | str | None, sample_rate: int = SAMPLE_RATE):
+        sd = sounddevice()
+        self.device = (device, output_device)
+        self.sample_rate = sample_rate
+        try:
+            sd.check_input_settings(device=device, samplerate=sample_rate, channels=1, dtype="int16")
+            sd.check_output_settings(device=output_device, samplerate=sample_rate, channels=1, dtype="int16")
+        except (sd.PortAudioError, ValueError) as e:
+            raise FatalError(
+                f"microfone e saída de som precisam aceitar {sample_rate} Hz mono: {e}\n"
+                "Escolha os dois do mesmo tipo (ex.: ambos [MME]) com --device e --output-device "
+                "(veja --list-devices), ou use --no-barge-in."
+            )
+        self._lock = threading.Lock()
+        self._buffer = bytearray()
+        self._paused = False
+        self._ending = False
+        self._played = 0  # bytes da resposta atual já entregues à placa
+        self._first_played_at: float | None = None
+        self._drained: asyncio.Event | None = None
+        self._loop: asyncio.AbstractEventLoop | None = None
+        self.latency = 0.0  # saída; conhecida quando o stream abre
+        self.input_latency = 0.0
+
+    # --- fonte ---
+
+    async def frames(self) -> AsyncIterator[tuple[bytes, bytes, float]]:
+        sd = sounddevice()
+        self._loop = asyncio.get_running_loop()
+        queue: asyncio.Queue[tuple[bytes, bytes, float]] = asyncio.Queue()
+
+        def callback(indata, outdata, frames, time_info, status):
+            captured_at = time.monotonic() - self.input_latency
+            ref = self._fill(outdata)
+            if status.input_overflow:
+                self._loop.call_soon_threadsafe(print, "  (aviso: perda de áudio na captura)")
+            self._loop.call_soon_threadsafe(queue.put_nowait, (bytes(indata), ref, captured_at))
+
+        try:
+            stream = sd.RawStream(samplerate=self.sample_rate, blocksize=FRAME_SAMPLES, channels=1, dtype="int16",
+                                  device=self.device, latency="low", callback=callback)
+        except sd.PortAudioError as e:
+            raise FatalError(f"não foi possível abrir microfone e saída de som juntos: {e} (tente --no-barge-in)")
+        with stream:
+            self.input_latency, self.latency = stream.latency
+            while True:
+                yield await queue.get()
+
+    def _fill(self, outdata) -> bytes:
+        """Callback do PortAudio: preenche a saída e devolve o que foi tocado (a referência)."""
+        n = len(outdata)
+        with self._lock:
+            chunk = b""
+            if not self._paused:
+                chunk = bytes(self._buffer[:n])
+                del self._buffer[:n]
+                self._played += len(chunk)
+                if chunk and self._first_played_at is None:
+                    self._first_played_at = time.monotonic() + self.latency
+            drained = self._ending and not self._buffer and not self._paused
+        out = chunk + b"\x00" * (n - len(chunk))
+        outdata[:] = out
+        if drained and self._drained is not None and not self._drained.is_set():
+            self._loop.call_soon_threadsafe(self._drained.set)
+        return out
+
+    # --- player ---
+
+    def begin(self) -> None:
+        with self._lock:
+            self._buffer.clear()
+            self._paused = self._ending = False
+            self._played = 0
+            self._first_played_at = None
+        self._drained = asyncio.Event()
+
+    def feed(self, pcm: bytes) -> None:
+        with self._lock:
+            self._buffer += pcm
+
+    def end(self) -> None:
+        with self._lock:
+            self._ending = True
+            empty = not self._buffer and not self._paused
+        if empty:
+            self._drained.set()
+
+    def pause(self) -> None:
+        with self._lock:
+            self._paused = True
+
+    def resume(self) -> None:
+        with self._lock:
+            self._paused = False
+            drained = self._ending and not self._buffer
+        if drained and self._drained is not None:
+            self._drained.set()
+
+    def stop(self) -> None:
+        """Descarta o resto da resposta (barge-in confirmado)."""
+        with self._lock:
+            self._buffer.clear()
+            self._paused = False
+            self._ending = True
+        if self._drained is not None:
+            self._drained.set()
+
+    def played_ms(self) -> float:
+        """Quanto da resposta atual já saiu nas caixas (o entregue à placa menos a latência)."""
+        with self._lock:
+            played = self._played
+        return max(0.0, played / 2 / self.sample_rate * 1000 - self.latency * 1000)
+
+    async def wait_done(self) -> float | None:
+        await self._drained.wait()
+        await asyncio.sleep(self.latency)
+        return self._first_played_at
+
+    def close(self) -> None:
+        pass  # o stream fecha junto com `frames`
 
 
 class NullPlayer:

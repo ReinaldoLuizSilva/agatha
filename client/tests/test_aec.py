@@ -73,3 +73,31 @@ def test_any_chunk_size_and_reset():
 def test_sizes_must_match():
     with pytest.raises(ValueError):
         EchoCanceller().process(np.zeros(160), np.zeros(100))
+
+
+def test_estimates_the_echo_delay():
+    from agatha_client.aec import estimate_delay
+
+    rng = np.random.default_rng(3)
+    ref = rng.normal(0, 3000, SR * 2)
+    mic = room(ref, delay=int(0.25 * SR)) + rng.normal(0, 300, SR * 2)  # caminho direto em 250 + 2,5 ms
+    delay, confidence = estimate_delay(mic, ref)
+    assert abs(delay - 252.5) < 1
+    assert confidence > 10
+
+
+def test_low_confidence_without_echo():
+    from agatha_client.aec import estimate_delay
+
+    rng = np.random.default_rng(4)
+    _, confidence = estimate_delay(rng.normal(0, 300, SR * 2), rng.normal(0, 3000, SR * 2))
+    assert confidence < 10
+
+
+def test_set_delay_restarts_the_filter():
+    ref = np.random.default_rng(5).normal(0, 3000, SR * 4)
+    mic = room(ref, delay=int(0.3 * SR))
+    ec = EchoCanceller()
+    run(ec, mic[: SR], ref[: SR])  # aprende algo com o atraso errado
+    ec.set_delay(290)
+    assert erle(mic[-SR:], run(ec, mic, ref)[-SR:]) > 25

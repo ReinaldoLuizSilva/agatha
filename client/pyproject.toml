@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "agatha-client"
-version = "0.3.0"
+version = "0.4.0"
 description = "Cliente da Agatha: conversa por voz com o servidor (microfone e alto-falante)"
 requires-python = ">=3.11"
 dependencies = [
@@ -16,6 +16,8 @@ dependencies = [
 [project.optional-dependencies]
 # Para --wav (enviar um arquivo em vez do microfone)
 wav = ["soundfile==0.14.0"]
+# Barge-in (ADR-014/016): detector da wake word "Agatha" (openWakeWord, ONNX)
+barge-in = ["openwakeword==0.6.0", "onnxruntime==1.31.0"]
 dev = ["pytest==9.1.1"]
 
 [tool.setuptools.packages.find]

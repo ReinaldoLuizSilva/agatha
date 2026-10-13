@@ -13,6 +13,9 @@ alguém falando por cima, para a voz não desajustar o filtro. A fala por cima �
 subindo muito acima do resíduo de costume do filtro já ajustado (não acima do eco: a voz chega
 mais baixa que o eco). O congelamento dura no máximo `dtd_hold_s`, para o filtro não travar se a
 sala mudar (o resíduo sobe e pareceria fala para sempre).
+
+O atraso depende do dispositivo e da latência do stream; `estimate_delay` o mede pela própria fala
+da Agatha (correlação cruzada GCC-PHAT entre o microfone e o que foi tocado), sem tocar bipe.
 """
 
 import numpy as np
@@ -28,11 +31,17 @@ class EchoCanceller:
     def __init__(self, sample_rate: int = 16000, block: int = 256, tail_ms: float = 128.0,
                  delay_ms: float = 0.0, mu: float = 1.0, dtd_ratio: float = 4.0, dtd_hold_s: float = 1.5):
         self.n = block
+        self.sample_rate = sample_rate
         self.parts = max(1, int(np.ceil(tail_ms * sample_rate / 1000 / block)))
         self.delay = int(round(delay_ms * sample_rate / 1000))
         self.mu = mu
         self.dtd_ratio = dtd_ratio
         self.dtd_hold_blocks = int(dtd_hold_s * sample_rate / block)
+        self.reset()
+
+    def set_delay(self, delay_ms: float) -> None:
+        """Troca o atraso fixo; o filtro recomeça (o que aprendeu valia para o atraso antigo)."""
+        self.delay = int(round(delay_ms * self.sample_rate / 1000))
         self.reset()
 
     def reset(self) -> None:
@@ -94,3 +103,20 @@ class EchoCanceller:
                 g[n:] = 0.0  # restrição de gradiente: o filtro continua com n coeficientes
                 self._w[m] += np.fft.rfft(g)
         return e
+
+
+def estimate_delay(mic: np.ndarray, ref: np.ndarray, sample_rate: int = 16000,
+                   max_ms: float = 600.0) -> tuple[float, float]:
+    """Atraso (ms) do eco da referência no microfone e a confiança da medida.
+
+    GCC-PHAT: a correlação cruzada com o espectro "branqueado" vira um pico estreito no atraso,
+    mesmo com fala por cima ou distorção das caixas. A confiança é a altura do pico em desvios
+    padrão da correlação; sem eco (ou só ruído) ela fica baixa.
+    """
+    mic = np.asarray(mic, np.float64)
+    ref = np.asarray(ref, np.float64)
+    nfft = 1 << int(np.ceil(np.log2(2 * len(mic))))
+    cross = np.fft.rfft(mic, nfft) * np.conj(np.fft.rfft(ref, nfft))
+    cc = np.fft.irfft(cross / (np.abs(cross) + 1e-9), nfft)[: int(max_ms * sample_rate / 1000) + 1]
+    k = int(np.argmax(cc))
+    return k * 1000 / sample_rate, float(cc[k] / (np.std(cc) + 1e-12))
