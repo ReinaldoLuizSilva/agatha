@@ -560,6 +560,41 @@ def test_barge_in_sem_fala_retoma_no_prazo():
     assert FakeConversation.interrupted == []
 
 
+class SlowSecondTranscriber(SequenceTranscriber):
+    """Como o STT real em algumas frases: a 2ª transcrição demora mais que o prazo da confirmação."""
+
+    def __init__(self, texts, delay_s=0.8):
+        super().__init__(texts)
+        self.delay_s, self.calls = delay_s, 0
+
+    def transcribe(self, audio):
+        self.calls += 1
+        if self.calls == 2:
+            time.sleep(self.delay_s)
+        return super().transcribe(audio)
+
+
+def test_barge_in_espera_a_transcricao_lenta_para_decidir():
+    msgs = with_server(scenario_barge_in(500), barge_confirm_s=0.3,
+                       transcriber=SlowSecondTranscriber(["olá agatha", "Agatha, para."]))
+    assert msgs[-1]["action"] == "stop"
+
+
+def test_frase_da_confirmacao_nao_vira_pergunta_depois():
+    # teste real de 13/10: "Zabbix, Oracle..." dita na confirmação ficou 1,9 s no STT, o prazo
+    # retomou a resposta e, depois, a frase foi respondida no modo conversa
+    async def scenario(ws):
+        msgs = await scenario_barge_in(500)(ws)
+        await ws.send(playback_end(1))
+        await asyncio.sleep(1.2)
+        return msgs
+
+    msgs = with_server(scenario, barge_confirm_s=0.3,
+                       transcriber=SlowSecondTranscriber(["olá agatha", "Zabbix, Oracle, Zabbix, Oracle."]))
+    assert msgs[-1]["action"] == "resume"
+    assert FakeConversation.heard == ["olá agatha"]
+
+
 def test_barge_in_sem_resposta_em_andamento():
     async def scenario(ws):
         await start(ws)

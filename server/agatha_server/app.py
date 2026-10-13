@@ -175,6 +175,9 @@ class Session:
         self._audio_ms = 0.0
         self._barge: dict | None = None  # barge-in em confirmação: {"response", "played_ms"}
         self._barge_timer: asyncio.TimerHandle | None = None
+        self._transcribing: set[int] = set()  # frases no STT agora
+        self._confirm_segments: set[int] = set()  # frases que começaram durante a confirmação atual
+        self._dropped: set[int] = set()  # frases de uma confirmação que acabou em "resume"
 
     async def run(self) -> None:
         try:
@@ -222,11 +225,14 @@ class Session:
             if isinstance(event, SpeechStart):
                 log.debug("[%s] #%d início da fala (%d ms)", self.id, event.segment, event.audio_ms)
                 self._speaking = True
+                if self.state == self.CONFIRMING:
+                    self._confirm_segments.add(event.segment)
                 if self._hold_timer:  # voltou a falar: a frase segurada vai ganhar continuação
                     self._hold_timer.cancel()
                     self._hold_timer = None
             elif isinstance(event, SpeechEnd):
                 self._speaking = False
+                self._transcribing.add(event.segment)
                 self._spawn(self._transcribe(event))
 
     async def _transcribe(self, event: SpeechEnd) -> None:
@@ -239,6 +245,8 @@ class Session:
             log.exception("[%s] #%d falha na transcrição", self.id, event.segment)
             started = finished = time.monotonic()
             text = ""
+        finally:
+            self._transcribing.discard(event.segment)
         timings = {
             "speech_ms": event.speech_ms,
             "endpoint_ms": round(event.endpoint_ms),
@@ -258,7 +266,14 @@ class Session:
             self._log("transcript", segment=event.segment, text=text, addressed=addressed, outcome=outcome,
                       timings=timings)
 
+        if event.segment in self._dropped:
+            # dita durante uma confirmação que já acabou em "resume": não vira pergunta depois
+            self._dropped.discard(event.segment)
+            log.info("[%s] #%d ignorada: era da confirmação de um barge-in já retomado", self.id, event.segment)
+            record("barge_in_resumed")
+            return
         if self.state == self.CONFIRMING and self._barge is not None:
+            self._confirm_segments.discard(event.segment)
             await self._decide_barge_in(event, text, finished, record)
             return
         if self.state != self.LISTENING:
@@ -398,6 +413,7 @@ class Session:
         log.info("[%s] barge-in na resposta %d após %.0f ms de áudio; confirmando", self.id, n, played_ms)
         self.state = self.CONFIRMING
         self._barge = {"response": n, "played_ms": played_ms}
+        self._confirm_segments = set()
         self.segmenter.reset()  # o cliente manda em seguida o áudio desde antes do nome
         self._arm_barge_timer(self.server.barge_in_confirm_s)
 
@@ -410,8 +426,9 @@ class Session:
         self._barge_timer = None
         if self.state != self.CONFIRMING:
             return
-        if self._speaking:  # ainda falando: espera a frase terminar
-            self._arm_barge_timer(1.0)
+        if self._speaking or self._transcribing & self._confirm_segments:
+            # ainda falando, ou a frase ainda está no STT (que às vezes leva ~2 s): espera ela decidir
+            self._arm_barge_timer(0.5)
             return
         log.info("[%s] barge-in sem fala para confirmar; retomando", self.id)
         self._log("barge_in", response=self._barge["response"], played_ms=round(self._barge["played_ms"]),
@@ -445,6 +462,7 @@ class Session:
         """Não era com ela: a resposta continua de onde parou."""
         n, played_ms = self._barge["response"], self._barge["played_ms"]
         self._barge = None
+        self._dropped |= self._confirm_segments  # as que ainda não decidiram: o resultado já foi dado
         if self._barge_timer:
             self._barge_timer.cancel()
             self._barge_timer = None
