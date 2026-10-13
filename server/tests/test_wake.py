@@ -43,8 +43,22 @@ def test_palavras_configuraveis():
     ("Agatha, para que serve um backup?", "question"),
     ("Agatha, e o host do banco?", "question"),
     ("Agatha, pode me explicar o que é um trigger?", "question"),
+    ("Oracle. Agatha, para.", "stop"),  # sobra de eco antes do nome
+    ("do banco Agatha chega", "stop"),
 ])
 def test_tipo_de_interrupcao(text, kind):
     from agatha_server.wake import interruption_kind
 
     assert interruption_kind(text, CONFIG) == kind
+
+
+@pytest.mark.parametrize("text, expected", [
+    ("Oracle. Agatha, e o host do banco?", "Agatha, e o host do banco?"),
+    ("Ok, Agatha, para", "Agatha, para"),
+    ("Para.", "Para."),
+    ("a tablespace users está cheia, Agatha", "a tablespace users está cheia, Agatha"),  # nome só no fim
+])
+def test_texto_a_partir_do_nome(text, expected):
+    from agatha_server.wake import from_name
+
+    assert from_name(text, CONFIG) == expected

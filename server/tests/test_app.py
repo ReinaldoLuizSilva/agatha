@@ -531,6 +531,15 @@ def test_barge_in_com_pergunta_nova():
     assert FakeConversation.heard == ["olá agatha", "Agatha, e o host do banco?"]
 
 
+def test_barge_in_descarta_a_sobra_de_eco_antes_do_nome():
+    async def scenario(ws):
+        msgs = await scenario_barge_in(0)(ws)
+        return msgs + await recv_until(ws, "response_end")
+
+    with_server(scenario, transcriber=SequenceTranscriber(["olá agatha", "Oracle. Agatha, e o host do banco?"]))
+    assert FakeConversation.heard == ["olá agatha", "Agatha, e o host do banco?"]
+
+
 def test_barge_in_falso_retoma_a_resposta():
     async def scenario(ws):
         end = (await scenario_barge_in(500)(ws))[-1]

@@ -43,14 +43,16 @@ from .tools.oracle import OracleClient, oracle_tools
 from .tools.zabbix import ZabbixClient, zabbix_tools
 from .text import looks_incomplete
 from .turnlog import TurnLog
-from .wake import interruption_kind, is_addressed
+from .wake import from_name, interruption_kind, is_addressed
 from .vad import Segmenter, SileroVAD, SpeechEnd, SpeechStart
 
 log = logging.getLogger(__name__)
 
 HELLO_TIMEOUT_S = 5.0
 PLAYBACK_GRACE_S = 15.0  # prazo extra, além da duração do áudio, para o cliente mandar playback_end
-BARGE_IN_CONFIRM_S = 5.0  # depois de um barge_in, quanto esperar o começo de uma fala para confirmar
+# depois de um barge_in, quanto esperar o começo de uma fala para confirmar; o cliente já manda o
+# áudio desde antes do nome, então a fala começa logo (num falso disparo, ela fica calada só isso)
+BARGE_IN_CONFIRM_S = 2.0
 
 
 class SupportsTranscribe(Protocol):
@@ -425,6 +427,7 @@ class Session:
             await self._end_barge_in("resume")
             return
         kind = interruption_kind(text, wake)
+        text = from_name(text, wake)  # sem a sobra de eco antes do nome
         await self._stop_response(n, played_ms)
         await self._send(protocol.barge_in_end(n, "stop", event.segment))
         if kind == "stop":

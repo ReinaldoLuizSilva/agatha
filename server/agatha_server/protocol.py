@@ -90,7 +90,7 @@ def output_audio_format(sample_rate: int) -> dict:
 
 
 def ready(session: str, vad: VADConfig, output_sample_rate: int, wake: WakeConfig = WakeConfig(),
-          barge_in_confirm_s: float = 5.0) -> str:
+          barge_in_confirm_s: float = 2.0) -> str:
     return _dump({
         "type": "ready",
         "protocol": PROTOCOL_VERSION,

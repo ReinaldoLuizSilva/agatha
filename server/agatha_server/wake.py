@@ -47,11 +47,28 @@ STOP_MAX_WORDS = 3
 LEADING_FILLERS = {"pode", "ok", "ta", "ja", "ei", "oi", "ah", "olha", "agora"}  # "Agatha, pode parar"
 
 
+def from_name(text: str, config: WakeConfig) -> str:
+    """O texto a partir do nome, se ele está entre as primeiras palavras.
+
+    No barge-in o cliente manda o áudio desde ~1 s antes do nome, e o começo pode trazer uma sobra
+    da voz dela que o cancelamento de eco não tirou ("...Oracle. Agatha, para").
+    """
+    names = {_normalize(w) for w in config.words}
+    for i, m in enumerate(re.finditer(r"[^\s\-‐–—]+", text)):
+        if i >= config.first_words:
+            break
+        if _normalize(m.group()) in names:
+            return text[m.start():]
+    return text
+
+
 def interruption_kind(text: str, config: WakeConfig) -> str:
     """O que uma fala por cima da Agatha pede: "stop" (parar e ouvir) ou "question" (nova pergunta).
 
-    Só o nome ("Agatha!") também é "stop": quem chama quer que ela pare e ouça.
+    Só o nome ("Agatha!") também é "stop": quem chama quer que ela pare e ouça. O que vem antes
+    do nome não conta (`from_name`).
     """
+    text = from_name(text, config)
     names = {_normalize(w) for w in config.words}
     words = [w for w in (_normalize(w) for w in re.split(r"[\s\-‐–—]+", text)) if w and w not in names]
     while words and words[0] in LEADING_FILLERS:
