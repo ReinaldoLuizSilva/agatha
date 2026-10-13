@@ -116,6 +116,7 @@ consequências:
 | [013](docs/adr/0013-systemd-quadlet.md) | serviço do systemd com Quadlet |
 | [014](docs/adr/0014-wake-word-no-cliente-para-barge-in.md) | wake word no cliente só para o barge-in |
 | [015](docs/adr/0015-cancelamento-de-eco-linear.md) | cancelamento de eco linear no cliente e detector treinado com eco |
+| [016](docs/adr/0016-barge-in.md) | barge-in: pausa no cliente, confirmação pela transcrição no servidor |
 
 ## Qualidade e operação
 

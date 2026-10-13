@@ -16,7 +16,8 @@ Uma única conexão WebSocket por cliente, com dois tipos de frame:
 - **Texto:** mensagens de controle em JSON, nos dois sentidos, sempre com o campo `type`.
 
 A conversa é **half-duplex**: enquanto a Agatha prepara e fala uma resposta, o servidor ignora o
-microfone. Ele volta a ouvir quando o cliente avisa que terminou de tocar (`playback_end`).
+microfone. Ele volta a ouvir quando o cliente avisa que terminou de tocar (`playback_end`). A
+exceção é o [barge-in](#barge-in): o cliente ouve "Agatha" por cima da resposta e o servidor confere.
 
 ```
 cliente                                          servidor
@@ -62,6 +63,7 @@ Antes do `ready`, o servidor rejeita qualquer áudio.
 | `client`   | não         | identificação livre do cliente, usada só em log                |
 | `token`    | sim         | segredo compartilhado (`AGATHA_TOKEN` no `.env` do servidor)   |
 | `audio`    | sim         | formato do microfone. Só `pcm_s16le`, `16000`, `1` é aceito    |
+| `output_audio` | não     | `{"sample_rate": 16000}` pede a resposta a 16 kHz (o servidor reamostra). Usado pelo barge-in, que toca e grava no mesmo stream. Sem o campo, a resposta vem na taxa da voz (22 050 Hz). Outras taxas: `unsupported_audio` |
 
 ### `ready` (servidor → cliente)
 
@@ -72,6 +74,7 @@ Antes do `ready`, o servidor rejeita qualquer áudio.
   "session": "3f9c2a71",
   "output_audio": {"encoding": "pcm_s16le", "sample_rate": 22050, "channels": 1},
   "wake": {"enabled": true, "words": ["agatha", "agata", "agatah"], "conversation_s": 20},
+  "barge_in": {"enabled": true, "confirm_s": 2.0},
   "vad": {
     "threshold": 0.5,
     "min_silence_ms": 500,
@@ -83,7 +86,8 @@ Antes do `ready`, o servidor rejeita qualquer áudio.
 }
 ```
 
-`output_audio` é o formato das respostas faladas; a taxa depende da voz do TTS. `wake` descreve a
+`output_audio` é o formato das respostas faladas: a taxa da voz do TTS, ou a pedida no `hello`.
+`barge_in` diz que o servidor aceita interrupções e quanto ele espera a fala começar. `wake` descreve a
 wake word ([ADR-008](adr/0008-wake-word-pela-transcricao.md)): se está ligada, as palavras aceitas e
 a duração do modo conversa. `vad` informa os parâmetros em uso, só para referência e log.
 
@@ -93,7 +97,8 @@ a duração do modo conversa. `vad` informa os parâmetros em uso, só para refe
 - Tamanho recomendado: **512 amostras** (32 ms, 1024 bytes), o bloco nativo do VAD. O servidor
   aceita qualquer tamanho e reagrupa, mas o número de bytes precisa ser par.
 - O cliente envia no ritmo em que captura e **para de enviar** enquanto uma resposta está em
-  andamento (de `response_start` até mandar o `playback_end`).
+  andamento (de `response_start` até mandar o `playback_end`), salvo durante um
+  [barge-in](#barge-in).
 - **Posição no fluxo:** o servidor conta *todas* as amostras recebidas na sessão, inclusive as que
   ele ignora durante uma resposta. Os campos `audio_ms` e `speech_end_ms` se referem a essa
   contagem, que o cliente reproduz contando as amostras que enviou.
@@ -236,6 +241,54 @@ houve áudio. O servidor então zera o VAD e volta a ouvir.
 Se o `playback_end` não chegar até 15 s depois da duração do áudio, o servidor volta a ouvir
 mesmo assim.
 
+## Barge-in
+
+Interromper a Agatha enquanto ela fala ([ADR-016](adr/0016-barge-in.md)). O cliente procura
+"Agatha" no microfone, depois de tirar o eco da voz dela, e o servidor **confirma pela
+transcrição**, porque o detector do cliente às vezes dispara à toa.
+
+```
+cliente                                          servidor
+   │◄──────────── [PCM da resposta] ... ────────────│  respondendo
+   │  (detector ouve "Agatha": pausa a fala)         │
+   │── {"type":"barge_in", ...} ───────────────────►│  confirmando
+   │── [PCM desde ~1 s antes do nome] ... ─────────►│
+   │◄──────────── {"type":"vad","event":"start"} ───│
+   │◄──────────── {"type":"vad","event":"end"} ─────│
+   │◄──────────── {"type":"transcript", ...} ───────│
+   │◄──────────── {"type":"barge_in_end", ...} ─────│  "stop" ou "resume"
+```
+
+### `barge_in` (cliente → servidor)
+
+```json
+{"type": "barge_in", "response": 3, "played_ms": 2140}
+```
+
+| campo | descrição |
+|---|---|
+| `response` | a resposta interrompida |
+| `played_ms` | quanto do áudio dela já tinha saído nas caixas: o histórico fica só com os trechos de texto que começaram antes disso |
+
+Logo depois, o cliente envia o áudio do microfone **desde ~1 s antes do nome** (ainda não
+enviado) e continua enviando até o `barge_in_end`. O servidor zera o VAD e passa a ouvir sem
+cancelar nada. Um `barge_in` fora de uma resposta em andamento recebe `barge_in_end` "resume".
+
+### `barge_in_end` (servidor → cliente)
+
+```json
+{"type": "barge_in_end", "response": 3, "action": "stop", "segment": 7}
+```
+
+| `action` | quando | o cliente |
+|---|---|---|
+| `stop` | a primeira frase transcrita chama a Agatha ou manda parar | descarta o resto da resposta, **sem** `playback_end`. Se a frase era um comando ("Agatha, para", "chega", só "Agatha"), o servidor fica ouvindo no modo conversa. Se era pergunta, o `response_start` da resposta a ela vem em seguida |
+| `resume` | a frase não era com ela, ou nenhuma fala começou em `confirm_s` | volta a tocar de onde pausou, para de enviar o microfone e manda o `playback_end` ao terminar |
+
+`segment` é a frase que decidiu (`null` no "resume" por prazo). O que vem antes do nome na
+transcrição (sobra do eco) é ignorado. A resposta interrompida aparece no registro de turnos
+com `reason: "interrupted"` e `heard` (o que foi ouvido).
+
 ## Erros
 
 ```json
@@ -265,3 +318,4 @@ descartada, e o histórico da conversa daquela sessão é perdido.
 | 1      | 1    | versão inicial: microfone → transcrições |
 | 2      | 2    | respostas faladas (`response_*`, `audio_*`, áudio binário do servidor), half-duplex com `playback_end`, `speech_end_ms` no `vad end`, `output_audio` no `ready`, medição de ponta a ponta no cliente |
 | 2 (+)  | 2–3  | campos opcionais, compatíveis: `continuation_ms` no `ready.vad` (frase cortada), `wake` no `ready` e `addressed` no `transcript` (wake word), `tools` e `timings.tool_ms` no `response_end` (ferramentas) |
+| 2 (+)  | 5    | barge-in, compatível: `output_audio` no `hello`, `barge_in` no `ready`, mensagens `barge_in` e `barge_in_end` |
