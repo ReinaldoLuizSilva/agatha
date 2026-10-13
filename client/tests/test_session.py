@@ -51,6 +51,12 @@ class FakeBarge:
     def hold(self, now):
         self.holds.append(now)
 
+    def begin_stats(self, now):
+        pass
+
+    def end_stats(self):
+        return None
+
 
 class FakeSource:
     finite = False

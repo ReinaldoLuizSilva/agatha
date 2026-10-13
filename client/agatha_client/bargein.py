@@ -49,6 +49,7 @@ class BargeIn:
         self._ref: list[np.ndarray] = []
         self._attempts = 0
         self._hold_until = float("-inf")
+        self._stats: dict | None = None
         if delay_ms is not None:
             self._set_delay(delay_ms, None)
 
@@ -63,11 +64,41 @@ class BargeIn:
         pcm, at = out.tobytes(), captured_at - self.latency_s
         self._ring.append((pcm, at))
         score = self.detector.feed(out)
+        if active and self._stats is not None:
+            self._update_stats(m, r, out, score, at)
         fired = None
         if active and self.delay_ms is not None and at >= self._hold_until and score >= self.threshold:
             fired = score
             self.hold(at)
         return pcm, at, fired
+
+    # --- Diagnóstico por resposta (sem guardar áudio) ---
+
+    def begin_stats(self, now: float) -> None:
+        self._stats = {"t0": now, "max": 0.0, "max_at": 0.0, "over": 0, "mic": 0.0, "out": 0.0, "n": 0}
+
+    def _update_stats(self, m: np.ndarray, r: np.ndarray, out: np.ndarray, score: float, at: float) -> None:
+        st = self._stats
+        if score > st["max"]:
+            st["max"], st["max_at"] = score, at - st["t0"]
+        st["over"] += score >= 0.5
+        if np.any(np.abs(r) > REF_ACTIVE):  # só enquanto ela fala: eco antes e depois do AEC
+            st["mic"] += float(np.sum(m.astype(np.float64) ** 2))
+            st["out"] += float(np.sum(out.astype(np.float64) ** 2))
+            st["n"] += len(m)
+
+    def end_stats(self) -> str | None:
+        """Uma linha com o que o detector ouviu durante a resposta: a maior nota (e quando), quantos
+        blocos de 80 ms passaram de 0,5, quanto eco o AEC tirou e o nível do eco no microfone."""
+        st, self._stats = self._stats, None
+        if st is None:
+            return None
+        line = f"nota máx {st['max']:.2f} aos {st['max_at']:.1f} s · {st['over']} blocos ≥ 0,5"
+        if st["n"] and st["out"] > 0:
+            erle = 10 * np.log10(st["mic"] / st["out"])
+            level = 10 * np.log10(st["mic"] / st["n"] / 32768**2 + 1e-12)
+            line += f" · AEC tirou {erle:.1f} dB · eco no microfone {level:.0f} dBFS"
+        return line
 
     def pre_roll(self) -> list[tuple[bytes, float]]:
         """O áudio limpo dos últimos `pre_roll_s` ainda não enviado (inclui o bloco do disparo)."""

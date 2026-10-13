@@ -97,3 +97,13 @@ def test_cancela_o_eco_depois_de_medir():
     mic = np.frombuffer(b"".join(m for m, _ in blocks[-60:]), "<i2").astype(float)
     clean = np.frombuffer(b"".join(p for p, _, _ in out[-60:]), "<i2").astype(float)
     assert 10 * np.log10(np.mean(mic ** 2) / np.mean(clean ** 2)) > 15
+
+
+def test_resumo_da_resposta_para_diagnostico():
+    b = BargeIn(FakeDetector(fire_at=40, score=0.7), delay_ms=200, threshold=0.9)
+    b.begin_stats(0.0)
+    feed(b, frames(3.0, delay_ms=200))
+    line = b.end_stats()
+    assert line.startswith("nota máx 0.70 aos 1.3 s") and "blocos ≥ 0,5" in line
+    assert "AEC tirou" in line and "dBFS" in line
+    assert b.end_stats() is None  # uma vez por resposta

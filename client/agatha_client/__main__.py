@@ -113,6 +113,8 @@ class Session:
             self.player.begin()
             self._reply = {"response": msg["response"], "segment": msg["segment"]}
             self._speaking = self._reply
+            if self.barge is not None:
+                self.barge.begin_stats(time.monotonic())
             print("  agatha: ", end="", flush=True)
         elif kind == "response_text":
             print(msg["text"], end=" ", flush=True)
@@ -139,6 +141,7 @@ class Session:
         detail = f" (servidor {server_ms} ms + rede/reprodução {e2e_ms - server_ms} ms)" if e2e_ms and server_ms else ""
         status = "" if msg["reason"] == "done" else f" [{msg['reason']}]"
         print(f"\n    ⏱ fim da fala → primeiro som: {e2e_ms} ms{detail}{status}", flush=True)
+        self._print_barge_stats()
         if self.wake.get("enabled"):
             print(f"    (pode continuar sem dizer \"Agatha\" por {self.wake['conversation_s']:g} s)", flush=True)
         print(flush=True)
@@ -180,6 +183,7 @@ class Session:
             return
         # "stop": descarta o resto; se veio pergunta nova, o response_start dela chega em seguida
         print("  ■ interrompida", flush=True)
+        self._print_barge_stats()
         if self._finish_task is not None:
             self._finish_task.cancel()  # sem playback_end: o servidor já encerrou essa resposta
         self.player.stop()
@@ -187,6 +191,11 @@ class Session:
             self.pending.discard(self._speaking["segment"])
         self._reply = self._speaking = None
         self.can_send.set()
+
+    def _print_barge_stats(self) -> None:
+        line = self.barge.end_stats() if self.barge is not None else None
+        if line:
+            print(f"    ⓘ barge-in: {line}", flush=True)
 
     def _spawn(self, coro) -> asyncio.Task:
         task = asyncio.create_task(coro)
