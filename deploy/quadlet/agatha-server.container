@@ -26,6 +26,9 @@ Notify=healthy
 StopTimeout=10
 
 [Service]
+# a latência não pode depender do swap (18/10: páginas do LLM foram parar lá com 9,8 GB livres,
+# levadas pelo Oracle de laboratório); os laboratórios continuam podendo usar swap
+MemorySwapMax=0
 Restart=on-failure
 RestartSec=5
 TimeoutStartSec=300

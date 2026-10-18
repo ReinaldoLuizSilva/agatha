@@ -53,6 +53,10 @@ Opções:
    *Substituída pelo [ADR-017](0017-laboratorios-no-systemd.md) (18/10): eles ficaram 6 dias
    desligados depois de reinícios.*
 
+8. **Sem swap para a Agatha** (atualização de 18/10): `MemorySwapMax=0` nos dois serviços. Com os
+   laboratórios no ar (ADR-017), o kernel levou ~100 MB de páginas do LLM para o swap mesmo com 9,8 GB
+   livres; a latência não pode depender disso. Os laboratórios e o resto do host continuam com swap.
+
 ## Consequências
 
 **Medido:**
