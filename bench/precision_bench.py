@@ -35,8 +35,8 @@ from tools_bench import NOW, RESULTS_DIR, build_registry, stream
 CLARIFY = re.compile(r"quis dizer|pode repetir|não entendi|pode reformular|poderia repetir|confirmar|"
                      r"se refere|seria (o|a) |não reconheço|não conheço (esse|essa)|pode explicar melhor|"
                      r"qual (servidor|host|banco)|o que (exatamente )?você", re.I)
-CANNOT = re.compile(r"não (consigo|tenho (acesso|como|ferramenta)|posso|é possível)|"
-                    r"não tenho essa informação|sem acesso", re.I)
+CANNOT = re.compile(r"não (consigo|sei|tenho (acesso|como|ferramenta)|posso|é possível)|"
+                    r"não tenho essa informação|sem acesso|não mostra", re.I)
 
 
 def case(kind, question, tools=(), any_of=(), not_any=(), alt=()):
@@ -63,6 +63,10 @@ CASES = [
     case("responder", "Agatha consegue me explicar para que serve o banco PostgreSQL.", any_of=["banco"]),
     case("responder", "Agatha, o que é o ASM?", any_of=["armazenamento", "storage", "disco"]),
     case("responder", "Agatha, qual a diferença entre CDB e PDB?", any_of=["container", "contêiner", "plugg", "plugáv"]),
+    # siglas conhecidas: responder direto, sem "você quis dizer" (sessão de 18/10 à tarde, já com a v5)
+    case("responder", "e o que significa o STT.", any_of=["fala", "speech"]),
+    case("responder", "Agatha, o que que significa LLM?", any_of=["linguagem", "language"]),
+    case("responder", "Agatha, o que é um protocolo HTTP?", any_of=["web", "navegador", "hipertexto"]),
     # --- confirmar: termos estragados pelo STT
     case("confirmar", "Agatha, eu quero que tu me explique pra que serve o RMA", alt=["rman"],
          not_any=["merchandise", "devolução", "mercadoria"]),
