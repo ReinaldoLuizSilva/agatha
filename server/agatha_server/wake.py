@@ -45,6 +45,8 @@ STOP_WORDS = {"para", "pare", "parar", "chega", "cancela", "cancelar", "silencio
               "basta", "esquece", "deixa", "stop"}
 STOP_MAX_WORDS = 3
 LEADING_FILLERS = {"pode", "ok", "ta", "ja", "ei", "oi", "ah", "olha", "agora"}  # "Agatha, pode parar"
+# Com ela calada, "esquece" e "deixa" são comandos da memória ("Agatha, esquece isso", ADR-010)
+IDLE_STOP_WORDS = STOP_WORDS - {"esquece", "deixa"}
 
 
 def from_name(text: str, config: WakeConfig) -> str:
@@ -62,17 +64,30 @@ def from_name(text: str, config: WakeConfig) -> str:
     return text
 
 
+def _command_words(text: str, config: WakeConfig) -> list[str]:
+    """As palavras do pedido: a partir do nome, sem o nome e sem as de cortesia do começo."""
+    names = {_normalize(w) for w in config.words}
+    words = [w for w in (_normalize(w) for w in re.split(r"[\s\-‐–—]+", from_name(text, config)))
+             if w and w not in names]
+    while words and words[0] in LEADING_FILLERS:
+        words = words[1:]
+    return words
+
+
 def interruption_kind(text: str, config: WakeConfig) -> str:
     """O que uma fala por cima da Agatha pede: "stop" (parar e ouvir) ou "question" (nova pergunta).
 
     Só o nome ("Agatha!") também é "stop": quem chama quer que ela pare e ouça. O que vem antes
     do nome não conta (`from_name`).
     """
-    text = from_name(text, config)
-    names = {_normalize(w) for w in config.words}
-    words = [w for w in (_normalize(w) for w in re.split(r"[\s\-‐–—]+", text)) if w and w not in names]
-    while words and words[0] in LEADING_FILLERS:
-        words = words[1:]
+    words = _command_words(text, config)
     if not words or (len(words) <= STOP_MAX_WORDS and words[0] in STOP_WORDS):
         return "stop"
     return "question"
+
+
+def is_idle_stop(text: str, config: WakeConfig) -> bool:
+    """Um "Agatha, para" com ela calada (em geral o fim de um barge-in que o detector perdeu): não
+    há o que parar. Só o nome não conta (é chamá-la), nem "esquece"/"deixa" (memória)."""
+    words = _command_words(text, config)
+    return bool(words) and len(words) <= STOP_MAX_WORDS and words[0] in IDLE_STOP_WORDS

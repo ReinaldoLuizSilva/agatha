@@ -43,7 +43,7 @@ from .tools.oracle import OracleClient, oracle_tools
 from .tools.zabbix import ZabbixClient, zabbix_tools
 from .text import looks_incomplete
 from .turnlog import TurnLog
-from .wake import from_name, interruption_kind, is_addressed
+from .wake import from_name, interruption_kind, is_addressed, is_idle_stop
 from .vad import Segmenter, SileroVAD, SpeechEnd, SpeechStart
 
 log = logging.getLogger(__name__)
@@ -260,7 +260,10 @@ class Session:
             timings["endpoint_ms"], timings["stt_ms"], timings["total_ms"],
         )
         addressed = self._addressed(event, text)
-        await self._send(protocol.transcript(event.segment, text, timings, addressed))
+        idle_stop = (addressed and self.state == self.LISTENING and self._held is None
+                     and event.segment not in self._dropped and is_idle_stop(text, self.server.config.wake))
+        await self._send(protocol.transcript(event.segment, text, timings, addressed,
+                                             "stop" if idle_stop else None))
 
         def record(outcome: str) -> None:
             self._log("transcript", segment=event.segment, text=text, addressed=addressed, outcome=outcome,
@@ -289,6 +292,12 @@ class Session:
         if not addressed:
             log.info("[%s] #%d ignorada: não chamou a Agatha", self.id, event.segment)
             record("not_addressed")
+            return
+        if idle_stop:
+            # "Agatha, para" com ela calada (o detector perdeu o barge-in e a frase chegou depois):
+            # nada a parar, e o LLM só responderia "não entendi"
+            log.info("[%s] #%d comando de parar sem resposta em andamento: nada a fazer", self.id, event.segment)
+            record("stop_idle")
             return
         if self._held:
             text = f"{self._held[1]} {text}"

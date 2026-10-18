@@ -595,6 +595,32 @@ def test_frase_da_confirmacao_nao_vira_pergunta_depois():
     assert FakeConversation.heard == ["olá agatha"]
 
 
+def test_parar_com_ela_calada_nao_vai_ao_llm():
+    # teste real de 13/10: o detector perdeu o nome, "Agatha, para" chegou depois que ela terminou
+    # e o LLM respondeu "não entendi"
+    async def scenario(ws):
+        await start(ws)
+        await send_all(ws, utterance())
+        msgs = await recv_until(ws, "transcript")
+        await asyncio.sleep(0.3)
+        return msgs
+
+    msgs = with_server(scenario, transcriber=SequenceTranscriber(["Agatha, para."]))
+    assert msgs[-1]["command"] == "stop" and msgs[-1]["addressed"] is True
+    assert FakeConversation.heard == []
+
+
+def test_esquece_isso_com_ela_calada_continua_indo_ao_llm():
+    async def scenario(ws):
+        await start(ws)
+        await send_all(ws, utterance())
+        return await recv_until(ws, "response_end")
+
+    msgs = with_server(scenario, transcriber=SequenceTranscriber(["Agatha, esquece isso."]))
+    assert "command" not in next(m for m in msgs if isinstance(m, dict) and m["type"] == "transcript")
+    assert FakeConversation.heard == ["Agatha, esquece isso."]
+
+
 def test_barge_in_sem_resposta_em_andamento():
     async def scenario(ws):
         await start(ws)

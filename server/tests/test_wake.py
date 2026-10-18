@@ -62,3 +62,18 @@ def test_texto_a_partir_do_nome(text, expected):
     from agatha_server.wake import from_name
 
     assert from_name(text, CONFIG) == expected
+
+
+@pytest.mark.parametrize("text, expected", [
+    ("Agatha, para.", True),
+    ("Agatha, pode parar", True),
+    ("Agatha, chega por hoje", True),
+    ("Agatha!", False),  # só o nome: é chamá-la
+    ("Agatha, esquece isso", False),  # memória (ADR-010)
+    ("Agatha, deixa pra lá", False),
+    ("Agatha, para que serve um backup?", False),
+])
+def test_parar_com_ela_calada(text, expected):
+    from agatha_server.wake import is_idle_stop
+
+    assert is_idle_stop(text, CONFIG) is expected

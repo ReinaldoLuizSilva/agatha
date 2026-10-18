@@ -122,9 +122,11 @@ def vad_event(event: SpeechStart | SpeechEnd) -> str:
     })
 
 
-def transcript(segment: int, text: str, timings: dict, addressed: bool = True) -> str:
-    return _dump({"type": "transcript", "segment": segment, "text": text, "addressed": addressed,
-                  "timings": timings})
+def transcript(segment: int, text: str, timings: dict, addressed: bool = True, command: str | None = None) -> str:
+    msg = {"type": "transcript", "segment": segment, "text": text, "addressed": addressed, "timings": timings}
+    if command is not None:  # "stop": comando de parar reconhecido, sem resposta
+        msg["command"] = command
+    return _dump(msg)
 
 
 def response_start(response: int, segment: int) -> str:
