@@ -105,5 +105,5 @@ def test_resumo_da_resposta_para_diagnostico():
     feed(b, frames(3.0, delay_ms=200))
     line = b.end_stats()
     assert line.startswith("nota máx 0.70 aos 1.3 s") and "blocos ≥ 0,5" in line
-    assert "AEC tirou" in line and "dBFS" in line
+    assert "AEC tirou" in line and "dBFS" in line and "ms por bloco de 32 ms" in line
     assert b.end_stats() is None  # uma vez por resposta

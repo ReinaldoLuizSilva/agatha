@@ -156,3 +156,11 @@ def test_barge_in_end_de_outra_resposta_e_ignorado():
     start_barge_in(s)
     s._on_message({"type": "barge_in_end", "response": 7, "action": "stop", "segment": None})
     assert s._confirming == 1 and s.player.calls[-1] == "pause"
+
+
+def test_comando_de_parar_com_ela_calada_nao_fica_pendente():
+    s = make()
+    s.pending.add(3)
+    s._on_message({"type": "transcript", "segment": 3, "text": "Agatha, para.", "addressed": True,
+                   "command": "stop", "timings": {"stt_ms": 300}})
+    assert not s.pending  # o servidor não vai responder: o modo --wav não fica esperando

@@ -11,6 +11,7 @@ Cada bloco do stream duplex chega com o microfone e o que foi tocado no mesmo in
    nome, para transcrever a frase inteira ("Agatha, para") e confirmar.
 """
 
+import time
 from collections import deque
 from collections.abc import Callable
 from typing import Protocol
@@ -35,6 +36,7 @@ class BargeIn:
                  frame_samples: int = 512, on_delay: Callable[[float, float | None], None] | None = None):
         self.detector = detector
         self.sample_rate = sample_rate
+        self.frame_ms = 1000 * frame_samples / sample_rate
         self.threshold = threshold
         self.refractory_s = refractory_s
         self.measure_samples = int(measure_s * sample_rate)
@@ -56,6 +58,7 @@ class BargeIn:
     def process(self, mic: bytes, ref: bytes, captured_at: float, active: bool) -> tuple[bytes, float, float | None]:
         """Um bloco do microfone e da referência → (áudio sem eco, instante de captura dele, nota
         do detector se disparou)."""
+        t0 = time.perf_counter()
         m = np.frombuffer(mic, "<i2")
         r = np.frombuffer(ref, "<i2")
         if self.delay_ms is None:
@@ -66,6 +69,8 @@ class BargeIn:
         score = self.detector.feed(out)
         if active and self._stats is not None:
             self._update_stats(m, r, out, score, at)
+            self._stats["cpu"] += time.perf_counter() - t0
+            self._stats["blocks"] += 1
         fired = None
         if active and self.delay_ms is not None and at >= self._hold_until and score >= self.threshold:
             fired = score
@@ -75,7 +80,8 @@ class BargeIn:
     # --- Diagnóstico por resposta (sem guardar áudio) ---
 
     def begin_stats(self, now: float) -> None:
-        self._stats = {"t0": now, "max": 0.0, "max_at": 0.0, "over": 0, "mic": 0.0, "out": 0.0, "n": 0}
+        self._stats = {"t0": now, "max": 0.0, "max_at": 0.0, "over": 0, "mic": 0.0, "out": 0.0, "n": 0,
+                       "cpu": 0.0, "blocks": 0}
 
     def _update_stats(self, m: np.ndarray, r: np.ndarray, out: np.ndarray, score: float, at: float) -> None:
         st = self._stats
@@ -89,7 +95,8 @@ class BargeIn:
 
     def end_stats(self) -> str | None:
         """Uma linha com o que o detector ouviu durante a resposta: a maior nota (e quando), quantos
-        blocos de 80 ms passaram de 0,5, quanto eco o AEC tirou e o nível do eco no microfone."""
+        blocos de 80 ms passaram de 0,5, quanto eco o AEC tirou, o nível do eco no microfone e o tempo
+        de processamento (AEC + detector) por bloco do stream."""
         st, self._stats = self._stats, None
         if st is None:
             return None
@@ -98,6 +105,8 @@ class BargeIn:
             erle = 10 * np.log10(st["mic"] / st["out"])
             level = 10 * np.log10(st["mic"] / st["n"] / 32768**2 + 1e-12)
             line += f" · AEC tirou {erle:.1f} dB · eco no microfone {level:.0f} dBFS"
+        if st["blocks"]:
+            line += f" · CPU {1000 * st['cpu'] / st['blocks']:.1f} ms por bloco de {self.frame_ms:.0f} ms"
         return line
 
     def pre_roll(self) -> list[tuple[bytes, float]]:

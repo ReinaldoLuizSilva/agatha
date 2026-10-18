@@ -101,12 +101,14 @@ class Session:
                 self.speech_end_ms[msg["segment"]] = msg["speech_end_ms"]
         elif kind == "transcript":
             t = msg["timings"]
+            command = msg.get("command")
             if msg.get("addressed", True):
+                note = "  (ok, já estou quieta)" if command == "stop" else ""
                 print(f"  #{msg['segment']} você: {msg['text'] or '(nada reconhecido)'}  "
-                      f"[stt {t['stt_ms']} ms]", flush=True)
+                      f"[stt {t['stt_ms']} ms]{note}", flush=True)
             else:  # não chamou a Agatha (wake word): ela não vai responder
                 print(f"  · ignorado (sem \"Agatha\"): {msg['text']}", flush=True)
-            if not msg["text"] or not msg.get("addressed", True):
+            if not msg["text"] or not msg.get("addressed", True) or command == "stop":
                 self.pending.discard(msg["segment"])
         elif kind == "response_start":
             self.can_send.clear()
