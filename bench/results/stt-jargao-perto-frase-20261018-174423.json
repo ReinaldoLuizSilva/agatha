@@ -1,0 +1,510 @@
+{
+  "date": "2026-10-18T17:44:23",
+  "label": "perto-frase",
+  "vocabulary": "O Reinaldo conversa com a Agatha sobre Oracle, RMAN, tablespace, Zabbix, trigger, template, item, host, housekeeping, Grafana, PostgreSQL, Linux e Podman., agatha-srv, PRDORA",
+  "hotwords": false,
+  "beam": 1,
+  "wer": 0.25925925925925924,
+  "terms": [
+    47,
+    50
+  ],
+  "rows": [
+    {
+      "id": "perto-001",
+      "ref": "Agatha",
+      "hyp": "Agatha.",
+      "errors": 0,
+      "words": 1,
+      "terms": [
+        "agatha"
+      ],
+      "missed": [],
+      "segments": 1
+    },
+    {
+      "id": "perto-002",
+      "ref": "Agatha?",
+      "hyp": "Agatha?",
+      "errors": 0,
+      "words": 1,
+      "terms": [
+        "agatha"
+      ],
+      "missed": [],
+      "segments": 1
+    },
+    {
+      "id": "perto-003",
+      "ref": "Agatha, que horas são?",
+      "hyp": "Agatha, que horas são?",
+      "errors": 0,
+      "words": 4,
+      "terms": [
+        "agatha"
+      ],
+      "missed": [],
+      "segments": 1
+    },
+    {
+      "id": "perto-004",
+      "ref": "Agatha, tem algum problema no Zabbix?",
+      "hyp": "Agatha, teu gopro RMAN, Zabbix.",
+      "errors": 4,
+      "words": 6,
+      "terms": [
+        "agatha",
+        "zabbix"
+      ],
+      "missed": [],
+      "segments": 1
+    },
+    {
+      "id": "perto-005",
+      "ref": "Agatha, como está a tablespace USERS?",
+      "hyp": "Agatha, como está a table-space users?",
+      "errors": 2,
+      "words": 6,
+      "terms": [
+        "agatha",
+        "tablespace"
+      ],
+      "missed": [
+        "tablespace"
+      ],
+      "segments": 1
+    },
+    {
+      "id": "perto-006",
+      "ref": "Agatha, quantas sessões tem no Oracle?",
+      "hyp": "Agatha, quantas sessões tem no Oracle?",
+      "errors": 0,
+      "words": 6,
+      "terms": [
+        "agatha",
+        "oracle"
+      ],
+      "missed": [],
+      "segments": 1
+    },
+    {
+      "id": "perto-007",
+      "ref": "Agatha, quanto é quinze por cento de duzentos?",
+      "hyp": "Agatha, quanto é 15% de duzentos?",
+      "errors": 0,
+      "words": 8,
+      "terms": [
+        "agatha"
+      ],
+      "missed": [],
+      "segments": 1
+    },
+    {
+      "id": "perto-008",
+      "ref": "Agatha, o que é housekeeping no Zabbix?",
+      "hyp": "Agatha, o que é housekeeping nos Zabbix?",
+      "errors": 1,
+      "words": 7,
+      "terms": [
+        "agatha",
+        "zabbix",
+        "housekeeping"
+      ],
+      "missed": [],
+      "segments": 1
+    },
+    {
+      "id": "perto-009",
+      "ref": "Agatha, me ajuda com uma coisa",
+      "hyp": "Agatha, me ajuda com uma coisa?",
+      "errors": 0,
+      "words": 6,
+      "terms": [
+        "agatha"
+      ],
+      "missed": [],
+      "segments": 1
+    },
+    {
+      "id": "perto-010",
+      "ref": "Agatha, guarda que a reunião é amanhã",
+      "hyp": "Agatha, guarde a reunião que há amanhã.",
+      "errors": 4,
+      "words": 7,
+      "terms": [
+        "agatha"
+      ],
+      "missed": [],
+      "segments": 1
+    },
+    {
+      "id": "perto-011",
+      "ref": "Agatha, esquece isso",
+      "hyp": "Agatha, esqueça isso.",
+      "errors": 1,
+      "words": 3,
+      "terms": [
+        "agatha"
+      ],
+      "missed": [],
+      "segments": 1
+    },
+    {
+      "id": "perto-012",
+      "ref": "Agatha, para",
+      "hyp": "Agatha, para.",
+      "errors": 0,
+      "words": 2,
+      "terms": [
+        "agatha"
+      ],
+      "missed": [],
+      "segments": 1
+    },
+    {
+      "id": "perto-013",
+      "ref": "Agatha, chega",
+      "hyp": "Agatha, shimmy.",
+      "errors": 1,
+      "words": 2,
+      "terms": [
+        "agatha"
+      ],
+      "missed": [],
+      "segments": 1
+    },
+    {
+      "id": "perto-014",
+      "ref": "Agatha, espera",
+      "hyp": "Agatha, espera.",
+      "errors": 0,
+      "words": 2,
+      "terms": [
+        "agatha"
+      ],
+      "missed": [],
+      "segments": 1
+    },
+    {
+      "id": "perto-015",
+      "ref": "Agatha, cancela",
+      "hyp": "Agatha, cansao.",
+      "errors": 1,
+      "words": 2,
+      "terms": [
+        "agatha"
+      ],
+      "missed": [],
+      "segments": 1
+    },
+    {
+      "id": "perto-016",
+      "ref": "Ei, Agatha",
+      "hyp": "Hey, Agatha.",
+      "errors": 1,
+      "words": 2,
+      "terms": [
+        "agatha"
+      ],
+      "missed": [],
+      "segments": 1
+    },
+    {
+      "id": "perto-017",
+      "ref": "Oi, Agatha, tudo bem?",
+      "hyp": "O Agatha tudo certo?",
+      "errors": 2,
+      "words": 4,
+      "terms": [
+        "agatha"
+      ],
+      "missed": [],
+      "segments": 1
+    },
+    {
+      "id": "perto-018",
+      "ref": "Bom dia, Agatha",
+      "hyp": "Bom dia, Agatha.",
+      "errors": 0,
+      "words": 3,
+      "terms": [
+        "agatha"
+      ],
+      "missed": [],
+      "segments": 1
+    },
+    {
+      "id": "perto-019",
+      "ref": "Obrigado, Agatha",
+      "hyp": "Obrigado, Agatha.",
+      "errors": 0,
+      "words": 2,
+      "terms": [
+        "agatha"
+      ],
+      "missed": [],
+      "segments": 1
+    },
+    {
+      "id": "perto-020",
+      "ref": "Certo, Agatha. E o host do banco?",
+      "hyp": "ser, agatha, e o banco host do...",
+      "errors": 3,
+      "words": 7,
+      "terms": [
+        "agatha"
+      ],
+      "missed": [],
+      "segments": 1
+    },
+    {
+      "id": "perto-021",
+      "ref": "Agatha",
+      "hyp": "Agatha",
+      "errors": 0,
+      "words": 1,
+      "terms": [
+        "agatha"
+      ],
+      "missed": [],
+      "segments": 1
+    },
+    {
+      "id": "perto-022",
+      "ref": "Agatha?",
+      "hyp": "Agatha?",
+      "errors": 0,
+      "words": 1,
+      "terms": [
+        "agatha"
+      ],
+      "missed": [],
+      "segments": 1
+    },
+    {
+      "id": "perto-023",
+      "ref": "Agatha, que horas são?",
+      "hyp": "Agatha aqui, oração.",
+      "errors": 3,
+      "words": 4,
+      "terms": [
+        "agatha"
+      ],
+      "missed": [],
+      "segments": 1
+    },
+    {
+      "id": "perto-024",
+      "ref": "Agatha, tem algum problema no Zabbix?",
+      "hyp": "Agatha tem algum problema nos ápics?",
+      "errors": 2,
+      "words": 6,
+      "terms": [
+        "agatha",
+        "zabbix"
+      ],
+      "missed": [
+        "zabbix"
+      ],
+      "segments": 1
+    },
+    {
+      "id": "perto-025",
+      "ref": "Agatha, como está a tablespace USERS?",
+      "hyp": "Agatha como task, table space, news users.",
+      "errors": 4,
+      "words": 6,
+      "terms": [
+        "agatha",
+        "tablespace"
+      ],
+      "missed": [
+        "tablespace"
+      ],
+      "segments": 1
+    },
+    {
+      "id": "perto-026",
+      "ref": "Agatha, quantas sessões tem no Oracle?",
+      "hyp": "Agatha, quantas sessões tem no Oracle?",
+      "errors": 0,
+      "words": 6,
+      "terms": [
+        "agatha",
+        "oracle"
+      ],
+      "missed": [],
+      "segments": 1
+    },
+    {
+      "id": "perto-027",
+      "ref": "Agatha, quanto é quinze por cento de duzentos?",
+      "hyp": "Agatha, quanto é 15% de 200?",
+      "errors": 0,
+      "words": 8,
+      "terms": [
+        "agatha"
+      ],
+      "missed": [],
+      "segments": 1
+    },
+    {
+      "id": "perto-028",
+      "ref": "Agatha, o que é housekeeping no Zabbix?",
+      "hyp": "Agatha, Oracle Housekeeping, Zabbix",
+      "errors": 4,
+      "words": 7,
+      "terms": [
+        "agatha",
+        "zabbix",
+        "housekeeping"
+      ],
+      "missed": [],
+      "segments": 1
+    },
+    {
+      "id": "perto-029",
+      "ref": "Agatha, me ajuda com uma coisa",
+      "hyp": "Agatha, me ajuda com alguma coisa.",
+      "errors": 1,
+      "words": 6,
+      "terms": [
+        "agatha"
+      ],
+      "missed": [],
+      "segments": 1
+    },
+    {
+      "id": "perto-030",
+      "ref": "Agatha, guarda que a reunião é amanhã",
+      "hyp": "Agatha, guarda que o Reanilhão é amanhã.",
+      "errors": 2,
+      "words": 7,
+      "terms": [
+        "agatha"
+      ],
+      "missed": [],
+      "segments": 1
+    },
+    {
+      "id": "perto-031",
+      "ref": "Agatha, esquece isso",
+      "hyp": "Agatha, esquece isso.",
+      "errors": 0,
+      "words": 3,
+      "terms": [
+        "agatha"
+      ],
+      "missed": [],
+      "segments": 1
+    },
+    {
+      "id": "perto-032",
+      "ref": "Agatha, para",
+      "hyp": "Agatha para.",
+      "errors": 0,
+      "words": 2,
+      "terms": [
+        "agatha"
+      ],
+      "missed": [],
+      "segments": 1
+    },
+    {
+      "id": "perto-033",
+      "ref": "Agatha, chega",
+      "hyp": "Agatha-srv.",
+      "errors": 1,
+      "words": 2,
+      "terms": [
+        "agatha"
+      ],
+      "missed": [],
+      "segments": 1
+    },
+    {
+      "id": "perto-034",
+      "ref": "Agatha, espera",
+      "hyp": "Agatha Espada",
+      "errors": 1,
+      "words": 2,
+      "terms": [
+        "agatha"
+      ],
+      "missed": [],
+      "segments": 1
+    },
+    {
+      "id": "perto-035",
+      "ref": "Agatha, cancela",
+      "hyp": "Agatha cancela.",
+      "errors": 0,
+      "words": 2,
+      "terms": [
+        "agatha"
+      ],
+      "missed": [],
+      "segments": 1
+    },
+    {
+      "id": "perto-036",
+      "ref": "Ei, Agatha",
+      "hyp": "e agatha.",
+      "errors": 1,
+      "words": 2,
+      "terms": [
+        "agatha"
+      ],
+      "missed": [],
+      "segments": 1
+    },
+    {
+      "id": "perto-037",
+      "ref": "Oi, Agatha, tudo bem?",
+      "hyp": "Agatha, tudo bem?",
+      "errors": 1,
+      "words": 4,
+      "terms": [
+        "agatha"
+      ],
+      "missed": [],
+      "segments": 1
+    },
+    {
+      "id": "perto-038",
+      "ref": "Bom dia, Agatha",
+      "hyp": "Onde é Agatha?",
+      "errors": 2,
+      "words": 3,
+      "terms": [
+        "agatha"
+      ],
+      "missed": [],
+      "segments": 1
+    },
+    {
+      "id": "perto-039",
+      "ref": "Obrigado, Agatha",
+      "hyp": "Obrigado, Agatha.",
+      "errors": 0,
+      "words": 2,
+      "terms": [
+        "agatha"
+      ],
+      "missed": [],
+      "segments": 1
+    },
+    {
+      "id": "perto-040",
+      "ref": "Certo, Agatha. E o host do banco?",
+      "hyp": "Certo, Agatha, e o host do banco.",
+      "errors": 0,
+      "words": 7,
+      "terms": [
+        "agatha"
+      ],
+      "missed": [],
+      "segments": 1
+    }
+  ]
+}
