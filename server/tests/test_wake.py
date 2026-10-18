@@ -68,6 +68,8 @@ def test_texto_a_partir_do_nome(text, expected):
     ("Agatha, para.", True),
     ("Agatha, pode parar", True),
     ("Agatha, chega por hoje", True),
+    ("Agatha, par", True),  # "para" cortado pelo Whisper
+    ("Par.", True),
     ("Agatha!", False),  # só o nome: é chamá-la
     ("Agatha, esquece isso", False),  # memória (ADR-010)
     ("Agatha, deixa pra lá", False),

@@ -28,9 +28,10 @@ class STTConfig:
     temperatures: tuple[float, ...] = (0.0, 0.4)
     # Vocabulário que ajuda o Whisper com nomes e jargão (plano B do ADR-002). Medido na Fase 2:
     # "Agatha" deixou de virar "Álvaro" e o tempo de transcrição não mudou. Na Fase 3 entraram os
-    # termos que o teste real no Windows errou ("hosts" virava "roaches"/"roxas").
+    # termos que o teste real no Windows errou ("hosts" virava "roaches"/"roxas"); em 18/10, "RMAN"
+    # (virava "Rima"/"RMA").
     initial_prompt: str | None = (
-        "Agatha, Zabbix, Oracle, trigger, tablespace, host, hosts, template, item, Grafana, "
+        "Agatha, Zabbix, Oracle, RMAN, trigger, tablespace, host, hosts, template, item, Grafana, "
         "PostgreSQL, housekeeping, Linux, Podman"
     )
     # Nomes do ambiente (hosts, bancos), acrescentados ao vocabulário. Teste de 12/10: "PRDORA" virava
