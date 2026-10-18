@@ -29,6 +29,8 @@ MEMORY_KEYS = ("vm.memory.util", "vm.memory.utilization")
 class ZabbixConfig:
     url: str = ""    # ex.: http://host.containers.internal:8081/api_jsonrpc.php
     token: str = ""
+    # host de "o servidor", quando ele não diz qual (o laboratório só monitora o agatha-srv; ADR-018)
+    default_host: str = ""
 
     @property
     def enabled(self) -> bool:
@@ -46,6 +48,7 @@ class ZabbixClient:
             headers={"Authorization": f"Bearer {config.token}", "Content-Type": "application/json-rpc"},
         )
         self._url = config.url
+        self.config = config
 
     async def call(self, method: str, params: dict):
         response = await self._client.post(self._url, json={"jsonrpc": "2.0", "method": method, "params": params, "id": 1})
@@ -172,7 +175,9 @@ def zabbix_tools(client: ZabbixClient) -> list[Tool]:
             name="zabbix_host",
             description="Mostra o estado e as métricas atuais de um host monitorado no Zabbix: CPU, memória, disco.",
             handler=host_status,
-            rule="perguntas sobre o estado atual de um host no Zabbix (CPU, memória, disco): use zabbix_host",
+            rule="perguntas sobre o estado atual de um host no Zabbix (CPU, memória, disco, se está no ar): use "
+                 "zabbix_host" + (f"; se ele não disser qual, como em o servidor, o host é {client.config.default_host}"
+                                  if client.config.default_host else ""),
             properties={"host": {"type": "string"}},
             required=("host",),
         ),

@@ -140,7 +140,8 @@ def load_config(env: dict | None = None) -> ServerConfig:
             db=get("MEMORY_DB", memory_defaults.db),
             max_facts=get("MEMORY_MAX_FACTS", memory_defaults.max_facts, int),
         ),
-        zabbix=ZabbixConfig(url=get("ZABBIX_URL", ""), token=get("ZABBIX_TOKEN", "")),
+        zabbix=ZabbixConfig(url=get("ZABBIX_URL", ""), token=get("ZABBIX_TOKEN", ""),
+                            default_host=get("ZABBIX_DEFAULT_HOST", "")),
         oracle=OracleConfig(dsn=get("ORACLE_DSN", ""), user=get("ORACLE_USER", ""),
                             password=get("ORACLE_PASSWORD", "")),
     )

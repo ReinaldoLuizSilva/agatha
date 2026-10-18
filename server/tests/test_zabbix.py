@@ -126,3 +126,11 @@ def test_valor_velho_nao_e_apresentado_como_atual():
         STALE = False
     assert "cpu_pct" not in result
     assert result["sem_dados_recentes"].startswith("última coleta")
+
+
+def test_host_padrao_entra_na_regra_da_ferramenta():
+    # "como está o servidor?" sem nome: o laboratório só monitora o agatha-srv (ADR-018)
+    rules = {t.name: t.rule for t in zabbix_tools(ZabbixClient(ZabbixConfig("http://x", "t", default_host="agatha-srv")))}
+    assert "o host é agatha-srv" in rules["zabbix_host"]
+    rules = {t.name: t.rule for t in zabbix_tools(ZabbixClient(ZabbixConfig("http://x", "t")))}
+    assert "o host é" not in rules["zabbix_host"]

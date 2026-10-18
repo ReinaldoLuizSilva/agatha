@@ -58,3 +58,9 @@ def test_nomes_no_vocabulario_do_stt(tmp_path):
     config = load_config({**base, "AGATHA_STT_NAMES": "PRDORA, agatha-srv"})
     assert config.stt.names == ("PRDORA", "agatha-srv")
     assert config.stt.vocabulary().endswith("Podman, PRDORA, agatha-srv")
+
+
+def test_host_padrao_do_zabbix(tmp_path):
+    env = {"AGATHA_ENV_FILE": str(tmp_path / "nao-existe"), "AGATHA_TOKEN": "x",
+           "AGATHA_ZABBIX_DEFAULT_HOST": "agatha-srv"}
+    assert load_config(env).zabbix.default_host == "agatha-srv"

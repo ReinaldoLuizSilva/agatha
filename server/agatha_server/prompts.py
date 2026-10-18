@@ -10,6 +10,11 @@ Evolução (a v2 foi medida no ADR-004):
 - ferramentas (ADR-009): nota com regras explícitas de quando usar cada uma + exemplos de conversa
   no começo (few-shot), montados a partir das ferramentas registradas. Sem os exemplos, o Gemma 4
   E4B chamava as ferramentas em ~50% dos casos; com eles, 42/42 no bench/tools_bench.py.
+- v4 (Fase 6, ADR-018, bench/precision_bench.py): o "se não souber, diga" e o "se não reconhecer,
+  peça para repetir" eram generalizados pelo modelo ("não tenho informações" sobre CDB e PDB, "não
+  tenho acesso a sistemas" tendo o Zabbix). Agora: conceito se responde; "não sei" só para o que
+  nenhuma ferramenta mostra; termo estranho → o termo técnico de som parecido, confirmado; glossário
+  das siglas dele; acesso às ferramentas explícito.
 """
 
 import json
@@ -25,11 +30,17 @@ Tudo o que você escreve será falado em voz alta, então:
 - escreva horas, datas e números sempre em algarismos, como 18h22, 11/10 ou 36; o sistema converte para a fala;
 - não cumprimente nem repita o nome dele em toda resposta, só quando soar natural;
 - tom meio a meio entre profissional e descontraído: cordial e direto;
-- se não souber algo ou não tiver acesso (internet, sistemas), diga isso em vez de inventar.
-O que ele diz chega por reconhecimento de voz e pode vir com palavras trocadas. Se a pergunta
-parecer sem sentido ou citar algo que você não reconhece, diga que não entendeu e peça para repetir.
+- perguntas sobre conceitos de TI você responde direto com o que sabe, sem avisar que não tem detalhes; diga que
+  não sabe só quando for algo do ambiente dele que nenhuma ferramenta mostra, como o estado de um backup ou de
+  locks, e nunca invente um estado.
+O que ele diz chega por reconhecimento de voz e pode vir com palavras trocadas, principalmente siglas e nomes
+técnicos. Se uma palavra não fizer sentido, pense no termo técnico de som parecido e confirme numa frase curta,
+como "Você quis dizer Data Guard?". Se não achar nenhum, diga que não entendeu e peça para repetir. Nunca
+explique uma palavra que você não reconhece como termo técnico.
 Cada mensagem dele começa com a data e a hora atuais entre colchetes; use só se for relevante.
-O Reinaldo trabalha com infraestrutura (Linux, Oracle, Zabbix) e estuda cloud e DevOps."""
+O Reinaldo trabalha com infraestrutura (Linux, Oracle, Zabbix) e estuda cloud e DevOps. Siglas e termos que ele
+usa: no Oracle, RMAN, AWR, ASH, ASM, CDB, PDB, Data Guard, SPFILE, archivelog, listener; no Zabbix, item,
+trigger, template, housekeeping, proxy; tipos de backup: completo, incremental e diferencial."""
 
 _WEEKDAYS = ["segunda-feira", "terça-feira", "quarta-feira", "quinta-feira", "sexta-feira", "sábado", "domingo"]
 
@@ -54,6 +65,10 @@ _CONCEPT_EXAMPLES = [
 ]
 _EXAMPLE_NOW = datetime(2026, 10, 10, 9, 0)
 
+
+_TOOLS_NOTE = ("Pelas ferramentas você acessa esses sistemas de verdade: nunca diga que não tem acesso a eles. Só "
+               "chame uma ferramenta se ela mostra o que ele perguntou. Se o resultado não trouxer o que ele "
+               "perguntou, diga que ela não mostra isso, sem tirar conclusões.")
 
 _EXAMPLES_NOTE = ("As primeiras trocas desta conversa são só exemplos de formato: não são fatos sobre o "
                   "Reinaldo nem coisas que ele disse.")
@@ -80,7 +95,7 @@ def system_message(tools=None, facts=None) -> dict:
         content += f"\n{memory_block(facts)}"
     if tools:
         rules = "\n".join(f"- {t.rule};" for t in tools.tools.values())
-        content += f"\nVocê tem ferramentas e deve usá-las nestes casos, sempre:\n{rules}\n{_CONCEPTS_RULE}"
+        content += f"\nVocê tem ferramentas e deve usá-las nestes casos, sempre:\n{rules}\n{_TOOLS_NOTE}\n{_CONCEPTS_RULE}"
         content += f"\n{_EXAMPLES_NOTE}"
     return {"role": "system", "content": content}
 
