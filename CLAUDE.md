@@ -153,7 +153,7 @@ agatha/
       RAM com defeito (sem ECC); dump em /var/crash/127.0.0.1-2026-10-12-20:36:18. Memtest86+ ainda NÃO feito
       (18/10). Até ele passar, NADA de testes pesados (varredura, treino). Aviso `timerqueue.c:38` no boot: ver
       se repete (pode ser driver).
-- [ ] Fase 6: precisão (escopo aprovado em 18/10; ADR-018) — itens 1–5 feitos em 18/10, falta o Reinaldo fechar.
+- [x] Fase 6: precisão (fechada em 18/10; ADR-018).
       Benchmarks: `bench/precision_bench.py` (falas reais como o STT entregou, rotuladas: responder / confirmar /
       ferramenta / não consigo; `--rescore`) e `bench/stt_jargon_bench.py` (40 frases de jargão na voz dele em
       /dados/agatha/data/stt/gravacoes-stt, pipeline do servidor no CPU, com teto de memória).
@@ -165,3 +165,7 @@ agatha/
       normalizado não ganham; beam 5 +1 termo e +13% de tempo. Erros restantes são acústicos (Whisper small no
       limite; modelo maior não cabe na VRAM). Fim de fala segue em 500 ms (2 cortes em 74 falas, ambos juntados).
       Agatha sem swap (MemorySwapMax=0, ADR-013 item 8).
+      Para acompanhar no uso: o registro de turnos mostra se as invenções sumiram de verdade; "você quis
+      dizer" às vezes aparece com sigla conhecida (STT); o STT erra ~1 em 5 termos de jargão.
+- [ ] Fase 7: a definir com o Reinaldo (candidatas: voz nova, transcrição parcial para perguntas longas, mais
+      ferramentas). Não começar sem escopo aprovado.

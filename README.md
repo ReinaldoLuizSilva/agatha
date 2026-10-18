@@ -182,4 +182,6 @@ Modelos, memória e logs ficam fora do repositório, em `/dados/agatha/{models,d
 - [x] **Fase 5**: interromper a Agatha pelo nome enquanto ela fala (barge-in): detector
       [openWakeWord](https://github.com/dscripka/openWakeWord) treinado com a voz do dono, cancelamento
       de eco próprio e confirmação pela transcrição no servidor
-- [ ] Próximos: transcrição parcial para perguntas longas, voz nova, mais ferramentas
+- [x] **Fase 6**: precisão: benchmarks com as falas reais e a voz do dono, prompt que confirma termos
+      mal ouvidos em vez de inventar (53/90 → 75/90, invenções 6 → 0)
+- [ ] Próximos: voz nova, transcrição parcial para perguntas longas, mais ferramentas
