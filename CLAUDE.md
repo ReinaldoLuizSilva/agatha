@@ -57,6 +57,8 @@ e no trabalho (infra, Oracle, Zabbix). Também é peça de portfólio Cloud/DevO
 - Teste de fumaça com a Agatha no ar: `.venv/bin/python server/scripts/smoke.py` (sem memória nem laboratórios).
   CI no GitHub Actions (`.github/workflows/tests.yml`): servidor no Ubuntu, cliente no Windows, sem GPU.
 - Testes ponta a ponta NUNCA podem mexer na memória real (fatos do Reinaldo em /dados/agatha/data).
+- Laboratórios no systemd do usuário (ADR-017, `deploy/install-labs.sh`, `--uninstall` para tirar): sobem no
+  boot e voltam se caírem; ~2,4 GB de RAM fixos. Os `up.sh`/`down.sh` abaixo viram `systemctl --user`.
 - Zabbix de laboratório: `deploy/zabbix/up.sh` / `down.sh`; frontend em :8081 (senha do Admin em
   `/dados/agatha/lab/zabbix/admin-password`). De dentro dos containers, o host é `host.containers.internal`.
 - Oracle de laboratório: `deploy/oracle/up.sh` / `down.sh`; PDB FREEPDB1 :1521 (fechada no firewall);

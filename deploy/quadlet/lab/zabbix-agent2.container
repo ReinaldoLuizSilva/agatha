@@ -1,0 +1,26 @@
+# Agente do Zabbix monitorando o próprio agatha-srv: rede e processos do host (CPU, memória, rede e
+# processos corretos); discos só os montados aqui. O server (no pod) chega por
+# host.containers.internal com o IP da LAN do host como origem: esse IP vem em agent.env, gerado
+# pelo deploy/install-labs.sh (rode de novo se o IP mudar).
+
+[Unit]
+Description=Laboratório: Zabbix agent2 (monitora o agatha-srv)
+
+[Container]
+ContainerName=zabbix-agent2
+Image=docker.io/zabbix/zabbix-agent2:alpine-7.0.31
+Timezone=local
+Network=host
+PodmanArgs=--pid=host
+SecurityLabelDisable=true
+Environment=ZBX_HOSTNAME=agatha-srv ZBX_ACTIVE_ALLOW=false
+EnvironmentFile=/dados/agatha/lab/zabbix/agent.env
+Volume=/dados:/dados:ro
+StopTimeout=10
+
+[Service]
+Restart=on-failure
+RestartSec=10
+
+[Install]
+WantedBy=default.target

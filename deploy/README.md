@@ -6,7 +6,9 @@ serviço do systemd do usuário `agatha` ([ADR-013](../docs/adr/0013-systemd-qua
 ```
 deploy/
 ├── install-systemd.sh   # instala as units do Quadlet e sobe o pod
+├── install-labs.sh      # instala os laboratórios no systemd (ADR-017; --uninstall para tirar)
 ├── quadlet/             # agatha.pod, agatha-llm.container, agatha-server.container
+│   └── lab/             # zabbix.pod, zabbix-*.container, oracle-free.container
 ├── up.sh                # sobe (ou reinicia) o pod "agatha" pelo systemd
 ├── down.sh              # derruba o pod
 ├── llama/Containerfile  # imagem do llama-server (CUDA 12, sm_61)
@@ -80,6 +82,22 @@ ficam no driver padrão do Podman, não no journald (o journal do host é volát
 - **Fuso horário:** `Timezone=local`. Sem isso, os containers ficam em UTC e a Agatha erra a hora.
 - **VRAM:** o pico com os dois serviços é de ~3,66 GB de 4 GB. Pare o pod antes de rodar os
   benchmarks de STT e LLM, ou os testes de STT, que precisam da GPU livre.
+
+## Laboratórios no systemd
+
+Desde o [ADR-017](../docs/adr/0017-laboratorios-no-systemd.md), o Zabbix e o Oracle de laboratório
+são serviços do systemd do usuário, como a Agatha: sobem no boot e voltam se caírem.
+
+```bash
+deploy/install-labs.sh               # instala/atualiza as units e (re)inicia (depois do 1º up.sh de cada um)
+deploy/install-labs.sh --uninstall   # para e remove as units (os dados ficam)
+systemctl --user status oracle-free zabbix-server
+```
+
+Com as units instaladas, os `up.sh`/`down.sh` abaixo viram atalhos para `systemctl --user`, e um
+`down.sh` vale até o próximo boot. As senhas ficam nos arquivos de sempre; o instalador gera a partir
+delas os arquivos de ambiente das units (`db.env`, `agent.env`, `oracle.env`, modo 600). Rode o
+instalador de novo se o IP do servidor mudar (o agente do Zabbix precisa dele). RAM fixa: ~2,4 GB.
 
 ## Zabbix de laboratório
 

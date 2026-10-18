@@ -50,6 +50,8 @@ Opções:
    `/dados/agatha/logs` (próxima entrega da Fase 4).
 7. **Laboratórios fora do systemd** (Zabbix e Oracle continuam com `deploy/zabbix/` e
    `deploy/oracle/`): não fazem parte da Agatha, e as ferramentas já tratam o laboratório fora do ar.
+   *Substituída pelo [ADR-017](0017-laboratorios-no-systemd.md) (18/10): eles ficaram 6 dias
+   desligados depois de reinícios.*
 
 ## Consequências
 

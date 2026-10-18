@@ -8,9 +8,19 @@
 #   deploy/oracle/down.sh                     derruba
 #   .venv/bin/python deploy/oracle/setup.py   usuário somente leitura + dados de demonstração
 #
+# Com a unit do systemd instalada (deploy/install-labs.sh, ADR-017), sobe/reinicia por ela.
+#
 # A porta 1521 é publicada no host, mas o firewall não a libera para a LAN: só os containers do
 # próprio servidor (a Agatha, por host.containers.internal) conectam.
 set -euo pipefail
+
+if systemctl --user cat oracle-free.service >/dev/null 2>&1; then
+    printf "subindo o Oracle pelo systemd (pode levar ~1 min)..."
+    # o start só termina com o banco saudável (Notify=healthy)
+    if systemctl --user restart oracle-free; then echo " ok"; exit 0; fi
+    echo; systemctl --user --no-pager status oracle-free | tail -30
+    exit 1
+fi
 
 IMAGE=${ORACLE_IMAGE:-docker.io/gvenzl/oracle-free:23.9}
 LAB=${ORACLE_LAB_DIR:-/dados/agatha/lab/oracle}

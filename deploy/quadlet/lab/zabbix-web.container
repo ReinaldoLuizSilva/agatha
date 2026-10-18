@@ -1,0 +1,27 @@
+# Frontend do Zabbix de laboratório (http://<agatha-srv>:8081). Fica "ativo" quando responde.
+
+[Unit]
+Description=Laboratório: frontend do Zabbix (:8081)
+Wants=zabbix-server.service
+After=zabbix-server.service
+
+[Container]
+ContainerName=zabbix-web
+Pod=zabbix.pod
+Image=docker.io/zabbix/zabbix-web-nginx-pgsql:alpine-7.0.31
+Timezone=local
+EnvironmentFile=/dados/agatha/lab/zabbix/db.env
+Environment=ZBX_SERVER_HOST=127.0.0.1 PHP_TZ=America/Sao_Paulo
+HealthCmd=curl -fsS -o /dev/null http://127.0.0.1:8080/
+HealthInterval=10s
+HealthStartPeriod=120s
+Notify=healthy
+StopTimeout=10
+
+[Service]
+Restart=on-failure
+RestartSec=10
+TimeoutStartSec=240
+
+[Install]
+WantedBy=default.target

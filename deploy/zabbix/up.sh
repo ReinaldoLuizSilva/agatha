@@ -6,10 +6,22 @@
 #   deploy/zabbix/down.sh           derruba
 #   .venv/bin/python deploy/zabbix/setup.py   configuração inicial pela API (uma vez)
 #
+# Com as units do systemd instaladas (deploy/install-labs.sh, ADR-017), sobe/reinicia por elas.
+#
 # Frontend: http://<agatha-srv>:8081 (liberado no firewall só para a LAN).
 # De dentro dos containers, o host é "host.containers.internal" (rede pasta do Podman sem root:
 # o IP da LAN do host aponta para o próprio container).
 set -euo pipefail
+
+if systemctl --user cat zabbix-pod.service >/dev/null 2>&1; then
+    printf "subindo o Zabbix pelo systemd..."
+    # o start só termina com o banco e o frontend saudáveis (Notify=healthy)
+    if systemctl --user restart zabbix-postgres zabbix-server zabbix-web zabbix-agent2; then
+        echo " ok: http://$(hostname -I | awk '{print $1}'):8081/"; exit 0
+    fi
+    echo; systemctl --user --no-pager status zabbix-postgres zabbix-server zabbix-web zabbix-agent2 | tail -30
+    exit 1
+fi
 
 VERSION=${ZABBIX_VERSION:-alpine-7.0.31}
 PG_IMAGE=${ZABBIX_PG_IMAGE:-docker.io/library/postgres:17.11-alpine}

@@ -1,0 +1,25 @@
+# Banco do Zabbix de laboratório. Senha em db.env (gerado pelo deploy/install-labs.sh, fora do git).
+
+[Unit]
+Description=Laboratório: PostgreSQL do Zabbix
+
+[Container]
+ContainerName=zabbix-postgres
+Pod=zabbix.pod
+Image=docker.io/library/postgres:17.11-alpine
+Timezone=local
+EnvironmentFile=/dados/agatha/lab/zabbix/db.env
+Volume=/dados/agatha/lab/zabbix/postgres:/var/lib/postgresql/data:Z
+HealthCmd=pg_isready -U zabbix
+HealthInterval=10s
+HealthStartPeriod=60s
+Notify=healthy
+StopTimeout=30
+
+[Service]
+Restart=on-failure
+RestartSec=10
+TimeoutStartSec=180
+
+[Install]
+WantedBy=default.target

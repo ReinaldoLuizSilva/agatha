@@ -1,0 +1,23 @@
+# Zabbix server de laboratório: sobe depois do banco pronto.
+
+[Unit]
+Description=Laboratório: Zabbix server
+Wants=zabbix-postgres.service
+After=zabbix-postgres.service
+
+[Container]
+ContainerName=zabbix-server
+Pod=zabbix.pod
+Image=docker.io/zabbix/zabbix-server-pgsql:alpine-7.0.31
+Timezone=local
+EnvironmentFile=/dados/agatha/lab/zabbix/db.env
+Environment=ZBX_CACHESIZE=64M
+StopTimeout=30
+
+[Service]
+Restart=on-failure
+RestartSec=10
+TimeoutStartSec=180
+
+[Install]
+WantedBy=default.target

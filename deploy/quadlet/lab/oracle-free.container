@@ -1,0 +1,30 @@
+# Oracle de laboratório (ADR-012, ADR-017): Oracle Database 23ai Free, PDB FREEPDB1, ~2,1 GB de RAM.
+# Senha do SYS/SYSTEM em oracle.env (gerado pelo deploy/install-labs.sh, fora do git). A porta 1521
+# é publicada no host, mas o firewall não a libera para a LAN: só a Agatha conecta.
+# StopTimeout=60: tempo para o shutdown limpo do banco.
+
+[Unit]
+Description=Laboratório: Oracle 23ai Free
+
+[Container]
+ContainerName=oracle-free
+Image=docker.io/gvenzl/oracle-free:23.9
+Timezone=local
+PublishPort=1521:1521
+EnvironmentFile=/dados/agatha/lab/oracle/oracle.env
+# :U ajusta o dono do volume para o usuário oracle de dentro do container (Podman sem root)
+Volume=/dados/agatha/lab/oracle/oradata:/opt/oracle/oradata:Z,U
+HealthCmd=/opt/oracle/healthcheck.sh
+HealthInterval=15s
+HealthStartPeriod=300s
+Notify=healthy
+StopTimeout=60
+
+[Service]
+Restart=on-failure
+RestartSec=15
+TimeoutStartSec=600
+TimeoutStopSec=90
+
+[Install]
+WantedBy=default.target

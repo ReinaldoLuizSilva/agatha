@@ -1,0 +1,14 @@
+# Pod do Zabbix de laboratório (ADR-011, ADR-017): postgres + server + frontend.
+# Instalação: deploy/install-labs.sh. O systemd gera o serviço zabbix-pod.service.
+#
+# Porta 8081: frontend (liberada no firewall só para a LAN). Dentro do pod, tudo fala por 127.0.0.1.
+
+[Unit]
+Description=Laboratório: pod do Zabbix (postgres + server + frontend)
+
+[Pod]
+PodName=zabbix
+PublishPort=8081:8080
+
+[Install]
+WantedBy=default.target
