@@ -118,6 +118,7 @@ consequências:
 | [015](docs/adr/0015-cancelamento-de-eco-linear.md) | cancelamento de eco linear no cliente e detector treinado com eco |
 | [016](docs/adr/0016-barge-in.md) | barge-in: pausa no cliente, confirmação pela transcrição no servidor |
 | [017](docs/adr/0017-laboratorios-no-systemd.md) | laboratórios (Zabbix e Oracle) como serviços do systemd |
+| [018](docs/adr/0018-precisao.md) | precisão: benchmark das falas reais, prompt v5, STT no limite do modelo |
 
 ## Qualidade e operação
 
