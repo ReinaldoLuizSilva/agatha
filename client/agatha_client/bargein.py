@@ -30,8 +30,8 @@ class SupportsFeed(Protocol):
 
 
 class BargeIn:
-    def __init__(self, detector: SupportsFeed, sample_rate: int = 16000, threshold: float = 0.9,
-                 pre_roll_s: float = 1.0, delay_ms: float | None = None, refractory_s: float = 1.5,
+    def __init__(self, detector: SupportsFeed, sample_rate: int = 16000, threshold: float = 0.6,
+                 pre_roll_s: float = 1.5, delay_ms: float | None = None, refractory_s: float = 1.5,
                  measure_s: float = 2.0, min_confidence: float = 10.0, max_attempts: int = 3,
                  frame_samples: int = 512, on_delay: Callable[[float, float | None], None] | None = None):
         self.detector = detector

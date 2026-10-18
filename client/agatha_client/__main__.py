@@ -340,8 +340,8 @@ def main() -> int:
                         help="não ouve durante a resposta (microfone e saída em streams separados)")
     parser.add_argument("--wake-model", default="models",
                         help="pasta com agatha.onnx, melspectrogram.onnx e embedding_model.onnx (padrão: models)")
-    parser.add_argument("--barge-threshold", type=float, default=0.9,
-                        help="nota mínima do detector para interromper (padrão: 0.9; 0.5 acerta mais e erra mais)")
+    parser.add_argument("--barge-threshold", type=float, default=0.6,
+                        help="nota mínima do detector para interromper (padrão: 0.6; mais alto erra menos e acerta menos)")
     parser.add_argument("--echo-delay-ms", type=float,
                         help="atraso do eco em ms (padrão: medido nos primeiros segundos de fala dela)")
     args = parser.parse_args()

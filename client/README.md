@@ -99,7 +99,7 @@ Nos primeiros ~2 s em que ela fala, o cliente **mede o atraso do eco** (aparece
 
 | opção | para quê |
 |---|---|
-| `--barge-threshold 0.5` | interrompe mais fácil (acerta ~85% em vez de ~77%), mas dispara mais à toa com a voz dela |
+| `--barge-threshold 0.8` | nota mínima para interromper (padrão 0.6): mais alto dispara menos à toa, mas perde mais vezes o seu "Agatha" |
 | `--echo-delay-ms 120` | usa um atraso fixo em vez de medir |
 | `--no-barge-in` | volta ao modo antigo, sem ouvir durante a resposta |
 | `--wake-model PASTA` | outra pasta com os três `.onnx` (padrão: `models`) |
@@ -179,5 +179,5 @@ As gravações têm a sua voz: ficam só no notebook e em `/dados`, nunca no git
 | `barge-in desligado: faltam em models ...` | copie os três `.onnx` (Instalação, passo 2) ou indique a pasta com `--wake-model` |
 | `barge-in desligado: No module named 'openwakeword'` | `.venv\Scripts\pip install -e ".[barge-in]"` |
 | `microfone e saída de som precisam aceitar 16000 Hz` | escolha os dois `[MME]` com `--device` e `--output-device`, ou use `--no-barge-in` |
-| ela pausa sozinha às vezes (`✋` sem você falar) | disparo falso com a voz dela; o servidor confere e ela continua. Se for frequente, suba `--barge-threshold` (ex.: 0.95) |
-| diz "Agatha" e ela não para | fale um pouco mais alto ou mais perto; ou baixe `--barge-threshold` (ex.: 0.5) |
+| ela pausa sozinha às vezes (`✋` sem você falar) | disparo falso com a voz dela; o servidor confere e ela continua. Se for frequente, suba `--barge-threshold` (ex.: 0.8) |
+| diz "Agatha" e ela não para | veja a `nota máx` na linha `ⓘ barge-in`: se ficou perto do limiar, baixe `--barge-threshold` (ex.: 0.5); se ficou em 0, afaste o microfone das caixas (o cancelamento de eco do Windows apaga a sua voz junto com a dela) |
