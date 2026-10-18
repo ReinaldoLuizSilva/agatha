@@ -67,7 +67,7 @@ _ORACLE_FAKE = {
 ZABBIX_ORACLE = [
     # Zabbix: definições reais do servidor (esquema, regra, exemplo), com resultado simulado
     *[dataclasses.replace(t, handler=fake(_ZABBIX_FAKE[t.name]))
-      for t in zabbix_tools(ZabbixClient(ZabbixConfig(url="http://x", token="x")))],
+      for t in zabbix_tools(ZabbixClient(ZabbixConfig(url="http://x", token="x", default_host="agatha-srv")))],
     # Oracle: definições reais do servidor, com resultado simulado
     *[dataclasses.replace(t, handler=fake(_ORACLE_FAKE[t.name])) for t in oracle_tools(None)],
 ]
