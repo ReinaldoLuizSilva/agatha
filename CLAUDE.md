@@ -139,8 +139,10 @@ agatha/
       retreinar NÃO está autorizado (perguntar antes); barge-in "melhora aos poucos".
       Pendências (melhorar aos poucos):
       - testar com as melhorias de áudio do microfone desligadas no Windows (o AEC linear assume o eco)
-      - medir nome → silêncio (meta < 300 ms), falsos disparos durante a fala dela e CPU do detector no notebook
-      - "Agatha, para" dito logo depois que ela termina vai ao LLM ("não entendi"): tratar como comando silencioso
+      - medir nome → silêncio (meta < 300 ms) e falsos disparos durante a fala dela; CPU do cliente agora sai
+        na linha `ⓘ barge-in` (ms por bloco de 32 ms): conferir no próximo teste
+      - feito em 18/10: "Agatha, para" com ela calada não vai mais ao LLM (`wake.is_idle_stop`; "esquece" e
+        "deixa" ficam de fora, são da memória)
       - varredura de `dtd_ratio` do AEC nas gravações reais (ERLE ~5,7 dB contra ~13,5) — só depois do memtest
       - voz a 16 kHz no modo barge-in perde agudos (alternativa: stream a 48 kHz)
       ATENÇÃO: treino e testes pesados sempre com `systemd-run --user --scope -p MemoryMax=5G -p

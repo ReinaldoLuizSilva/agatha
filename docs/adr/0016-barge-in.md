@@ -41,7 +41,10 @@ depois que a frase termina (500 ms de silêncio + STT).
 3. **Parar ou perguntar** (`wake.interruption_kind`): até 3 palavras começando por "para",
    "chega", "cancela", "silêncio"... (ou só o nome) é comando. Não vai ao LLM, e o servidor fica
    no modo conversa. O resto é pergunta nova e é respondida em seguida. "Agatha, para que serve um
-   backup?" é pergunta, porque tem mais de 3 palavras.
+   backup?" é pergunta, porque tem mais de 3 palavras. Com ela calada (o detector perdeu o nome e
+   a frase chegou depois), o comando de parar não faz nada e não vai ao LLM (`wake.is_idle_stop`).
+   Nesse caso "esquece" e "deixa" não contam, porque "Agatha, esquece isso" é comando da memória
+   (ADR-010).
 4. **O histórico fica só com o que foi ouvido.** O servidor guarda o início de cada trecho de
    texto no áudio. Os trechos que começaram antes de `played_ms` substituem a resposta no
    histórico. O começo do prompt não muda (ADR-007): o llama.cpp só reprocessa o fim do último

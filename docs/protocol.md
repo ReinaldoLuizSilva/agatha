@@ -138,6 +138,10 @@ O `start` só sai depois de `min_speech_ms` de fala. Trechos mais curtos são de
 fala iniciada no modo conversa (até `conversation_s` depois da última resposta) ou continuação de
 uma fala que era para ela. Se for `false`, não há resposta.
 
+Com ela calada, um comando de parar ("Agatha, para", "chega"; não "esquece", que é da memória)
+vem com `"command": "stop"` e **não gera resposta**: em geral é o fim de um barge-in que o
+detector do cliente perdeu.
+
 Os tempos são os mesmos da v1 (`total_ms` vai do último bloco com fala até o texto pronto). Se o
 texto não estiver vazio e `addressed` for `true`, o servidor **inicia uma resposta** e passa a
 ignorar o microfone. Texto vazio não gera resposta.
@@ -318,4 +322,4 @@ descartada, e o histórico da conversa daquela sessão é perdido.
 | 1      | 1    | versão inicial: microfone → transcrições |
 | 2      | 2    | respostas faladas (`response_*`, `audio_*`, áudio binário do servidor), half-duplex com `playback_end`, `speech_end_ms` no `vad end`, `output_audio` no `ready`, medição de ponta a ponta no cliente |
 | 2 (+)  | 2–3  | campos opcionais, compatíveis: `continuation_ms` no `ready.vad` (frase cortada), `wake` no `ready` e `addressed` no `transcript` (wake word), `tools` e `timings.tool_ms` no `response_end` (ferramentas) |
-| 2 (+)  | 5    | barge-in, compatível: `output_audio` no `hello`, `barge_in` no `ready`, mensagens `barge_in` e `barge_in_end` |
+| 2 (+)  | 5    | barge-in, compatível: `output_audio` no `hello`, `barge_in` no `ready`, mensagens `barge_in` e `barge_in_end`, `command` no `transcript` |
