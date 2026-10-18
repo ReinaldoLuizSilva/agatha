@@ -1,6 +1,6 @@
 # ADR-016: Barge-in — pausa no cliente, confirmação pela transcrição no servidor
 
-- **Status:** Aceito (falta o teste real no Windows, passo 5 da Fase 5)
+- **Status:** Aceito (testado no Windows em 13/10; ver "Teste real")
 - **Data:** 2026-10-12
 - **Complementa:** [ADR-006](0006-protocolo-v2-half-duplex.md) (half-duplex),
   [ADR-014](0014-wake-word-no-cliente-para-barge-in.md) (detector no cliente) e
@@ -74,6 +74,37 @@ depois que a frase termina (500 ms de silêncio + STT).
 | Medir o atraso com um bipe no início da sessão | incomoda a cada reconexão; a fala dela mede igual (25/25 nas gravações) |
 | Atraso fixo de 289 ms (o do gravador) | muda com a latência do stream; o cliente usa latência baixa, diferente da do gravador |
 
+## Teste real (13/10)
+
+Três rodadas no notebook do Reinaldo (caixas e "Microfone Externo (Realtek)"), com uma linha de
+diagnóstico por resposta no cliente: nota máxima do detector, eco antes e depois do AEC (sem
+guardar áudio). Fim da fala → primeiro som continuou em 1,85–2,2 s (rede/reprodução 150–177 ms,
+contra 131 ms com streams separados). O atraso do eco foi medido em 162 ms em todas as sessões
+(confiança 27–77).
+
+1. **1ª rodada: o detector só disparava no fim da fala dela** (`played_ms` 9575 de ~9,7 s) e nem
+   isso em outras três respostas longas.
+2. **O diagnóstico mostrou o AEC piorando o sinal**: eco no microfone de −54 a −67 dBFS (quase
+   nada; nas gravações de 12/10 ele vinha acima da voz do Reinaldo) e saída do AEC 22–44 dB
+   **acima** do microfone. Reproduzido em simulação: o eco começa forte, o Windows (ou o driver
+   Realtek) passa a cancelá-lo, e o filtro continua subtraindo o eco antigo; o detector de fala
+   por cima tomava isso por fala e não soltava (depois de `dtd_hold_s` adaptava um único bloco).
+   **Correção:** saída mais alta que o microfone = filtro errado, não fala por cima; ele adapta
+   sem congelar e, enquanto isso, devolve o microfone cru. Depois do congelamento máximo, o erro
+   atual vira o novo normal.
+3. **Bug no servidor:** uma frase dita na confirmação ficou 1,9 s no STT, o prazo de 2 s retomou
+   a resposta e depois a frase foi respondida no modo conversa. **Correção:** o prazo espera a
+   transcrição pendente, e frases de uma confirmação já retomada são descartadas.
+4. **3ª rodada:** "AEC tirou 0 dB" (não há eco para tirar: o sistema já cancela) e o barge-in
+   **funciona quando o microfone fica afastado das caixas** ("Agatha para" pausou aos 2,4 s e
+   interrompeu). Com o microfone perto, a nota fica em 0,00: o cancelamento do sistema apaga a voz
+   do Reinaldo junto com o eco quando os dois chegam juntos, o mesmo efeito medido no AEC3 (ADR-015).
+   Quando o detector perde o nome, o "Agatha, para" dito no fim da fala dela chega depois como
+   frase comum e vai ao LLM ("não entendi").
+
+Decisão do Reinaldo: o barge-in fica como está e melhora aos poucos. Próximo teste: desligar as
+melhorias de áudio do microfone no Windows (o eco volta e o AEC linear, que preserva a voz, assume).
+
 ## Consequências
 
 **Positivas**
@@ -87,13 +118,16 @@ depois que a frase termina (500 ms de silêncio + STT).
 
 **Negativas / riscos**
 
-- **Ainda não testado com o microfone e as caixas reais.** Falta medir o nome → silêncio, a
-  frequência dos falsos disparos durante a fala dela e o custo de CPU do detector no notebook
-  (ele roda o tempo todo, mas só age durante a resposta).
-- **O cancelamento de eco está em ajuste**: o detector novo de fala por cima (`dtd_ratio` 4)
-  manteve o acerto (85% com 0,5 e 0,9) mas tirou menos eco (ERLE ~5,7 dB contra ~13,5). Menos eco
-  tirado pode significar mais disparos com a voz dela. A varredura de `dtd_ratio` foi interrompida
-  por uma queda do servidor (suspeita de RAM) e fica para depois do memtest.
+- **Depende do processamento de áudio do Windows**: com as melhorias do microfone ligadas, o
+  barge-in só funciona com o microfone afastado das caixas (Teste real, item 4). Ainda falta
+  testar com elas desligadas.
+- **Ainda não medidos**: nome → silêncio (meta < 300 ms), frequência dos falsos disparos durante
+  a fala dela e o custo de CPU do detector no notebook (ele roda o tempo todo, mas só age durante
+  a resposta).
+- **O ajuste do cancelamento de eco não foi validado nas gravações reais**: o detector novo de
+  fala por cima (`dtd_ratio` 4) manteve o acerto (85% com 0,5 e 0,9) mas tirou menos eco (ERLE
+  ~5,7 dB contra ~13,5), e a varredura de `dtd_ratio` espera o memtest (queda do servidor em
+  12/10, suspeita de RAM). Com o eco já cancelado pelo Windows, perdeu prioridade.
 - **A voz a 16 kHz perde os agudos** acima de 8 kHz no modo barge-in. Se incomodar, a
   alternativa é o stream a 48 kHz (decisão 6).
 - Num falso disparo sem ninguém falando, ela fica calada até 2 s. Se a sobra de eco no áudio

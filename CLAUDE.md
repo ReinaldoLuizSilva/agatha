@@ -122,35 +122,32 @@ agatha/
       saudável, VRAM 3,66 GB) e o teste de fumaça passou (fim da fala → 1º áudio p50 1,96 s, máx 2,18 s).
       Repositório fica privado por enquanto; licença (Piper GPL, voz "dii" CC BY-NC-ND, ADR-005) só se um dia
       ficar público. Não levantar de novo antes disso.
-- [ ] Fase 5: barge-in com wake word no cliente — **em andamento** (escopo aprovado em 12/10). Plano revisto
-      pelo ADR-014: 1 coleta ✔, 2 detectores ✔, 3 cancelamento de eco ✔ (ADR-015), 4 barge-in no cliente e no
-      servidor: stream duplex (mic + saída no mesmo stream, atraso medido no início), detector só durante a fala
-      dela, ao ouvir "Agatha" PAUSA a fala e o servidor confirma pela transcrição (retoma se não era com ela),
-      `interrupt` cancela LLM/TTS, "Agatha, para" sem LLM; meta nome → silêncio < 300 ms. 5 teste real no
-      Windows. Ele usa as **caixas de som do notebook**.
-      Decisões do Reinaldo: treino no agatha-srv, sem Colab nem serviço externo; opção A do ADR-014 — o
-      detector do cliente serve SÓ para o barge-in, a chamada normal continua pela transcrição no servidor
-      (ADR-008). Guardar o áudio das falas do dia a dia para retreinar NÃO está autorizado (perguntar antes).
-      feito: 1. coleta (`python -m agatha_client.record`, `--redo`): 141 falas em
-      /dados/agatha/data/wakeword/gravacoes (manifest.jsonl: vale a última linha de cada id), microfone
-      "Microfone Externo (Realtek)" do notebook. 2. benchmark (`bench/wake_bench.py`): STT do servidor 98/83/100%
-      (perto/variado/longe), 2,7 falsos/h; Vosk descartado; openWakeWord treinado só com a voz dele
-      (`client/wakeword/train.py`, CPU) 90/79/75%, ~1–3 falsos/h → /dados/agatha/models/wakeword/agatha.onnx.
-      Sintéticos do Piper não ajudaram (desligados). Bug do hífen ("Agatha-srv") corrigido e no ar.
-      3. AEC (ADR-015, `bench/aec_bench.py`): o AEC3 do WebRTC tira ~30 dB mas apaga a voz dele (31% de acerto);
-      AEC linear próprio (`client/agatha_client/aec.py`, numpy, filtro persistente, atraso 289−16 ms) tira ~13 dB
-      e preserva a voz; detector treinado com eco simulado: 85% (0,5) / 77% (0,9) das interrupções; preço:
-      falsos disparos em áudio comum sobem (modelo final 10–23/h na validação; só importa durante a fala dela).
+- [x] Fase 5: barge-in com wake word no cliente (fechada em 18/10; ADR-014, ADR-015, ADR-016).
+      Coleta de 141 falas do Reinaldo (`python -m agatha_client.record`) em /dados/agatha/data/wakeword/gravacoes;
+      detector openWakeWord treinado só com a voz dele (`client/wakeword/train.py`, CPU) →
+      /dados/agatha/models/wakeword/{agatha,melspectrogram,embedding_model}.onnx (o cliente copia para
+      `client\models`); serve SÓ para o barge-in, a chamada normal continua pela transcrição (opção A do ADR-014).
+      AEC linear próprio (`client/agatha_client/aec.py`): o AEC3 do WebRTC apagava a voz dele. Cliente com
+      `DuplexAudio` (mic + caixas num stream a 16 kHz, servidor reamostra), atraso do eco medido pela fala dela
+      (GCC-PHAT), detector só durante a resposta (limiar 0,9), ao ouvir "Agatha" PAUSA e manda ~1 s de áudio de
+      antes do nome; servidor confirma pela transcrição em até 2 s: stop ("Agatha, para", sem LLM), pergunta nova
+      ou resume. `--no-barge-in` volta ao modo antigo; sem o extra `[barge-in]` ou os modelos, o cliente avisa.
+      Teste real em 13/10 (ADR-016, "Teste real"): o Windows/Realtek já cancela o eco no microfone e apaga a voz
+      dele junto quando o mic fica perto das caixas; com o mic afastado funcionou ("Agatha para" pausou aos 2,4 s).
+      Cada resposta imprime `ⓘ barge-in:` (nota máx do detector, eco antes/depois do AEC) para diagnóstico.
+      Decisões do Reinaldo: treino no agatha-srv, sem serviço externo; guardar o áudio das falas do dia a dia para
+      retreinar NÃO está autorizado (perguntar antes); barge-in "melhora aos poucos".
+      Pendências (melhorar aos poucos):
+      - testar com as melhorias de áudio do microfone desligadas no Windows (o AEC linear assume o eco)
+      - medir nome → silêncio (meta < 300 ms), falsos disparos durante a fala dela e CPU do detector no notebook
+      - "Agatha, para" dito logo depois que ela termina vai ao LLM ("não entendi"): tratar como comando silencioso
+      - varredura de `dtd_ratio` do AEC nas gravações reais (ERLE ~5,7 dB contra ~13,5) — só depois do memtest
+      - voz a 16 kHz no modo barge-in perde agudos (alternativa: stream a 48 kHz)
       ATENÇÃO: treino e testes pesados sempre com `systemd-run --user --scope -p MemoryMax=5G -p
       MemorySwapMax=0 nice -n 19` — um teste sem teto jogou o LLM no swap (1º áudio 34 s).
-      4. barge-in (ADR-016, branch `wip/barge-in`, servidor no ar com ele): cliente com `DuplexAudio` (mic +
-      caixas num stream a 16 kHz, pausa/retoma/para), atraso do eco medido pela fala dela (GCC-PHAT, 25/25
-      gravações em 288–290 ms), detector só durante a resposta (limiar 0,9), ~1 s de áudio antes do nome;
-      servidor confirma pela transcrição (2 s de prazo, ignora sobra de eco antes do nome). Verificado contra
-      o servidor real com voz sintética ("Agatha, para." → stop; frase sem nome → resume). Modelos do
-      detector em /dados/agatha/models/wakeword (3 .onnx, o cliente copia para `client\models`).
-      Pendente: varredura de `dtd_ratio` do AEC (o novo tira ~5,7 dB contra ~13,5; scratchpad
-      `aec_persist.py` da sessão b99324d4) — depois do memtest; passo 5 (teste real no Windows).
       **HARDWARE (12/10, 20:35): kernel panic `Bad pagetable`** — 1 bit trocado (bit 39) numa PTE, padrão de
-      RAM com defeito (sem ECC); dump em /var/crash/127.0.0.1-2026-10-12-20:36:18. Até o memtest86+ passar,
-      NADA de testes pesados (varredura, treino). Aviso `timerqueue.c:38` no boot: ver se repete (pode ser driver).
+      RAM com defeito (sem ECC); dump em /var/crash/127.0.0.1-2026-10-12-20:36:18. Memtest86+ ainda NÃO feito
+      (18/10). Até ele passar, NADA de testes pesados (varredura, treino). Aviso `timerqueue.c:38` no boot: ver
+      se repete (pode ser driver).
+- [ ] Fase 6: a definir com o Reinaldo (candidatas: transcrição parcial para perguntas longas, voz nova,
+      mais ferramentas, memória mais inteligente). Não começar sem escopo aprovado.
