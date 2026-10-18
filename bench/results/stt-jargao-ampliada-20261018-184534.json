@@ -1,0 +1,588 @@
+{
+  "date": "2026-10-18T18:45:34",
+  "label": "ampliada",
+  "vocabulary": "Agatha, Zabbix, Oracle, RMAN, AWR, ASM, Data Guard, SPFILE, PDB, UNDO, redo log, archivelog, listener, trigger, tablespace, host, hosts, template, item, severidade, Grafana, PostgreSQL, housekeeping, Linux, Podman, Docker, Kubernetes, Ansible, Terraform, agatha-srv, PRDORA",
+  "hotwords": false,
+  "beam": 1,
+  "wer": 0.24262295081967214,
+  "terms": [
+    77,
+    97
+  ],
+  "rows": [
+    {
+      "id": "jargao-001",
+      "ref": "Agatha, para que serve o RMAN?",
+      "hyp": "Agatha, pra que serve o RMAN?",
+      "errors": 1,
+      "words": 6,
+      "terms": [
+        "agatha",
+        "rman"
+      ],
+      "missed": [],
+      "segments": 1
+    },
+    {
+      "id": "jargao-002",
+      "ref": "Agatha, explica a diferença entre backup completo, incremental e diferencial.",
+      "hyp": "Agatha explica a diferença entre o backup completo, incremental e diferencial.",
+      "errors": 1,
+      "words": 10,
+      "terms": [
+        "agatha",
+        "backup",
+        "incremental",
+        "diferencial"
+      ],
+      "missed": [],
+      "segments": 1
+    },
+    {
+      "id": "jargao-003",
+      "ref": "Agatha, como eu gero um relatório AWR no Oracle?",
+      "hyp": "Agatha como o Geron relatório AWR no Oracle.",
+      "errors": 3,
+      "words": 9,
+      "terms": [
+        "agatha",
+        "awr",
+        "oracle"
+      ],
+      "missed": [],
+      "segments": 1
+    },
+    {
+      "id": "jargao-004",
+      "ref": "Agatha, o que é o ASH no Oracle?",
+      "hyp": "Agatha, o que é o ASH no Oracle?",
+      "errors": 0,
+      "words": 8,
+      "terms": [
+        "agatha",
+        "ash",
+        "oracle"
+      ],
+      "missed": [],
+      "segments": 1
+    },
+    {
+      "id": "jargao-005",
+      "ref": "Agatha, o Data Guard está sincronizado?",
+      "hyp": "Agatha, o Data Guard está sincronizado?",
+      "errors": 0,
+      "words": 6,
+      "terms": [
+        "agatha",
+        "data guard"
+      ],
+      "missed": [],
+      "segments": 1
+    },
+    {
+      "id": "jargao-006",
+      "ref": "Agatha, qual a diferença entre CDB e PDB?",
+      "hyp": "Agatha, qual a diferença entre CDB e PDB?",
+      "errors": 0,
+      "words": 8,
+      "terms": [
+        "agatha",
+        "cdb",
+        "pdb"
+      ],
+      "missed": [],
+      "segments": 1
+    },
+    {
+      "id": "jargao-007",
+      "ref": "Agatha, onde fica o SPFILE do banco?",
+      "hyp": "Agatha, onde fica o SPFILE do banco.",
+      "errors": 0,
+      "words": 7,
+      "terms": [
+        "agatha",
+        "spfile"
+      ],
+      "missed": [],
+      "segments": 1
+    },
+    {
+      "id": "jargao-008",
+      "ref": "Agatha, a tablespace de UNDO está cheia?",
+      "hyp": "Agatha, attbspace de andu está cheia?",
+      "errors": 3,
+      "words": 7,
+      "terms": [
+        "agatha",
+        "undo",
+        "tablespace"
+      ],
+      "missed": [
+        "undo",
+        "tablespace"
+      ],
+      "segments": 1
+    },
+    {
+      "id": "jargao-009",
+      "ref": "Agatha, quantos grupos de redo log o banco tem?",
+      "hyp": "Agatha, quantos grupos de redlog o banco tem?",
+      "errors": 2,
+      "words": 9,
+      "terms": [
+        "agatha",
+        "redo log"
+      ],
+      "missed": [
+        "redo log"
+      ],
+      "segments": 1
+    },
+    {
+      "id": "jargao-010",
+      "ref": "Agatha, o banco está em modo archivelog?",
+      "hyp": "Agatha, o banco está em modo archivelog",
+      "errors": 0,
+      "words": 7,
+      "terms": [
+        "agatha",
+        "archivelog"
+      ],
+      "missed": [],
+      "segments": 1
+    },
+    {
+      "id": "jargao-011",
+      "ref": "Agatha, o listener do Oracle está no ar?",
+      "hyp": "Agatha, o LISR do Oracle está no ar.",
+      "errors": 1,
+      "words": 8,
+      "terms": [
+        "agatha",
+        "listener",
+        "oracle"
+      ],
+      "missed": [
+        "listener"
+      ],
+      "segments": 1
+    },
+    {
+      "id": "jargao-012",
+      "ref": "Agatha, o que é o ASM?",
+      "hyp": "Agatha, OQA, SEMI",
+      "errors": 5,
+      "words": 6,
+      "terms": [
+        "agatha",
+        "asm"
+      ],
+      "missed": [
+        "asm"
+      ],
+      "segments": 1
+    },
+    {
+      "id": "jargao-013",
+      "ref": "Agatha, como funciona o flashback database?",
+      "hyp": "Agatha, como funciona o flashback database?",
+      "errors": 0,
+      "words": 6,
+      "terms": [
+        "agatha",
+        "flashback"
+      ],
+      "missed": [],
+      "segments": 1
+    },
+    {
+      "id": "jargao-014",
+      "ref": "Agatha, quantas sessões ativas tem no PRDORA?",
+      "hyp": "Agatha, quantas sessões ativas tem no Oracle?",
+      "errors": 1,
+      "words": 7,
+      "terms": [
+        "agatha",
+        "prdora"
+      ],
+      "missed": [
+        "prdora"
+      ],
+      "segments": 1
+    },
+    {
+      "id": "jargao-015",
+      "ref": "Agatha, tem algum lock no banco agora?",
+      "hyp": "Agatha, tem algum log no Oracle agora?",
+      "errors": 2,
+      "words": 7,
+      "terms": [
+        "agatha",
+        "lock"
+      ],
+      "missed": [
+        "lock"
+      ],
+      "segments": 1
+    },
+    {
+      "id": "jargao-016",
+      "ref": "Agatha, valida se o Zabbix está no ar.",
+      "hyp": "Agatha varida se o Zabbix está no ar.",
+      "errors": 1,
+      "words": 8,
+      "terms": [
+        "agatha",
+        "zabbix",
+        "valida"
+      ],
+      "missed": [
+        "valida"
+      ],
+      "segments": 1
+    },
+    {
+      "id": "jargao-017",
+      "ref": "Agatha, verifica o host agatha-srv no Zabbix.",
+      "hyp": "Agatha verifica o vulsa Agatha server no Zabbix",
+      "errors": 2,
+      "words": 8,
+      "terms": [
+        "agatha",
+        "agatha srv",
+        "zabbix",
+        "verifica"
+      ],
+      "missed": [
+        "agatha srv"
+      ],
+      "segments": 1
+    },
+    {
+      "id": "jargao-018",
+      "ref": "Agatha, qual a diferença entre item, trigger e template no Zabbix?",
+      "hyp": "Metacord, Ferencine, entre item, trigger, template, nos águes",
+      "errors": 7,
+      "words": 11,
+      "terms": [
+        "agatha",
+        "zabbix",
+        "item",
+        "trigger",
+        "triggers",
+        "template"
+      ],
+      "missed": [
+        "agatha",
+        "zabbix"
+      ],
+      "segments": 1
+    },
+    {
+      "id": "jargao-019",
+      "ref": "Agatha, como funciona o housekeeping do Zabbix?",
+      "hyp": "Agatha, como funciona o housekeeping nos Zabbix? Zabbix",
+      "errors": 2,
+      "words": 7,
+      "terms": [
+        "agatha",
+        "zabbix",
+        "housekeeping"
+      ],
+      "missed": [],
+      "segments": 2
+    },
+    {
+      "id": "jargao-020",
+      "ref": "Agatha, o que é um Zabbix proxy?",
+      "hyp": "Agatha, o que é um Zabbix próximo?",
+      "errors": 1,
+      "words": 7,
+      "terms": [
+        "agatha",
+        "zabbix",
+        "proxy"
+      ],
+      "missed": [
+        "proxy"
+      ],
+      "segments": 1
+    },
+    {
+      "id": "jargao-021",
+      "ref": "Agatha, como funciona a descoberta de baixo nível no Zabbix?",
+      "hyp": "Agatha, como funciona a descoberta de baixo nível no Zabbix?",
+      "errors": 0,
+      "words": 10,
+      "terms": [
+        "agatha",
+        "zabbix"
+      ],
+      "missed": [],
+      "segments": 1
+    },
+    {
+      "id": "jargao-022",
+      "ref": "Agatha, quais triggers estão disparadas agora?",
+      "hyp": "Agatha Core, trigger, desistão, desparados agora.",
+      "errors": 4,
+      "words": 6,
+      "terms": [
+        "agatha",
+        "trigger",
+        "triggers"
+      ],
+      "missed": [],
+      "segments": 1
+    },
+    {
+      "id": "jargao-023",
+      "ref": "Agatha, o agente do Zabbix está respondendo?",
+      "hyp": "Agatha, o agente das águas está respondendo.",
+      "errors": 2,
+      "words": 7,
+      "terms": [
+        "agatha",
+        "zabbix"
+      ],
+      "missed": [
+        "zabbix"
+      ],
+      "segments": 1
+    },
+    {
+      "id": "jargao-024",
+      "ref": "Agatha, qual a severidade desse problema?",
+      "hyp": "Agatha, qual é a sua realidade desse problema?",
+      "errors": 3,
+      "words": 6,
+      "terms": [
+        "agatha",
+        "severidade"
+      ],
+      "missed": [
+        "severidade"
+      ],
+      "segments": 1
+    },
+    {
+      "id": "jargao-025",
+      "ref": "Agatha, me mostra os problemas de alta prioridade.",
+      "hyp": "Agatha me mostra os problemas de alta prioridade.",
+      "errors": 0,
+      "words": 8,
+      "terms": [
+        "agatha"
+      ],
+      "missed": [],
+      "segments": 1
+    },
+    {
+      "id": "jargao-026",
+      "ref": "Agatha, para que serve o Grafana?",
+      "hyp": "Agatha, para aqui serve o Grafana.",
+      "errors": 1,
+      "words": 6,
+      "terms": [
+        "agatha",
+        "grafana"
+      ],
+      "missed": [],
+      "segments": 1
+    },
+    {
+      "id": "jargao-027",
+      "ref": "Agatha, qual a diferença entre PostgreSQL e Oracle?",
+      "hyp": "Acord, diferença entre Puskas e Oracle.",
+      "errors": 4,
+      "words": 8,
+      "terms": [
+        "agatha",
+        "postgresql",
+        "oracle"
+      ],
+      "missed": [
+        "agatha",
+        "postgresql"
+      ],
+      "segments": 1
+    },
+    {
+      "id": "jargao-028",
+      "ref": "Agatha, o que é um container Docker?",
+      "hyp": "Qion, container docker.",
+      "errors": 5,
+      "words": 7,
+      "terms": [
+        "agatha",
+        "docker"
+      ],
+      "missed": [
+        "agatha"
+      ],
+      "segments": 1
+    },
+    {
+      "id": "jargao-029",
+      "ref": "Agatha, qual a diferença entre Podman e Docker?",
+      "hyp": "Agatha, Qual a diferença entre Podman e Docker?",
+      "errors": 0,
+      "words": 8,
+      "terms": [
+        "agatha",
+        "docker",
+        "podman"
+      ],
+      "missed": [],
+      "segments": 1
+    },
+    {
+      "id": "jargao-030",
+      "ref": "Agatha, o que é um pod no Kubernetes?",
+      "hyp": "OQM pode no Kubernetes.",
+      "errors": 6,
+      "words": 8,
+      "terms": [
+        "agatha",
+        "kubernetes"
+      ],
+      "missed": [
+        "agatha"
+      ],
+      "segments": 1
+    },
+    {
+      "id": "jargao-031",
+      "ref": "Agatha, para que serve o Ansible?",
+      "hyp": "Agatha, pra que serve o Linux bom?",
+      "errors": 3,
+      "words": 6,
+      "terms": [
+        "agatha",
+        "ansible"
+      ],
+      "missed": [
+        "ansible"
+      ],
+      "segments": 1
+    },
+    {
+      "id": "jargao-032",
+      "ref": "Agatha, o que o Terraform faz?",
+      "hyp": "Agatha, o que a Terraform faz?",
+      "errors": 1,
+      "words": 6,
+      "terms": [
+        "agatha",
+        "terraform"
+      ],
+      "missed": [],
+      "segments": 1
+    },
+    {
+      "id": "jargao-033",
+      "ref": "Agatha, como está o uso de CPU do servidor?",
+      "hyp": "Agatha, como está a CPU do servidor?",
+      "errors": 3,
+      "words": 9,
+      "terms": [
+        "agatha",
+        "cpu"
+      ],
+      "missed": [],
+      "segments": 1
+    },
+    {
+      "id": "jargao-034",
+      "ref": "Agatha, quanto de memória o servidor está usando?",
+      "hyp": "Quanto de memória o servidor está usando?",
+      "errors": 1,
+      "words": 8,
+      "terms": [
+        "agatha"
+      ],
+      "missed": [
+        "agatha"
+      ],
+      "segments": 1
+    },
+    {
+      "id": "jargao-035",
+      "ref": "Agatha, o disco do barra dados está cheio?",
+      "hyp": "Agatha, o disco do barra, de barra dados, está cheio?",
+      "errors": 2,
+      "words": 8,
+      "terms": [
+        "agatha"
+      ],
+      "missed": [],
+      "segments": 1
+    },
+    {
+      "id": "jargao-036",
+      "ref": "Agatha, quanto é dois terabytes em gigabytes?",
+      "hyp": "Agatha, quanto é 2 terabytes em gigabyte?",
+      "errors": 1,
+      "words": 7,
+      "terms": [
+        "agatha",
+        "terabytes",
+        "gigabytes"
+      ],
+      "missed": [],
+      "segments": 1
+    },
+    {
+      "id": "jargao-037",
+      "ref": "Agatha, guarda que o PRDORA roda na porta mil quinhentos e vinte e um.",
+      "hyp": "Agatha, guarda que o PRDORA roda no portal 1521.",
+      "errors": 2,
+      "words": 14,
+      "terms": [
+        "agatha",
+        "prdora"
+      ],
+      "missed": [],
+      "segments": 1
+    },
+    {
+      "id": "jargao-038",
+      "ref": "Agatha, o que você sabe sobre o meu ambiente?",
+      "hyp": "Agatha, o que você sabe sobre o meu ambiente?",
+      "errors": 0,
+      "words": 9,
+      "terms": [
+        "agatha"
+      ],
+      "missed": [],
+      "segments": 1
+    },
+    {
+      "id": "jargao-039",
+      "ref": "Agatha, valida o backup de ontem.",
+      "hyp": "Agatha, Valida, Valida, backup de ontem.",
+      "errors": 1,
+      "words": 6,
+      "terms": [
+        "agatha",
+        "backup",
+        "valida"
+      ],
+      "missed": [],
+      "segments": 1
+    },
+    {
+      "id": "jargao-040",
+      "ref": "Agatha, reinicia o serviço do listener.",
+      "hyp": "agatha-hidden, sysrv, do listener.",
+      "errors": 3,
+      "words": 6,
+      "terms": [
+        "agatha",
+        "listener"
+      ],
+      "missed": [],
+      "segments": 1
+    }
+  ]
+}
