@@ -256,7 +256,7 @@ cliente                                          servidor
    │◄──────────── [PCM da resposta] ... ────────────│  respondendo
    │  (detector ouve "Agatha": pausa a fala)         │
    │── {"type":"barge_in", ...} ───────────────────►│  confirmando
-   │── [PCM desde ~1 s antes do nome] ... ─────────►│
+   │── [PCM desde ~1,5 s antes do nome] ... ───────►│
    │◄──────────── {"type":"vad","event":"start"} ───│
    │◄──────────── {"type":"vad","event":"end"} ─────│
    │◄──────────── {"type":"transcript", ...} ───────│
@@ -274,7 +274,7 @@ cliente                                          servidor
 | `response` | a resposta interrompida |
 | `played_ms` | quanto do áudio dela já tinha saído nas caixas: o histórico fica só com os trechos de texto que começaram antes disso |
 
-Logo depois, o cliente envia o áudio do microfone **desde ~1 s antes do nome** (ainda não
+Logo depois, o cliente envia o áudio do microfone **desde ~1,5 s antes do nome** (ainda não
 enviado) e continua enviando até o `barge_in_end`. O servidor zera o VAD e passa a ouvir sem
 cancelar nada. Um `barge_in` fora de uma resposta em andamento recebe `barge_in_end` "resume".
 

@@ -129,7 +129,7 @@ agatha/
       `client\models`); serve SÓ para o barge-in, a chamada normal continua pela transcrição (opção A do ADR-014).
       AEC linear próprio (`client/agatha_client/aec.py`): o AEC3 do WebRTC apagava a voz dele. Cliente com
       `DuplexAudio` (mic + caixas num stream a 16 kHz, servidor reamostra), atraso do eco medido pela fala dela
-      (GCC-PHAT), detector só durante a resposta (limiar 0,9), ao ouvir "Agatha" PAUSA e manda ~1 s de áudio de
+      (GCC-PHAT), detector só durante a resposta (limiar 0,6), ao ouvir "Agatha" PAUSA e manda ~1,5 s de áudio de
       antes do nome; servidor confirma pela transcrição em até 2 s: stop ("Agatha, para", sem LLM), pergunta nova
       ou resume. `--no-barge-in` volta ao modo antigo; sem o extra `[barge-in]` ou os modelos, o cliente avisa.
       Teste real em 13/10 (ADR-016, "Teste real"): o Windows/Realtek já cancela o eco no microfone e apaga a voz

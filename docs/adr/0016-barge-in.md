@@ -34,7 +34,7 @@ depois que a frase termina (500 ms de silêncio + STT).
 
    A pausa atende à meta de latência. A transcrição garante que um falso disparo custe só uma
    pausa curta, e não a resposta.
-2. **O cliente manda o áudio desde ~1 s antes do nome**, guardado e já sem eco, para o servidor
+2. **O cliente manda o áudio desde ~1,5 s antes do nome**, guardado e já sem eco, para o servidor
    transcrever a frase inteira ("Agatha, para"). Com isso o nome já está no áudio, e o prazo para
    a fala começar pode ser curto (2 s). O que vem antes do nome na transcrição (sobra de eco) é
    ignorado (`wake.from_name`).
@@ -61,8 +61,10 @@ depois que a frase termina (500 ms de silêncio + STT).
    sem eco. O corte de confiança é 10. Antes de medir, o detector não dispara. Se depois de 3
    tentativas não houver eco (fone de ouvido), ele passa a ouvir direto.
 8. **O detector só pode disparar durante uma resposta** (de `response_start` ao `playback_end`),
-   com 1,5 s de intervalo entre disparos. **Limiar padrão 0,9**, ajustável com
-   `--barge-threshold`: com a confirmação, errar para menos (77%) incomoda menos que pausas à toa.
+   com 1,5 s de intervalo entre disparos. **Limiar padrão 0,6** (era 0,9), ajustável com
+   `--barge-threshold`. No teste de 18/10, o "Agatha" do Reinaldo pontuou 0,74 e 0,78 (perdidos
+   com 0,9) e a voz dela, com o eco já cancelado pelo Windows, pontuou 0,00 nas 14 respostas sem
+   interrupção; um disparo falso custa só uma pausa curta, porque o servidor confirma.
 9. **Opcional no cliente**: sem o extra `[barge-in]` (openWakeWord) ou sem os modelos, o cliente
    avisa e funciona como antes (`--no-barge-in` força isso).
 
@@ -104,6 +106,12 @@ contra 131 ms com streams separados). O atraso do eco foi medido em 162 ms em to
    do Reinaldo junto com o eco quando os dois chegam juntos, o mesmo efeito medido no AEC3 (ADR-015).
    Quando o detector perde o nome, o "Agatha, para" dito no fim da fala dela chega depois como
    frase comum e vai ao LLM ("não entendi").
+
+Rodada de 18/10 (17 falas): CPU do cliente 2,3–2,5 ms por bloco de 32 ms (~7,5% de um núcleo);
+o "Agatha" dele pontuou 0,74 e 0,78 em duas respostas (perdidos com o limiar 0,9) e a voz dela 0,00
+em todas as outras → **limiar padrão 0,6**. Um disparo (1,00) virou "Par" na transcrição, sem o
+nome: 1 s de áudio antes do disparo cortava o começo do "Agatha" → **1,5 s**. O "para" cortado
+("Agatha, par") passou a contar como comando de parar.
 
 Decisão do Reinaldo: o barge-in fica como está e melhora aos poucos. Próximo teste: desligar as
 melhorias de áudio do microfone no Windows (o eco volta e o AEC linear, que preserva a voz, assume).
