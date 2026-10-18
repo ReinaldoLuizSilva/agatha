@@ -213,3 +213,12 @@ def test_run_redo_records_again_even_if_done(recorder, tmp_path, monkeypatch):
     recorder.run(plan, redo=select_redo(plan, ["perto-002..perto-003"]))
     ids = [json.loads(line)["id"] for line in (tmp_path / "manifest.jsonl").read_text(encoding="utf-8").splitlines()]
     assert ids == ["perto-001", "perto-002", "perto-003", "perto-002", "perto-003"]
+
+
+def test_plan_jargao_for_the_stt_benchmark():
+    from agatha_client.record import JARGON, build_plan
+
+    plan = build_plan(["jargao"])
+    assert [t.text for t in plan] == JARGON and {t.label for t in plan} == {"stt"}
+    assert len({t.id for t in plan}) == len(plan) == 40
+    assert all(t.duration_s >= 3.5 for t in plan)  # folga extra: frases técnicas, ditas sem pressa

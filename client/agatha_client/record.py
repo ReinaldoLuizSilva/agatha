@@ -1,4 +1,4 @@
-"""Gravador guiado de amostras para a wake word e o barge-in (Fase 5, etapa 1).
+"""Gravador guiado de amostras: wake word e barge-in (Fase 5) e jargão para o STT (Fase 6).
 
 Mostra uma frase, grava a sua voz pelo microfone do notebook e salva um WAV de 16 kHz por fala,
 com um manifest.jsonl descrevendo cada uma. As partes do roteiro:
@@ -10,9 +10,12 @@ com um manifest.jsonl descrevendo cada uma. As partes do roteiro:
     eco         a Agatha fala pelas caixas de som e você a interrompe no meio (ou fica quieto);
                 salva o microfone e, ao lado, o áudio exato que saiu nas caixas (*.ref.wav)
     ambiente    alguns minutos de TV, rádio ou podcast tocando em outro aparelho
+    jargao      frases com o jargão do trabalho (Oracle, Zabbix, infra), para medir o STT (Fase 6);
+                fica fora do padrão: grave com --part jargao
 
 Uso (no notebook, dentro de client/):
-    python -m agatha_client.record --out gravacoes                      # todas as partes, em ordem
+    python -m agatha_client.record --out gravacoes                      # partes da wake word, em ordem
+    python -m agatha_client.record --out gravacoes-stt --part jargao    # jargão (benchmark do STT)
     python -m agatha_client.record --out gravacoes --part perto longe   # só algumas
     python -m agatha_client.record --out gravacoes --part eco --replies respostas
     python -m agatha_client.record --list                               # mostra o roteiro
@@ -136,6 +139,51 @@ INTERRUPTIONS = [
     None,
 ]
 
+# Fase 6 (precisão): o jargão do dia a dia, inclusive o que o STT já errou ("Rima" por RMAN, "abics"
+# por Zabbix, "valer" por validar) e os nomes do ambiente. Também serve para o benchmark do LLM.
+JARGON = [
+    "Agatha, para que serve o RMAN?",
+    "Agatha, explica a diferença entre backup completo, incremental e diferencial.",
+    "Agatha, como eu gero um relatório AWR no Oracle?",
+    "Agatha, o que é o ASH no Oracle?",
+    "Agatha, o Data Guard está sincronizado?",
+    "Agatha, qual a diferença entre CDB e PDB?",
+    "Agatha, onde fica o SPFILE do banco?",
+    "Agatha, a tablespace de UNDO está cheia?",
+    "Agatha, quantos grupos de redo log o banco tem?",
+    "Agatha, o banco está em modo archivelog?",
+    "Agatha, o listener do Oracle está no ar?",
+    "Agatha, o que é o ASM?",
+    "Agatha, como funciona o flashback database?",
+    "Agatha, quantas sessões ativas tem no PRDORA?",
+    "Agatha, tem algum lock no banco agora?",
+    "Agatha, valida se o Zabbix está no ar.",
+    "Agatha, verifica o host agatha-srv no Zabbix.",
+    "Agatha, qual a diferença entre item, trigger e template no Zabbix?",
+    "Agatha, como funciona o housekeeping do Zabbix?",
+    "Agatha, o que é um Zabbix proxy?",
+    "Agatha, como funciona a descoberta de baixo nível no Zabbix?",
+    "Agatha, quais triggers estão disparadas agora?",
+    "Agatha, o agente do Zabbix está respondendo?",
+    "Agatha, qual a severidade desse problema?",
+    "Agatha, me mostra os problemas de alta prioridade.",
+    "Agatha, para que serve o Grafana?",
+    "Agatha, qual a diferença entre PostgreSQL e Oracle?",
+    "Agatha, o que é um container Docker?",
+    "Agatha, qual a diferença entre Podman e Docker?",
+    "Agatha, o que é um pod no Kubernetes?",
+    "Agatha, para que serve o Ansible?",
+    "Agatha, o que o Terraform faz?",
+    "Agatha, como está o uso de CPU do servidor?",
+    "Agatha, quanto de memória o servidor está usando?",
+    "Agatha, o disco do barra dados está cheio?",
+    "Agatha, quanto é dois terabytes em gigabytes?",
+    "Agatha, guarda que o PRDORA roda na porta mil quinhentos e vinte e um.",
+    "Agatha, o que você sabe sobre o meu ambiente?",
+    "Agatha, valida o backup de ontem.",
+    "Agatha, reinicia o serviço do listener.",
+]
+
 PARTS = {
     "perto": "a ~50 cm do notebook, voz normal",
     "variado": "a ~50 cm do notebook, do jeito indicado em cada frase",
@@ -143,7 +191,9 @@ PARTS = {
     "negativas": "a ~50 cm do notebook, voz normal; frases SEM o nome",
     "eco": "caixas de som do notebook no volume de sempre; a Agatha fala e você a interrompe",
     "ambiente": "TV, rádio ou podcast tocando em outro aparelho; ninguém chama a Agatha",
+    "jargao": "a ~50 cm do notebook, voz normal, do jeito que você pergunta no dia a dia",
 }
+DEFAULT_PARTS = ["perto", "variado", "longe", "negativas", "eco", "ambiente"]  # roteiro da wake word
 NEAR_REPEATS = 2
 VARIED_REPEATS = 2
 AMBIENT_CHUNK_S = 60
@@ -196,6 +246,9 @@ def build_plan(parts: list[str], replies: list[Path] | None = None, ambient_min:
         elif part == "ambiente":
             for _ in range(ambient_min):
                 add(part, "ambient", None, "não fale nada", AMBIENT_CHUNK_S)
+        elif part == "jargao":
+            for text in JARGON:
+                add(part, "stt", text, "voz normal, como no dia a dia", speech_duration(text) + 1.0)
         else:
             raise ValueError(f"parte desconhecida: {part}")
     return plan
@@ -411,8 +464,8 @@ class Recorder:
 def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     parser.add_argument("--out", default="gravacoes", help="pasta das gravações (padrão: gravacoes)")
-    parser.add_argument("--part", nargs="+", choices=list(PARTS), default=list(PARTS), metavar="PARTE",
-                        help=f"partes a gravar, em ordem (padrão: todas): {', '.join(PARTS)}")
+    parser.add_argument("--part", nargs="+", choices=list(PARTS), default=DEFAULT_PARTS, metavar="PARTE",
+                        help=f"partes a gravar, em ordem (padrão: as da wake word): {', '.join(PARTS)}")
     parser.add_argument("--replies", help="pasta com os WAVs das respostas da Agatha (parte eco)")
     parser.add_argument("--minutes", type=int, default=10, help="minutos da parte ambiente (padrão: 10)")
     parser.add_argument("--device", help="índice ou nome do microfone (veja --list-devices)")

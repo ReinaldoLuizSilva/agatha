@@ -114,6 +114,18 @@ Para testar sem microfone, envie um arquivo WAV de 16 kHz:
 .venv\Scripts\python -m agatha_client --wav frase.wav
 ```
 
+## Gravar o jargão para o benchmark do STT (Fase 6)
+
+40 frases com o jargão do trabalho (RMAN, AWR, Data Guard, trigger, template...), ~6 min, para medir
+quanto o STT erra na sua voz. Mesmo gravador e mesmo microfone da wake word:
+
+```powershell
+.venv\Scripts\python -m agatha_client.record --out gravacoes-stt --part jargao
+scp -r gravacoes-stt root@192.168.1.25:/dados/agatha/data/stt/
+```
+
+Fale como no dia a dia, sem soletrar. Ficam só no notebook e em `/dados`, nunca no git.
+
 ## Gravar amostras para a wake word (Fase 5)
 
 O `agatha_client.record` é um gravador guiado. Ele mostra uma frase, você fala, e cada fala vira

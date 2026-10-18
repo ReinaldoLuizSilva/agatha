@@ -153,5 +153,12 @@ agatha/
       RAM com defeito (sem ECC); dump em /var/crash/127.0.0.1-2026-10-12-20:36:18. Memtest86+ ainda NÃO feito
       (18/10). Até ele passar, NADA de testes pesados (varredura, treino). Aviso `timerqueue.c:38` no boot: ver
       se repete (pode ser driver).
-- [ ] Fase 6: a definir com o Reinaldo (candidatas: transcrição parcial para perguntas longas, voz nova,
-      mais ferramentas, memória mais inteligente). Não começar sem escopo aprovado.
+- [ ] Fase 6: precisão — **em andamento** (escopo aprovado em 18/10). Nas 52 falas reais do registro, quase
+      todo erro começa no STT (jargão: "Rima"/"RMA" por RMAN, "abics", "incompleto" por diferencial, "valer"
+      por validar) e o LLM inventa em cima ("backup incompleto", "SPDP = Storage Pluggable Database"); também
+      recusa o que sabe e não usa ferramenta quando o host é óbvio. Plano: 1 benchmark de precisão (LLM com
+      as perguntas reais rotuladas: responder / pedir confirmação / ferramenta; STT na voz dele com 40 frases
+      de jargão, `python -m agatha_client.record --part jargao` → /dados/agatha/data/stt, enviadas pelo
+      servidor real), 2 STT (vocabulário, hotwords, beam), 3 LLM (pedir confirmação em vez de inventar,
+      glossário curto, medir tokens), 4 frases cortadas (min_silence 500 ms), 5 ferramentas (host óbvio).
+      Medir antes/depois; decisões no ADR-018. Sem treino nem teste pesado (memtest pendente).
