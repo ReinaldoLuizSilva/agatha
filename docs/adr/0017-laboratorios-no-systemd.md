@@ -41,6 +41,9 @@ servir para alguma coisa. O Reinaldo pediu que eles subam sozinhos no boot, como
 
 ## Consequências
 
+Verificado no reboot de 18/10 (memtest): os 9 serviços (Agatha, Zabbix e Oracle) subiram sozinhos, e as
+ferramentas do Zabbix e do Oracle responderam logo depois.
+
 **Positivas**
 
 - Os laboratórios sobrevivem a reinícios e quedas, e as ferramentas do Zabbix e do Oracle ficam

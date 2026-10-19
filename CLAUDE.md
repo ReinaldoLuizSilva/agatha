@@ -145,14 +145,15 @@ agatha/
         na linha `ⓘ barge-in` (ms por bloco de 32 ms): conferir no próximo teste
       - feito em 18/10: "Agatha, para" com ela calada não vai mais ao LLM (`wake.is_idle_stop`; "esquece" e
         "deixa" ficam de fora, são da memória)
-      - varredura de `dtd_ratio` do AEC nas gravações reais (ERLE ~5,7 dB contra ~13,5) — só depois do memtest
+      - varredura de `dtd_ratio` do AEC nas gravações reais (ERLE ~5,7 dB contra ~13,5) — liberada (memtest ok)
       - voz a 16 kHz no modo barge-in perde agudos (alternativa: stream a 48 kHz)
       ATENÇÃO: treino e testes pesados sempre com `systemd-run --user --scope -p MemoryMax=5G -p
       MemorySwapMax=0 nice -n 19` — um teste sem teto jogou o LLM no swap (1º áudio 34 s).
-      **HARDWARE (12/10, 20:35): kernel panic `Bad pagetable`** — 1 bit trocado (bit 39) numa PTE, padrão de
-      RAM com defeito (sem ECC); dump em /var/crash/127.0.0.1-2026-10-12-20:36:18. Memtest86+ ainda NÃO feito
-      (18/10). Até ele passar, NADA de testes pesados (varredura, treino). Aviso `timerqueue.c:38` no boot: ver
-      se repete (pode ser driver).
+      HARDWARE: kernel panic `Bad pagetable` em 12/10, 20:35 (1 bit trocado numa PTE; dump em
+      /var/crash/127.0.0.1-2026-10-12-20:36:18). **Memtest86+ 7.00 em 18/10: 2 passagens, 0 erros** (entrada BLS
+      "Memory test", `grub2-reboot <machine-id>-0-memtest86+`). Testes pesados liberados, sempre com teto de
+      memória. O aviso `timerqueue.c:38` aparece em todo boot no mesmo ponto (~11 s): bug fixo de driver/kernel,
+      não memória. Se outro panic aparecer, rodar o memtest por mais tempo (noite inteira) antes de culpar o software.
 - [x] Fase 6: precisão (fechada em 18/10; ADR-018).
       Benchmarks: `bench/precision_bench.py` (falas reais como o STT entregou, rotuladas: responder / confirmar /
       ferramenta / não consigo; `--rescore`) e `bench/stt_jargon_bench.py` (40 frases de jargão na voz dele em
