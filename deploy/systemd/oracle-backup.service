@@ -1,0 +1,10 @@
+# Backup diário do Oracle de laboratório (ADR-020); disparado pelo oracle-backup.timer.
+[Unit]
+Description=Laboratório: backup RMAN do Oracle
+Requires=oracle-free.service
+After=oracle-free.service
+
+[Service]
+Type=oneshot
+Nice=19
+ExecStart=%h/agatha/deploy/oracle/backup.sh

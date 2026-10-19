@@ -23,7 +23,15 @@ DSN = os.environ.get("ORACLE_DSN", "127.0.0.1:1521/FREEPDB1")
 AGATHA_DSN = "host.containers.internal:1521/FREEPDB1"  # visto de dentro do pod da Agatha
 ENV_FILE = Path(__file__).resolve().parents[2] / "server" / ".env"
 RO_USER = "AGATHA_RO"
-VIEWS = ["SYS.DBA_TABLESPACE_USAGE_METRICS", "SYS.DBA_TABLESPACES", "SYS.V_$SESSION"]
+VIEWS = ["SYS.DBA_TABLESPACE_USAGE_METRICS", "SYS.DBA_TABLESPACES", "SYS.V_$SESSION", "SYS.V_$DATABASE",
+         "SYS.V_$INSTANCE"]
+# Backups (ADR-020): o RMAN registra no controlfile, que só aparece no contêiner raiz (na PDB a
+# V$RMAN_BACKUP_JOB_DETAILS vem vazia). Como os plugins de monitoração (ex.: o do Zabbix), um usuário
+# comum só de leitura no CDB.
+CDB_DSN = os.environ.get("ORACLE_CDB_DSN", "127.0.0.1:1521/FREE")
+AGATHA_CDB_DSN = "host.containers.internal:1521/FREE"
+CDB_USER = "C##AGATHA_RO"
+CDB_VIEWS = ["SYS.V_$RMAN_BACKUP_JOB_DETAILS", "SYS.V_$DATABASE", "SYS.V_$INSTANCE"]
 DEMO_TS, DEMO_USER, TARGET_PCT = "DADOS_APP", "APP_DEMO", 85
 
 
@@ -109,8 +117,38 @@ def main() -> None:
         except oracledb.DatabaseError as e:
             print(f"{RO_USER} não cria nada ({str(e).splitlines()[0]})")
 
-    update_env({"AGATHA_ORACLE_DSN": AGATHA_DSN, "AGATHA_ORACLE_USER": RO_USER, "AGATHA_ORACLE_PASSWORD": ro_pw})
-    print(f"conexão do {RO_USER} gravada em {ENV_FILE}")
+    cdb_pw = setup_cdb_user(system_pw)
+    update_env({"AGATHA_ORACLE_DSN": AGATHA_DSN, "AGATHA_ORACLE_USER": RO_USER, "AGATHA_ORACLE_PASSWORD": ro_pw,
+                "AGATHA_ORACLE_CDB_DSN": AGATHA_CDB_DSN, "AGATHA_ORACLE_CDB_USER": CDB_USER,
+                "AGATHA_ORACLE_CDB_PASSWORD": cdb_pw})
+    print(f"conexões do {RO_USER} e do {CDB_USER} gravadas em {ENV_FILE}")
+
+
+def setup_cdb_user(system_pw: str) -> str:
+    """Usuário comum C##AGATHA_RO no contêiner raiz: só CREATE SESSION e SELECT em CDB_VIEWS."""
+    pw = secret_file("c_agatha_ro-password")
+    with oracledb.connect(user="sys", password=system_pw, dsn=CDB_DSN, mode=oracledb.AUTH_MODE_SYSDBA) as conn:
+        cur = conn.cursor()
+        if exists(cur, "SELECT COUNT(*) FROM dba_users WHERE username = :u", u=CDB_USER):
+            cur.execute(f'ALTER USER {CDB_USER} IDENTIFIED BY "{pw}" CONTAINER=ALL')
+            print(f"usuário {CDB_USER}: já existia")
+        else:
+            cur.execute(f'CREATE USER {CDB_USER} IDENTIFIED BY "{pw}" CONTAINER=ALL')
+            print(f"usuário {CDB_USER}: criado (comum, no CDB)")
+        cur.execute(f"GRANT CREATE SESSION TO {CDB_USER}")  # só no contêiner raiz
+        for view in CDB_VIEWS:
+            cur.execute(f"GRANT SELECT ON {view} TO {CDB_USER}")
+        print(f"  privilégios no CDB: CREATE SESSION + SELECT em {', '.join(v.split('.')[1] for v in CDB_VIEWS)}")
+    with oracledb.connect(user=CDB_USER, password=pw, dsn=CDB_DSN) as conn:
+        cur = conn.cursor()
+        cur.execute("SELECT COUNT(*) FROM v$rman_backup_job_details")
+        print(f"{CDB_USER} lê os backups: {cur.fetchone()[0]} jobs do RMAN")
+        try:
+            cur.execute("CREATE TABLE teste_escrita (x NUMBER)")
+            sys.exit(f"ATENÇÃO: {CDB_USER} conseguiu criar uma tabela")
+        except oracledb.DatabaseError as e:
+            print(f"{CDB_USER} não cria nada ({str(e).splitlines()[0]})")
+    return pw
 
 
 if __name__ == "__main__":

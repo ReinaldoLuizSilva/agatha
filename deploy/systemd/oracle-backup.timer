@@ -1,0 +1,11 @@
+# Todo dia às 02:30; se o servidor estava desligado, roda no boot seguinte (Persistent).
+[Unit]
+Description=Laboratório: backup RMAN diário do Oracle
+
+[Timer]
+OnCalendar=*-*-* 02:30:00
+RandomizedDelaySec=10min
+Persistent=true
+
+[Install]
+WantedBy=timers.target

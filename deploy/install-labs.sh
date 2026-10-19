@@ -18,10 +18,14 @@ OLAB=/dados/agatha/lab/oracle
 UNITS=(zabbix.pod zabbix-postgres.container zabbix-server.container zabbix-web.container
        zabbix-agent2.container oracle-free.container)
 SERVICES=(zabbix-agent2 zabbix-web zabbix-server zabbix-postgres zabbix-pod oracle-free)
+TIMER_DIR=${XDG_CONFIG_HOME:-$HOME/.config}/systemd/user
+TIMER_UNITS=(oracle-backup.service oracle-backup.timer)  # backup RMAN diário (ADR-020)
 
 if [ "${1:-}" = "--uninstall" ]; then
+    systemctl --user disable --now oracle-backup.timer 2>/dev/null || true
     systemctl --user stop "${SERVICES[@]}" 2>/dev/null || true
     for u in "${UNITS[@]}"; do rm -f "$DEST/$u"; done
+    for u in "${TIMER_UNITS[@]}"; do rm -f "$TIMER_DIR/$u"; done
     systemctl --user daemon-reload
     echo "laboratórios removidos do systemd (dados preservados em /dados/agatha/lab)"
     exit 0
@@ -40,8 +44,11 @@ fi
 
 mkdir -p "$DEST"
 for u in "${UNITS[@]}"; do install -m 0644 "$REPO/deploy/quadlet/lab/$u" "$DEST/"; done
+mkdir -p "$TIMER_DIR"
+for u in "${TIMER_UNITS[@]}"; do install -m 0644 "$REPO/deploy/systemd/$u" "$TIMER_DIR/"; done
 systemctl --user daemon-reload
-echo "units instaladas em $DEST"
+systemctl --user enable --now oracle-backup.timer
+echo "units instaladas em $DEST e $TIMER_DIR (backup do Oracle às 02:30)"
 
 # containers criados à mão pelos up.sh antigos têm os mesmos nomes: saem antes do systemd assumir
 if ! systemctl --user is-active -q zabbix-pod.service && podman pod exists zabbix; then
