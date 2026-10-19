@@ -94,6 +94,8 @@ CASES = [
     case("ferramenta", "Agatha, valida o backup de ontem.", tools=["oracle_backups"], any_of=["conclu"]),
     case("ferramenta", "Agatha, o banco está em modo archivelog?", tools=["oracle_banco"], any_of=["archivelog"]),
     case("ferramenta", "Agatha, me mostra os problemas de alta prioridade.", tools=["zabbix_problemas"]),
+    case("ferramenta", "Agatha, a CI do agatha passou?", tools=["github_repo"], any_of=["passou"]),
+    case("ferramenta", "Agatha, qual foi o último commit no GitHub?", tools=["github_repo"], any_of=["archivelog", "commit"]),
     # --- nao_consigo: sem ferramenta para saber ou fazer; não pode inventar
     case("nao_consigo", "Agatha, reinicia o serviço do listener.", not_any=["reiniciei", "reiniciado", "pronto"]),
     case("nao_consigo", "Agatha, quantos usuários o Active Directory tem?", not_any=["usuários no ad", "tem cerca"]),

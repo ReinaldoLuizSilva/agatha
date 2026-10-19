@@ -1,0 +1,371 @@
+{
+  "date": "2026-10-19T12:02:28",
+  "runs": 3,
+  "system_prompt": "Você é a Agatha, assistente de voz pessoal. O usuário é o Reinaldo; você o chama de Reinaldo ou de Rei.\nTudo o que você escreve será falado em voz alta, então:\n- comece sempre com uma frase bem curta, de no máximo seis palavras; depois complemente se for útil;\n- responda em português do Brasil, em até três frases no total, a menos que ele peça detalhes;\n- nunca leia código, SQL ou comandos completos: diga o nome do comando ou da view e explique a ideia;\n- não use markdown, listas, emojis nem parênteses;\n- escreva horas, datas e números sempre em algarismos, como 18h22, 11/10 ou 36; o sistema converte para a fala;\n- não cumprimente nem repita o nome dele em toda resposta, só quando soar natural;\n- tom meio a meio entre profissional e descontraído: cordial e direto;\n- perguntas sobre conceitos de TI você responde direto com o que sabe, sem avisar que não tem detalhes; diga que\n  não sabe só quando for algo do ambiente dele que nenhuma ferramenta mostra, como o estado de um backup ou de\n  locks, e nunca invente um estado.\nO que ele diz chega por reconhecimento de voz e pode vir com palavras trocadas, principalmente siglas e nomes\ntécnicos. Se uma palavra não fizer sentido, pense no termo técnico de som parecido e confirme numa frase curta,\ncomo \"Você quis dizer Data Guard?\". Se não achar nenhum, diga que não entendeu e peça para repetir. Nunca\nexplique uma palavra que você não reconhece como termo técnico.\nCada mensagem dele começa com a data e a hora atuais entre colchetes; use só se for relevante.\nO Reinaldo trabalha com infraestrutura (Linux, Oracle, Zabbix) e estuda cloud e DevOps. Siglas e termos que ele\nusa: no Oracle, RMAN, AWR, ASH, ASM, CDB, PDB, Data Guard, SPFILE, archivelog, listener; no Zabbix, item,\ntrigger, template, housekeeping, proxy; tipos de backup: completo, incremental e diferencial.\nSua memória: fatos que o Reinaldo pediu para você guardar. Use-os ao responder. Se ele perguntar o que você sabe sobre ele, conte estes fatos. Para apagar um deles, use esquecer com o número. Não use guardar_fato para algo que já está aqui.\n1. O Reinaldo usa o padrão ambiente-servidor-host nos hosts do Zabbix\n2. O banco de produção se chama PRDORA\n3. A reunião com o time é na quinta às 10h\nVocê tem ferramentas e deve usá-las nestes casos, sempre:\n- qualquer conta, porcentagem ou conversão de unidades: use calcular, mesmo que pareça fácil;\n- perguntas sobre alertas ou problemas atuais no Zabbix: use zabbix_problemas; para prioridade alta, severidade_minima alta;\n- perguntas sobre o estado atual de um host no Zabbix (CPU, memória, disco, se está no ar): use zabbix_host; se ele não disser qual, como em o servidor, o host é agatha-srv;\n- perguntas sobre o uso atual das tablespaces do Oracle: use oracle_tablespaces;\n- perguntas sobre sessões abertas no Oracle: use oracle_sessoes;\n- perguntas sobre o estado do banco Oracle, como se está no ar, archivelog, Data Guard ou locks: use oracle_banco;\n- perguntas sobre os backups do Oracle, como se o backup de ontem rodou: use oracle_backups;\n- perguntas sobre os repositórios dele no GitHub, como commits, PRs, issues ou se a CI passou: use github_repo;\n- quando ele pedir para lembrar, anotar ou guardar algo novo: use guardar_fato; uma pergunta nunca é pedido para guardar;\n- quando ele pedir para esquecer ou apagar algo da memória: use esquecer com o número do fato; se ele não disser qual, como em isso ou essa informação, use o último fato da lista;\nPelas ferramentas você acessa esses sistemas de verdade: nunca diga que não tem acesso a eles. Só chame uma ferramenta se ela mostra o que ele perguntou. Se o resultado não trouxer o que ele perguntou, diga que ela não mostra isso, sem tirar conclusões.\nPerguntas do tipo \"o que é\", \"como funciona\" ou \"para que serve\" são sobre conceitos: responda direto com o que você sabe, sem ferramenta. O mesmo vale para opiniões, conversa e perguntas sobre o que já está na sua memória.\nAs primeiras trocas desta conversa são só exemplos de formato: não são fatos sobre o Reinaldo nem coisas que ele disse.",
+  "tools": [
+    {
+      "type": "function",
+      "function": {
+        "name": "calcular",
+        "description": "Calcula uma expressão matemática. Use para qualquer conta, porcentagem ou conversão numérica. Exemplo de expressão: 240 * 0.15",
+        "parameters": {
+          "type": "object",
+          "properties": {
+            "expressao": {
+              "type": "string",
+              "description": "expressão em sintaxe Python"
+            }
+          },
+          "required": [
+            "expressao"
+          ]
+        }
+      }
+    },
+    {
+      "type": "function",
+      "function": {
+        "name": "zabbix_problemas",
+        "description": "Lista os alertas (problemas) ativos no Zabbix, de todos os hosts ou de um host.",
+        "parameters": {
+          "type": "object",
+          "properties": {
+            "host": {
+              "type": "string",
+              "description": "nome do host; omita para todos"
+            },
+            "severidade_minima": {
+              "type": "string",
+              "enum": [
+                "informação",
+                "atenção",
+                "média",
+                "alta",
+                "desastre"
+              ],
+              "description": "só problemas desta severidade para cima"
+            }
+          },
+          "required": []
+        }
+      }
+    },
+    {
+      "type": "function",
+      "function": {
+        "name": "zabbix_host",
+        "description": "Mostra o estado e as métricas atuais de um host monitorado no Zabbix: CPU, memória, disco.",
+        "parameters": {
+          "type": "object",
+          "properties": {
+            "host": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "host"
+          ]
+        }
+      }
+    },
+    {
+      "type": "function",
+      "function": {
+        "name": "oracle_tablespaces",
+        "description": "Mostra o uso de espaço das tablespaces do banco Oracle.",
+        "parameters": {
+          "type": "object",
+          "properties": {},
+          "required": []
+        }
+      }
+    },
+    {
+      "type": "function",
+      "function": {
+        "name": "oracle_sessoes",
+        "description": "Mostra quantas sessões estão abertas no banco Oracle e quantas estão ativas.",
+        "parameters": {
+          "type": "object",
+          "properties": {},
+          "required": []
+        }
+      }
+    },
+    {
+      "type": "function",
+      "function": {
+        "name": "oracle_banco",
+        "description": "Mostra o estado do banco Oracle: se está aberto, modo archivelog, papel e Data Guard, versão, há quanto tempo está no ar e sessões bloqueadas por locks.",
+        "parameters": {
+          "type": "object",
+          "properties": {},
+          "required": []
+        }
+      }
+    },
+    {
+      "type": "function",
+      "function": {
+        "name": "oracle_backups",
+        "description": "Lista os últimos backups do Oracle feitos pelo RMAN: quando, tipo, status e tamanho.",
+        "parameters": {
+          "type": "object",
+          "properties": {},
+          "required": []
+        }
+      }
+    },
+    {
+      "type": "function",
+      "function": {
+        "name": "github_repo",
+        "description": "Mostra um repositório dele no GitHub (agatha): últimos commits, PRs e issues abertos e a última execução da CI.",
+        "parameters": {
+          "type": "object",
+          "properties": {
+            "repo": {
+              "type": "string",
+              "description": "nome do repositório (agatha); omita para o agatha"
+            }
+          },
+          "required": []
+        }
+      }
+    },
+    {
+      "type": "function",
+      "function": {
+        "name": "guardar_fato",
+        "description": "Guarda um fato NOVO sobre o Reinaldo na memória, para conversas futuras. Use quando ele pedir para lembrar, anotar ou guardar alguma coisa que ainda não está na memória.",
+        "parameters": {
+          "type": "object",
+          "properties": {
+            "fato": {
+              "type": "string",
+              "description": "o fato, numa frase curta, na 3ª pessoa"
+            }
+          },
+          "required": [
+            "fato"
+          ]
+        }
+      }
+    },
+    {
+      "type": "function",
+      "function": {
+        "name": "esquecer",
+        "description": "Apaga um fato da memória, pelo número com que ele aparece na lista de memória.",
+        "parameters": {
+          "type": "object",
+          "properties": {
+            "numero": {
+              "type": "integer",
+              "description": "número do fato na memória"
+            }
+          },
+          "required": [
+            "numero"
+          ]
+        }
+      }
+    }
+  ],
+  "rows": [
+    {
+      "question": "A CI do agatha passou?",
+      "expected": "github_repo",
+      "got": "github_repo",
+      "decision_s": 0.6315605630006758,
+      "first_text": "",
+      "error": null,
+      "correct_choice": true,
+      "arguments": {
+        "repo": "agatha"
+      },
+      "args_ok": true,
+      "answer": "A CI do agatha passou. O último teste foi há 2 horas.",
+      "answer_first_chunk_s": 1.0466884999987087,
+      "text_ok": true,
+      "ok": true,
+      "run": 0
+    },
+    {
+      "question": "Qual foi o último commit no GitHub?",
+      "expected": "github_repo",
+      "got": "github_repo",
+      "decision_s": 0.6020472580003116,
+      "first_text": "",
+      "error": null,
+      "correct_choice": true,
+      "arguments": {
+        "repo": "agatha"
+      },
+      "args_ok": true,
+      "answer": "O último commit foi sobre archivelog em texto. Foi feito pelo Reinaldo há 3 horas.",
+      "answer_first_chunk_s": 1.2252690170007554,
+      "text_ok": true,
+      "ok": true,
+      "run": 0
+    },
+    {
+      "question": "Tem issue aberta no repositório da Agatha?",
+      "expected": "github_repo",
+      "got": "github_repo",
+      "decision_s": 0.5965156929996738,
+      "first_text": "",
+      "error": null,
+      "correct_choice": true,
+      "arguments": {
+        "repo": "agatha"
+      },
+      "args_ok": true,
+      "answer": "Sim, tem uma issue aberta. Ela se chama voz a 48 kHz.",
+      "answer_first_chunk_s": 0.7657596310000372,
+      "text_ok": true,
+      "ok": true,
+      "run": 0
+    },
+    {
+      "question": "O que é um pull request?",
+      "expected": null,
+      "got": null,
+      "decision_s": 0.284629887999472,
+      "first_text": "É um pedido para revisar código. Permite que desenvolvedores sugiram mudanças em um projeto.",
+      "error": null,
+      "correct_choice": true,
+      "text_ok": true,
+      "ok": true,
+      "run": 0
+    },
+    {
+      "question": "A CI do agatha passou?",
+      "expected": "github_repo",
+      "got": "github_repo",
+      "decision_s": 0.629836535999857,
+      "first_text": "",
+      "error": null,
+      "correct_choice": true,
+      "arguments": {
+        "repo": "agatha"
+      },
+      "args_ok": true,
+      "answer": "A CI do agatha passou. O teste mais recente foi há 2 horas.",
+      "answer_first_chunk_s": 0.9911002489989187,
+      "text_ok": true,
+      "ok": true,
+      "run": 1
+    },
+    {
+      "question": "Qual foi o último commit no GitHub?",
+      "expected": "github_repo",
+      "got": "github_repo",
+      "decision_s": 0.5986655260003317,
+      "first_text": "",
+      "error": null,
+      "correct_choice": true,
+      "arguments": {},
+      "args_ok": true,
+      "answer": "O último commit foi um fix no servidor, há 3 horas. A CI passou há 2 horas.",
+      "answer_first_chunk_s": 1.160968199999843,
+      "text_ok": false,
+      "ok": false,
+      "run": 1
+    },
+    {
+      "question": "Tem issue aberta no repositório da Agatha?",
+      "expected": "github_repo",
+      "got": "github_repo",
+      "decision_s": 0.5948369220004679,
+      "first_text": "",
+      "error": null,
+      "correct_choice": true,
+      "arguments": {
+        "repo": "agatha"
+      },
+      "args_ok": true,
+      "answer": "Tem uma issue aberta. Ela diz \"voz a 48 kHz\".",
+      "answer_first_chunk_s": 0.877622459000122,
+      "text_ok": true,
+      "ok": true,
+      "run": 1
+    },
+    {
+      "question": "O que é um pull request?",
+      "expected": null,
+      "got": null,
+      "decision_s": 0.2840901670006133,
+      "first_text": "É um pedido para revisar código. Ele permite propor mudanças em um repositório antes de mesclá-las.",
+      "error": null,
+      "correct_choice": true,
+      "text_ok": true,
+      "ok": true,
+      "run": 1
+    },
+    {
+      "question": "A CI do agatha passou?",
+      "expected": "github_repo",
+      "got": "github_repo",
+      "decision_s": 0.6301500930003385,
+      "first_text": "",
+      "error": null,
+      "correct_choice": true,
+      "arguments": {
+        "repo": "agatha"
+      },
+      "args_ok": true,
+      "answer": "Sim, a CI passou. O workflow de tests rodou há 2 horas.",
+      "answer_first_chunk_s": 0.7642804980005167,
+      "text_ok": true,
+      "ok": true,
+      "run": 2
+    },
+    {
+      "question": "Qual foi o último commit no GitHub?",
+      "expected": "github_repo",
+      "got": "github_repo",
+      "decision_s": 0.5956168270004127,
+      "first_text": "",
+      "error": null,
+      "correct_choice": true,
+      "arguments": {},
+      "args_ok": true,
+      "answer": "O último commit foi \"fix(server): archivelog as text\" feito por Reinaldo há 3 horas.",
+      "answer_first_chunk_s": 1.165441484999974,
+      "text_ok": true,
+      "ok": true,
+      "run": 2
+    },
+    {
+      "question": "Tem issue aberta no repositório da Agatha?",
+      "expected": "github_repo",
+      "got": "github_repo",
+      "decision_s": 0.5971936320001987,
+      "first_text": "",
+      "error": null,
+      "correct_choice": true,
+      "arguments": {
+        "repo": "agatha"
+      },
+      "args_ok": true,
+      "answer": "Sim, há uma issue aberta. Ela se chama \"voz a 48 kHz\".",
+      "answer_first_chunk_s": 0.7676976670009026,
+      "text_ok": true,
+      "ok": true,
+      "run": 2
+    },
+    {
+      "question": "O que é um pull request?",
+      "expected": null,
+      "got": null,
+      "decision_s": 0.2838613229996554,
+      "first_text": "É um pedido para revisar código. Permite que um desenvolvedor sugira mudanças em outro repositório.",
+      "error": null,
+      "correct_choice": true,
+      "text_ok": true,
+      "ok": true,
+      "run": 2
+    }
+  ]
+}

@@ -33,6 +33,7 @@ from agatha_server.memory import MemoryConfig, MemoryStore
 from agatha_server.prompts import user_message
 from agatha_server.tools import Example, Tool, ToolRegistry
 from agatha_server.tools.calc import calculator, evaluate
+from agatha_server.tools.github import GitHubClient, GitHubConfig, github_tools
 from agatha_server.tools.memory import memory_tools
 from agatha_server.tools.oracle import oracle_tools
 from agatha_server.tools.zabbix import ZabbixClient, ZabbixConfig, zabbix_tools
@@ -63,6 +64,11 @@ _ORACLE_FAKE = {
     "oracle_tablespaces": {"tablespaces": [{"nome": "USERS", "usado_pct": 91}, {"nome": "SYSTEM", "usado_pct": 74},
                                            {"nome": "SYSAUX", "usado_pct": 66}]},
     "oracle_sessoes": {"total": 48, "ativas": 5},
+    "github_repo": {"repositorio": "agatha", "branch": "main",
+                    "ultimos_commits": [{"mensagem": "fix(server): archivelog as text", "autor": "Reinaldo",
+                                         "quando": "há 3 horas"}],
+                    "prs_abertos": [], "issues_abertas": ["voz a 48 kHz"],
+                    "ultima_ci": {"workflow": "tests", "resultado": "passou", "quando": "há 2 horas"}},
     "oracle_banco": {"instancia": "aberta", "modo": "leitura e escrita", "modo_archivelog": "ligado", "papel": "primário",
                      "versao": "23.9.0.25.07", "no_ar_ha": "4 dias", "sessoes_bloqueadas": 2,
                      "sessoes_bloqueando": 1, "maior_espera": "3 minutos", "data_guard": "sem standby configurado"},
@@ -75,6 +81,9 @@ ZABBIX_ORACLE = [
       for t in zabbix_tools(ZabbixClient(ZabbixConfig(url="http://x", token="x", default_host="agatha-srv")))],
     # Oracle: definições reais do servidor, com resultado simulado
     *[dataclasses.replace(t, handler=fake(_ORACLE_FAKE[t.name])) for t in oracle_tools(None, lambda sql: None)],
+    # GitHub: definição real (ADR-020), resultado simulado
+    *[dataclasses.replace(t, handler=fake(_ORACLE_FAKE[t.name]))
+      for t in github_tools(GitHubClient(GitHubConfig(token="x", repos=("ReinaldoLuizSilva/agatha",))))],
 ]
 
 
@@ -145,6 +154,10 @@ CASES = [
     ("O backup de ontem rodou?", "oracle_backups", lambda a: True, "conclu", None),
     ("Me mostra os problemas de alta prioridade no Zabbix.", "zabbix_problemas",
      lambda a: a.get("severidade_minima") == "alta", None, None),
+    ("A CI do agatha passou?", "github_repo", lambda a: "agatha" in (a.get("repo") or "agatha"), "passou", None),
+    ("Qual foi o último commit no GitHub?", "github_repo", lambda a: True, "commit", None),
+    ("Tem issue aberta no repositório da Agatha?", "github_repo", lambda a: True, "48", None),
+    ("O que é um pull request?", None, None, None, None),
     ("Lembra que o meu servidor de testes se chama lab01.", "guardar_fato", lambda a: "lab01" in a.get("fato", "").lower(), None, None),
     ("Anota aí: o backup roda todo dia às 2h.", "guardar_fato", lambda a: "backup" in a.get("fato", "").lower(), None, None),
     ("Esquece que o banco de produção se chama PRDORA.", "esquecer", lambda a: int(a.get("numero")) == 2, None, None),

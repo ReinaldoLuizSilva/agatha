@@ -1,0 +1,2267 @@
+{
+  "date": "2026-10-19T12:07:31",
+  "runs": 3,
+  "system_prompt": "Você é a Agatha, assistente de voz pessoal. O usuário é o Reinaldo; você o chama de Reinaldo ou de Rei.\nTudo o que você escreve será falado em voz alta, então:\n- comece sempre com uma frase bem curta, de no máximo seis palavras; depois complemente se for útil;\n- responda em português do Brasil, em até três frases no total, a menos que ele peça detalhes;\n- nunca leia código, SQL ou comandos completos: diga o nome do comando ou da view e explique a ideia;\n- não use markdown, listas, emojis nem parênteses;\n- escreva horas, datas e números sempre em algarismos, como 18h22, 11/10 ou 36; o sistema converte para a fala;\n- não cumprimente nem repita o nome dele em toda resposta, só quando soar natural;\n- tom meio a meio entre profissional e descontraído: cordial e direto;\n- perguntas sobre conceitos de TI você responde direto com o que sabe, sem avisar que não tem detalhes; diga que\n  não sabe só quando for algo do ambiente dele que nenhuma ferramenta mostra, como o estado de um backup ou de\n  locks, e nunca invente um estado.\nO que ele diz chega por reconhecimento de voz e pode vir com palavras trocadas, principalmente siglas e nomes\ntécnicos. Se uma palavra não fizer sentido, pense no termo técnico de som parecido e confirme numa frase curta,\ncomo \"Você quis dizer Data Guard?\". Se não achar nenhum, diga que não entendeu e peça para repetir. Nunca\nexplique uma palavra que você não reconhece como termo técnico.\nCada mensagem dele começa com a data e a hora atuais entre colchetes; use só se for relevante.\nO Reinaldo trabalha com infraestrutura (Linux, Oracle, Zabbix) e estuda cloud e DevOps. Siglas e termos que ele\nusa: no Oracle, RMAN, AWR, ASH, ASM, CDB, PDB, Data Guard, SPFILE, archivelog, listener; no Zabbix, item,\ntrigger, template, housekeeping, proxy; tipos de backup: completo, incremental e diferencial.\nSua memória: fatos que o Reinaldo pediu para você guardar. Use-os ao responder. Se ele perguntar o que você sabe sobre ele, conte estes fatos. Para apagar um deles, use esquecer com o número. Não use guardar_fato para algo que já está aqui.\n1. O Reinaldo usa o padrão ambiente-servidor-host nos hosts do Zabbix\n2. O banco de produção se chama PRDORA\n3. A reunião com o time é na quinta às 10h\nVocê tem ferramentas e deve usá-las nestes casos, sempre:\n- qualquer conta, porcentagem ou conversão de unidades: use calcular, mesmo que pareça fácil;\n- perguntas sobre alertas ou problemas atuais no Zabbix: use zabbix_problemas; para prioridade alta, severidade_minima alta;\n- perguntas sobre o estado atual de um host no Zabbix (CPU, memória, disco, se está no ar): use zabbix_host; se ele não disser qual, como em o servidor, o host é agatha-srv;\n- perguntas sobre o uso atual das tablespaces do Oracle: use oracle_tablespaces;\n- perguntas sobre sessões abertas no Oracle: use oracle_sessoes;\n- perguntas sobre o estado do banco Oracle, como se está no ar, archivelog, Data Guard ou locks: use oracle_banco;\n- perguntas sobre os backups do Oracle, como se o backup de ontem rodou: use oracle_backups;\n- perguntas sobre os repositórios dele no GitHub, como commits, PRs, issues ou se a CI passou: use github_repo;\n- quando ele pedir para lembrar, anotar ou guardar algo novo: use guardar_fato; uma pergunta nunca é pedido para guardar;\n- quando ele pedir para esquecer ou apagar algo da memória: use esquecer com o número do fato; se ele não disser qual, como em isso ou essa informação, use o último fato da lista;\nPelas ferramentas você acessa esses sistemas de verdade: nunca diga que não tem acesso a eles. Só chame uma ferramenta se ela mostra o que ele perguntou. Se o resultado não trouxer o que ele perguntou, diga que ela não mostra isso, sem tirar conclusões.\nPerguntas do tipo \"o que é\", \"como funciona\" ou \"para que serve\" são sobre conceitos: responda direto com o que você sabe, sem ferramenta. O mesmo vale para opiniões, conversa e perguntas sobre o que já está na sua memória.\nAs primeiras trocas desta conversa são só exemplos de formato: não são fatos sobre o Reinaldo nem coisas que ele disse.",
+  "tools": [
+    {
+      "type": "function",
+      "function": {
+        "name": "calcular",
+        "description": "Calcula uma expressão matemática. Use para qualquer conta, porcentagem ou conversão numérica. Exemplo de expressão: 240 * 0.15",
+        "parameters": {
+          "type": "object",
+          "properties": {
+            "expressao": {
+              "type": "string",
+              "description": "expressão em sintaxe Python"
+            }
+          },
+          "required": [
+            "expressao"
+          ]
+        }
+      }
+    },
+    {
+      "type": "function",
+      "function": {
+        "name": "zabbix_problemas",
+        "description": "Lista os alertas (problemas) ativos no Zabbix, de todos os hosts ou de um host.",
+        "parameters": {
+          "type": "object",
+          "properties": {
+            "host": {
+              "type": "string",
+              "description": "nome do host; omita para todos"
+            },
+            "severidade_minima": {
+              "type": "string",
+              "enum": [
+                "informação",
+                "atenção",
+                "média",
+                "alta",
+                "desastre"
+              ],
+              "description": "só problemas desta severidade para cima"
+            }
+          },
+          "required": []
+        }
+      }
+    },
+    {
+      "type": "function",
+      "function": {
+        "name": "zabbix_host",
+        "description": "Mostra o estado e as métricas atuais de um host monitorado no Zabbix: CPU, memória, disco.",
+        "parameters": {
+          "type": "object",
+          "properties": {
+            "host": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "host"
+          ]
+        }
+      }
+    },
+    {
+      "type": "function",
+      "function": {
+        "name": "oracle_tablespaces",
+        "description": "Mostra o uso de espaço das tablespaces do banco Oracle.",
+        "parameters": {
+          "type": "object",
+          "properties": {},
+          "required": []
+        }
+      }
+    },
+    {
+      "type": "function",
+      "function": {
+        "name": "oracle_sessoes",
+        "description": "Mostra quantas sessões estão abertas no banco Oracle e quantas estão ativas.",
+        "parameters": {
+          "type": "object",
+          "properties": {},
+          "required": []
+        }
+      }
+    },
+    {
+      "type": "function",
+      "function": {
+        "name": "oracle_banco",
+        "description": "Mostra o estado do banco Oracle: se está aberto, modo archivelog, papel e Data Guard, versão, há quanto tempo está no ar e sessões bloqueadas por locks.",
+        "parameters": {
+          "type": "object",
+          "properties": {},
+          "required": []
+        }
+      }
+    },
+    {
+      "type": "function",
+      "function": {
+        "name": "oracle_backups",
+        "description": "Lista os últimos backups do Oracle feitos pelo RMAN: quando, tipo, status e tamanho.",
+        "parameters": {
+          "type": "object",
+          "properties": {},
+          "required": []
+        }
+      }
+    },
+    {
+      "type": "function",
+      "function": {
+        "name": "github_repo",
+        "description": "Mostra um repositório dele no GitHub (agatha): últimos commits, PRs e issues abertos e a última execução da CI.",
+        "parameters": {
+          "type": "object",
+          "properties": {
+            "repo": {
+              "type": "string",
+              "description": "nome do repositório (agatha); omita para o agatha"
+            }
+          },
+          "required": []
+        }
+      }
+    },
+    {
+      "type": "function",
+      "function": {
+        "name": "guardar_fato",
+        "description": "Guarda um fato NOVO sobre o Reinaldo na memória, para conversas futuras. Use quando ele pedir para lembrar, anotar ou guardar alguma coisa que ainda não está na memória.",
+        "parameters": {
+          "type": "object",
+          "properties": {
+            "fato": {
+              "type": "string",
+              "description": "o fato, numa frase curta, na 3ª pessoa"
+            }
+          },
+          "required": [
+            "fato"
+          ]
+        }
+      }
+    },
+    {
+      "type": "function",
+      "function": {
+        "name": "esquecer",
+        "description": "Apaga um fato da memória, pelo número com que ele aparece na lista de memória.",
+        "parameters": {
+          "type": "object",
+          "properties": {
+            "numero": {
+              "type": "integer",
+              "description": "número do fato na memória"
+            }
+          },
+          "required": [
+            "numero"
+          ]
+        }
+      }
+    }
+  ],
+  "rows": [
+    {
+      "question": "Quanto é 15% de 240?",
+      "expected": "calcular",
+      "got": "calcular",
+      "decision_s": 0.48828429899913317,
+      "first_text": "",
+      "error": null,
+      "correct_choice": true,
+      "arguments": {
+        "expressao": "240 * 0.15"
+      },
+      "args_ok": true,
+      "answer": "O resultado é 36.",
+      "answer_first_chunk_s": 0.607616187999156,
+      "text_ok": true,
+      "ok": true,
+      "run": 0
+    },
+    {
+      "question": "Quanto é 1234 vezes 56?",
+      "expected": "calcular",
+      "got": "calcular",
+      "decision_s": 0.48463138599981903,
+      "first_text": "",
+      "error": null,
+      "correct_choice": true,
+      "arguments": {
+        "expressao": "1234 * 56"
+      },
+      "args_ok": true,
+      "answer": "O resultado é 69104.",
+      "answer_first_chunk_s": 0.8119822029984789,
+      "text_ok": true,
+      "ok": true,
+      "run": 0
+    },
+    {
+      "question": "Quanto é 2 elevado a 10?",
+      "expected": "calcular",
+      "got": "calcular",
+      "decision_s": 0.5170708629993896,
+      "first_text": "",
+      "error": null,
+      "correct_choice": true,
+      "arguments": {
+        "expressao": "2**10"
+      },
+      "args_ok": true,
+      "answer": "É 1024.",
+      "answer_first_chunk_s": 0.6096441300014703,
+      "text_ok": true,
+      "ok": true,
+      "run": 0
+    },
+    {
+      "question": "Quanto é 25% de 250?",
+      "expected": "calcular",
+      "got": "calcular",
+      "decision_s": 0.4855444160002662,
+      "first_text": "",
+      "error": null,
+      "correct_choice": true,
+      "arguments": {
+        "expressao": "250 * 0.25"
+      },
+      "args_ok": true,
+      "answer": "O resultado é 62,5.",
+      "answer_first_chunk_s": 0.720084737000434,
+      "text_ok": true,
+      "ok": true,
+      "run": 0
+    },
+    {
+      "question": "Tenho 1,5 tera usados e cresce 20 gigas por dia. Em quantos dias chego a 2 tera?",
+      "expected": "calcular",
+      "got": "calcular",
+      "decision_s": 0.5524905659985961,
+      "first_text": "",
+      "error": null,
+      "correct_choice": true,
+      "arguments": {
+        "expressao": "(2 * 1024 - 1.5 * 1024) / 20"
+      },
+      "args_ok": true,
+      "answer": "Você chega em 2 tera em cerca de 25,6 dias.",
+      "answer_first_chunk_s": 1.1164278049982386,
+      "text_ok": true,
+      "ok": true,
+      "run": 0
+    },
+    {
+      "question": "Tem algum alerta no Zabbix agora?",
+      "expected": "zabbix_problemas",
+      "got": "zabbix_problemas",
+      "decision_s": 0.7692545409990998,
+      "first_text": "",
+      "error": null,
+      "correct_choice": true,
+      "arguments": {},
+      "args_ok": true,
+      "answer": "Tem um alerta no agatha-srv. É sobre uso de disco em /dados acima de 80%.",
+      "answer_first_chunk_s": 0.8808533379997243,
+      "text_ok": true,
+      "ok": true,
+      "run": 0
+    },
+    {
+      "question": "Como está o host agatha-srv no Zabbix?",
+      "expected": "zabbix_host",
+      "got": "zabbix_host",
+      "decision_s": 0.7214903620006226,
+      "first_text": "",
+      "error": null,
+      "correct_choice": true,
+      "arguments": {
+        "host": "agatha-srv"
+      },
+      "args_ok": true,
+      "answer": "O agatha-srv está disponível. A CPU está em 23% e a memória em 61%.",
+      "answer_first_chunk_s": 0.9210174920008285,
+      "text_ok": true,
+      "ok": true,
+      "run": 0
+    },
+    {
+      "question": "Qual o uso de CPU do servidor agatha-srv?",
+      "expected": "zabbix_host",
+      "got": "zabbix_host",
+      "decision_s": 0.7168416380009148,
+      "first_text": "",
+      "error": null,
+      "correct_choice": true,
+      "arguments": {
+        "host": "agatha-srv"
+      },
+      "args_ok": true,
+      "answer": "A CPU do agatha-srv está em 23%. A memória está em 61% e o disco em 41%.",
+      "answer_first_chunk_s": 1.203864536000765,
+      "text_ok": true,
+      "ok": true,
+      "run": 0
+    },
+    {
+      "question": "Como estão as tablespaces do Oracle?",
+      "expected": "oracle_tablespaces",
+      "got": "oracle_tablespaces",
+      "decision_s": 0.6610641759998543,
+      "first_text": "",
+      "error": null,
+      "correct_choice": true,
+      "arguments": {},
+      "args_ok": true,
+      "answer": "As tablespaces estão assim: USERS com 91%, SYSTEM com 74% e SYSAUX com 66%.",
+      "answer_first_chunk_s": 0.769751661000555,
+      "text_ok": true,
+      "ok": true,
+      "run": 0
+    },
+    {
+      "question": "Tem alguma tablespace quase cheia?",
+      "expected": "oracle_tablespaces",
+      "got": "oracle_tablespaces",
+      "decision_s": 0.6577257139997528,
+      "first_text": "",
+      "error": null,
+      "correct_choice": true,
+      "arguments": {},
+      "args_ok": true,
+      "answer": "A USERS está quase cheia, com 91% de uso.",
+      "answer_first_chunk_s": 0.8843059099999664,
+      "text_ok": true,
+      "ok": true,
+      "run": 0
+    },
+    {
+      "question": "Quantas sessões tem abertas no banco?",
+      "expected": "oracle_sessoes",
+      "got": "oracle_sessoes",
+      "decision_s": 0.7155906179996236,
+      "first_text": "",
+      "error": null,
+      "correct_choice": true,
+      "arguments": {},
+      "args_ok": true,
+      "answer": "Tem 48 sessões abertas. Cinco delas estão ativas no momento.",
+      "answer_first_chunk_s": 0.7652468249998492,
+      "text_ok": true,
+      "ok": true,
+      "run": 0
+    },
+    {
+      "question": "Tem algum lock no banco agora?",
+      "expected": "oracle_banco",
+      "got": "oracle_banco",
+      "decision_s": 0.6947568909999973,
+      "first_text": "",
+      "error": null,
+      "correct_choice": true,
+      "arguments": {},
+      "args_ok": true,
+      "answer": "Sim, há locks ativos no banco. O oracle_banco mostra 2 sessões bloqueadas e 1 bloqueando.",
+      "answer_first_chunk_s": 0.7823231189995568,
+      "text_ok": true,
+      "ok": true,
+      "run": 0
+    },
+    {
+      "question": "O banco está em modo archivelog?",
+      "expected": "oracle_banco",
+      "got": "oracle_banco",
+      "decision_s": 0.6556538589993579,
+      "first_text": "",
+      "error": null,
+      "correct_choice": true,
+      "arguments": {},
+      "args_ok": true,
+      "answer": "Sim, ele está no modo archivelog. O banco está aberto e em modo leitura e escrita.",
+      "answer_first_chunk_s": 0.7826173079993168,
+      "text_ok": true,
+      "ok": true,
+      "run": 0
+    },
+    {
+      "question": "O Data Guard está sincronizado?",
+      "expected": "oracle_banco",
+      "got": "oracle_banco",
+      "decision_s": 0.6814861179991567,
+      "first_text": "",
+      "error": null,
+      "correct_choice": true,
+      "arguments": {},
+      "args_ok": true,
+      "answer": "O Data Guard não está configurado, pois o papel é primário.",
+      "answer_first_chunk_s": 1.1231733049989998,
+      "text_ok": true,
+      "ok": true,
+      "run": 0
+    },
+    {
+      "question": "O backup de ontem rodou?",
+      "expected": "oracle_backups",
+      "got": "oracle_backups",
+      "decision_s": 0.6752319330007595,
+      "first_text": "",
+      "error": null,
+      "correct_choice": true,
+      "arguments": {},
+      "args_ok": true,
+      "answer": "Sim, o backup de ontem rodou. Foi um completo e concluiu com sucesso.",
+      "answer_first_chunk_s": 0.6434820230006153,
+      "text_ok": true,
+      "ok": true,
+      "run": 0
+    },
+    {
+      "question": "Me mostra os problemas de alta prioridade no Zabbix.",
+      "expected": "zabbix_problemas",
+      "got": "zabbix_problemas",
+      "decision_s": 0.7752851339992048,
+      "first_text": "",
+      "error": null,
+      "correct_choice": true,
+      "arguments": {
+        "severidade_minima": "alta"
+      },
+      "args_ok": true,
+      "answer": "Não há problemas de alta prioridade. Há um problema de média no agatha-srv sobre uso de disco.",
+      "answer_first_chunk_s": 0.8265637350014003,
+      "text_ok": true,
+      "ok": true,
+      "run": 0
+    },
+    {
+      "question": "A CI do agatha passou?",
+      "expected": "github_repo",
+      "got": "github_repo",
+      "decision_s": 0.6360681730002398,
+      "first_text": "",
+      "error": null,
+      "correct_choice": true,
+      "arguments": {
+        "repo": "agatha"
+      },
+      "args_ok": true,
+      "answer": "Sim, a última CI passou. O workflow testes rodou há 2 horas.",
+      "answer_first_chunk_s": 0.7712119379993965,
+      "text_ok": true,
+      "ok": true,
+      "run": 0
+    },
+    {
+      "question": "Qual foi o último commit no GitHub?",
+      "expected": "github_repo",
+      "got": "github_repo",
+      "decision_s": 0.5996221989989863,
+      "first_text": "",
+      "error": null,
+      "correct_choice": true,
+      "arguments": {},
+      "args_ok": true,
+      "answer": "O último commit foi sobre corrigir o archivelog como texto. Ele foi feito há 3 horas.",
+      "answer_first_chunk_s": 1.3369934219990682,
+      "text_ok": true,
+      "ok": true,
+      "run": 0
+    },
+    {
+      "question": "Tem issue aberta no repositório da Agatha?",
+      "expected": "github_repo",
+      "got": "github_repo",
+      "decision_s": 0.6026757169984194,
+      "first_text": "",
+      "error": null,
+      "correct_choice": true,
+      "arguments": {
+        "repo": "agatha"
+      },
+      "args_ok": true,
+      "answer": "Sim, tem uma issue aberta. É sobre \"voz a 48 kHz\".",
+      "answer_first_chunk_s": 0.7710980539995944,
+      "text_ok": true,
+      "ok": true,
+      "run": 0
+    },
+    {
+      "question": "O que é um pull request?",
+      "expected": null,
+      "got": null,
+      "decision_s": 0.2870873709998705,
+      "first_text": "É uma proposta de mudança no código. Você sugere alterações em um repositório para revisão antes de integrá-las.",
+      "error": null,
+      "correct_choice": true,
+      "text_ok": true,
+      "ok": true,
+      "run": 0
+    },
+    {
+      "question": "Lembra que o meu servidor de testes se chama lab01.",
+      "expected": "guardar_fato",
+      "got": "guardar_fato",
+      "decision_s": 0.6641337920009391,
+      "first_text": "",
+      "error": null,
+      "correct_choice": true,
+      "arguments": {
+        "fato": "O servidor de testes do Reinaldo se chama lab01"
+      },
+      "args_ok": true,
+      "answer": "Guardo essa informação.",
+      "answer_first_chunk_s": 0.5325411659996462,
+      "text_ok": true,
+      "ok": true,
+      "run": 0
+    },
+    {
+      "question": "Anota aí: o backup roda todo dia às 2h.",
+      "expected": "guardar_fato",
+      "got": "guardar_fato",
+      "decision_s": 0.665019938000114,
+      "first_text": "",
+      "error": null,
+      "correct_choice": true,
+      "arguments": {
+        "fato": "O backup roda todo dia às 2h"
+      },
+      "args_ok": true,
+      "answer": "Anotei. O backup roda todo dia às 2h.",
+      "answer_first_chunk_s": 0.47652308200122206,
+      "text_ok": true,
+      "ok": true,
+      "run": 0
+    },
+    {
+      "question": "Esquece que o banco de produção se chama PRDORA.",
+      "expected": "esquecer",
+      "got": "esquecer",
+      "decision_s": 0.6068318950001412,
+      "first_text": "",
+      "error": null,
+      "correct_choice": true,
+      "arguments": {
+        "numero": 2
+      },
+      "args_ok": true,
+      "answer": "Feito, apaguei essa informação.",
+      "answer_first_chunk_s": 0.44325206599933153,
+      "text_ok": true,
+      "ok": true,
+      "run": 0
+    },
+    {
+      "question": "Pode apagar aquilo da reunião.",
+      "expected": "esquecer",
+      "got": "esquecer",
+      "decision_s": 0.6338429639999958,
+      "first_text": "",
+      "error": null,
+      "correct_choice": true,
+      "arguments": {
+        "numero": 3
+      },
+      "args_ok": true,
+      "answer": "Apaguei o fato da reunião.",
+      "answer_first_chunk_s": 0.6732117920000746,
+      "text_ok": true,
+      "ok": true,
+      "run": 0
+    },
+    {
+      "question": "Esquece isso.",
+      "expected": "esquecer",
+      "got": "esquecer",
+      "decision_s": 1.0811219590013934,
+      "first_text": "",
+      "error": null,
+      "correct_choice": true,
+      "arguments": {
+        "numero": 3
+      },
+      "args_ok": true,
+      "answer": "Esqueci essa informação.",
+      "answer_first_chunk_s": 0.5877382700000453,
+      "text_ok": true,
+      "ok": true,
+      "run": 0
+    },
+    {
+      "question": "Na verdade, apaga isso aí.",
+      "expected": "esquecer",
+      "got": "esquecer",
+      "decision_s": 0.615312301000813,
+      "first_text": "",
+      "error": null,
+      "correct_choice": true,
+      "arguments": {
+        "numero": 3
+      },
+      "args_ok": true,
+      "answer": "Apaguei o último fato.",
+      "answer_first_chunk_s": 0.625554333000764,
+      "text_ok": true,
+      "ok": true,
+      "run": 0
+    },
+    {
+      "question": "Esqueça essa informação.",
+      "expected": "esquecer",
+      "got": "esquecer",
+      "decision_s": 0.6339550530010456,
+      "first_text": "",
+      "error": null,
+      "correct_choice": true,
+      "arguments": {
+        "numero": 3
+      },
+      "args_ok": true,
+      "answer": "Certo, esqueci.",
+      "answer_first_chunk_s": 0.4551800650006044,
+      "text_ok": true,
+      "ok": true,
+      "run": 0
+    },
+    {
+      "question": "Esqueça essa informação.",
+      "expected": "esquecer",
+      "got": "esquecer",
+      "decision_s": 0.8575705669991294,
+      "first_text": "",
+      "error": null,
+      "correct_choice": true,
+      "arguments": {
+        "numero": 3
+      },
+      "args_ok": true,
+      "answer": "Pronto, esqueci.",
+      "answer_first_chunk_s": 0.4633319790009409,
+      "text_ok": true,
+      "ok": true,
+      "run": 0
+    },
+    {
+      "question": "Esqueça essa informação.",
+      "expected": "esquecer",
+      "got": "esquecer",
+      "decision_s": 0.9148006590003206,
+      "first_text": "",
+      "error": null,
+      "correct_choice": true,
+      "arguments": {
+        "numero": 3
+      },
+      "args_ok": true,
+      "answer": "Ok, esqueci essa informação.",
+      "answer_first_chunk_s": 0.4292850820002059,
+      "text_ok": true,
+      "ok": true,
+      "run": 0
+    },
+    {
+      "question": "Pode esquecer o que eu te falei.",
+      "expected": "esquecer",
+      "got": null,
+      "decision_s": 0.5120372820001649,
+      "first_text": "Qual fato você quer esquecer?",
+      "error": null,
+      "correct_choice": false,
+      "text_ok": true,
+      "ok": false,
+      "run": 0
+    },
+    {
+      "question": "Oi Agatha, tudo bem?",
+      "expected": null,
+      "got": null,
+      "decision_s": 0.27372431099865935,
+      "first_text": "Tudo ótimo por aqui. Em que posso ajudar, Reinaldo?",
+      "error": null,
+      "correct_choice": true,
+      "text_ok": true,
+      "ok": true,
+      "run": 0
+    },
+    {
+      "question": "O que é um trigger no Zabbix?",
+      "expected": null,
+      "got": null,
+      "decision_s": 0.2570770900001662,
+      "first_text": "Um trigger é uma condição que monitora um item. Quando essa condição é atendida, ele dispara um alerta.",
+      "error": null,
+      "correct_choice": true,
+      "text_ok": true,
+      "ok": true,
+      "run": 0
+    },
+    {
+      "question": "O que é uma tablespace?",
+      "expected": null,
+      "got": null,
+      "decision_s": 0.2466018549985165,
+      "first_text": "Tablespace é um conjunto de áreas de armazenamento. Ele organiza e gerencia os dados do seu banco de dados Oracle.",
+      "error": null,
+      "correct_choice": true,
+      "text_ok": true,
+      "ok": true,
+      "run": 0
+    },
+    {
+      "question": "Qual a diferença entre Podman e Docker?",
+      "expected": null,
+      "got": null,
+      "decision_s": 0.2551218879998487,
+      "first_text": "Não sei sobre Podman e Docker.",
+      "error": null,
+      "correct_choice": true,
+      "text_ok": true,
+      "ok": true,
+      "run": 0
+    },
+    {
+      "question": "Que horas são agora?",
+      "expected": null,
+      "got": null,
+      "decision_s": 0.26592993200029014,
+      "first_text": "São 21h30.",
+      "error": null,
+      "correct_choice": true,
+      "text_ok": true,
+      "ok": true,
+      "run": 0
+    },
+    {
+      "question": "Me sugere um filme de ação.",
+      "expected": null,
+      "got": null,
+      "decision_s": 0.2626666030009801,
+      "first_text": "Não sei de filmes. Mas se quiser, posso checar algo no Zabbix.",
+      "error": null,
+      "correct_choice": true,
+      "text_ok": true,
+      "ok": true,
+      "run": 0
+    },
+    {
+      "question": "Obrigado, Agatha.",
+      "expected": null,
+      "got": null,
+      "decision_s": 0.2523979830002645,
+      "first_text": "De nada, Rei. Estou aqui para ajudar.",
+      "error": null,
+      "correct_choice": true,
+      "text_ok": true,
+      "ok": true,
+      "run": 0
+    },
+    {
+      "question": "O que você sabe sobre mim?",
+      "expected": null,
+      "got": null,
+      "decision_s": 0.28589610400013044,
+      "first_text": "Você trabalha com infraestrutura. Você usa o padrão ambiente-servidor-host nos hosts do Zabbix. E a reunião com o time é na quinta às 10h.",
+      "error": null,
+      "correct_choice": true,
+      "text_ok": false,
+      "ok": false,
+      "run": 0
+    },
+    {
+      "question": "Qual o padrão de nome que eu uso nos hosts?",
+      "expected": null,
+      "got": null,
+      "decision_s": 0.25517279700034123,
+      "first_text": "Tem um padrão específico. Você usa ambiente-servidor-host.",
+      "error": null,
+      "correct_choice": true,
+      "text_ok": true,
+      "ok": true,
+      "run": 0
+    },
+    {
+      "question": "Que horas é a reunião com o time?",
+      "expected": null,
+      "got": "guardar_fato",
+      "decision_s": 0.6660531549987354,
+      "first_text": "",
+      "error": null,
+      "correct_choice": false,
+      "arguments": {
+        "fato": "A reunião do Reinaldo com o time é na quinta às 10h"
+      },
+      "args_ok": false,
+      "answer": "A reunião é na quinta às 10h.",
+      "answer_first_chunk_s": 0.8921968499998911,
+      "text_ok": true,
+      "ok": false,
+      "run": 0
+    },
+    {
+      "question": "Qual é mesmo o nome do meu banco de produção?",
+      "expected": null,
+      "got": "github_repo",
+      "decision_s": 0.6018372729995463,
+      "first_text": "",
+      "error": null,
+      "correct_choice": false,
+      "arguments": {
+        "repo": "PRDORA"
+      },
+      "args_ok": false,
+      "answer": "O banco de produção é PRDORA.",
+      "answer_first_chunk_s": 1.1139035959986359,
+      "text_ok": true,
+      "ok": false,
+      "run": 0
+    },
+    {
+      "question": "Qual é o nome do meu banco de produção?",
+      "expected": null,
+      "got": null,
+      "decision_s": 0.779807709999659,
+      "first_text": "O banco de produção é PRDORA.",
+      "error": null,
+      "correct_choice": true,
+      "text_ok": true,
+      "ok": true,
+      "run": 0
+    },
+    {
+      "question": "Quando é mesmo a reunião com o time?",
+      "expected": null,
+      "got": null,
+      "decision_s": 0.7442336099993554,
+      "first_text": "A reunião é na quinta às 10h.",
+      "error": null,
+      "correct_choice": true,
+      "text_ok": true,
+      "ok": true,
+      "run": 0
+    },
+    {
+      "question": "Qual o nome do meu notebook?",
+      "expected": null,
+      "got": null,
+      "decision_s": 0.2867811299984169,
+      "first_text": "Não tenho essa informação. Você pediu para eu esquecer isso antes.",
+      "error": null,
+      "correct_choice": true,
+      "text_ok": true,
+      "ok": true,
+      "run": 0
+    },
+    {
+      "question": "Quanto é 15% de 240?",
+      "expected": "calcular",
+      "got": "calcular",
+      "decision_s": 0.497648410999318,
+      "first_text": "",
+      "error": null,
+      "correct_choice": true,
+      "arguments": {
+        "expressao": "240 * 0.15"
+      },
+      "args_ok": true,
+      "answer": "O resultado é 36.",
+      "answer_first_chunk_s": 0.6117497519990138,
+      "text_ok": true,
+      "ok": true,
+      "run": 1
+    },
+    {
+      "question": "Quanto é 1234 vezes 56?",
+      "expected": "calcular",
+      "got": "calcular",
+      "decision_s": 0.4906796020004549,
+      "first_text": "",
+      "error": null,
+      "correct_choice": true,
+      "arguments": {
+        "expressao": "1234 * 56"
+      },
+      "args_ok": true,
+      "answer": "O resultado é 69104.",
+      "answer_first_chunk_s": 0.8226110119994701,
+      "text_ok": true,
+      "ok": true,
+      "run": 1
+    },
+    {
+      "question": "Quanto é 2 elevado a 10?",
+      "expected": "calcular",
+      "got": "calcular",
+      "decision_s": 0.5297539010007313,
+      "first_text": "",
+      "error": null,
+      "correct_choice": true,
+      "arguments": {
+        "expressao": "2**10"
+      },
+      "args_ok": true,
+      "answer": "O resultado é 1024.",
+      "answer_first_chunk_s": 0.7261324230003083,
+      "text_ok": true,
+      "ok": true,
+      "run": 1
+    },
+    {
+      "question": "Quanto é 25% de 250?",
+      "expected": "calcular",
+      "got": "calcular",
+      "decision_s": 0.48982908700054395,
+      "first_text": "",
+      "error": null,
+      "correct_choice": true,
+      "arguments": {
+        "expressao": "250 * 0.25"
+      },
+      "args_ok": true,
+      "answer": "São 62,5.",
+      "answer_first_chunk_s": 0.6132301369998459,
+      "text_ok": true,
+      "ok": true,
+      "run": 1
+    },
+    {
+      "question": "Tenho 1,5 tera usados e cresce 20 gigas por dia. Em quantos dias chego a 2 tera?",
+      "expected": "calcular",
+      "got": "calcular",
+      "decision_s": 0.5591006729991932,
+      "first_text": "",
+      "error": null,
+      "correct_choice": true,
+      "arguments": {
+        "expressao": "(2000 - 1500) / 20"
+      },
+      "args_ok": true,
+      "answer": "Você chega em 2 tera em 25 dias.",
+      "answer_first_chunk_s": 0.9034206550004455,
+      "text_ok": true,
+      "ok": true,
+      "run": 1
+    },
+    {
+      "question": "Tem algum alerta no Zabbix agora?",
+      "expected": "zabbix_problemas",
+      "got": "zabbix_problemas",
+      "decision_s": 0.776071743999637,
+      "first_text": "",
+      "error": null,
+      "correct_choice": true,
+      "arguments": {},
+      "args_ok": true,
+      "answer": "Sim, tem um alerta. O host agatha-srv está com uso de disco acima de 80%.",
+      "answer_first_chunk_s": 0.543952967000223,
+      "text_ok": true,
+      "ok": true,
+      "run": 1
+    },
+    {
+      "question": "Como está o host agatha-srv no Zabbix?",
+      "expected": "zabbix_host",
+      "got": "zabbix_host",
+      "decision_s": 0.7197740550000162,
+      "first_text": "",
+      "error": null,
+      "correct_choice": true,
+      "arguments": {
+        "host": "agatha-srv"
+      },
+      "args_ok": true,
+      "answer": "O host agatha-srv está no ar. A CPU está em 23% e a memória em 61%.",
+      "answer_first_chunk_s": 1.0453867849992093,
+      "text_ok": true,
+      "ok": true,
+      "run": 1
+    },
+    {
+      "question": "Qual o uso de CPU do servidor agatha-srv?",
+      "expected": "zabbix_host",
+      "got": "zabbix_host",
+      "decision_s": 0.7207229590003408,
+      "first_text": "",
+      "error": null,
+      "correct_choice": true,
+      "arguments": {
+        "host": "agatha-srv"
+      },
+      "args_ok": true,
+      "answer": "A CPU do agatha-srv está em 23%. A memória usa 61% e o disco em 41%.",
+      "answer_first_chunk_s": 1.2146162610006286,
+      "text_ok": true,
+      "ok": true,
+      "run": 1
+    },
+    {
+      "question": "Como estão as tablespaces do Oracle?",
+      "expected": "oracle_tablespaces",
+      "got": "oracle_tablespaces",
+      "decision_s": 0.6622986309994303,
+      "first_text": "",
+      "error": null,
+      "correct_choice": true,
+      "arguments": {},
+      "args_ok": true,
+      "answer": "As tablespaces estão assim: USERS em 91%, SYSTEM em 74% e SYSAUX em 66%.",
+      "answer_first_chunk_s": 0.7819485229993006,
+      "text_ok": true,
+      "ok": true,
+      "run": 1
+    },
+    {
+      "question": "Tem alguma tablespace quase cheia?",
+      "expected": "oracle_tablespaces",
+      "got": "oracle_tablespaces",
+      "decision_s": 0.6600569849997555,
+      "first_text": "",
+      "error": null,
+      "correct_choice": true,
+      "arguments": {},
+      "args_ok": true,
+      "answer": "A USERS está quase cheia. Ela tem 91% de uso.",
+      "answer_first_chunk_s": 0.8313184479993652,
+      "text_ok": true,
+      "ok": true,
+      "run": 1
+    },
+    {
+      "question": "Quantas sessões tem abertas no banco?",
+      "expected": "oracle_sessoes",
+      "got": "oracle_sessoes",
+      "decision_s": 0.7164187479993416,
+      "first_text": "",
+      "error": null,
+      "correct_choice": true,
+      "arguments": {},
+      "args_ok": true,
+      "answer": "Tem 48 sessões abertas. Dessas, 5 estão ativas.",
+      "answer_first_chunk_s": 0.7624398070001916,
+      "text_ok": true,
+      "ok": true,
+      "run": 1
+    },
+    {
+      "question": "Tem algum lock no banco agora?",
+      "expected": "oracle_banco",
+      "got": "oracle_banco",
+      "decision_s": 0.6939748019995022,
+      "first_text": "",
+      "error": null,
+      "correct_choice": true,
+      "arguments": {},
+      "args_ok": true,
+      "answer": "Tem 2 sessões bloqueadas. A situação geral do banco está aberta e em modo archivelog.",
+      "answer_first_chunk_s": 1.0684533410003496,
+      "text_ok": true,
+      "ok": true,
+      "run": 1
+    },
+    {
+      "question": "O banco está em modo archivelog?",
+      "expected": "oracle_banco",
+      "got": "oracle_banco",
+      "decision_s": 0.6586022669998783,
+      "first_text": "",
+      "error": null,
+      "correct_choice": true,
+      "arguments": {},
+      "args_ok": true,
+      "answer": "Sim, o modo archivelog está ligado. O banco está aberto e rodando no modo leitura e escrita.",
+      "answer_first_chunk_s": 0.7845633400011138,
+      "text_ok": true,
+      "ok": true,
+      "run": 1
+    },
+    {
+      "question": "O Data Guard está sincronizado?",
+      "expected": "oracle_banco",
+      "got": "oracle_banco",
+      "decision_s": 0.6786496370004897,
+      "first_text": "",
+      "error": null,
+      "correct_choice": true,
+      "arguments": {},
+      "args_ok": true,
+      "answer": "O Data Guard não está configurado. O banco está aberto e no modo leitura e escrita.",
+      "answer_first_chunk_s": 1.0748598480004148,
+      "text_ok": true,
+      "ok": true,
+      "run": 1
+    },
+    {
+      "question": "O backup de ontem rodou?",
+      "expected": "oracle_backups",
+      "got": "oracle_backups",
+      "decision_s": 0.6835836169993854,
+      "first_text": "",
+      "error": null,
+      "correct_choice": true,
+      "arguments": {},
+      "args_ok": true,
+      "answer": "Sim, o backup de ontem rodou. Foi um completo e concluiu com sucesso.",
+      "answer_first_chunk_s": 0.6437029429998802,
+      "text_ok": true,
+      "ok": true,
+      "run": 1
+    },
+    {
+      "question": "Me mostra os problemas de alta prioridade no Zabbix.",
+      "expected": "zabbix_problemas",
+      "got": "zabbix_problemas",
+      "decision_s": 0.7781457349992706,
+      "first_text": "",
+      "error": null,
+      "correct_choice": true,
+      "arguments": {
+        "severidade_minima": "alta"
+      },
+      "args_ok": true,
+      "answer": "Apenas um problema de média prioridade no agatha-srv. O uso de disco em /dados está acima de 80% desde 21h02.",
+      "answer_first_chunk_s": 1.1675842069998907,
+      "text_ok": true,
+      "ok": true,
+      "run": 1
+    },
+    {
+      "question": "A CI do agatha passou?",
+      "expected": "github_repo",
+      "got": "github_repo",
+      "decision_s": 0.6378287879997515,
+      "first_text": "",
+      "error": null,
+      "correct_choice": true,
+      "arguments": {
+        "repo": "agatha"
+      },
+      "args_ok": true,
+      "answer": "A última CI passou. Ela foi no workflow tests há 2 horas.",
+      "answer_first_chunk_s": 0.8875280920001387,
+      "text_ok": true,
+      "ok": true,
+      "run": 1
+    },
+    {
+      "question": "Qual foi o último commit no GitHub?",
+      "expected": "github_repo",
+      "got": "github_repo",
+      "decision_s": 0.6033159730013722,
+      "first_text": "",
+      "error": null,
+      "correct_choice": true,
+      "arguments": {
+        "repo": "agatha"
+      },
+      "args_ok": true,
+      "answer": "O último commit foi sobre fix(server): archivelog as text.",
+      "answer_first_chunk_s": 1.1763603210001747,
+      "text_ok": true,
+      "ok": true,
+      "run": 1
+    },
+    {
+      "question": "Tem issue aberta no repositório da Agatha?",
+      "expected": "github_repo",
+      "got": "github_repo",
+      "decision_s": 0.6093349909988319,
+      "first_text": "",
+      "error": null,
+      "correct_choice": true,
+      "arguments": {
+        "repo": "agatha"
+      },
+      "args_ok": true,
+      "answer": "Sim, tem uma issue aberta. É a \"voz a 48 kHz\".",
+      "answer_first_chunk_s": 0.7804808359996969,
+      "text_ok": true,
+      "ok": true,
+      "run": 1
+    },
+    {
+      "question": "O que é um pull request?",
+      "expected": null,
+      "got": null,
+      "decision_s": 0.28754317499988247,
+      "first_text": "É um pedido para revisar código. Permite que um desenvolvedor proponha mudanças em um repositório.",
+      "error": null,
+      "correct_choice": true,
+      "text_ok": true,
+      "ok": true,
+      "run": 1
+    },
+    {
+      "question": "Lembra que o meu servidor de testes se chama lab01.",
+      "expected": "guardar_fato",
+      "got": "guardar_fato",
+      "decision_s": 0.6711558679999143,
+      "first_text": "",
+      "error": null,
+      "correct_choice": true,
+      "arguments": {
+        "fato": "O servidor de testes do Reinaldo se chama lab01"
+      },
+      "args_ok": true,
+      "answer": "Anotei isso.",
+      "answer_first_chunk_s": 0.5419523180007673,
+      "text_ok": true,
+      "ok": true,
+      "run": 1
+    },
+    {
+      "question": "Anota aí: o backup roda todo dia às 2h.",
+      "expected": "guardar_fato",
+      "got": "guardar_fato",
+      "decision_s": 0.6635166649994062,
+      "first_text": "",
+      "error": null,
+      "correct_choice": true,
+      "arguments": {
+        "fato": "O backup roda todo dia às 2h"
+      },
+      "args_ok": true,
+      "answer": "Anotei para você. O backup roda todo dia às 2h.",
+      "answer_first_chunk_s": 0.5920366779992037,
+      "text_ok": true,
+      "ok": true,
+      "run": 1
+    },
+    {
+      "question": "Esquece que o banco de produção se chama PRDORA.",
+      "expected": "esquecer",
+      "got": "esquecer",
+      "decision_s": 0.6082066310009395,
+      "first_text": "",
+      "error": null,
+      "correct_choice": true,
+      "arguments": {
+        "numero": 2
+      },
+      "args_ok": true,
+      "answer": "Ok, esqueci essa informação.",
+      "answer_first_chunk_s": 0.38423920599962,
+      "text_ok": true,
+      "ok": true,
+      "run": 1
+    },
+    {
+      "question": "Pode apagar aquilo da reunião.",
+      "expected": "esquecer",
+      "got": "esquecer",
+      "decision_s": 0.6350502610002877,
+      "first_text": "",
+      "error": null,
+      "correct_choice": true,
+      "arguments": {
+        "numero": 3
+      },
+      "args_ok": true,
+      "answer": "Apaguei a informação da reunião.",
+      "answer_first_chunk_s": 0.6782540889998927,
+      "text_ok": true,
+      "ok": true,
+      "run": 1
+    },
+    {
+      "question": "Esquece isso.",
+      "expected": "esquecer",
+      "got": "esquecer",
+      "decision_s": 1.0937614369995572,
+      "first_text": "",
+      "error": null,
+      "correct_choice": true,
+      "arguments": {
+        "numero": 3
+      },
+      "args_ok": true,
+      "answer": "Certo, esqueci a informação.",
+      "answer_first_chunk_s": 0.45717086699914944,
+      "text_ok": true,
+      "ok": true,
+      "run": 1
+    },
+    {
+      "question": "Na verdade, apaga isso aí.",
+      "expected": "esquecer",
+      "got": "esquecer",
+      "decision_s": 0.6151934560002701,
+      "first_text": "",
+      "error": null,
+      "correct_choice": true,
+      "arguments": {
+        "numero": 3
+      },
+      "args_ok": true,
+      "answer": "Apaguei essa informação.",
+      "answer_first_chunk_s": 0.5714385730007052,
+      "text_ok": true,
+      "ok": true,
+      "run": 1
+    },
+    {
+      "question": "Esqueça essa informação.",
+      "expected": "esquecer",
+      "got": "esquecer",
+      "decision_s": 0.6410788769990177,
+      "first_text": "",
+      "error": null,
+      "correct_choice": true,
+      "arguments": {
+        "numero": 3
+      },
+      "args_ok": true,
+      "answer": "Certo, eu esqueci.",
+      "answer_first_chunk_s": 0.45424080200064054,
+      "text_ok": true,
+      "ok": true,
+      "run": 1
+    },
+    {
+      "question": "Esqueça essa informação.",
+      "expected": "esquecer",
+      "got": "esquecer",
+      "decision_s": 0.8577791450006771,
+      "first_text": "",
+      "error": null,
+      "correct_choice": true,
+      "arguments": {
+        "numero": 3
+      },
+      "args_ok": true,
+      "answer": "Feito, esqueci essa informação.",
+      "answer_first_chunk_s": 0.4914772889987944,
+      "text_ok": true,
+      "ok": true,
+      "run": 1
+    },
+    {
+      "question": "Esqueça essa informação.",
+      "expected": "esquecer",
+      "got": "esquecer",
+      "decision_s": 0.9145945039999788,
+      "first_text": "",
+      "error": null,
+      "correct_choice": true,
+      "arguments": {
+        "numero": 3
+      },
+      "args_ok": true,
+      "answer": "Pronto, esqueci essa informação.",
+      "answer_first_chunk_s": 0.4635904730002949,
+      "text_ok": true,
+      "ok": true,
+      "run": 1
+    },
+    {
+      "question": "Pode esquecer o que eu te falei.",
+      "expected": "esquecer",
+      "got": null,
+      "decision_s": 0.5122262120003143,
+      "first_text": "Qual informação você quer esquecer?",
+      "error": null,
+      "correct_choice": false,
+      "text_ok": true,
+      "ok": false,
+      "run": 1
+    },
+    {
+      "question": "Oi Agatha, tudo bem?",
+      "expected": null,
+      "got": null,
+      "decision_s": 0.2709432209994702,
+      "first_text": "Tudo ótimo por aqui. Como posso ajudar, Rei?",
+      "error": null,
+      "correct_choice": true,
+      "text_ok": true,
+      "ok": true,
+      "run": 1
+    },
+    {
+      "question": "O que é um trigger no Zabbix?",
+      "expected": null,
+      "got": null,
+      "decision_s": 0.2579381730010937,
+      "first_text": "Um trigger é uma condição que dispara um alerta. Ele avalia os valores dos itens que estão sendo coletados.",
+      "error": null,
+      "correct_choice": true,
+      "text_ok": true,
+      "ok": true,
+      "run": 1
+    },
+    {
+      "question": "O que é uma tablespace?",
+      "expected": null,
+      "got": null,
+      "decision_s": 0.24685465499896964,
+      "first_text": "É um espaço lógico de armazenamento no banco de dados. Ele agrupa objetos de dados, como tabelas e índices.",
+      "error": null,
+      "correct_choice": true,
+      "text_ok": true,
+      "ok": true,
+      "run": 1
+    },
+    {
+      "question": "Qual a diferença entre Podman e Docker?",
+      "expected": null,
+      "got": null,
+      "decision_s": 0.25718673699884675,
+      "first_text": "Eu não sei sobre Podman e Docker.",
+      "error": null,
+      "correct_choice": true,
+      "text_ok": true,
+      "ok": true,
+      "run": 1
+    },
+    {
+      "question": "Que horas são agora?",
+      "expected": null,
+      "got": null,
+      "decision_s": 0.26136848400165036,
+      "first_text": "São 21h30.",
+      "error": null,
+      "correct_choice": true,
+      "text_ok": true,
+      "ok": true,
+      "run": 1
+    },
+    {
+      "question": "Me sugere um filme de ação.",
+      "expected": null,
+      "got": null,
+      "decision_s": 0.25791448000018136,
+      "first_text": "Eu não sei filmes. Que tal um bom filme de infraestrutura?",
+      "error": null,
+      "correct_choice": true,
+      "text_ok": true,
+      "ok": true,
+      "run": 1
+    },
+    {
+      "question": "Obrigado, Agatha.",
+      "expected": null,
+      "got": null,
+      "decision_s": 0.24877259799905005,
+      "first_text": "De nada, Reinaldo. Estou aqui para ajudar.",
+      "error": null,
+      "correct_choice": true,
+      "text_ok": true,
+      "ok": true,
+      "run": 1
+    },
+    {
+      "question": "O que você sabe sobre mim?",
+      "expected": null,
+      "got": null,
+      "decision_s": 0.2886234309989959,
+      "first_text": "Você usa o padrão ambiente-servidor-host nos hosts do Zabbix. O banco de produção é PRDORA e a reunião é quinta às 10h.",
+      "error": null,
+      "correct_choice": true,
+      "text_ok": true,
+      "ok": true,
+      "run": 1
+    },
+    {
+      "question": "Qual o padrão de nome que eu uso nos hosts?",
+      "expected": null,
+      "got": null,
+      "decision_s": 0.25716186099998595,
+      "first_text": "O padrão é ambiente-servidor-host.",
+      "error": null,
+      "correct_choice": true,
+      "text_ok": true,
+      "ok": true,
+      "run": 1
+    },
+    {
+      "question": "Que horas é a reunião com o time?",
+      "expected": null,
+      "got": "guardar_fato",
+      "decision_s": 0.6633896040002583,
+      "first_text": "",
+      "error": null,
+      "correct_choice": false,
+      "arguments": {
+        "fato": "A reunião do Reinaldo com o time é na quinta às 10h"
+      },
+      "args_ok": false,
+      "answer": "A reunião é quinta às 10h.",
+      "answer_first_chunk_s": 0.8238129370001843,
+      "text_ok": true,
+      "ok": false,
+      "run": 1
+    },
+    {
+      "question": "Qual é mesmo o nome do meu banco de produção?",
+      "expected": null,
+      "got": "guardar_fato",
+      "decision_s": 0.664413701999365,
+      "first_text": "",
+      "error": null,
+      "correct_choice": false,
+      "arguments": {
+        "fato": "O banco de produção do Reinaldo se chama PRDORA"
+      },
+      "args_ok": false,
+      "answer": "O banco de produção é PRDORA.",
+      "answer_first_chunk_s": 0.7687924279998697,
+      "text_ok": true,
+      "ok": false,
+      "run": 1
+    },
+    {
+      "question": "Qual é o nome do meu banco de produção?",
+      "expected": null,
+      "got": "guardar_fato",
+      "decision_s": 1.1868012699997053,
+      "first_text": "",
+      "error": null,
+      "correct_choice": false,
+      "arguments": {
+        "fato": "O banco de produção do Reinaldo se chama PRDORA"
+      },
+      "args_ok": false,
+      "answer": "O banco de produção é PRDORA.",
+      "answer_first_chunk_s": 0.781513426998572,
+      "text_ok": true,
+      "ok": false,
+      "run": 1
+    },
+    {
+      "question": "Quando é mesmo a reunião com o time?",
+      "expected": null,
+      "got": "guardar_fato",
+      "decision_s": 1.1440090439991764,
+      "first_text": "",
+      "error": null,
+      "correct_choice": false,
+      "arguments": {
+        "fato": "A reunião com o time é na quinta às 10h"
+      },
+      "args_ok": false,
+      "answer": "A reunião é na quinta às 10h.",
+      "answer_first_chunk_s": 0.8930646440003329,
+      "text_ok": true,
+      "ok": false,
+      "run": 1
+    },
+    {
+      "question": "Qual o nome do meu notebook?",
+      "expected": null,
+      "got": null,
+      "decision_s": 0.2949559759999829,
+      "first_text": "Eu não tenho essa informação. Você não guardou isso na memória.",
+      "error": null,
+      "correct_choice": true,
+      "text_ok": true,
+      "ok": true,
+      "run": 1
+    },
+    {
+      "question": "Quanto é 15% de 240?",
+      "expected": "calcular",
+      "got": "calcular",
+      "decision_s": 0.49554577299932134,
+      "first_text": "",
+      "error": null,
+      "correct_choice": true,
+      "arguments": {
+        "expressao": "240 * 0.15"
+      },
+      "args_ok": true,
+      "answer": "São 36.",
+      "answer_first_chunk_s": 0.5016447910002171,
+      "text_ok": true,
+      "ok": true,
+      "run": 2
+    },
+    {
+      "question": "Quanto é 1234 vezes 56?",
+      "expected": "calcular",
+      "got": "calcular",
+      "decision_s": 0.48945869299859623,
+      "first_text": "",
+      "error": null,
+      "correct_choice": true,
+      "arguments": {
+        "expressao": "1234 * 56"
+      },
+      "args_ok": true,
+      "answer": "O resultado é 69104.",
+      "answer_first_chunk_s": 0.8197462159987481,
+      "text_ok": true,
+      "ok": true,
+      "run": 2
+    },
+    {
+      "question": "Quanto é 2 elevado a 10?",
+      "expected": "calcular",
+      "got": "calcular",
+      "decision_s": 0.5337886919987795,
+      "first_text": "",
+      "error": null,
+      "correct_choice": true,
+      "arguments": {
+        "expressao": "2**10"
+      },
+      "args_ok": true,
+      "answer": "É 1024.",
+      "answer_first_chunk_s": 0.6178662850015826,
+      "text_ok": true,
+      "ok": true,
+      "run": 2
+    },
+    {
+      "question": "Quanto é 25% de 250?",
+      "expected": "calcular",
+      "got": "calcular",
+      "decision_s": 0.49054123400128447,
+      "first_text": "",
+      "error": null,
+      "correct_choice": true,
+      "arguments": {
+        "expressao": "250 * 0.25"
+      },
+      "args_ok": true,
+      "answer": "É 62,5.",
+      "answer_first_chunk_s": 0.6193420470008277,
+      "text_ok": true,
+      "ok": true,
+      "run": 2
+    },
+    {
+      "question": "Tenho 1,5 tera usados e cresce 20 gigas por dia. Em quantos dias chego a 2 tera?",
+      "expected": "calcular",
+      "got": "calcular",
+      "decision_s": 0.5523227510002471,
+      "first_text": "",
+      "error": null,
+      "correct_choice": true,
+      "arguments": {
+        "expressao": "(2 - 1.5) / 20"
+      },
+      "args_ok": false,
+      "answer": "Você levará cerca de 0,025 dias.",
+      "answer_first_chunk_s": 1.0169951309999306,
+      "text_ok": true,
+      "ok": false,
+      "run": 2
+    },
+    {
+      "question": "Tem algum alerta no Zabbix agora?",
+      "expected": "zabbix_problemas",
+      "got": "zabbix_problemas",
+      "decision_s": 0.7758399610011111,
+      "first_text": "",
+      "error": null,
+      "correct_choice": true,
+      "arguments": {},
+      "args_ok": true,
+      "answer": "Tem um alerta de média. O host agatha-srv está com uso de disco em /dados acima de 80%.",
+      "answer_first_chunk_s": 0.7196042310006305,
+      "text_ok": true,
+      "ok": true,
+      "run": 2
+    },
+    {
+      "question": "Como está o host agatha-srv no Zabbix?",
+      "expected": "zabbix_host",
+      "got": "zabbix_host",
+      "decision_s": 0.7287569919990347,
+      "first_text": "",
+      "error": null,
+      "correct_choice": true,
+      "arguments": {
+        "host": "agatha-srv"
+      },
+      "args_ok": true,
+      "answer": "O agatha-srv está no ar. O uso de CPU é de 23% e memória de 61%.",
+      "answer_first_chunk_s": 0.9879593030000251,
+      "text_ok": true,
+      "ok": true,
+      "run": 2
+    },
+    {
+      "question": "Qual o uso de CPU do servidor agatha-srv?",
+      "expected": "zabbix_host",
+      "got": "zabbix_host",
+      "decision_s": 0.7285201560007408,
+      "first_text": "",
+      "error": null,
+      "correct_choice": true,
+      "arguments": {
+        "host": "agatha-srv"
+      },
+      "args_ok": true,
+      "answer": "A CPU do agatha-srv está em 23%. O disco em /dados está em 41%.",
+      "answer_first_chunk_s": 1.2227729559999716,
+      "text_ok": true,
+      "ok": true,
+      "run": 2
+    },
+    {
+      "question": "Como estão as tablespaces do Oracle?",
+      "expected": "oracle_tablespaces",
+      "got": "oracle_tablespaces",
+      "decision_s": 0.6729708330003632,
+      "first_text": "",
+      "error": null,
+      "correct_choice": true,
+      "arguments": {},
+      "args_ok": true,
+      "answer": "As tablespaces estão assim: USERS 91%, SYSTEM 74% e SYSAUX 66%.",
+      "answer_first_chunk_s": 0.7870480029996543,
+      "text_ok": true,
+      "ok": true,
+      "run": 2
+    },
+    {
+      "question": "Tem alguma tablespace quase cheia?",
+      "expected": "oracle_tablespaces",
+      "got": "oracle_tablespaces",
+      "decision_s": 0.6623713159988256,
+      "first_text": "",
+      "error": null,
+      "correct_choice": true,
+      "arguments": {},
+      "args_ok": true,
+      "answer": "Sim, a USERS está quase cheia, com 91%.",
+      "answer_first_chunk_s": 0.5557076540007984,
+      "text_ok": true,
+      "ok": true,
+      "run": 2
+    },
+    {
+      "question": "Quantas sessões tem abertas no banco?",
+      "expected": "oracle_sessoes",
+      "got": "oracle_sessoes",
+      "decision_s": 0.721965258999262,
+      "first_text": "",
+      "error": null,
+      "correct_choice": true,
+      "arguments": {},
+      "args_ok": true,
+      "answer": "Tem 48 sessões abertas no banco. Cinco delas estão ativas.",
+      "answer_first_chunk_s": 0.8786864440007776,
+      "text_ok": true,
+      "ok": true,
+      "run": 2
+    },
+    {
+      "question": "Tem algum lock no banco agora?",
+      "expected": "oracle_banco",
+      "got": "oracle_banco",
+      "decision_s": 0.6967731770000682,
+      "first_text": "",
+      "error": null,
+      "correct_choice": true,
+      "arguments": {},
+      "args_ok": true,
+      "answer": "Sim, tem 2 sessões bloqueadas e 1 bloqueando.",
+      "answer_first_chunk_s": 0.7883544899996195,
+      "text_ok": true,
+      "ok": true,
+      "run": 2
+    },
+    {
+      "question": "O banco está em modo archivelog?",
+      "expected": "oracle_banco",
+      "got": "oracle_banco",
+      "decision_s": 0.6627782800005662,
+      "first_text": "",
+      "error": null,
+      "correct_choice": true,
+      "arguments": {},
+      "args_ok": true,
+      "answer": "Sim, o modo archivelog está ligado. O banco está no modo leitura e escrita.",
+      "answer_first_chunk_s": 0.7951067359990702,
+      "text_ok": true,
+      "ok": true,
+      "run": 2
+    },
+    {
+      "question": "O Data Guard está sincronizado?",
+      "expected": "oracle_banco",
+      "got": "oracle_banco",
+      "decision_s": 0.6881833690003987,
+      "first_text": "",
+      "error": null,
+      "correct_choice": true,
+      "arguments": {},
+      "args_ok": true,
+      "answer": "O Data Guard não está configurado. O banco está aberto e no modo de leitura e escrita.",
+      "answer_first_chunk_s": 1.0756103559997428,
+      "text_ok": true,
+      "ok": true,
+      "run": 2
+    },
+    {
+      "question": "O backup de ontem rodou?",
+      "expected": "oracle_backups",
+      "got": "oracle_backups",
+      "decision_s": 0.6803447610000148,
+      "first_text": "",
+      "error": null,
+      "correct_choice": true,
+      "arguments": {},
+      "args_ok": true,
+      "answer": "Sim, o backup de ontem rodou. Foi um completo e está concluído.",
+      "answer_first_chunk_s": 0.6564535050001723,
+      "text_ok": true,
+      "ok": true,
+      "run": 2
+    },
+    {
+      "question": "Me mostra os problemas de alta prioridade no Zabbix.",
+      "expected": "zabbix_problemas",
+      "got": "zabbix_problemas",
+      "decision_s": 0.7805170249994262,
+      "first_text": "",
+      "error": null,
+      "correct_choice": true,
+      "arguments": {
+        "severidade_minima": "alta"
+      },
+      "args_ok": true,
+      "answer": "Tem um problema de média severidade no agatha-srv. O disco em /dados está acima de 80% desde as 21h02.",
+      "answer_first_chunk_s": 1.116720317000727,
+      "text_ok": true,
+      "ok": true,
+      "run": 2
+    },
+    {
+      "question": "A CI do agatha passou?",
+      "expected": "github_repo",
+      "got": "github_repo",
+      "decision_s": 0.6437321039993549,
+      "first_text": "",
+      "error": null,
+      "correct_choice": true,
+      "arguments": {
+        "repo": "agatha"
+      },
+      "args_ok": true,
+      "answer": "A última CI do agatha passou. Ela rodou há 2 horas.",
+      "answer_first_chunk_s": 1.0648573649996251,
+      "text_ok": true,
+      "ok": true,
+      "run": 2
+    },
+    {
+      "question": "Qual foi o último commit no GitHub?",
+      "expected": "github_repo",
+      "got": "github_repo",
+      "decision_s": 0.609246958998483,
+      "first_text": "",
+      "error": null,
+      "correct_choice": true,
+      "arguments": {},
+      "args_ok": true,
+      "answer": "O último commit foi um fix no servidor, feito há 3 horas. A CI também passou há 2 horas.",
+      "answer_first_chunk_s": 1.1778506269984064,
+      "text_ok": true,
+      "ok": true,
+      "run": 2
+    },
+    {
+      "question": "Tem issue aberta no repositório da Agatha?",
+      "expected": "github_repo",
+      "got": "github_repo",
+      "decision_s": 0.6066461359987443,
+      "first_text": "",
+      "error": null,
+      "correct_choice": true,
+      "arguments": {
+        "repo": "agatha"
+      },
+      "args_ok": true,
+      "answer": "Tem uma issue aberta. É sobre voz a 48 kHz.",
+      "answer_first_chunk_s": 0.9014624940009526,
+      "text_ok": true,
+      "ok": true,
+      "run": 2
+    },
+    {
+      "question": "O que é um pull request?",
+      "expected": null,
+      "got": null,
+      "decision_s": 0.28827738300060446,
+      "first_text": "É um pedido para revisar código. Permite que colaboradores sugiram alterações em um repositório.",
+      "error": null,
+      "correct_choice": true,
+      "text_ok": true,
+      "ok": true,
+      "run": 2
+    },
+    {
+      "question": "Lembra que o meu servidor de testes se chama lab01.",
+      "expected": "guardar_fato",
+      "got": "guardar_fato",
+      "decision_s": 0.6645897029993648,
+      "first_text": "",
+      "error": null,
+      "correct_choice": true,
+      "arguments": {
+        "fato": "O servidor de testes do Reinaldo se chama lab01"
+      },
+      "args_ok": true,
+      "answer": "Guardo essa informação.",
+      "answer_first_chunk_s": 0.5446341690003464,
+      "text_ok": true,
+      "ok": true,
+      "run": 2
+    },
+    {
+      "question": "Anota aí: o backup roda todo dia às 2h.",
+      "expected": "guardar_fato",
+      "got": "guardar_fato",
+      "decision_s": 0.6661283699995693,
+      "first_text": "",
+      "error": null,
+      "correct_choice": true,
+      "arguments": {
+        "fato": "O backup roda todo dia às 2h"
+      },
+      "args_ok": true,
+      "answer": "Anotei isso. O backup roda todo dia às 2h.",
+      "answer_first_chunk_s": 0.5387276470009965,
+      "text_ok": true,
+      "ok": true,
+      "run": 2
+    },
+    {
+      "question": "Esquece que o banco de produção se chama PRDORA.",
+      "expected": "esquecer",
+      "got": "esquecer",
+      "decision_s": 0.6112925949983037,
+      "first_text": "",
+      "error": null,
+      "correct_choice": true,
+      "arguments": {
+        "numero": 2
+      },
+      "args_ok": true,
+      "answer": "Tudo certo, esqueci.",
+      "answer_first_chunk_s": 0.5094447689989465,
+      "text_ok": true,
+      "ok": true,
+      "run": 2
+    },
+    {
+      "question": "Pode apagar aquilo da reunião.",
+      "expected": "esquecer",
+      "got": "esquecer",
+      "decision_s": 0.6440891700003704,
+      "first_text": "",
+      "error": null,
+      "correct_choice": true,
+      "arguments": {
+        "numero": 3
+      },
+      "args_ok": true,
+      "answer": "Apaguei a informação da reunião.",
+      "answer_first_chunk_s": 0.6835478909997619,
+      "text_ok": true,
+      "ok": true,
+      "run": 2
+    },
+    {
+      "question": "Esquece isso.",
+      "expected": "esquecer",
+      "got": "esquecer",
+      "decision_s": 1.0977811649991054,
+      "first_text": "",
+      "error": null,
+      "correct_choice": true,
+      "arguments": {
+        "numero": 3
+      },
+      "args_ok": true,
+      "answer": "Esqueci a informação.",
+      "answer_first_chunk_s": 0.5809690489986679,
+      "text_ok": true,
+      "ok": true,
+      "run": 2
+    },
+    {
+      "question": "Na verdade, apaga isso aí.",
+      "expected": "esquecer",
+      "got": "esquecer",
+      "decision_s": 0.6250115540005936,
+      "first_text": "",
+      "error": null,
+      "correct_choice": true,
+      "arguments": {
+        "numero": 3
+      },
+      "args_ok": true,
+      "answer": "Desfiz isso.",
+      "answer_first_chunk_s": 0.45683609700063244,
+      "text_ok": true,
+      "ok": true,
+      "run": 2
+    },
+    {
+      "question": "Esqueça essa informação.",
+      "expected": "esquecer",
+      "got": "esquecer",
+      "decision_s": 0.6455005429997982,
+      "first_text": "",
+      "error": null,
+      "correct_choice": true,
+      "arguments": {
+        "numero": 3
+      },
+      "args_ok": true,
+      "answer": "Desfiz o esquecimento.",
+      "answer_first_chunk_s": 0.5802402200006327,
+      "text_ok": true,
+      "ok": true,
+      "run": 2
+    },
+    {
+      "question": "Esqueça essa informação.",
+      "expected": "esquecer",
+      "got": "esquecer",
+      "decision_s": 0.8701102329996502,
+      "first_text": "",
+      "error": null,
+      "correct_choice": true,
+      "arguments": {
+        "numero": 3
+      },
+      "args_ok": true,
+      "answer": "Ok, apaguei essa informação.",
+      "answer_first_chunk_s": 0.4065342120011337,
+      "text_ok": true,
+      "ok": true,
+      "run": 2
+    },
+    {
+      "question": "Esqueça essa informação.",
+      "expected": "esquecer",
+      "got": "esquecer",
+      "decision_s": 0.91893881499891,
+      "first_text": "",
+      "error": null,
+      "correct_choice": true,
+      "arguments": {
+        "numero": 3
+      },
+      "args_ok": true,
+      "answer": "Pronto, esqueci essa informação.",
+      "answer_first_chunk_s": 0.472819423999681,
+      "text_ok": true,
+      "ok": true,
+      "run": 2
+    },
+    {
+      "question": "Pode esquecer o que eu te falei.",
+      "expected": "esquecer",
+      "got": null,
+      "decision_s": 0.5239679779988364,
+      "first_text": "Qual informação você quer esquecer?",
+      "error": null,
+      "correct_choice": false,
+      "text_ok": true,
+      "ok": false,
+      "run": 2
+    },
+    {
+      "question": "Oi Agatha, tudo bem?",
+      "expected": null,
+      "got": null,
+      "decision_s": 0.27962961199955316,
+      "first_text": "Tudo ótimo por aqui. Em que posso ajudar, Rei?",
+      "error": null,
+      "correct_choice": true,
+      "text_ok": true,
+      "ok": true,
+      "run": 2
+    },
+    {
+      "question": "O que é um trigger no Zabbix?",
+      "expected": null,
+      "got": null,
+      "decision_s": 0.26335035000010976,
+      "first_text": "Um trigger é uma regra de alerta. Ele verifica se um item atingiu um estado crítico ou anormal.",
+      "error": null,
+      "correct_choice": true,
+      "text_ok": true,
+      "ok": true,
+      "run": 2
+    },
+    {
+      "question": "O que é uma tablespace?",
+      "expected": null,
+      "got": null,
+      "decision_s": 0.24768838899944967,
+      "first_text": "É um espaço lógico no banco de dados. Ele agrupa objetos de dados como tabelas e índices.",
+      "error": null,
+      "correct_choice": true,
+      "text_ok": true,
+      "ok": true,
+      "run": 2
+    },
+    {
+      "question": "Qual a diferença entre Podman e Docker?",
+      "expected": null,
+      "got": null,
+      "decision_s": 0.2632891680004832,
+      "first_text": "Eu não sei sobre Podman e Docker. É um assunto que não está nos meus conhecimentos técnicos atuais.",
+      "error": null,
+      "correct_choice": true,
+      "text_ok": true,
+      "ok": true,
+      "run": 2
+    },
+    {
+      "question": "Que horas são agora?",
+      "expected": null,
+      "got": null,
+      "decision_s": 0.26026128900048207,
+      "first_text": "São 21h30.",
+      "error": null,
+      "correct_choice": true,
+      "text_ok": true,
+      "ok": true,
+      "run": 2
+    },
+    {
+      "question": "Me sugere um filme de ação.",
+      "expected": null,
+      "got": null,
+      "decision_s": 0.2637953829998878,
+      "first_text": "Eu não sei de filmes. Que tal eu verificar algo da sua infraestrutura?",
+      "error": null,
+      "correct_choice": true,
+      "text_ok": true,
+      "ok": true,
+      "run": 2
+    },
+    {
+      "question": "Obrigado, Agatha.",
+      "expected": null,
+      "got": null,
+      "decision_s": 0.24733034600103565,
+      "first_text": "De nada, Rei. Estou à disposição.",
+      "error": null,
+      "correct_choice": true,
+      "text_ok": true,
+      "ok": true,
+      "run": 2
+    },
+    {
+      "question": "O que você sabe sobre mim?",
+      "expected": null,
+      "got": null,
+      "decision_s": 0.29516502800106537,
+      "first_text": "Você trabalha com infraestrutura e cloud. Seu banco de produção é o PRDORA.",
+      "error": null,
+      "correct_choice": true,
+      "text_ok": true,
+      "ok": true,
+      "run": 2
+    },
+    {
+      "question": "Qual o padrão de nome que eu uso nos hosts?",
+      "expected": null,
+      "got": null,
+      "decision_s": 0.264727194000443,
+      "first_text": "O padrão é ambiente-servidor-host.",
+      "error": null,
+      "correct_choice": true,
+      "text_ok": true,
+      "ok": true,
+      "run": 2
+    },
+    {
+      "question": "Que horas é a reunião com o time?",
+      "expected": null,
+      "got": "guardar_fato",
+      "decision_s": 0.6661576269998477,
+      "first_text": "",
+      "error": null,
+      "correct_choice": false,
+      "arguments": {
+        "fato": "A reunião do Reinaldo com o time é na quinta às 10h"
+      },
+      "args_ok": false,
+      "answer": "A reunião é quinta às 10h.",
+      "answer_first_chunk_s": 0.8235233480008901,
+      "text_ok": true,
+      "ok": false,
+      "run": 2
+    },
+    {
+      "question": "Qual é mesmo o nome do meu banco de produção?",
+      "expected": null,
+      "got": "guardar_fato",
+      "decision_s": 0.6640580279999995,
+      "first_text": "",
+      "error": null,
+      "correct_choice": false,
+      "arguments": {
+        "fato": "O banco de produção do Reinaldo se chama PRDORA"
+      },
+      "args_ok": false,
+      "answer": "O nome do seu banco de produção é PRDORA.",
+      "answer_first_chunk_s": 0.9350315189985849,
+      "text_ok": true,
+      "ok": false,
+      "run": 2
+    },
+    {
+      "question": "Qual é o nome do meu banco de produção?",
+      "expected": null,
+      "got": "guardar_fato",
+      "decision_s": 1.1784433150005498,
+      "first_text": "",
+      "error": null,
+      "correct_choice": false,
+      "arguments": {
+        "fato": "O banco de produção do Reinaldo se chama PRDORA"
+      },
+      "args_ok": false,
+      "answer": "O banco de produção é PRDORA.",
+      "answer_first_chunk_s": 0.7798965239999234,
+      "text_ok": true,
+      "ok": false,
+      "run": 2
+    },
+    {
+      "question": "Quando é mesmo a reunião com o time?",
+      "expected": null,
+      "got": null,
+      "decision_s": 0.7388416469984804,
+      "first_text": "A reunião é na quinta-feira às 10h.",
+      "error": null,
+      "correct_choice": true,
+      "text_ok": true,
+      "ok": true,
+      "run": 2
+    },
+    {
+      "question": "Qual o nome do meu notebook?",
+      "expected": null,
+      "got": null,
+      "decision_s": 0.28762114900018787,
+      "first_text": "Não tenho essa informação.",
+      "error": null,
+      "correct_choice": true,
+      "text_ok": true,
+      "ok": true,
+      "run": 2
+    }
+  ]
+}
