@@ -188,4 +188,6 @@ Modelos, memória e logs ficam fora do repositório, em `/dados/agatha/{models,d
       mal ouvidos em vez de inventar (53/90 → 75/90, invenções 6 → 0)
 - [x] **Fase 7**: voz: teste de audição e Kokoro avaliado no ar; a voz dii ficou, com a pronúncia de
       horas e siglas corrigida
-- [ ] Próximos: mais ferramentas, transcrição parcial para perguntas longas
+- [x] **Fase 8**: mais ferramentas: estado e backups do Oracle (RMAN diário no laboratório), severidade no
+      Zabbix e GitHub (commits, PRs, issues, CI), somente leitura
+- [ ] Próximos: transcrição parcial para perguntas longas, memória mais confiável

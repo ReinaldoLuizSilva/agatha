@@ -176,8 +176,8 @@ agatha/
       server/.env; padrão piper). Pronúncia: horas no feminino ("vinte e uma e dois") e siglas Oracle (RMAN,
       AWR, ASH, ASM, CDB, PDB, SPFILE) em `text.ACRONYMS`, ajustáveis de ouvido. Plano B guardado: destilar a
       pf_dora numa voz Piper (noites de treino na GPU, qualidade incerta) — só com aprovação.
-- [ ] Fase 8: mais ferramentas (escopo aprovado em 19/10; ADR-020) — tudo no ar, inclusive o GitHub (token
-      configurado e testado em 19/10); falta o Reinaldo fechar. `oracle_banco` (aberto, archivelog, papel/Data Guard, versão, no ar há, locks) e
+- [x] Fase 8: mais ferramentas (fechada em 19/10; ADR-020) — tudo no ar, inclusive o GitHub (token fine-grained
+      configurado e testado em 19/10; ele expira: quando vencer, gerar outro). `oracle_banco` (aberto, archivelog, papel/Data Guard, versão, no ar há, locks) e
       `oracle_backups` (últimos jobs do RMAN); duas conexões: AGATHA_RO na PDB e o usuário comum C##AGATHA_RO
       no CDB (a PDB não enxerga os backups). Laboratório em ARCHIVELOG com backup RMAN diário às 02:30
       (`deploy/oracle/backup.sh`, `oracle-backup.timer`, FRA de 10 GB). `zabbix_problemas` com
@@ -188,3 +188,7 @@ agatha/
       95/111, invenções 0, 1º áudio p50 ~2,07 s. GitHub com 1 nova tentativa se a conexão falhar (a rede oscilou
       no 1º teste). Ponto fraco: pergunta sobre fato da memória às vezes chama uma ferramenta antes (ex.:
       "nome do banco de produção" → oracle_banco), só atrasa ~1 s.
+- [ ] Fase 9: a definir com o Reinaldo (candidatas: transcrição parcial para perguntas longas; memória — o ponto
+      fraco recorrente, guardar_fato/ferramenta em pergunta sobre fato guardado; barge-in com as melhorias de
+      áudio do Windows desligadas). Prompt em 2311 tokens: antes de nova ferramenta, enxugar ou juntar regras.
+      Não começar sem escopo aprovado.
