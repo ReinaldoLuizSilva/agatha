@@ -168,7 +168,7 @@ agatha/
       Agatha sem swap (MemorySwapMax=0, ADR-013 item 8).
       Para acompanhar no uso: o registro de turnos mostra se as invenções sumiram de verdade; "você quis
       dizer" às vezes aparece com sigla conhecida (STT); o STT erra ~1 em 5 termos de jargão.
-- [ ] Fase 7: voz nova (escopo aprovado em 19/10; ADR-019) — feita, falta o Reinaldo fechar. Teste de audição
+- [x] Fase 7: voz nova (fechada em 19/10; ADR-019): a voz continua a dii. Teste de audição
       (`bench/voice_samples.py`): dii a 16/22 kHz e com menos ruído soaram iguais; Kokoro pf_dora bem mais natural.
       Kokoro na GPU não roda (onnxruntime-gpu do PyPI é CUDA 13; o build CUDA 12 falha no cuDNN 9.27 na LSTM,
       Pascal obsoleto desde o cuDNN 9.9) e não caberia na VRAM. No CPU, no ar, 1º som ~2,9 s (2,2–3,8) contra
@@ -176,3 +176,5 @@ agatha/
       server/.env; padrão piper). Pronúncia: horas no feminino ("vinte e uma e dois") e siglas Oracle (RMAN,
       AWR, ASH, ASM, CDB, PDB, SPFILE) em `text.ACRONYMS`, ajustáveis de ouvido. Plano B guardado: destilar a
       pf_dora numa voz Piper (noites de treino na GPU, qualidade incerta) — só com aprovação.
+- [ ] Fase 8: a definir com o Reinaldo (candidatas: mais ferramentas — GitHub, mais Zabbix/Oracle, medidas nos
+      benchmarks; transcrição parcial para perguntas longas). Não começar sem escopo aprovado.

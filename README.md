@@ -185,4 +185,6 @@ Modelos, memória e logs ficam fora do repositório, em `/dados/agatha/{models,d
       de eco próprio e confirmação pela transcrição no servidor
 - [x] **Fase 6**: precisão: benchmarks com as falas reais e a voz do dono, prompt que confirma termos
       mal ouvidos em vez de inventar (53/90 → 75/90, invenções 6 → 0)
-- [ ] Próximos: voz nova, transcrição parcial para perguntas longas, mais ferramentas
+- [x] **Fase 7**: voz: teste de audição e Kokoro avaliado no ar; a voz dii ficou, com a pronúncia de
+      horas e siglas corrigida
+- [ ] Próximos: mais ferramentas, transcrição parcial para perguntas longas
