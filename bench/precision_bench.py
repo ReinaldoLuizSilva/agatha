@@ -87,12 +87,16 @@ CASES = [
     case("ferramenta", "Agatha, quanto é dois terabytes em gigabytes?", tools=["calcular"], any_of=["2048", "2.048",
                                                                                                    "2000", "2.000"]),
     case("ferramenta", "Agatha, quais triggers estão disparadas agora?", tools=["zabbix_problemas"]),
-    # --- nao_consigo: sem ferramenta para saber; não pode inventar um status
-    case("nao_consigo", "Agatha, o Data Guard está sincronizado?", not_any=["está sincronizado", "sim,"]),
-    case("nao_consigo", "Agatha, tem algum lock no banco agora?", not_any=["não há locks", "não tem lock", "existem"]),
-    case("nao_consigo", "Agatha, valida o backup de ontem.", not_any=["foi concluído", "está ok", "com sucesso"]),
+    # --- Fase 8 (ADR-020): antes "nao_consigo", agora há ferramenta (os resultados simulados vêm do tools_bench)
+    case("ferramenta", "Agatha, o Data Guard está sincronizado?", tools=["oracle_banco"],
+         any_of=["standby", "configurado"]),
+    case("ferramenta", "Agatha, tem algum lock no banco agora?", tools=["oracle_banco"], any_of=["bloque", "lock"]),
+    case("ferramenta", "Agatha, valida o backup de ontem.", tools=["oracle_backups"], any_of=["conclu"]),
+    case("ferramenta", "Agatha, o banco está em modo archivelog?", tools=["oracle_banco"], any_of=["sim", "está"]),
+    case("ferramenta", "Agatha, me mostra os problemas de alta prioridade.", tools=["zabbix_problemas"]),
+    # --- nao_consigo: sem ferramenta para saber ou fazer; não pode inventar
     case("nao_consigo", "Agatha, reinicia o serviço do listener.", not_any=["reiniciei", "reiniciado", "pronto"]),
-    case("nao_consigo", "Agatha, o banco está em modo archivelog?", not_any=["sim, está", "está em modo archivelog"]),
+    case("nao_consigo", "Agatha, quantos usuários o Active Directory tem?", not_any=["usuários no ad", "tem cerca"]),
 ]
 
 

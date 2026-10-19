@@ -63,13 +63,18 @@ _ORACLE_FAKE = {
     "oracle_tablespaces": {"tablespaces": [{"nome": "USERS", "usado_pct": 91}, {"nome": "SYSTEM", "usado_pct": 74},
                                            {"nome": "SYSAUX", "usado_pct": 66}]},
     "oracle_sessoes": {"total": 48, "ativas": 5},
+    "oracle_banco": {"instancia": "aberta", "modo": "leitura e escrita", "archivelog": True, "papel": "primário",
+                     "versao": "23.9.0.25.07", "no_ar_ha": "4 dias", "sessoes_bloqueadas": 2,
+                     "sessoes_bloqueando": 1, "maior_espera": "3 minutos", "data_guard": "sem standby configurado"},
+    "oracle_backups": {"backups": [{"inicio": "ontem às 02h31", "tipo": "completo", "status": "concluído",
+                                    "tamanho": "437 MB", "duracao": "1 minuto"}], "ultimo_concluido_ha": "19 horas"},
 }
 ZABBIX_ORACLE = [
     # Zabbix: definições reais do servidor (esquema, regra, exemplo), com resultado simulado
     *[dataclasses.replace(t, handler=fake(_ZABBIX_FAKE[t.name]))
       for t in zabbix_tools(ZabbixClient(ZabbixConfig(url="http://x", token="x", default_host="agatha-srv")))],
     # Oracle: definições reais do servidor, com resultado simulado
-    *[dataclasses.replace(t, handler=fake(_ORACLE_FAKE[t.name])) for t in oracle_tools(None)],
+    *[dataclasses.replace(t, handler=fake(_ORACLE_FAKE[t.name])) for t in oracle_tools(None, lambda sql: None)],
 ]
 
 
@@ -133,6 +138,13 @@ CASES = [
     ("Como estão as tablespaces do Oracle?", "oracle_tablespaces", lambda a: True, "USERS", None),
     ("Tem alguma tablespace quase cheia?", "oracle_tablespaces", lambda a: True, "USERS", None),
     ("Quantas sessões tem abertas no banco?", "oracle_sessoes", lambda a: True, "48", None),
+    # Fase 8 (ADR-020)
+    ("Tem algum lock no banco agora?", "oracle_banco", lambda a: True, "bloque", None),
+    ("O banco está em modo archivelog?", "oracle_banco", lambda a: True, "sim", None),
+    ("O Data Guard está sincronizado?", "oracle_banco", lambda a: True, "configurado", None),
+    ("O backup de ontem rodou?", "oracle_backups", lambda a: True, "conclu", None),
+    ("Me mostra os problemas de alta prioridade no Zabbix.", "zabbix_problemas",
+     lambda a: a.get("severidade_minima") == "alta", None, None),
     ("Lembra que o meu servidor de testes se chama lab01.", "guardar_fato", lambda a: "lab01" in a.get("fato", "").lower(), None, None),
     ("Anota aí: o backup roda todo dia às 2h.", "guardar_fato", lambda a: "backup" in a.get("fato", "").lower(), None, None),
     ("Esquece que o banco de produção se chama PRDORA.", "esquecer", lambda a: int(a.get("numero")) == 2, None, None),
