@@ -186,7 +186,8 @@ def oracle_tools(query: Query, cdb_query: Query | None = None) -> list[Tool]:
         result = {
             "instancia": "aberta" if status == "OPEN" else status.lower(),
             "modo": "leitura e escrita" if open_mode == "READ WRITE" else open_mode.lower(),
-            "archivelog": log_mode == "ARCHIVELOG",
+            # texto, não booleano: com true/false o modelo pulava o campo ("está em archivelog?" sem resposta)
+            "modo_archivelog": "ligado" if log_mode == "ARCHIVELOG" else "desligado",
             "papel": ROLES.get(role, role.lower()),
             "versao": version,
             "no_ar_ha": _duration(float(hours)),

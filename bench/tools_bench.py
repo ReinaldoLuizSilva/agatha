@@ -63,7 +63,7 @@ _ORACLE_FAKE = {
     "oracle_tablespaces": {"tablespaces": [{"nome": "USERS", "usado_pct": 91}, {"nome": "SYSTEM", "usado_pct": 74},
                                            {"nome": "SYSAUX", "usado_pct": 66}]},
     "oracle_sessoes": {"total": 48, "ativas": 5},
-    "oracle_banco": {"instancia": "aberta", "modo": "leitura e escrita", "archivelog": True, "papel": "primário",
+    "oracle_banco": {"instancia": "aberta", "modo": "leitura e escrita", "modo_archivelog": "ligado", "papel": "primário",
                      "versao": "23.9.0.25.07", "no_ar_ha": "4 dias", "sessoes_bloqueadas": 2,
                      "sessoes_bloqueando": 1, "maior_espera": "3 minutos", "data_guard": "sem standby configurado"},
     "oracle_backups": {"backups": [{"inicio": "ontem às 02h31", "tipo": "completo", "status": "concluído",
@@ -140,7 +140,7 @@ CASES = [
     ("Quantas sessões tem abertas no banco?", "oracle_sessoes", lambda a: True, "48", None),
     # Fase 8 (ADR-020)
     ("Tem algum lock no banco agora?", "oracle_banco", lambda a: True, "bloque", None),
-    ("O banco está em modo archivelog?", "oracle_banco", lambda a: True, "sim", None),
+    ("O banco está em modo archivelog?", "oracle_banco", lambda a: True, "archivelog", None),
     ("O Data Guard está sincronizado?", "oracle_banco", lambda a: True, "configurado", None),
     ("O backup de ontem rodou?", "oracle_backups", lambda a: True, "conclu", None),
     ("Me mostra os problemas de alta prioridade no Zabbix.", "zabbix_problemas",

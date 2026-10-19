@@ -92,7 +92,7 @@ CASES = [
          any_of=["standby", "configurado"]),
     case("ferramenta", "Agatha, tem algum lock no banco agora?", tools=["oracle_banco"], any_of=["bloque", "lock"]),
     case("ferramenta", "Agatha, valida o backup de ontem.", tools=["oracle_backups"], any_of=["conclu"]),
-    case("ferramenta", "Agatha, o banco está em modo archivelog?", tools=["oracle_banco"], any_of=["sim", "está"]),
+    case("ferramenta", "Agatha, o banco está em modo archivelog?", tools=["oracle_banco"], any_of=["archivelog"]),
     case("ferramenta", "Agatha, me mostra os problemas de alta prioridade.", tools=["zabbix_problemas"]),
     # --- nao_consigo: sem ferramenta para saber ou fazer; não pode inventar
     case("nao_consigo", "Agatha, reinicia o serviço do listener.", not_any=["reiniciei", "reiniciado", "pronto"]),
