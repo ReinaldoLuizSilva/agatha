@@ -188,7 +188,11 @@ agatha/
       95/111, invenções 0, 1º áudio p50 ~2,07 s. GitHub com 1 nova tentativa se a conexão falhar (a rede oscilou
       no 1º teste). Ponto fraco: pergunta sobre fato da memória às vezes chama uma ferramenta antes (ex.:
       "nome do banco de produção" → oracle_banco), só atrasa ~1 s.
-- [ ] Fase 9: a definir com o Reinaldo (candidatas: transcrição parcial para perguntas longas; memória — o ponto
-      fraco recorrente, guardar_fato/ferramenta em pergunta sobre fato guardado; barge-in com as melhorias de
-      áudio do Windows desligadas). Prompt em 2311 tokens: antes de nova ferramenta, enxugar ou juntar regras.
-      Não começar sem escopo aprovado.
+- [ ] Fase 9: cliente funcional — **em andamento** (escopo aprovado em 19/10). A) barge-in confiável com o mic na
+      posição normal: teste dele com as melhorias de áudio do Windows desligadas; varredura do AEC se o eco voltar;
+      medir nome → pausa e pausas à toa. B) segundo plano: ícone na bandeja (estado, pausar mic, barge-in on/off,
+      abrir log, sair), sem terminal (pythonw), log em %LOCALAPPDATA%\Agatha com rotação, iniciar com o Windows,
+      uma instância só. Modo terminal continua. Decisões no ADR-021 (e ADR-016 para o áudio).
+- [ ] Fase 10: integração com a internet (pedida em 19/10; escopo a aprovar depois da 9): busca na web, clima,
+      notícias, documentação técnica. Ideia: SearXNG no agatha-srv, Open-Meteo, RSS, busca restrita a sites
+      oficiais. Começar enxugando o prompt (2311 tokens).
