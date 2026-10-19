@@ -41,16 +41,23 @@ class GitHubClient:
     def __init__(self, config: GitHubConfig, transport: httpx.AsyncBaseTransport | None = None):
         self.config = config
         self._client = httpx.AsyncClient(
-            base_url=API, timeout=httpx.Timeout(8.0, connect=3.0), transport=transport,
+            base_url=API, timeout=httpx.Timeout(8.0, connect=5.0), transport=transport,
             headers={"Authorization": f"Bearer {config.token}", "Accept": "application/vnd.github+json",
                      "X-GitHub-Api-Version": "2022-11-28", "User-Agent": "agatha-srv"},
         )
 
     async def get(self, path: str, **params):
-        try:
-            r = await self._client.get(path, params=params)
-        except httpx.HTTPError as e:
-            raise GitHubError(f"sem conexão com o GitHub ({type(e).__name__})") from e
+        # uma nova tentativa se a conexão falhar: no 1º teste real (19/10) a rede oscilou por ~1 minuto
+        for attempt in (1, 2):
+            try:
+                r = await self._client.get(path, params=params)
+                break
+            except (httpx.ConnectError, httpx.ConnectTimeout) as e:
+                if attempt == 2:
+                    raise GitHubError(f"sem conexão com o GitHub ({type(e).__name__})") from e
+                await asyncio.sleep(0.5)
+            except httpx.HTTPError as e:
+                raise GitHubError(f"sem conexão com o GitHub ({type(e).__name__})") from e
         if r.status_code == 401:
             raise GitHubError("o token do GitHub foi recusado (inválido ou expirado)")
         if r.status_code in (403, 404):

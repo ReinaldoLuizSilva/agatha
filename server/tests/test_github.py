@@ -74,3 +74,23 @@ def test_desligado_sem_token():
     assert not GitHubConfig().enabled
     assert not GitHubConfig(token="x").enabled
     assert GitHubConfig(token="x", repos=REPOS).enabled
+
+
+def test_uma_nova_tentativa_quando_a_conexao_falha():
+    calls = []
+
+    def flaky(request):
+        calls.append(request.url.path)
+        if len(calls) == 1:
+            raise httpx.ConnectTimeout("timeout", request=request)
+        return fake_api(request)
+
+    assert asyncio.run(tool(flaky).handler({}))["repositorio"] == "agatha"
+    assert calls[0] == calls[1] == "/repos/ReinaldoLuizSilva/agatha"  # a 1ª requisição foi repetida
+
+
+def test_conexao_que_continua_falhando_vira_erro():
+    def down(request):
+        raise httpx.ConnectError("unreachable", request=request)
+
+    assert asyncio.run(tool(down).handler({})) == {"erro": "sem conexão com o GitHub (ConnectError)"}
