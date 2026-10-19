@@ -19,6 +19,9 @@ dependencies = [
     "piper-tts==1.8.0",
     # Oracle de laboratório (ADR-012): modo thin, sem Instant Client
     "oracledb==26.0.1",
+    # TTS alternativo (ADR-019): Kokoro v1.0 (Apache 2.0) na CPU; usa o phonemizer + eSpeak NG (GPL-3.0,
+    # como o Piper)
+    "kokoro-onnx==0.6.1",
 ]
 
 [project.optional-dependencies]

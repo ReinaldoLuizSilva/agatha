@@ -45,11 +45,12 @@ def main() -> int:
     transcriber.warmup()
     log.info("STT pronto em %.1f s", time.perf_counter() - t0)
 
-    log.info("carregando TTS: %s", config.tts.voice)
+    log.info("carregando TTS (%s)", config.tts.engine)
     t0 = time.perf_counter()
     synthesizer = Synthesizer(config.tts)
     synthesizer.warmup()
-    log.info("TTS pronto em %.1f s (%d Hz)", time.perf_counter() - t0, synthesizer.sample_rate)
+    log.info("TTS pronto em %.1f s: %s, %d Hz", time.perf_counter() - t0, synthesizer.description,
+             synthesizer.sample_rate)
 
     asyncio.run(run(config, transcriber, LLMClient(config.llm), synthesizer))
     return 0

@@ -30,6 +30,8 @@ ENV AGATHA_STT_MODELS_DIR=/models/whisper \
     AGATHA_MEMORY_DB=/data/memory/agatha.db \
     AGATHA_LOG_DIR=/logs \
     AGATHA_TTS_VOICE=/models/tts/piper/dii_pt-BR.onnx \
+    AGATHA_TTS_KOKORO_MODEL=/models/tts/kokoro/kokoro-v1.0.onnx \
+    AGATHA_TTS_KOKORO_VOICES=/models/tts/kokoro/voices-v1.0.bin \
     AGATHA_LLM_URL=http://127.0.0.1:8080 \
     PYTHONUNBUFFERED=1
 

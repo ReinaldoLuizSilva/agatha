@@ -64,3 +64,18 @@ def test_host_padrao_do_zabbix(tmp_path):
     env = {"AGATHA_ENV_FILE": str(tmp_path / "nao-existe"), "AGATHA_TOKEN": "x",
            "AGATHA_ZABBIX_DEFAULT_HOST": "agatha-srv"}
     assert load_config(env).zabbix.default_host == "agatha-srv"
+
+
+def test_motor_de_voz(tmp_path):
+    base = {"AGATHA_TOKEN": "x", "AGATHA_ENV_FILE": str(tmp_path / "x")}
+    assert load_config(base).tts.engine == "piper"
+    config = load_config({**base, "AGATHA_TTS_ENGINE": "kokoro", "AGATHA_TTS_KOKORO_VOICE": "pf_dora"})
+    assert (config.tts.engine, config.tts.kokoro_voice) == ("kokoro", "pf_dora")
+
+
+def test_motor_de_voz_invalido():
+    import pytest
+    from agatha_server.tts import Synthesizer, TTSConfig
+
+    with pytest.raises(ValueError, match="AGATHA_TTS_ENGINE"):
+        Synthesizer(TTSConfig(engine="espeak"))

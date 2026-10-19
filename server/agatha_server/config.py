@@ -124,7 +124,12 @@ def load_config(env: dict | None = None) -> ServerConfig:
             max_tokens=get("LLM_MAX_TOKENS", llm_defaults.max_tokens, int),
         ),
         tts=TTSConfig(
+            engine=get("TTS_ENGINE", tts_defaults.engine),
             voice=get("TTS_VOICE", tts_defaults.voice),
+            kokoro_model=get("TTS_KOKORO_MODEL", tts_defaults.kokoro_model),
+            kokoro_voices=get("TTS_KOKORO_VOICES", tts_defaults.kokoro_voices),
+            kokoro_voice=get("TTS_KOKORO_VOICE", tts_defaults.kokoro_voice),
+            kokoro_speed=get("TTS_KOKORO_SPEED", tts_defaults.kokoro_speed, float),
             length_scale=get("TTS_LENGTH_SCALE", tts_defaults.length_scale, float),
             threads=get("TTS_THREADS", tts_defaults.threads, int),
         ),
