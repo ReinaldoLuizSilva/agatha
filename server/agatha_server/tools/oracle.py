@@ -198,7 +198,7 @@ def oracle_tools(query: Query, cdb_query: Query | None = None) -> list[Tool]:
             result["maior_espera"] = _duration(float(waited) / 3600)
         if dataguard is not None:
             (standbys, in_sync), = dataguard
-            result["data_guard"] = ("sem standby configurado" if not standbys
+            result["data_guard"] = ("não configurado: o banco não tem standby" if not standbys
                                     else f"{int(standbys)} standby, {int(in_sync)} sincronizado sem atraso")
         return result
 

@@ -62,7 +62,7 @@ def test_estado_do_banco_com_locks_e_data_guard():
     result = asyncio.run(by_name(cdb_query=fake_cdb_query)["oracle_banco"].handler({}))
     assert result == {"instancia": "aberta", "modo": "leitura e escrita", "modo_archivelog": "ligado", "papel": "primário",
                       "versao": "23.9.0.25.07", "no_ar_ha": "4 dias", "sessoes_bloqueadas": 3,
-                      "sessoes_bloqueando": 1, "maior_espera": "2 minutos", "data_guard": "sem standby configurado"}
+                      "sessoes_bloqueando": 1, "maior_espera": "2 minutos", "data_guard": "não configurado: o banco não tem standby"}
 
 
 def test_estado_do_banco_sem_conexao_do_cdb():
