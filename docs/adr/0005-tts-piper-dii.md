@@ -1,6 +1,6 @@
 # ADR-005: TTS com Piper e a voz feminina "dii" (PT-BR), na CPU
 
-- **Status:** Aceito (provisório quanto à voz: a ideia é trocar por uma voz mais limpa quando houver)
+- **Status:** Aceito (a voz, antes provisória, foi reavaliada e mantida no [ADR-019](0019-voz.md))
 - **Data:** 2026-10-11
 
 ## Contexto
