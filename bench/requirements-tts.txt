@@ -1,3 +1,4 @@
 piper-tts==1.8.0
 kokoro-onnx==0.6.1
 soundfile==0.14.0
+num2words==0.5.14

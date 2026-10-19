@@ -1,0 +1,83 @@
+{
+  "date": "2026-10-19T09:56:58",
+  "sentences": [
+    "São 21h02 de sexta-feira, Rei.",
+    "Deixa eu ver. Tem um problema no agatha-srv: o disco do /dados está com 85% de uso.",
+    "O RMAN é o utilitário de backup e recuperação do Oracle. Ele faz backups consistentes e restaura o banco em caso de falha.",
+    "De nada, Reinaldo. Qualquer coisa, é só chamar."
+  ],
+  "spoken": [
+    "São vinte e um e dois de sexta-feira, Rei.",
+    "Deixa eu ver. Tem um problema no agatha-srv: o disco do /dados está com oitenta e cinco por cento de uso.",
+    "O RMAN é o utilitário de backup e recuperação do Oracle. Ele faz backups consistentes e restaura o banco em caso de falha.",
+    "De nada, Reinaldo. Qualquer coisa, é só chamar."
+  ],
+  "versions": {
+    "dii-atual": {
+      "description": "dii como toca hoje (16 kHz, modo barge-in)",
+      "rate": 16000,
+      "params": {},
+      "short_sentence_ms": 130,
+      "synth_s": [
+        0.187,
+        0.262,
+        0.279,
+        0.13
+      ]
+    },
+    "dii-22k": {
+      "description": "dii na qualidade original (22 kHz, como antes do barge-in)",
+      "rate": 22050,
+      "params": {},
+      "short_sentence_ms": 142,
+      "synth_s": [
+        0.099,
+        0.253,
+        0.272,
+        0.142
+      ]
+    },
+    "dii-limpa": {
+      "description": "dii com menos ruído na síntese (noise 0,4 / 0,5)",
+      "rate": 22050,
+      "params": {
+        "noise_scale": 0.4,
+        "noise_w_scale": 0.5
+      },
+      "short_sentence_ms": 141,
+      "synth_s": [
+        0.095,
+        0.249,
+        0.264,
+        0.141
+      ]
+    },
+    "dii-mais-limpa": {
+      "description": "dii com bem menos ruído (noise 0,25 / 0,3)",
+      "rate": 22050,
+      "params": {
+        "noise_scale": 0.25,
+        "noise_w_scale": 0.3
+      },
+      "short_sentence_ms": 136,
+      "synth_s": [
+        0.11,
+        0.247,
+        0.259,
+        0.136
+      ]
+    },
+    "kokoro-dora": {
+      "description": "Kokoro pf_dora (24 kHz, Apache 2.0)",
+      "rate": 24000,
+      "params": {},
+      "short_sentence_ms": 1096,
+      "synth_s": [
+        1.143,
+        2.39,
+        2.855,
+        1.096
+      ]
+    }
+  }
+}
