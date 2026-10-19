@@ -3,6 +3,8 @@
 Uso:
     python -m agatha_client                       # microfone e saída de som padrão
     python -m agatha_client --no-barge-in         # sem interromper a Agatha (half-duplex puro)
+    pythonw -m agatha_client --tray               # em segundo plano, com ícone na bandeja (Windows)
+    python -m agatha_client --autostart ligar     # inicia com o Windows, em segundo plano
     python -m agatha_client --list-devices        # lista os dispositivos de entrada e saída
     python -m agatha_client --device 3            # escolhe o microfone
     python -m agatha_client --output-device 5     # escolhe a saída de som
@@ -33,6 +35,7 @@ from . import __version__
 from .audio import (FRAME_S, SAMPLE_RATE, DuplexAudio, FatalError, MicSource, NullPlayer, Player, WavSource,
                     list_devices)
 from .bargein import BargeIn
+from .controls import CONNECTING, LISTENING, OFFLINE, SPEAKING, Controls
 
 PROTOCOL_VERSION = 2
 FRAME_MS = round(FRAME_S * 1000)  # 32
@@ -45,8 +48,9 @@ FATAL_ERRORS = {"unauthorized", "unsupported_protocol", "unsupported_audio"}
 
 class Session:
     def __init__(self, ws, source: MicSource | WavSource | DuplexAudio, player: Player | NullPlayer | DuplexAudio,
-                 wake: dict | None = None, barge: BargeIn | None = None):
+                 wake: dict | None = None, barge: BargeIn | None = None, controls: Controls | None = None):
         self.ws = ws
+        self.controls = controls or Controls()
         self.wake = wake or {}
         self.source = source
         self.player = player
@@ -61,18 +65,23 @@ class Session:
         self._confirming: int | None = None  # barge-in à espera do servidor (número da resposta)
         self._finish_task: asyncio.Task | None = None
         self._tasks: set[asyncio.Task] = set()
+        self._barge_fire: dict | None = None  # disparo em confirmação: quando foi e se já mediu o atraso
+        self.barge_counts = {"disparos": 0, "parou": 0, "retomou": 0}
 
     async def send_loop(self) -> None:
         async for item in self.source.frames():
             if self.barge is not None:
                 mic, ref, captured_at = item
-                active = self._speaking is not None and self._confirming is None
+                active = (self._speaking is not None and self._confirming is None and self.controls.barge_in
+                          and not self.controls.muted)
                 pcm, captured_at, fired = self.barge.process(mic, ref, captured_at, active)
                 if fired is not None:
-                    await self._start_barge_in(fired)  # já envia este bloco, junto com o que veio antes
+                    await self._start_barge_in(fired, captured_at)  # já envia este bloco e o que veio antes
                     continue
             else:
                 pcm, captured_at = item
+            if self.controls.muted:
+                pcm = bytes(len(pcm))  # silêncio: fecha a frase que estiver aberta e mantém a contagem
             if not self.can_send.is_set():
                 if not self.source.finite:
                     continue  # microfone: descarta o que foi dito durante a resposta
@@ -97,6 +106,7 @@ class Session:
             if msg["event"] == "start":
                 self.pending.add(msg["segment"])
                 print(f"  ▶ ouvindo... (#{msg['segment']})", flush=True)
+                self._report_barge_delay(msg["audio_ms"])
             else:
                 self.speech_end_ms[msg["segment"]] = msg["speech_end_ms"]
         elif kind == "transcript":
@@ -115,6 +125,7 @@ class Session:
             self.player.begin()
             self._reply = {"response": msg["response"], "segment": msg["segment"]}
             self._speaking = self._reply
+            self.controls.status(SPEAKING)
             if self.barge is not None:
                 self.barge.begin_stats(time.monotonic())
             print("  agatha: ", end="", flush=True)
@@ -150,15 +161,18 @@ class Session:
         self.pending.discard(reply["segment"])
         self._speaking = None
         self.can_send.set()
+        self.controls.status(LISTENING)
 
     # --- Barge-in -----------------------------------------------------------------------
 
-    async def _start_barge_in(self, score: float) -> None:
+    async def _start_barge_in(self, score: float, fired_at: float = 0.0) -> None:
         """Ouviu "Agatha" por cima da resposta: pausa, avisa o servidor e manda o áudio desde antes
         do nome; o microfone segue aberto até o servidor decidir (`barge_in_end`)."""
         n = self._speaking["response"]
         self.player.pause()
         self._confirming = n
+        self._barge_fire = {"at": fired_at, "reported": False}
+        self.barge_counts["disparos"] += 1
         await self.ws.send(json.dumps({"type": "barge_in", "response": n, "played_ms": round(self.player.played_ms())}))
         for pcm, captured_at in self.barge.pre_roll():
             await self.ws.send(pcm)
@@ -170,6 +184,7 @@ class Session:
         if self._confirming != msg["response"]:
             return
         self._confirming = None
+        self.barge_counts["retomou" if msg["action"] == "resume" else "parou"] += 1
         if msg["action"] == "resume":
             print("  (não era comigo; continuando)", flush=True)
             self.barge.hold(time.monotonic())
@@ -193,6 +208,22 @@ class Session:
             self.pending.discard(self._speaking["segment"])
         self._reply = self._speaking = None
         self.can_send.set()
+        self.controls.status(LISTENING)
+
+    def _report_barge_delay(self, audio_ms: int) -> None:
+        """No 1º começo de fala depois de um disparo: quanto tempo depois do começo da sua fala o
+        detector disparou (o nome dura ~0,5 s; meta: pausa < 300 ms depois do fim dele) e quanto a
+        pausa leva para sair nas caixas (a latência de saída)."""
+        fire = self._barge_fire
+        if self._confirming is None or fire is None or fire["reported"]:
+            return
+        fire["reported"] = True
+        index = audio_ms // FRAME_MS
+        if 0 <= index < len(self.captured_at) and fire["at"]:
+            delay = round((fire["at"] - self.captured_at[index]) * 1000)
+            out = round(getattr(self.player, "latency", 0) * 1000)
+            print(f"    ⏱ barge-in: disparou {delay} ms depois do começo da sua fala; a pausa sai nas caixas "
+                  f"~{out} ms depois", flush=True)
 
     def _print_barge_stats(self) -> None:
         line = self.barge.end_stats() if self.barge is not None else None
@@ -209,7 +240,9 @@ class Session:
         return bool(self.pending) or not self.can_send.is_set()
 
 
-async def session(url: str, token: str, source: MicSource | WavSource | DuplexAudio, args, detector=None) -> None:
+async def session(url: str, token: str, source: MicSource | WavSource | DuplexAudio, args, detector=None,
+                  controls: Controls | None = None) -> None:
+    controls = controls or Controls()
     duplex = isinstance(source, DuplexAudio)
     async with connect(url, open_timeout=5, max_size=2**22) as ws:
         hello = {
@@ -251,7 +284,8 @@ async def session(url: str, token: str, source: MicSource | WavSource | DuplexAu
         else:
             print("Pode falar. Ctrl+C para sair.\n")
 
-        s = Session(ws, source, player, wake, barge)
+        s = Session(ws, source, player, wake, barge, controls)
+        controls.status(LISTENING)
         receiver = asyncio.create_task(s.receive_loop())
         sender = asyncio.create_task(s.send_loop())
         try:
@@ -276,6 +310,10 @@ async def session(url: str, token: str, source: MicSource | WavSource | DuplexAu
                 task.cancel()
             await asyncio.gather(*tasks, return_exceptions=True)
             player.close()
+            c = s.barge_counts
+            if c["disparos"]:
+                print(f"barge-in nesta conexão: {c['disparos']} disparos, {c['parou']} confirmados (ela parou), "
+                      f"{c['retomou']} à toa (ela continuou)", flush=True)
 
 
 def report_delay(delay_ms: float, confidence: float | None) -> None:
@@ -297,15 +335,19 @@ def load_detector(args):
         return None
 
 
-async def run(url: str, token: str, source: MicSource | WavSource | DuplexAudio, args, detector=None) -> None:
+async def run(url: str, token: str, source: MicSource | WavSource | DuplexAudio, args, detector=None,
+              controls: Controls | None = None) -> None:
+    controls = controls or Controls()
     while True:
+        controls.status(CONNECTING)
         try:
-            await session(url, token, source, args, detector)
+            await session(url, token, source, args, detector, controls)
             if source.finite:
                 return
         except (ConnectionClosed, ConnectionError, OSError, TimeoutError) as e:
             if source.finite:
                 raise FatalError(f"conexão falhou: {e}")
+            controls.status(OFFLINE)
             print(f"conexão com {url} indisponível ({e or type(e).__name__}); nova tentativa em {RETRY_S:g} s")
         await asyncio.sleep(RETRY_S)
 
@@ -344,6 +386,11 @@ def main() -> int:
                         help="nota mínima do detector para interromper (padrão: 0.6; mais alto erra menos e acerta menos)")
     parser.add_argument("--echo-delay-ms", type=float,
                         help="atraso do eco em ms (padrão: medido nos primeiros segundos de fala dela)")
+    parser.add_argument("--tray", action="store_true",
+                        help="em segundo plano, com ícone na bandeja; o que sairia na tela vai para o log "
+                             "(%%LOCALAPPDATA%%\\Agatha\\client.log). Use com pythonw (extra [tray])")
+    parser.add_argument("--autostart", choices=["ligar", "desligar"],
+                        help="inicia (ou não) a Agatha em segundo plano junto com o Windows e sai")
     args = parser.parse_args()
     args.device = device_arg(args.device)
     args.output_device = device_arg(args.output_device)
@@ -355,22 +402,18 @@ def main() -> int:
     except FatalError as e:
         print(f"erro: {e}", file=sys.stderr)
         return 1
+    if args.autostart:
+        return autostart(args.autostart)
+    if args.tray:
+        return tray_main(args)
 
-    env = {**read_env_file(Path(".env")), **os.environ}
-    url = args.url or env.get("AGATHA_URL") or DEFAULT_URL
-    token = args.token or env.get("AGATHA_TOKEN")
+    url, token = server_address(args)
     if not token:
         print("token não informado (--token, AGATHA_TOKEN ou .env)", file=sys.stderr)
         return 2
 
     try:
-        detector = None
-        if args.wav:
-            source = WavSource(args.wav)
-        elif not args.no_barge_in and (detector := load_detector(args)) is not None:
-            source = DuplexAudio(args.device, args.output_device)
-        else:
-            source = MicSource(args.device)
+        source, detector = open_audio(args)
         asyncio.run(run(url, token, source, args, detector))
     except FatalError as e:
         print(f"erro: {e}", file=sys.stderr)
@@ -380,6 +423,71 @@ def main() -> int:
         return 2
     except KeyboardInterrupt:
         print("\naté logo!")
+    return 0
+
+
+def server_address(args) -> tuple[str, str | None]:
+    env = {**read_env_file(Path(".env")), **os.environ}
+    return args.url or env.get("AGATHA_URL") or DEFAULT_URL, args.token or env.get("AGATHA_TOKEN")
+
+
+def open_audio(args):
+    detector = None
+    if args.wav:
+        return WavSource(args.wav), None
+    if not args.no_barge_in and (detector := load_detector(args)) is not None:
+        return DuplexAudio(args.device, args.output_device), detector
+    return MicSource(args.device), None
+
+
+def autostart(action: str) -> int:
+    from . import autostart as auto
+
+    try:
+        if action == "ligar":
+            print(f"pronto: a Agatha vai iniciar com o Windows, em segundo plano ({auto.enable()})")
+        else:
+            print("pronto: não inicia mais com o Windows" if auto.disable() else "já não iniciava com o Windows")
+    except (RuntimeError, OSError) as e:
+        print(f"erro: {e}", file=sys.stderr)
+        return 1
+    return 0
+
+
+def tray_main(args) -> int:
+    """Modo bandeja (ADR-021): sem terminal; tudo o que seria impresso vai para o log."""
+    from .instance import SingleInstance
+    from .tray import TrayApp, log_dir, setup_logging
+
+    log_path = setup_logging()
+    instance = SingleInstance(lock_dir=log_dir())
+    if not instance.acquire():
+        print("a Agatha já está rodando (veja o ícone na bandeja); saindo")
+        return 1
+    print(f"Agatha {__version__} em segundo plano; log em {log_path}")
+    url, token = server_address(args)
+    if not token:
+        print("token não informado (AGATHA_TOKEN no .env da pasta do cliente)", file=sys.stderr)
+        return 2
+    try:
+        import PIL  # noqa: F401
+        import pystray  # noqa: F401
+    except ImportError as e:
+        print(f"modo bandeja precisa do extra [tray]: pip install -e \".[tray]\" ({e})", file=sys.stderr)
+        return 1
+    try:
+        source, detector = open_audio(args)
+        client = lambda controls: run(url, token, source, args, detector, controls)  # noqa: E731
+    except FatalError as error:  # ex.: microfone que não abre: a bandeja fica vermelha e avisa
+        detector = None
+
+        async def client(controls, error=error):
+            raise error
+    try:
+        TrayApp(client, has_barge_in=detector is not None, log_path=log_path).run()
+    finally:
+        instance.release()
+    print("até logo!")
     return 0
 
 

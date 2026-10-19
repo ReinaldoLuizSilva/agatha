@@ -114,6 +114,31 @@ Para testar sem microfone, envie um arquivo WAV de 16 kHz:
 .venv\Scripts\python -m agatha_client --wav frase.wav
 ```
 
+### Em segundo plano (ícone na bandeja)
+
+Para usar no dia a dia sem janela de terminal ([ADR-021](../docs/adr/0021-cliente-em-segundo-plano.md)):
+
+```powershell
+.venv\Scripts\pip install -e ".[barge-in,tray]"
+.venv\Scripts\pythonw -m agatha_client --tray        # roda agora, sem janela
+.venv\Scripts\python -m agatha_client --autostart ligar     # e passa a iniciar com o Windows
+```
+
+O ícone da Agatha aparece perto do relógio (às vezes escondido na setinha `^`). A cor mostra o estado:
+
+| cor | estado |
+|---|---|
+| verde | ouvindo |
+| azul | falando |
+| âmbar | microfone pausado (ela recebe silêncio) |
+| cinza | conectando ou sem conexão com o servidor (tenta de novo a cada 3 s) |
+| vermelho | erro: passe o mouse ou abra o log |
+
+O menu (clique direito) tem **Pausar o microfone**, **Interromper pelo nome (barge-in)**, **Abrir o
+log** e **Sair**. O que o modo terminal mostra na tela vai para `%LOCALAPPDATA%\Agatha\client.log`
+(até 4 arquivos de 1 MB). Só uma Agatha roda por vez: abrir de novo não cria um segundo cliente.
+Para não iniciar mais com o Windows: `.venv\Scripts\python -m agatha_client --autostart desligar`.
+
 ## Gravar o jargão para o benchmark do STT (Fase 6)
 
 40 frases com o jargão do trabalho (RMAN, AWR, Data Guard, trigger, template...), ~6 min, para medir
@@ -192,4 +217,6 @@ As gravações têm a sua voz: ficam só no notebook e em `/dados`, nunca no git
 | `barge-in desligado: No module named 'openwakeword'` | `.venv\Scripts\pip install -e ".[barge-in]"` |
 | `microfone e saída de som precisam aceitar 16000 Hz` | escolha os dois `[MME]` com `--device` e `--output-device`, ou use `--no-barge-in` |
 | ela pausa sozinha às vezes (`✋` sem você falar) | disparo falso com a voz dela; o servidor confere e ela continua. Se for frequente, suba `--barge-threshold` (ex.: 0.8) |
+| o ícone não aparece | confira se o extra `[tray]` está instalado e abra `%LOCALAPPDATA%\Agatha\client.log`; o ícone pode estar escondido na setinha `^` da bandeja |
+| "a Agatha já está rodando" no log | já existe um cliente aberto (bandeja ou terminal); feche-o pelo menu **Sair** |
 | diz "Agatha" e ela não para | veja a `nota máx` na linha `ⓘ barge-in`: se ficou perto do limiar, baixe `--barge-threshold` (ex.: 0.5); se ficou em 0, afaste o microfone das caixas (o cancelamento de eco do Windows apaga a sua voz junto com a dela) |

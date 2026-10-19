@@ -164,3 +164,51 @@ def test_comando_de_parar_com_ela_calada_nao_fica_pendente():
     s._on_message({"type": "transcript", "segment": 3, "text": "Agatha, para.", "addressed": True,
                    "command": "stop", "timings": {"stt_ms": 300}})
     assert not s.pending  # o servidor não vai responder: o modo --wav não fica esperando
+
+
+def test_microfone_pausado_manda_silencio():
+    from agatha_client.controls import Controls
+
+    async def scenario():
+        s = Session(FakeWS(), FakeSource(3), FakePlayer(), {}, FakeBarge(), Controls(muted=True))
+        await s.send_loop()
+        return s
+
+    s = asyncio.run(scenario())
+    assert s.ws.sent == [b"\x00" * 4] * 3 and len(s.captured_at) == 3
+
+
+def test_barge_in_desligado_na_bandeja_nao_dispara():
+    from agatha_client.controls import Controls
+
+    async def scenario():
+        s = Session(FakeWS(), FakeSource(6), FakePlayer(), {}, FakeBarge(fire_on=4), Controls(barge_in=False))
+        s._on_message({"type": "response_start", "response": 1, "segment": 1})
+        await s.send_loop()
+        return s
+
+    s = asyncio.run(scenario())
+    assert jsons(s.ws) == [] and s._confirming is None
+
+
+def test_estados_da_resposta():
+    from agatha_client.controls import LISTENING, SPEAKING, Controls
+
+    seen = []
+    s = Session(FakeWS(), FakeSource(0), FakePlayer(), {}, FakeBarge(), Controls(on_status=seen.append))
+    s._on_message({"type": "response_start", "response": 1, "segment": 1})
+    asyncio.run(s._start_barge_in(0.97))
+    s._on_message({"type": "barge_in_end", "response": 1, "action": "stop", "segment": 2})
+    assert seen == [SPEAKING, LISTENING]
+    assert s.barge_counts == {"disparos": 1, "parou": 1, "retomou": 0}
+
+
+def test_mede_do_comeco_da_fala_ate_o_disparo(capsys):
+    s = make()
+    s.captured_at = [10.0 + 0.032 * i for i in range(100)]  # blocos de 32 ms
+    s._on_message({"type": "response_start", "response": 1, "segment": 1})
+    asyncio.run(s._start_barge_in(0.97, fired_at=10.0 + 0.032 * 40))
+    s._on_message({"type": "vad", "event": "start", "segment": 2, "audio_ms": 25 * 32})
+    s._on_message({"type": "vad", "event": "start", "segment": 3, "audio_ms": 30 * 32})  # só mede uma vez
+    out = capsys.readouterr().out
+    assert out.count("⏱ barge-in: disparou 480 ms depois do começo da sua fala") == 1

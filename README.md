@@ -121,6 +121,7 @@ consequências:
 | [018](docs/adr/0018-precisao.md) | precisão: benchmark das falas reais, prompt v5, STT no limite do modelo |
 | [019](docs/adr/0019-voz.md) | voz: a dii continua, Kokoro fica como opção, pronúncia corrigida |
 | [020](docs/adr/0020-mais-ferramentas.md) | mais ferramentas: estado e backups do Oracle, severidade no Zabbix, GitHub |
+| [021](docs/adr/0021-cliente-em-segundo-plano.md) | cliente em segundo plano: ícone na bandeja do Windows |
 
 ## Qualidade e operação
 
