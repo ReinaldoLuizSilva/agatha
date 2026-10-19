@@ -147,6 +147,20 @@ def _int(n: int) -> str:
     return num2words(n, lang="pt_BR").replace(",", "")  # "mil, quinhentos": a vírgula viraria pausa
 
 
+def _hour(n: int) -> str:
+    """Hora no feminino: "uma", "duas", "vinte e uma" (21h02 saía "vinte e um e dois")."""
+    words = _int(n)
+    if n % 10 == 1 and n != 11:
+        return words[: -len("um")] + "uma"
+    if n % 10 == 2 and n != 12:
+        return words[: -len("dois")] + "duas"
+    return words
+
+
+def _hours(n: int) -> str:
+    return f"{_hour(n)} {'hora' if n == 1 else 'horas'}"
+
+
 def _digits_words(s: str) -> str:
     return _int(int(s))
 
@@ -170,6 +184,16 @@ ACRONYMS = {
     "VPN": "vê pê ene",
     "DNS": "dê ene ésse",
     "SO": "ésse ó",
+    "STT": "ésse tê tê",
+    "TTS": "tê tê ésse",
+    # Oracle (ADR-019: o RMAN saía estranho em todas as vozes no teste de audição de 19/10)
+    "RMAN": "érre man",
+    "AWR": "a dáblio érre",
+    "ASH": "a ésse agá",
+    "ASM": "a ésse ême",
+    "CDB": "cê dê bê",
+    "PDB": "pê dê bê",
+    "SPFILE": "ésse pê fáiou",
 }
 
 UNITS = {
@@ -235,8 +259,8 @@ def normalize_for_speech(text: str) -> str:
         + (f" e {_int(int(m[2]))} centavos" if m[2] and int(m[2]) else ""),
         text,
     )
-    text = _TIME.sub(lambda m: f"{_int(int(m[1]))} e {_int(int(m[2]))}" if int(m[2]) else f"{_int(int(m[1]))} horas", text)
-    text = _HOURS.sub(lambda m: f"{_int(int(m[1]))} horas", text)
+    text = _TIME.sub(lambda m: f"{_hour(int(m[1]))} e {_int(int(m[2]))}" if int(m[2]) else _hours(int(m[1])), text)
+    text = _HOURS.sub(lambda m: _hours(int(m[1])), text)
     text = _PERCENT.sub(lambda m: f"{_measure(m[1])} por cento", text)
     text = _ORDINAL.sub(lambda m: num2words(int(m[1]), lang="pt_BR", to="ordinal"), text)
     text = _UNIT.sub(lambda m: f"{_measure(m[1])} {UNITS[m[2]]}", text)
