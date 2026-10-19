@@ -139,7 +139,13 @@ deploy/oracle/down.sh                        # derruba com shutdown limpo (os da
 - **Conexão:** PDB `FREEPDB1` na porta 1521, **sem liberação no firewall** (só os containers do
   servidor conectam, por `host.containers.internal`). Senhas em `/dados/agatha/lab/oracle`
   (modo 600): `system-password` (SYS/SYSTEM) e `agatha_ro-password`.
-- **RAM:** ~2,1 GB. **Disco:** ~2,9 GB. Não usa GPU.
+- **RAM:** ~2,1 GB. **Disco:** ~2,9 GB de dados + até 10 GB de backups. Não usa GPU.
+- **Usuários da Agatha** (ADR-020), só leitura: `AGATHA_RO` na PDB (tablespaces, sessões, locks) e
+  `C##AGATHA_RO` no contêiner raiz (estado do banco, Data Guard, backups do RMAN, que a PDB não
+  enxerga). Senhas em `agatha_ro-password` e `c_agatha_ro-password`.
+- **Backup:** ARCHIVELOG + RMAN (redundância 2, comprimido, área de recuperação de 10 GB em
+  `oradata/fra`). `deploy/oracle/backup.sh` roda às 02:30 pelo `oracle-backup.timer`
+  (`systemctl --user list-timers`); à mão: `deploy/oracle/backup.sh`.
 
 ### Construir as imagens
 
