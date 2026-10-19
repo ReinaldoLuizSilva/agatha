@@ -26,10 +26,10 @@ def fake_api(request: httpx.Request) -> httpx.Response:
         assert request.url.params["sha"] == "main"
         return httpx.Response(200, json=[{"commit": {"message": "fix(server): archivelog as text\n\ncorpo",
                                                      "author": {"name": "Reinaldo", "date": iso(hours=3)}}}])
-    if path.endswith("/pulls"):
-        return httpx.Response(200, json=[{"title": "feat: github tool", "user": {"login": "reinaldo"}}])
-    if path.endswith("/issues"):
-        return httpx.Response(200, json=[{"title": "voz a 48 kHz"}, {"title": "PR", "pull_request": {}}])
+    if path.endswith("/issues"):  # a API de issues devolve os PRs junto (com "pull_request")
+        return httpx.Response(200, json=[{"title": "voz a 48 kHz", "user": {"login": "reinaldo"}},
+                                         {"title": "feat: github tool", "user": {"login": "reinaldo"},
+                                          "pull_request": {}}])
     if path.endswith("/actions/runs"):
         return httpx.Response(200, json={"workflow_runs": [
             {"name": "tests", "status": "completed", "conclusion": "failure", "created_at": iso(minutes=20)}]})
@@ -48,7 +48,7 @@ def test_resumo_do_repositorio():
         "repositorio": "agatha", "branch": "main",
         "ultimos_commits": [{"mensagem": "fix(server): archivelog as text", "autor": "Reinaldo", "quando": "há 3 horas"}],
         "prs_abertos": [{"titulo": "feat: github tool", "de": "reinaldo"}],
-        "issues_abertas": ["voz a 48 kHz"],  # o PR que a API de issues devolve fica de fora
+        "issues_abertas": ["voz a 48 kHz"],  # o PR que a API de issues devolve vai para prs_abertos
         "ultima_ci": {"workflow": "tests", "resultado": "falhou", "quando": "há 20 minutos"},
     }
 
@@ -87,6 +87,18 @@ def test_uma_nova_tentativa_quando_a_conexao_falha():
 
     assert asyncio.run(tool(flaky).handler({}))["repositorio"] == "agatha"
     assert calls[0] == calls[1] == "/repos/ReinaldoLuizSilva/agatha"  # a 1ª requisição foi repetida
+
+
+def test_leitura_que_trava_tambem_e_repetida():
+    calls = []
+
+    def slow_once(request):
+        calls.append(1)
+        if len(calls) == 1:
+            raise httpx.ReadTimeout("timeout", request=request)
+        return fake_api(request)
+
+    assert asyncio.run(tool(slow_once).handler({}))["repositorio"] == "agatha"
 
 
 def test_conexao_que_continua_falhando_vira_erro():

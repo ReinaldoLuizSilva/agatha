@@ -9,6 +9,7 @@ requests nos repositórios que ele escolheu; `AGATHA_GITHUB_REPOS` lista esses m
 
 import asyncio
 import logging
+import time
 from dataclasses import dataclass, field
 from datetime import datetime, timezone
 
@@ -38,24 +39,32 @@ class GitHubError(Exception):
 
 
 class GitHubClient:
-    def __init__(self, config: GitHubConfig, transport: httpx.AsyncBaseTransport | None = None):
+    """Cliente HTTP síncrono, numa thread (`asyncio.to_thread`), com uma conexão reaproveitada
+    (keep-alive). Medido em 19/10: o ping não perde nada, mas conexões TCP novas para o GitHub às vezes
+    não abrem (mais com várias ao mesmo tempo); a assíncrona do httpx estourava o prazo 6 vezes em 30.
+    Por isso: uma conexão só, consultas em sequência, prazo curto e até 3 tentativas."""
+
+    def __init__(self, config: GitHubConfig, transport: httpx.BaseTransport | None = None):
         self.config = config
-        self._client = httpx.AsyncClient(
-            base_url=API, timeout=httpx.Timeout(8.0, connect=5.0), transport=transport,
+        self._client = httpx.Client(
+            base_url=API, timeout=httpx.Timeout(6.0, connect=2.5), transport=transport,
             headers={"Authorization": f"Bearer {config.token}", "Accept": "application/vnd.github+json",
                      "X-GitHub-Api-Version": "2022-11-28", "User-Agent": "agatha-srv"},
         )
 
     async def get(self, path: str, **params):
-        # uma nova tentativa se a conexão falhar: no 1º teste real (19/10) a rede oscilou por ~1 minuto
-        for attempt in (1, 2):
+        return await asyncio.to_thread(self._get, path, params)
+
+    def _get(self, path: str, params: dict):
+        # GET é idempotente: repetir em falha de conexão ou de leitura é seguro
+        for attempt in (1, 2, 3):
             try:
-                r = await self._client.get(path, params=params)
+                r = self._client.get(path, params=params)
                 break
-            except (httpx.ConnectError, httpx.ConnectTimeout) as e:
-                if attempt == 2:
+            except (httpx.ConnectError, httpx.ConnectTimeout, httpx.ReadTimeout) as e:
+                if attempt == 3:
                     raise GitHubError(f"sem conexão com o GitHub ({type(e).__name__})") from e
-                await asyncio.sleep(0.5)
+                time.sleep(0.3)
             except httpx.HTTPError as e:
                 raise GitHubError(f"sem conexão com o GitHub ({type(e).__name__})") from e
         if r.status_code == 401:
@@ -66,7 +75,7 @@ class GitHubClient:
         return r.json()
 
     async def aclose(self) -> None:
-        await self._client.aclose()
+        self._client.close()
 
 
 def _ago(iso: str, now: datetime) -> str:
@@ -101,17 +110,17 @@ def github_tools(client: GitHubClient) -> list[Tool]:
         try:
             info = await client.get(f"/repos/{repo}")
             branch = info["default_branch"]
-            commits, pulls, issues, runs = await asyncio.gather(
-                client.get(f"/repos/{repo}/commits", sha=branch, per_page=3),
-                client.get(f"/repos/{repo}/pulls", state="open", per_page=5),
-                client.get(f"/repos/{repo}/issues", state="open", per_page=10),
-                client.get(f"/repos/{repo}/actions/runs", branch=branch, per_page=1),
-            )
+            # em sequência, na mesma conexão: abrir várias ao mesmo tempo aumentava as falhas
+            commits = await client.get(f"/repos/{repo}/commits", sha=branch, per_page=3)
+            # a API de issues devolve os PRs abertos junto: uma consulta a menos
+            items = await client.get(f"/repos/{repo}/issues", state="open", per_page=20)
+            runs = await client.get(f"/repos/{repo}/actions/runs", branch=branch, per_page=1)
         except GitHubError as e:
             log.warning("github_repo falhou: %s", e)
             return {"erro": str(e)}
         now = datetime.now(timezone.utc)
-        issues = [i for i in issues if "pull_request" not in i]  # a API de issues também devolve PRs
+        pulls = [i for i in items if "pull_request" in i]
+        issues = [i for i in items if "pull_request" not in i]
         result = {
             "repositorio": repo.split("/")[-1],
             "branch": branch,
@@ -120,7 +129,7 @@ def github_tools(client: GitHubClient) -> list[Tool]:
                  "quando": _ago(c["commit"]["author"]["date"], now)}
                 for c in commits
             ],
-            "prs_abertos": [{"titulo": p["title"][:100], "de": p["user"]["login"]} for p in pulls],
+            "prs_abertos": [{"titulo": p["title"][:100], "de": p["user"]["login"]} for p in pulls[:5]],
             "issues_abertas": [i["title"][:100] for i in issues[:5]],
         }
         if runs.get("workflow_runs"):
