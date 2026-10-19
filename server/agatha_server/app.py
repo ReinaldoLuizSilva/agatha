@@ -550,12 +550,12 @@ class Session:
 
 
 def build_tools(memory: MemoryStore, zabbix: ZabbixClient | None = None,
-                oracle: OracleClient | None = None) -> ToolRegistry:
+                oracle: OracleClient | None = None, oracle_cdb: OracleClient | None = None) -> ToolRegistry:
     tools = [calculator, *memory_tools(memory)]
     if zabbix is not None:
         tools += zabbix_tools(zabbix)
     if oracle is not None:
-        tools += oracle_tools(oracle.query)
+        tools += oracle_tools(oracle.query, oracle_cdb.query if oracle_cdb is not None else None)
     return ToolRegistry(tools)
 
 
@@ -564,7 +564,8 @@ async def run(config: ServerConfig, transcriber: SupportsTranscribe, llm, synthe
     memory = MemoryStore(config.memory)
     zabbix = ZabbixClient(config.zabbix) if config.zabbix.enabled else None
     oracle = OracleClient(config.oracle) if config.oracle.enabled else None
-    tools = build_tools(memory, zabbix, oracle)
+    oracle_cdb = OracleClient(config.oracle, cdb=True) if config.oracle.enabled and config.oracle.cdb_enabled else None
+    tools = build_tools(memory, zabbix, oracle, oracle_cdb)
     log.info("ferramentas: %s · memória: %d fatos em %s", ", ".join(tools.tools), len(memory.facts()),
              config.memory.db)
     turn_log = TurnLog(config.log_dir) if config.log_dir else None
@@ -604,7 +605,7 @@ async def run(config: ServerConfig, transcriber: SupportsTranscribe, llm, synthe
         server.shutdown()
         tts_executor.shutdown(wait=False, cancel_futures=True)
         memory.close()
-        for client in (zabbix, oracle):
+        for client in (zabbix, oracle, oracle_cdb):
             if client is not None:
                 await client.aclose()
         await llm.aclose()

@@ -27,7 +27,7 @@ def fake_api(request: httpx.Request) -> httpx.Response:
     elif method == "trigger.get":
         result = [{"description": "Uso de disco em /dados acima de 80%", "priority": "3", "lastchange": str(NOW - 60),
                    "hosts": [{"host": "agatha-srv", "name": "agatha-srv"}]}]
-        if params.get("hostids") == ["999"]:
+        if params.get("hostids") == ["999"] or 3 not in params.get("severities", [3]):
             result = []
     elif method == "item.get" and "filter" in params and STALE:
         result = [{"key_": "system.cpu.util", "lastvalue": "25.5", "lastclock": str(NOW - 900)}]
@@ -134,3 +134,10 @@ def test_host_padrao_entra_na_regra_da_ferramenta():
     assert "o host é agatha-srv" in rules["zabbix_host"]
     rules = {t.name: t.rule for t in zabbix_tools(ZabbixClient(ZabbixConfig("http://x", "t")))}
     assert "o host é" not in rules["zabbix_host"]
+
+
+def test_problemas_por_severidade_minima():
+    # "me mostra os problemas de alta prioridade": o problema de disco é "média"
+    problemas, _ = tools()
+    assert asyncio.run(problemas.handler({"severidade_minima": "alta"})) == {"problemas": []}
+    assert len(asyncio.run(problemas.handler({"severidade_minima": "média"}))["problemas"]) == 1

@@ -148,5 +148,6 @@ def load_config(env: dict | None = None) -> ServerConfig:
         zabbix=ZabbixConfig(url=get("ZABBIX_URL", ""), token=get("ZABBIX_TOKEN", ""),
                             default_host=get("ZABBIX_DEFAULT_HOST", "")),
         oracle=OracleConfig(dsn=get("ORACLE_DSN", ""), user=get("ORACLE_USER", ""),
-                            password=get("ORACLE_PASSWORD", "")),
+                            password=get("ORACLE_PASSWORD", ""), cdb_dsn=get("ORACLE_CDB_DSN", ""),
+                            cdb_user=get("ORACLE_CDB_USER", ""), cdb_password=get("ORACLE_CDB_PASSWORD", "")),
     )

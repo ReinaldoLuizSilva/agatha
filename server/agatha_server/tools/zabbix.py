@@ -105,6 +105,9 @@ def zabbix_tools(client: ZabbixClient) -> list[Tool]:
         params = {"output": ["description", "priority", "lastchange"], "only_true": True, "monitored": True,
                   "active": True, "skipDependent": True, "filter": {"value": 1}, "expandDescription": True,
                   "selectHosts": ["host", "name"], "sortfield": "priority", "sortorder": "DESC", "limit": 10}
+        minimum = (args.get("severidade_minima") or "").strip().lower()
+        if minimum in SEVERITIES:  # "alta" → alta e desastre
+            params["severities"] = list(range(SEVERITIES.index(minimum), len(SEVERITIES)))
         host = (args.get("host") or "").strip()
         if host:
             hosts = await client.find_hosts(host)
@@ -167,8 +170,11 @@ def zabbix_tools(client: ZabbixClient) -> list[Tool]:
             name="zabbix_problemas",
             description="Lista os alertas (problemas) ativos no Zabbix, de todos os hosts ou de um host.",
             handler=problemas,
-            rule="perguntas sobre alertas ou problemas atuais no Zabbix: use zabbix_problemas",
-            properties={"host": {"type": "string", "description": "nome do host; omita para todos"}},
+            rule="perguntas sobre alertas ou problemas atuais no Zabbix: use zabbix_problemas; para prioridade "
+                 "alta, severidade_minima alta",
+            properties={"host": {"type": "string", "description": "nome do host; omita para todos"},
+                        "severidade_minima": {"type": "string", "enum": SEVERITIES[1:],
+                                              "description": "só problemas desta severidade para cima"}},
             examples=(Example("Tem algum alerta no Zabbix?", {}, {"problemas": []}, "Nenhum alerta ativo agora."),),
         ),
         Tool(
