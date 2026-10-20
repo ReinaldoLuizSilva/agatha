@@ -107,3 +107,12 @@ def test_resumo_da_resposta_para_diagnostico():
     assert line.startswith("nota máx 0.70 aos 1.3 s") and "blocos ≥ 0,5" in line
     assert "AEC tirou" in line and "dBFS" in line and "ms por bloco de 32 ms" in line
     assert b.end_stats() is None  # uma vez por resposta
+
+
+def test_diagnostico_mostra_nivel_e_nota_quando_ha_som():
+    lines = []
+    b = BargeIn(FakeDetector(fire_at=30, score=0.3), delay_ms=200, threshold=0.9, debug=lines.append)
+    b.begin_stats(0.0)
+    feed(b, frames(3.0, delay_ms=200))  # o eco sintético é alto: aparece em todas as janelas
+    assert len(lines) >= 4 and "dBFS (pico)" in lines[0]
+    assert any("nota 0.30" in line for line in lines)

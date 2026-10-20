@@ -269,7 +269,8 @@ async def session(url: str, token: str, source: MicSource | WavSource | DuplexAu
             player = source
             detector.reset()
             barge = BargeIn(detector, source.sample_rate, threshold=args.barge_threshold,
-                            delay_ms=args.echo_delay_ms, on_delay=report_delay)
+                            delay_ms=args.echo_delay_ms, on_delay=report_delay,
+                            debug=(lambda line: print(line, flush=True)) if args.barge_debug else None)
             print(f"conectado a {url} (sessão {reply['session']}, resposta a {rate} Hz, barge-in ligado: "
                   f"diga \"Agatha\" enquanto ela fala para interromper)")
         else:
@@ -386,6 +387,8 @@ def main() -> int:
                         help="nota mínima do detector para interromper (padrão: 0.6; mais alto erra menos e acerta menos)")
     parser.add_argument("--echo-delay-ms", type=float,
                         help="atraso do eco em ms (padrão: medido nos primeiros segundos de fala dela)")
+    parser.add_argument("--barge-debug", action="store_true",
+                        help="durante a fala dela, mostra a cada 0,5 s o nível do microfone e a nota do detector")
     parser.add_argument("--duplex-latency", choices=["low", "high"], default="low",
                         help="latência do stream do barge-in (padrão: low; high é a do gravador)")
     parser.add_argument("--tray", action="store_true",

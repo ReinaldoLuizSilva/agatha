@@ -33,7 +33,8 @@ class BargeIn:
     def __init__(self, detector: SupportsFeed, sample_rate: int = 16000, threshold: float = 0.6,
                  pre_roll_s: float = 1.5, delay_ms: float | None = None, refractory_s: float = 1.5,
                  measure_s: float = 2.0, min_confidence: float = 10.0, max_attempts: int = 3,
-                 frame_samples: int = 512, on_delay: Callable[[float, float | None], None] | None = None):
+                 frame_samples: int = 512, on_delay: Callable[[float, float | None], None] | None = None,
+                 debug: Callable[[str], None] | None = None):
         self.detector = detector
         self.sample_rate = sample_rate
         self.frame_ms = 1000 * frame_samples / sample_rate
@@ -43,6 +44,9 @@ class BargeIn:
         self.min_confidence = min_confidence
         self.max_attempts = max_attempts
         self.on_delay = on_delay
+        # diagnóstico (--barge-debug): nível do microfone e nota do detector a cada 0,5 s da fala dela
+        self.debug = debug
+        self._window: dict | None = None
         self.aec = EchoCanceller(sample_rate)
         self.latency_s = self.aec.n / sample_rate  # o AEC atrasa a saída em um bloco
         self.delay_ms: float | None = None
@@ -71,6 +75,8 @@ class BargeIn:
             self._update_stats(m, r, out, score, at)
             self._stats["cpu"] += time.perf_counter() - t0
             self._stats["blocks"] += 1
+        if active and self.debug is not None:
+            self._debug_window(out, score, at)
         fired = None
         if active and self.delay_ms is not None and at >= self._hold_until and score >= self.threshold:
             fired = score
@@ -108,6 +114,19 @@ class BargeIn:
         if st["blocks"]:
             line += f" · CPU {1000 * st['cpu'] / st['blocks']:.1f} ms por bloco de {self.frame_ms:.0f} ms"
         return line
+
+    def _debug_window(self, out: np.ndarray, score: float, at: float) -> None:
+        w = self._window
+        if w is None or (self._stats is not None and w["t0"] != self._stats["t0"]):
+            w = self._window = {"t0": self._stats["t0"] if self._stats else at, "start": at, "peak": 0, "score": 0.0}
+        w["peak"] = max(w["peak"], int(np.max(np.abs(out.astype(np.int32)))) if len(out) else 0)
+        w["score"] = max(w["score"], score)
+        if at - w["start"] < 0.5:
+            return
+        level = 20 * np.log10(max(w["peak"], 1) / 32768)
+        if level > -45 or w["score"] > 0.05:
+            self.debug(f"    · {w['start'] - w['t0']:4.1f} s: microfone {level:4.0f} dBFS (pico), nota {w['score']:.2f}")
+        w.update(start=at, peak=0, score=0.0)
 
     def pre_roll(self) -> list[tuple[bytes, float]]:
         """O áudio limpo dos últimos `pre_roll_s` ainda não enviado (inclui o bloco do disparo)."""
