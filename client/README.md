@@ -212,12 +212,13 @@ O detector foi treinado com o microfone do notebook e erra com o do headset. Par
    headset no lugar de sempre.
 
    ```powershell
-   .venv\Scripts\python -m agatha_client.record --list-devices          # o número do "Microfone Externo"
-   .venv\Scripts\python -m agatha_client.record --out gravacoes-headset --part perto variado negativas --device N
+   .venv\Scripts\python -m agatha_client.record --list-devices          # o número do "Microfone Externo" [MME]
+   .venv\Scripts\python -m agatha_client.record --out gravacoes-headset --part perto variado negativas --device 1
    ```
 
    O gravador descarta o primeiro meio segundo de cada fala (o tranco que o headset dá ao abrir o
-   microfone): espere o `● gravando` aparecer para começar a falar.
+   microfone): espere o `● gravando` aparecer para começar a falar. Troque o `1` pelo número que o
+   `--list-devices` mostrar para o "Microfone Externo" do tipo `[MME]` (o Bluetooth "Headset" não serve).
 3. **Envie** para o servidor e, como root lá, acerte o dono:
 
    ```powershell
