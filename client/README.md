@@ -201,6 +201,31 @@ novo continua de onde parou.
 As gravações têm a sua voz: ficam só no notebook e em `/dados`, nunca no git (`*.wav` está no
 `.gitignore`).
 
+### Rodada com o headset (Fase 9)
+
+O detector foi treinado com o microfone do notebook e erra com o do headset. Para retreinar:
+
+1. **Aumente o nível do microfone do headset**: `Win+R` → `mmsys.cpl` → aba Gravação → "Microfone
+   Externo" → Propriedades → Níveis → 80–100. Os picos estavam entre −31 e −40 dBFS.
+2. **Grave** só as partes `perto`, `variado` e `negativas` (94 falas, ~15 min), numa pasta nova para
+   não misturar com a rodada do notebook. A distância do roteiro não vale aqui: fale normalmente com o
+   headset no lugar de sempre.
+
+   ```powershell
+   .venv\Scripts\python -m agatha_client.record --list-devices          # o número do "Microfone Externo"
+   .venv\Scripts\python -m agatha_client.record --out gravacoes-headset --part perto variado negativas --device N
+   ```
+
+   O gravador descarta o primeiro meio segundo de cada fala (o tranco que o headset dá ao abrir o
+   microfone): espere o `● gravando` aparecer para começar a falar.
+3. **Envie** para o servidor e, como root lá, acerte o dono:
+
+   ```powershell
+   scp -r gravacoes-headset root@192.168.1.25:/dados/agatha/data/wakeword/
+   ```
+
+   `chown -R agatha:agatha /dados/agatha/data/wakeword`
+
 ## Problemas comuns
 
 | sintoma | o que verificar |

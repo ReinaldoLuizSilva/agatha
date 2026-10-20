@@ -222,3 +222,40 @@ def test_plan_jargao_for_the_stt_benchmark():
     assert [t.text for t in plan] == JARGON and {t.label for t in plan} == {"stt"}
     assert len({t.id for t in plan}) == len(plan) == 40
     assert all(t.duration_s >= 3.5 for t in plan)  # folga extra: frases técnicas, ditas sem pressa
+
+
+def with_open_spike(pcm):
+    """O tranco do headset ao abrir o stream: ~−6 dBFS nos primeiros 100 ms."""
+    pcm = pcm.copy()
+    pcm[: 1600] = 16000
+    return pcm
+
+
+def test_run_drops_stream_open_spike(recorder, tmp_path, monkeypatch):
+    lead = int(record.LEAD_IN_S * 16000)
+    asked = []
+
+    def rec(frames, **kwargs):
+        asked.append(frames)
+        return with_open_spike(voice_like(frames)).reshape(-1, 1)
+
+    monkeypatch.setattr(recorder.sd, "rec", rec)
+    answers(monkeypatch, "")
+    recorder.run([Take("perto-001", "perto", "wake", "Agatha", "voz normal", 2.5)])
+    pcm, _ = read_wav(tmp_path / "perto" / "perto-001.wav")
+    assert asked == [lead + int(2.5 * 16000)]
+    assert len(pcm) == int(2.5 * 16000) and np.abs(pcm).max() < 16000
+    np.testing.assert_array_equal(pcm, voice_like(asked[0])[lead:])
+
+
+def test_run_eco_keeps_reference_aligned_after_drop(recorder, tmp_path, monkeypatch):
+    # eco perfeito e sem atraso: depois do descarte, microfone e referência continuam iguais amostra a amostra
+    monkeypatch.setattr(recorder.sd, "playrec", lambda data, **kwargs: with_open_spike(data[:, 0]).reshape(-1, 1))
+    write_wav(tmp_path / "resposta-1.wav", tone(800, 16000, seconds=1.0), rate=16000)
+    plan = build_plan(["eco"], [tmp_path / "resposta-1.wav"])
+    answers(monkeypatch, "")
+    recorder.run(plan)
+    mic, _ = read_wav(tmp_path / "eco" / "eco-001.wav")
+    ref, _ = read_wav(tmp_path / "eco" / "eco-001.ref.wav")
+    np.testing.assert_array_equal(mic, ref)
+    np.testing.assert_array_equal(ref[:16000], tone(800, 16000, seconds=1.0))  # a resposta começa no início

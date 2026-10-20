@@ -1,6 +1,6 @@
 """Gravador guiado de amostras: wake word e barge-in (Fase 5) e jargão para o STT (Fase 6).
 
-Mostra uma frase, grava a sua voz pelo microfone do notebook e salva um WAV de 16 kHz por fala,
+Mostra uma frase, grava a sua voz pelo microfone e salva um WAV de 16 kHz por fala,
 com um manifest.jsonl descrevendo cada uma. As partes do roteiro:
 
     perto       "Agatha" em frases variadas, a ~50 cm do notebook, voz normal
@@ -198,6 +198,9 @@ NEAR_REPEATS = 2
 VARIED_REPEATS = 2
 AMBIENT_CHUNK_S = 60
 ECO_TAIL_S = 1.5  # depois do fim da resposta, para pegar uma interrupção atrasada
+# Começo de cada gravação jogado fora: o mic do headset dá um tranco de ~−6 dBFS ao abrir o stream
+# (Fase 9). O aviso "● gravando" só aparece depois dele, então a fala não cai no trecho descartado.
+LEAD_IN_S = 0.5
 
 
 @dataclass(frozen=True)
@@ -376,13 +379,14 @@ class Recorder:
         self.output_name = self.sd.query_devices(output_device, "output")["name"]
 
     def _record(self, take: Take) -> tuple[np.ndarray, np.ndarray | None]:
+        lead = int(LEAD_IN_S * SAMPLE_RATE)
         frames = int(take.duration_s * SAMPLE_RATE)
         ref = None
         if take.reply:
             pcm, rate = read_wav(self.replies_dir / take.reply)
-            ref = np.zeros(frames, dtype="<i2")
+            ref = np.zeros(lead + frames, dtype="<i2")  # a resposta começa depois do trecho descartado
             played = resample(pcm, rate, SAMPLE_RATE)[:frames]
-            ref[: len(played)] = played
+            ref[lead : lead + len(played)] = played
             # entrada e saída no mesmo stream: as duas ficam alinhadas (atraso constante)
             try:
                 rec = self.sd.playrec(ref.reshape(-1, 1), samplerate=SAMPLE_RATE, channels=1, dtype="int16",
@@ -392,14 +396,17 @@ class Recorder:
                                  "Escolha os dois do mesmo tipo (ex.: ambos [MME]) com --device e "
                                  "--output-device; veja --list-devices.")
         else:
-            rec = self.sd.rec(frames, samplerate=SAMPLE_RATE, channels=1, dtype="int16", device=self.device)
+            rec = self.sd.rec(lead + frames, samplerate=SAMPLE_RATE, channels=1, dtype="int16", device=self.device)
         start = time.monotonic()
-        while (left := take.duration_s - (time.monotonic() - start)) > 0:
-            print(f"\r  ● gravando... {left:4.1f} s ", end="", flush=True)
+        while (left := LEAD_IN_S + take.duration_s - (time.monotonic() - start)) > 0:
+            if left > take.duration_s:
+                print("\r  ○ espere...          ", end="", flush=True)
+            else:
+                print(f"\r  ● gravando... {left:4.1f} s ", end="", flush=True)
             time.sleep(0.1)
         self.sd.wait()
         print("\r" + " " * 30 + "\r", end="")
-        return rec[:, 0].copy(), ref
+        return rec[lead:, 0].copy(), (ref[lead:] if ref is not None else None)
 
     def save(self, take: Take, mic: np.ndarray, ref: np.ndarray | None) -> dict:
         path = self.out / take.part / f"{take.id}.wav"
