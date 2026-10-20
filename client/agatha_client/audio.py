@@ -22,6 +22,16 @@ def sounddevice():
     return sounddevice
 
 
+def describe_devices(sd, devices) -> str:
+    """"Microfone Externo (Realtek) → Alto-falantes (Realtek) [MME]": para diagnóstico."""
+    try:
+        inp, out = devices if isinstance(devices, (tuple, list)) else (devices, devices)
+        i, o = sd.query_devices(inp), sd.query_devices(out)
+        return f"{i['name']} → {o['name']} [{sd.query_hostapis(i['hostapi'])['name']}]"
+    except Exception:  # noqa: BLE001 (só informativo)
+        return "dispositivos padrão"
+
+
 def list_devices() -> None:
     sd = sounddevice()
     default_in, default_out = sd.default.device
@@ -190,10 +200,14 @@ class DuplexAudio:
 
     finite = False
 
-    def __init__(self, device: int | str | None, output_device: int | str | None, sample_rate: int = SAMPLE_RATE):
+    def __init__(self, device: int | str | None, output_device: int | str | None, sample_rate: int = SAMPLE_RATE,
+                 latency: str = "low"):
         sd = sounddevice()
         self.device = (device, output_device)
         self.sample_rate = sample_rate
+        # "low": a pausa do barge-in sai mais rápido; "high" é o que o gravador usa (teste de 20/10: com
+        # "low" o microfone ficou mudo durante a fala dela; ver se o Windows trata como chamada de voz)
+        self.stream_latency = latency
         try:
             sd.check_input_settings(device=device, samplerate=sample_rate, channels=1, dtype="int16")
             sd.check_output_settings(device=output_device, samplerate=sample_rate, channels=1, dtype="int16")
@@ -230,11 +244,13 @@ class DuplexAudio:
 
         try:
             stream = sd.RawStream(samplerate=self.sample_rate, blocksize=FRAME_SAMPLES, channels=1, dtype="int16",
-                                  device=self.device, latency="low", callback=callback)
+                                  device=self.device, latency=self.stream_latency, callback=callback)
         except sd.PortAudioError as e:
             raise FatalError(f"não foi possível abrir microfone e saída de som juntos: {e} (tente --no-barge-in)")
         with stream:
             self.input_latency, self.latency = stream.latency
+            print(f"  (áudio: {describe_devices(sd, getattr(stream, 'device', None))}, latência {self.stream_latency}: "
+                  f"entrada {self.input_latency * 1000:.0f} ms, saída {self.latency * 1000:.0f} ms)", flush=True)
             while True:
                 yield await queue.get()
 

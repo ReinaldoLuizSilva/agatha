@@ -386,6 +386,8 @@ def main() -> int:
                         help="nota mínima do detector para interromper (padrão: 0.6; mais alto erra menos e acerta menos)")
     parser.add_argument("--echo-delay-ms", type=float,
                         help="atraso do eco em ms (padrão: medido nos primeiros segundos de fala dela)")
+    parser.add_argument("--duplex-latency", choices=["low", "high"], default="low",
+                        help="latência do stream do barge-in (padrão: low; high é a do gravador)")
     parser.add_argument("--tray", action="store_true",
                         help="em segundo plano, com ícone na bandeja; o que sairia na tela vai para o log "
                              "(%%LOCALAPPDATA%%\\Agatha\\client.log). Use com pythonw (extra [tray])")
@@ -436,7 +438,7 @@ def open_audio(args):
     if args.wav:
         return WavSource(args.wav), None
     if not args.no_barge_in and (detector := load_detector(args)) is not None:
-        return DuplexAudio(args.device, args.output_device), detector
+        return DuplexAudio(args.device, args.output_device, latency=args.duplex_latency), detector
     return MicSource(args.device), None
 
 
