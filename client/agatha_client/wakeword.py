@@ -5,9 +5,14 @@ Reinaldo (`client/wakeword/train.py`). Os três ONNX ficam numa pasta fora do gi
 /dados/agatha/models/wakeword no agatha-srv (veja o README do cliente).
 """
 
+import logging
+import math
+import sys
 from pathlib import Path
 
 import numpy as np
+
+log = logging.getLogger(__name__)
 
 MODEL_FILES = ("agatha.onnx", "melspectrogram.onnx", "embedding_model.onnx")
 CHUNK = 1280  # 80 ms: o openWakeWord calcula um embedding a cada bloco desse tamanho
@@ -27,6 +32,7 @@ class WakeDetector:
             embedding_model_path=str(model_dir / "embedding_model.onnx"),
         )
         self._buf = np.zeros(0, np.int16)
+        self.nan_count = 0  # notas inválidas: viravam 0,00 em silêncio (teste de 20/10)
 
     def reset(self) -> None:
         self._model.reset()
@@ -39,5 +45,50 @@ class WakeDetector:
         best = 0.0
         while len(self._buf) >= CHUNK:
             chunk, self._buf = self._buf[:CHUNK], self._buf[CHUNK:]
-            best = max(best, float(next(iter(self._model.predict(chunk).values()))))
+            score = float(next(iter(self._model.predict(chunk).values())))
+            if math.isnan(score):
+                self.nan_count += 1
+                if self.nan_count in (1, 100, 1000):
+                    log.warning("o detector devolveu uma nota inválida (NaN) %d vez(es)", self.nan_count)
+                    print(f"  (aviso: o detector devolveu nota inválida (NaN) {self.nan_count} vez(es))", flush=True)
+                continue
+            best = max(best, score)
         return best
+
+
+def versions() -> str:
+    """Versões que importam para o detector (diagnóstico)."""
+    import onnxruntime
+    from importlib.metadata import version
+
+    return (f"Python {sys.version.split()[0]}, numpy {np.__version__}, onnxruntime {onnxruntime.__version__}, "
+            f"openwakeword {version('openwakeword')}")
+
+
+def main() -> int:
+    """Autoteste: `python -m agatha_client.wakeword gravacoes\\perto\\perto-012.wav [--model models]`.
+    Passa a gravação pelo detector em blocos de 512 amostras, como no cliente, e mostra a maior nota."""
+    import argparse
+    import wave
+
+    parser = argparse.ArgumentParser(description=main.__doc__)
+    parser.add_argument("wav", nargs="+")
+    parser.add_argument("--model", default="models")
+    args = parser.parse_args()
+    print(versions())
+    det = WakeDetector(args.model)
+    for path in args.wav:
+        with wave.open(path) as w:
+            if w.getframerate() != 16000 or w.getnchannels() != 1:
+                print(f"{path}: precisa ser 16 kHz mono")
+                continue
+            pcm = np.frombuffer(w.readframes(w.getnframes()), dtype="<i2")
+        det.reset()
+        pcm = np.concatenate([np.zeros(16000, np.int16), pcm, np.zeros(8000, np.int16)])  # 1 s antes, como no treino
+        best = max((det.feed(pcm[i:i + 512]) for i in range(0, len(pcm) - 511, 512)), default=0.0)
+        print(f"{path}: nota máxima {best:.2f}" + (f" · {det.nan_count} notas NaN" if det.nan_count else ""))
+    return 0
+
+
+if __name__ == "__main__":
+    sys.exit(main())

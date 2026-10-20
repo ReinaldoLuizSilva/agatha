@@ -268,6 +268,9 @@ async def session(url: str, token: str, source: MicSource | WavSource | DuplexAu
                 raise FatalError("o servidor não tem barge-in (atualize o servidor ou use --no-barge-in)")
             player = source
             detector.reset()
+            if args.barge_debug:
+                from .wakeword import versions
+                print(f"  (detector: {versions()})", flush=True)
             barge = BargeIn(detector, source.sample_rate, threshold=args.barge_threshold,
                             delay_ms=args.echo_delay_ms, on_delay=report_delay,
                             debug=(lambda line: print(line, flush=True)) if args.barge_debug else None)

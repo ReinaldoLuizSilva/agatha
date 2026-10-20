@@ -75,10 +75,12 @@ class BargeIn:
             self._update_stats(m, r, out, score, at)
             self._stats["cpu"] += time.perf_counter() - t0
             self._stats["blocks"] += 1
-        if active and self.debug is not None:
-            self._debug_window(out, score, at)
+        if self.debug is not None:
+            self._debug_window(out, score, at, active)
         fired = None
-        if active and self.delay_ms is not None and at >= self._hold_until and score >= self.threshold:
+        # sem esperar o atraso do eco: com fone não há eco para medir, e a medição levava ~6 s para desistir
+        # (o barge-in ficava mudo até lá); com caixas, um disparo à toa nesse começo o servidor descarta
+        if active and at >= self._hold_until and score >= self.threshold:
             fired = score
             self.hold(at)
         return pcm, at, fired
@@ -115,17 +117,19 @@ class BargeIn:
             line += f" · CPU {1000 * st['cpu'] / st['blocks']:.1f} ms por bloco de {self.frame_ms:.0f} ms"
         return line
 
-    def _debug_window(self, out: np.ndarray, score: float, at: float) -> None:
+    def _debug_window(self, out: np.ndarray, score: float, at: float, active: bool) -> None:
         w = self._window
-        if w is None or (self._stats is not None and w["t0"] != self._stats["t0"]):
-            w = self._window = {"t0": self._stats["t0"] if self._stats else at, "start": at, "peak": 0, "score": 0.0}
+        t0 = self._stats["t0"] if (active and self._stats is not None) else None
+        if w is None or w["active"] != active or (active and w["t0"] != t0):
+            w = self._window = {"t0": t0 if active else at, "start": at, "peak": 0, "score": 0.0, "active": active}
         w["peak"] = max(w["peak"], int(np.max(np.abs(out.astype(np.int32)))) if len(out) else 0)
         w["score"] = max(w["score"], score)
         if at - w["start"] < 0.5:
             return
         level = 20 * np.log10(max(w["peak"], 1) / 32768)
         if level > -45 or w["score"] > 0.05:
-            self.debug(f"    · {w['start'] - w['t0']:4.1f} s: microfone {level:4.0f} dBFS (pico), nota {w['score']:.2f}")
+            when = f"{max(0.0, w['start'] - w['t0']):4.1f} s da fala dela" if active else "ela calada"
+            self.debug(f"    · {when}: microfone {level:4.0f} dBFS (pico), nota {w['score']:.2f}")
         w.update(start=at, peak=0, score=0.0)
 
     def pre_roll(self) -> list[tuple[bytes, float]]:

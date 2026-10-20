@@ -43,13 +43,18 @@ def feed(b: BargeIn, blocks, active=True, t0=0.0):
     return out
 
 
-def test_mede_o_atraso_pela_fala_dela_antes_de_disparar():
+def test_mede_o_atraso_pela_fala_dela():
     delays = []
-    b = BargeIn(FakeDetector(fire_at=0), on_delay=lambda d, c: delays.append((d, c)))
-    out = feed(b, frames(3.0, delay_ms=200))
+    b = BargeIn(FakeDetector(), on_delay=lambda d, c: delays.append((d, c)))
+    feed(b, frames(3.0, delay_ms=200))
     assert abs(b.delay_ms - 200) < 1 and delays[0][1] > 10
-    first_fire = next(i for i, (_, _, fired) in enumerate(out) if fired is not None)
-    assert (first_fire + 1) * FRAME / SR >= 2.0  # só depois de medir (2 s de fala dela)
+
+
+def test_dispara_antes_de_medir_o_atraso():
+    # com fone não há eco: a medição só desiste depois de ~6 s, e o barge-in não pode esperar por ela
+    b = BargeIn(FakeDetector(fire_at=5))
+    out = feed(b, frames(1.0, delay_ms=None))
+    assert b.delay_ms is None and any(f is not None for _, _, f in out)
 
 
 def test_so_dispara_durante_a_resposta_e_respeita_o_intervalo():
