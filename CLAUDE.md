@@ -199,8 +199,8 @@ agatha/
       pausa 453 ms após o começo da fala + ~96 ms de saída (ok). Mic do headset baixo (picos −31 a −40 dBFS) e
       com um "tranco" de −6 dBFS ao abrir o stream. Corrigido no caminho: disparo não espera mais a medição do
       atraso do eco (com fone travava ~6 s); nota NaN agora avisa.
-      **Próximo passo (aprovado em 20/10, fazer na próxima sessão):** 1) gravador descarta o 1º meio segundo de
-      cada fala (o tranco do headset); 2) ele aumenta o nível do mic do headset (mmsys.cpl → Gravação → Níveis
+      **Próximo passo (aprovado em 20/10):** 1) ~~gravador descarta o 1º meio segundo de cada fala~~ feito em
+      20/10 (`LEAD_IN_S`; roteiro em client/README.md, "Rodada com o headset", pasta `gravacoes-headset`); 2) ele aumenta o nível do mic do headset (mmsys.cpl → Gravação → Níveis
       80–100); 3) gravar com o headset as partes perto, variado e negativas (~15 min; sem longe/eco) e mandar para
       /dados/agatha/data/wakeword (chown como root depois do scp); 4) retreinar com gravações antigas + novas
       (`client/wakeword/train.py --eval` e `--final`, CPU, com teto de memória), trocar o modelo só se melhorar
