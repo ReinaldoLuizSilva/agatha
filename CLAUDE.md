@@ -188,11 +188,24 @@ agatha/
       95/111, invenções 0, 1º áudio p50 ~2,07 s. GitHub com 1 nova tentativa se a conexão falhar (a rede oscilou
       no 1º teste). Ponto fraco: pergunta sobre fato da memória às vezes chama uma ferramenta antes (ex.:
       "nome do banco de produção" → oracle_banco), só atrasa ~1 s.
-- [ ] Fase 9: cliente funcional — **em andamento** (escopo aprovado em 19/10). A) barge-in confiável com o mic na
-      posição normal: teste dele com as melhorias de áudio do Windows desligadas; varredura do AEC se o eco voltar;
-      medir nome → pausa e pausas à toa. B) segundo plano: ícone na bandeja (estado, pausar mic, barge-in on/off,
-      abrir log, sair), sem terminal (pythonw), log em %LOCALAPPDATA%\Agatha com rotação, iniciar com o Windows,
-      uma instância só. Modo terminal continua. Decisões no ADR-021 (e ADR-016 para o áudio).
+- [ ] Fase 9: cliente funcional — **em andamento** (escopo aprovado em 19/10).
+      B) segundo plano: **feito e testado no Windows** (ADR-021): `pythonw -m agatha_client --tray` (ícone por
+      estado, pausar mic = manda silêncio, barge-in on/off, abrir log, sair), log em %LOCALAPPDATA%\Agatha,
+      `--autostart ligar|desligar`, uma instância só (mutex). Extra `[tray]` (pystray, Pillow); cliente 0.5.0.
+      A) barge-in: diagnóstico de 20/10 (`--barge-debug`, `--duplex-latency`, `python -m agatha_client.wakeword
+      <wav>`): ele usa **headset** ("Fones de ouvido" + "Microfone Externo" = mic do headset), não há eco; a voz
+      dele chega ao mic durante a fala dela, mas o detector quase nunca dispara. Causa: o detector foi treinado
+      só com o **mic do notebook** (12/10); com o mic do headset acerta 3/6 gravações (era 90%). Quando dispara,
+      pausa 453 ms após o começo da fala + ~96 ms de saída (ok). Mic do headset baixo (picos −31 a −40 dBFS) e
+      com um "tranco" de −6 dBFS ao abrir o stream. Corrigido no caminho: disparo não espera mais a medição do
+      atraso do eco (com fone travava ~6 s); nota NaN agora avisa.
+      **Próximo passo (aprovado em 20/10, fazer na próxima sessão):** 1) gravador descarta o 1º meio segundo de
+      cada fala (o tranco do headset); 2) ele aumenta o nível do mic do headset (mmsys.cpl → Gravação → Níveis
+      80–100); 3) gravar com o headset as partes perto, variado e negativas (~15 min; sem longe/eco) e mandar para
+      /dados/agatha/data/wakeword (chown como root depois do scp); 4) retreinar com gravações antigas + novas
+      (`client/wakeword/train.py --eval` e `--final`, CPU, com teto de memória), trocar o modelo só se melhorar
+      sem subir falsos disparos; ele copia o .onnx para `client\models`. Registrar no ADR-014.
+      Pendente também: varredura do AEC (só importa com as caixas do notebook).
 - [ ] Fase 10: integração com a internet (pedida em 19/10; escopo a aprovar depois da 9): busca na web, clima,
       notícias, documentação técnica. Ideia: SearXNG no agatha-srv, Open-Meteo, RSS, busca restrita a sites
       oficiais. Começar enxugando o prompt (2311 tokens).
