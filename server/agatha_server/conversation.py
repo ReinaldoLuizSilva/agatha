@@ -28,6 +28,10 @@ log = logging.getLogger(__name__)
 
 # Frases ditas enquanto uma ferramenta roda (alternadas para não soar repetitivo)
 FILLERS = ("Deixa eu ver.", "Um instante.", "Só um momento.")
+# Resultado de ferramenta que fica no histórico (ADR-023): acima disso vira este marcador. Os pequenos
+# ficam inteiros: o "esquece isso" logo depois de guardar usa o número que o guardar_fato devolveu.
+COMPACT_MIN_CHARS = 150
+OMITTED = json.dumps({"omitido": "já usado na resposta; consulte de novo se precisar"}, ensure_ascii=False)
 
 
 @dataclass(frozen=True)
@@ -238,8 +242,13 @@ class Conversation:
                     break
 
     def _remember(self, turn: list[dict]) -> None:
-        # Guarda exatamente o que foi enviado e gerado (inclusive chamadas e resultados de
-        # ferramentas): qualquer diferença no prefixo do prompt obriga o llama.cpp a reprocessar.
+        # Guarda exatamente o que foi enviado e gerado: qualquer diferença no prefixo do prompt obriga o
+        # llama.cpp a reprocessar. A exceção é o resultado grande de ferramenta (ADR-023), que ficava no
+        # histórico e estourou o contexto em 21/10: vira um marcador, e a chamada fica (o modelo continua
+        # vendo que pergunta assim se consulta). Como muda só o fim do último turno, a pergunta seguinte
+        # reprocessa ~85 tokens a mais que antes (~50 ms).
+        turn = [{**m, "content": OMITTED} if m["role"] == "tool" and len(m["content"]) > COMPACT_MIN_CHARS else m
+                for m in turn]
         self.history.append(turn)
         reasons = []
         if len(self.history) > self.config.history_turns:

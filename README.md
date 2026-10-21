@@ -123,6 +123,7 @@ consequências:
 | [020](docs/adr/0020-mais-ferramentas.md) | mais ferramentas: estado e backups do Oracle, severidade no Zabbix, GitHub |
 | [021](docs/adr/0021-cliente-em-segundo-plano.md) | cliente em segundo plano: ícone na bandeja do Windows |
 | [022](docs/adr/0022-internet-clima.md) | internet, parte 1: clima pelo Open-Meteo e DNS do pod |
+| [023](docs/adr/0023-historico-compacto-de-ferramentas.md) | resultado grande de ferramenta vira marcador no histórico |
 
 ## Qualidade e operação
 

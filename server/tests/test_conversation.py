@@ -182,6 +182,24 @@ def test_ferramenta_fala_espera_executa_e_responde_com_o_resultado():
     assert second[-1] == {"role": "tool", "tool_call_id": "call_x", "content": json.dumps({"resultado": 36})}
     # o turno inteiro (pergunta, chamada, resultado, resposta) vai para o histórico, exatamente
     assert [m["role"] for m in conv.history[0]] == ["user", "assistant", "tool", "assistant"]
+    assert conv.history[0][2]["content"] == json.dumps({"resultado": 36})  # pequeno: fica inteiro
+
+
+def test_resultado_grande_de_ferramenta_vira_marcador_no_historico():
+    big = {"cidade": "Novo Hamburgo", "hoje": "de 12 a 25 graus, chance de chuva 10%, nublado",
+           "amanhã": "de 14 a 28 graus, chance de chuva 39%, garoa fraca", "sexta-feira": "de 18 a 30 graus"}
+    tools = ToolRegistry([Tool(name="clima", description="clima", handler=lambda args: big, rule="tempo: use clima",
+                               properties={"cidade": {"type": "string"}}, required=("cidade",))])
+    conv, llm, synth = make(("tool", "clima", '{"cidade": "Novo Hamburgo"}'), "Amanhã tem 39% de chance de chuva.",
+                            "Nublado.", tools=tools)
+    run(conv, "Vai chover amanhã?")
+    assert llm.calls[1][-1]["content"] == json.dumps(big, ensure_ascii=False)  # na hora, o modelo vê tudo
+    tool_msg = conv.history[0][2]
+    assert tool_msg["role"] == "tool" and tool_msg["tool_call_id"] == "call_x"
+    assert json.loads(tool_msg["content"]) == {"omitido": "já usado na resposta; consulte de novo se precisar"}
+    assert conv.history[0][1]["tool_calls"][0]["function"]["name"] == "clima"  # a chamada continua
+    run(conv, "E hoje?")
+    assert "omitido" in llm.calls[2][-3]["content"]  # a pergunta seguinte já vai com o marcador
 
 
 def test_prefixo_tem_regras_e_exemplos_das_ferramentas():

@@ -234,6 +234,8 @@ agatha/
       contexto (4076 tokens; histórico cortado 8 → 2, resposta em 6,8 s): resultados de ferramenta ficam no
       histórico. Resultado do clima compactado (189 → ~100 tokens, sem "(RS)" e sem "Celsius"); clima no bench
       20/21. Teste de fumaça 5/6 (a falha: `oracle_backups` à toa em "para que serve um backup incremental?",
-      ponto fraco antigo). **Decisão pendente do Reinaldo:** como evitar que o histórico encha com resultados
-      de ferramenta (opções no fim da conversa de 21/10; recomendação: compactar as trocas com ferramenta no
-      histórico, medindo antes). Depois: notícias (RSS).
+      ponto fraco antigo). Decisão do Reinaldo (21/10): **ADR-023**, resultado de ferramenta > 150 caracteres
+      vira marcador no histórico (a chamada fica; pequenos ficam inteiros); "com o tempo pode ter que ser B"
+      (contexto 6144, medir VRAM com o pod parado). Cache: +18 tokens reprocessados (~50 ms); depois de troca
+      compactada consulta de novo 18/18; tools_bench antigos 120/135, novos 29/30. No ar.
+      Próximo: notícias (RSS: G1, Folha, Tecnoblog).

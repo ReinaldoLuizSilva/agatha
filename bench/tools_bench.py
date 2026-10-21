@@ -27,7 +27,7 @@ import urllib.request
 from datetime import datetime
 from pathlib import Path
 
-from agatha_server.conversation import build_prefix
+from agatha_server.conversation import OMITTED, build_prefix
 from agatha_server.llm import NO_BRACKETS
 from agatha_server.memory import MemoryConfig, MemoryStore
 from agatha_server.prompts import user_message
@@ -140,15 +140,23 @@ SAVED_THEN_MISHEARD_3 = [
     {"role": "assistant", "content": "Não entendi o que você quer dizer com formatão. Você pode repetir, por favor?"},
 ]
 
+def tool_turn(question, tool, arguments, answer):
+    """Troca com ferramenta como fica no histórico do servidor: o resultado grande vira o marcador
+    (ADR-023)."""
+    return [
+        user_message(question, NOW),
+        {"role": "assistant", "content": "", "tool_calls": [{"id": "call_0", "type": "function", "function": {
+            "name": tool, "arguments": json.dumps(arguments, ensure_ascii=False)}}]},
+        {"role": "tool", "tool_call_id": "call_0", "content": OMITTED},
+        {"role": "assistant", "content": answer},
+    ]
+
+
 # Acabou de perguntar o tempo de Novo Hamburgo (para o "E em Curitiba?")
-ASKED_WEATHER = [
-    user_message("Como está o tempo hoje?", NOW),
-    {"role": "assistant", "content": "", "tool_calls": [{"id": "call_0", "type": "function", "function": {
-        "name": "clima", "arguments": json.dumps({"cidade": "Novo Hamburgo (RS)"}, ensure_ascii=False)}}]},
-    {"role": "tool", "tool_call_id": "call_0", "content": json.dumps({"cidade": "Novo Hamburgo",
-                                                                     "agora": "23 graus, nublado"}, ensure_ascii=False)},
-    {"role": "assistant", "content": "Está nublado, 23 graus em Novo Hamburgo."},
-]
+ASKED_WEATHER = tool_turn("Como está o tempo hoje?", "clima", {"cidade": "Novo Hamburgo (RS)"},
+                          "Está nublado, 23 graus em Novo Hamburgo.")
+ASKED_TABLESPACES = tool_turn("Como estão as tablespaces do Oracle?", "oracle_tablespaces", {},
+                              "A USERS está com 91%, quase cheia. As outras estão tranquilas.")
 
 # (pergunta, ferramenta esperada ou None, verificação dos argumentos, texto que deve aparecer na resposta,
 #  texto que NÃO pode aparecer na resposta[, histórico antes da pergunta])
@@ -183,6 +191,11 @@ CASES = [
     ("Como vai estar o tempo em Porto Alegre amanhã?", "clima",
      lambda a: "porto alegre" in a.get("cidade", "").lower(), None, None),
     ("E em Curitiba?", "clima", lambda a: "curitiba" in a.get("cidade", "").lower(), None, None, ASKED_WEATHER),
+    # ADR-023: depois de uma troca compactada, a pergunta seguinte consulta de novo (ou responde, se é conceito)
+    ("Vai chover amanhã?", "clima", lambda a: "novo hamburgo" in a.get("cidade", "").lower(), "80", None, ASKED_WEATHER),
+    ("E as sessões?", "oracle_sessoes", lambda a: True, "48", None, ASKED_TABLESPACES),
+    ("Qual a mais cheia agora?", "oracle_tablespaces", lambda a: True, "USERS", None, ASKED_TABLESPACES),
+    ("O que é uma tablespace?", None, None, None, None, ASKED_TABLESPACES),
     ("O que é o El Niño?", None, None, None, None),
     ("Qual a diferença entre clima e tempo?", None, None, None, None),
     ("Lembra que o meu servidor de testes se chama lab01.", "guardar_fato", lambda a: "lab01" in a.get("fato", "").lower(), None, None),
