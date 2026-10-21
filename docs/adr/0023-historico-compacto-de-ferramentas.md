@@ -2,8 +2,8 @@
 
 - **Status:** Aceito
 - **Data:** 2026-10-21
-- **Complementa:** [ADR-007](0007-ajustes-de-latencia.md) (o prefixo não muda entre turnos) e
-  [ADR-009](0009-tool-calling.md) (ferramentas)
+- **Complementa:** [ADR-007](0007-ajustes-latencia-conversa.md) (o prefixo não muda entre turnos) e
+  [ADR-009](0009-ferramentas-tool-calling.md) (ferramentas)
 
 ## Contexto
 
