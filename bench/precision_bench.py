@@ -15,8 +15,13 @@ com os erros de transcrição, mais frases do roteiro de jargão (`agatha_client
 Mesmo prompt e ferramentas do servidor (`bench/tools_bench.py`: resultados simulados, memória de
 teste). A classificação é por texto (regex) e imprime a resposta de cada falha para revisão.
 
+Com `--history`, cada pergunta vem depois de uma conversa real (sessão de 20/10, com uma resposta
+interrompida): no uso a pergunta quase nunca chega sozinha, e o "OWR" daquela sessão só virou
+invenção com o histórico (sem ele, 5/5 "você quis dizer AWR?").
+
 Uso:
     .venv/bin/python bench/precision_bench.py --runs 3
+    .venv/bin/python bench/precision_bench.py --history
     .venv/bin/python bench/precision_bench.py --only 'rman|spdp'
     .venv/bin/python bench/precision_bench.py --rescore bench/results/precision-*.json   # critérios atuais
 """
@@ -35,7 +40,7 @@ from tools_bench import NOW, RESULTS_DIR, build_registry, stream
 CLARIFY = re.compile(r"quis dizer|pode repetir|não entendi|pode reformular|poderia repetir|confirmar|"
                      r"se refere|seria (o|a) |não reconheço|não conheço (esse|essa)|pode explicar melhor|"
                      r"qual (servidor|host|banco)|o que (exatamente )?você", re.I)
-CANNOT = re.compile(r"não (consigo|sei|tenho (acesso|como|ferramenta)|posso|é possível)|"
+CANNOT = re.compile(r"não (consigo|sei|tenho (acesso|como|ferramenta|a função|controle)|posso|é possível)|"
                     r"não tenho essa informação|sem acesso|não mostra", re.I)
 
 
@@ -78,6 +83,9 @@ CASES = [
     case("confirmar", "Agatha, Kiora, Zabbix"),
     case("confirmar", "Zabbix Touchpad", not_any=["touchpad é", "touchpad serve"]),
     case("confirmar", "Agatha, qual é a diferença entre host"),
+    # 20/10, headset: ele disse AWR; a v5 inventou "Oracle WebLogic Repository"
+    case("confirmar", "Agatha consegue explicar para que serve um OWR no Oracle.", alt=["awr"],
+         not_any=["weblogic", "owr significa", "owr é"]),
     # --- ferramenta: o Zabbix de laboratório só tem um host (agatha-srv)
     case("ferramenta", "Agatha, como está o servidor?", tools=["zabbix_host"]),
     case("ferramenta", "Agatha Valido, Servidor, Agatha-srv", tools=["zabbix_host"]),
@@ -100,6 +108,21 @@ CASES = [
     case("nao_consigo", "Agatha, reinicia o serviço do listener.", not_any=["reiniciei", "reiniciado", "pronto"]),
     case("nao_consigo", "Agatha, quantos usuários o Active Directory tem?", not_any=["usuários no ad", "tem cerca"]),
 ]
+
+
+# Sessão de 20/10 às 21:25, como o histórico do servidor a guardou (a 3ª foi interrompida: fica só o
+# que ele ouviu; o "Agatha, para" não vai ao LLM)
+HISTORY = [
+    ("Agatha, deoração", "Não entendi o comando. Você pode repetir, por favor?"),
+    ("Agatha, que horas são?", "São 21h26."),
+    ("Agatha consegue explicar a diferença de um banco Oracle para um banco PostgreSQL",
+     "Eles são sistemas de gerenciamento de banco de dados diferentes. O Oracle é comercial e muito robusto em "
+     "ambientes empresariais. O PostgreSQL é open source e muito flexível."),
+]
+
+
+def history_messages() -> list[dict]:
+    return [m for user, reply in HISTORY for m in (user_message(user, NOW), {"role": "assistant", "content": reply})]
 
 
 def run_case(registry, prefix, c) -> dict:
@@ -164,6 +187,7 @@ def main() -> None:
     parser.add_argument("--runs", type=int, default=1)
     parser.add_argument("--only", help="só os casos cuja pergunta contém um destes textos (separados por |)")
     parser.add_argument("--label", default="base", help="nome da variante, no arquivo de resultado")
+    parser.add_argument("--history", action="store_true", help="cada pergunta depois da conversa real de 20/10")
     parser.add_argument("--rescore", nargs="+", metavar="JSON", help="re-pontua resultados salvos e sai")
     args = parser.parse_args()
     if args.rescore:
@@ -174,6 +198,8 @@ def main() -> None:
 
     registry, store = build_registry()
     prefix = build_prefix(registry, store)
+    if args.history:
+        prefix = [*prefix, *history_messages()]
     stream([*prefix, user_message("Oi.", NOW)], registry.schemas())  # aquecimento do cache
 
     rows = []

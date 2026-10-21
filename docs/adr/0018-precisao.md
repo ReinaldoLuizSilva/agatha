@@ -93,6 +93,29 @@ STT (40 frases de jargão, 97 ocorrências de termos):
 | Glossário no vocabulário do STT | medido: a lista ampliada não ganhou nada |
 | Corte de fim de fala em 700 ms | +200 ms em todas as falas para resolver ~3% delas |
 
+## Revisão de 20/10: siglas no meio da conversa (prompt v8)
+
+No teste do barge-in de 20/10 (Fase 9) ele perguntou do AWR, o STT entregou "OWR" e a v5 inventou
+"Oracle WebLogic Repository". Sozinha, a mesma pergunta dá 5/5 "Você quis dizer AWR?"; depois da
+conversa daquela sessão, 0/5. O `precision_bench` só media perguntas sem histórico; ganhou o caso
+do OWR e a opção `--history` (cada pergunta depois daquela conversa real). A v8 acrescenta ao fim do
+glossário: "Uma sigla de Oracle ou Zabbix fora dessa lista quase sempre é uma delas mal ouvida:
+confirme ("Você quis dizer AWR?" para "OWR"), também no meio de uma conversa."
+
+| prompt | sem histórico | com histórico | confirmar (com histórico) | invenções (com) | `tools_bench` |
+|---|---|---|---|---|---|
+| v5 | 97/114 | 93/114 | 15/24 | 2 | 118/132 (Fase 8) |
+| **v8** | 96/114 | **95/114** | **19/24** | **0** | 119/132 |
+
+3 rodadas cada (38 casos). O OWR com histórico foi de 0/3 a 3/3. Única piora vista: numa rodada
+sem histórico, "para que serve o PostgreSQL" virou "não tenho informações sobre o PostgreSQL, eu me
+concentro em Oracle e Zabbix" (a v5 também falha 1/3 nesse caso, por outro motivo). Prefixo 2311 →
+2354 tokens.
+
+Vocabulário do STT sem mudança: só com o AWR a mais na lista, 77/97 termos contra 79/97 (o
+Whisper muda metade das transcrições com uma palavra a mais no vocabulário) e o AWR já saía
+certo nas gravações de jargão; não há gravação do "OWR" para medir o ganho.
+
 ## Consequências
 
 **Positivas**

@@ -15,6 +15,8 @@ Evolução (a v2 foi medida no ADR-004):
   tenho acesso a sistemas" tendo o Zabbix). Agora: conceito se responde; "não sei" só para o que
   nenhuma ferramenta mostra; termo estranho → o termo técnico de som parecido, confirmado; glossário
   das siglas dele; acesso às ferramentas explícito.
+- v8 (20/10, ADR-018 "Revisão de 20/10"): no meio de uma conversa a v5 inventava sigla mal ouvida
+  ("OWR" → "Oracle WebLogic Repository"); sigla de Oracle/Zabbix fora do glossário → confirma a dele.
 """
 
 import json
@@ -40,7 +42,9 @@ explique uma palavra que você não reconhece como termo técnico.
 Cada mensagem dele começa com a data e a hora atuais entre colchetes; use só se for relevante.
 O Reinaldo trabalha com infraestrutura (Linux, Oracle, Zabbix) e estuda cloud e DevOps. Siglas e termos que ele
 usa: no Oracle, RMAN, AWR, ASH, ASM, CDB, PDB, Data Guard, SPFILE, archivelog, listener; no Zabbix, item,
-trigger, template, housekeeping, proxy; tipos de backup: completo, incremental e diferencial."""
+trigger, template, housekeeping, proxy; tipos de backup: completo, incremental e diferencial. Uma sigla de
+Oracle ou Zabbix fora dessa lista quase sempre é uma delas mal ouvida: confirme ("Você quis dizer AWR?" para
+"OWR"), também no meio de uma conversa."""
 
 _WEEKDAYS = ["segunda-feira", "terça-feira", "quarta-feira", "quinta-feira", "sexta-feira", "sábado", "domingo"]
 
