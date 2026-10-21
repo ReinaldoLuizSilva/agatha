@@ -116,6 +116,25 @@ Vocabulário do STT sem mudança: só com o AWR a mais na lista, 77/97 termos co
 Whisper muda metade das transcrições com uma palavra a mais no vocabulário) e o AWR já saía
 certo nas gravações de jargão; não há gravação do "OWR" para medir o ganho.
 
+### Tentativas de enxugar o prompt (21/10, Fase 10)
+
+Meta: voltar de 2354 para ~2000 tokens antes das ferramentas da internet. Medida: `precision_bench`
+com e sem histórico e `tools_bench`, 3 rodadas cada (temperatura 0,6: a v8 oscilou 119 e 117/132
+no `tools_bench`).
+
+| prompt | tokens | sem histórico | com histórico | `tools_bench` |
+|---|---|---|---|---|
+| **v8 (fica)** | 2354 | 96/114 | 95/114 | 119 e 117/132 |
+| v9: regras de fala condensadas, regra de conceitos só no fim, "data e hora" sem "atuais", cabeçalho da memória curto | 2197 | 90/114 | 99/114 | 112/132 |
+| v10: v9 devolvendo a regra de conceitos no topo, "atuais" e o cabeçalho da memória | 2246 | 96/114 | 97/114 | 115 e 113/132 |
+
+O que cada corte custou na v9: sem a regra de conceitos no topo ela dizia "não sei sobre o
+PostgreSQL"; sem o "atuais" errava "que horas são"; sem o "para apagar, use esquecer com o número",
+"pode apagar aquilo da reunião" não chamava o `esquecer`. A v10 ainda perdia de forma consistente
+em "quando é a reunião com o time?" (chama `guardar_fato`: 5 → 1 de 6) e na conta de tera/giga.
+Ganho pequeno (−108 tokens) contra piora medida: ficou a v8. Os resultados estão em
+`bench/results/precision-v9*`, `precision-v10*` e `tools-servidor-20261021-*`.
+
 ## Consequências
 
 **Positivas**
