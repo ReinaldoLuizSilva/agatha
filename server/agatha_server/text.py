@@ -129,12 +129,17 @@ class LeadingTimestampFilter:
         return text
 
 
+_STATE = re.compile(r"\s*\((?:AC|AL|AP|AM|BA|CE|DF|ES|GO|MA|MT|MS|MG|PA|PB|PR|PE|PI|RJ|RN|RS|RO|RR|SC|SP|SE|TO)\)")
+
+
 def clean(text: str) -> str:
     text = _TIMESTAMP.sub(" ", text)
     for pattern, repl in _MARKDOWN:
         text = pattern.sub(repl, text)
     # emoji e pictogramas (categoria So) e caracteres de controle
     text = "".join(c for c in text if unicodedata.category(c) not in ("So", "Cs", "Co", "Cc") or c in "\n\t")
+    # "Novo Hamburgo (RS)": o modelo copia o estado do argumento do clima; sem os parênteses virava "RS"
+    text = _STATE.sub("", text)
     text = re.sub(r"[()\[\]{}<>|\\^\"]", " ", text)
     text = re.sub(r"\s+", " ", text)
     text = re.sub(r"\s+([,.;:!?…])", r"\1", text)

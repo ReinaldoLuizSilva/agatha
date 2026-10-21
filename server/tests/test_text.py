@@ -135,3 +135,11 @@ def filtered(text: str, step: int = 3) -> str:
 ])
 def test_filtro_de_carimbo(raw, expected):
     assert filtered(raw) == expected
+
+
+def test_estado_entre_parenteses_some_da_fala():
+    from agatha_server.text import clean
+
+    assert clean("Amanhã em Novo Hamburgo (RS) tem chuva.") == "Amanhã em Novo Hamburgo tem chuva."
+    assert clean("Em Curitiba (PR), 17 graus.") == "Em Curitiba, 17 graus."
+    assert clean("O banco (PRDORA) está no ar.") == "O banco PRDORA está no ar."  # não é estado: fica
