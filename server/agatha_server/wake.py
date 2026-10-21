@@ -41,9 +41,10 @@ def is_addressed(text: str, config: WakeConfig) -> bool:
 
 # Barge-in: "Agatha, para", "chega", "cancela"... Curtos de propósito: "Agatha, para que serve um
 # backup?" é pergunta, não comando.
-# "par": o "para" sai cortado do Whisper quando o fim da palavra se perde (teste real de 18/10)
-STOP_WORDS = {"para", "par", "pare", "parar", "chega", "cancela", "cancelar", "silencio", "cala", "quieta",
-              "basta", "esquece", "deixa", "stop"}
+# "par": o "para" sai cortado do Whisper quando o fim da palavra se perde (teste real de 18/10);
+# "paras" e "espera" (ia ao LLM: "Estou aqui aguardando"), do teste de 21/10
+STOP_WORDS = {"para", "par", "pare", "parar", "paras", "chega", "cancela", "cancelar", "silencio", "cala",
+              "quieta", "basta", "espera", "espere", "esquece", "deixa", "stop"}
 STOP_MAX_WORDS = 3
 LEADING_FILLERS = {"pode", "ok", "ta", "ja", "ei", "oi", "ah", "olha", "agora"}  # "Agatha, pode parar"
 # Com ela calada, "esquece" e "deixa" são comandos da memória ("Agatha, esquece isso", ADR-010)
