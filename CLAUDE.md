@@ -230,4 +230,10 @@ agatha/
       visto 2887/4096. 1) **clima no ar** (21/10, ADR-022): `clima(cidade)` no Open-Meteo, cidade pela memória,
       cache de 10 min; tools_bench clima 18/21 (falhas eram da régua), antigos 114/132, precision 95 e 93/114;
       prefixo 2488 tokens. DNS do pod `timeout:1 attempts:2` (os DNS IPv4 do provedor perdem ~1 em 5: 5–8 s).
-      Próximo: ele testa o clima no Windows; depois notícias (RSS).
+      Teste no Windows (21/10): clima certo nas 5 perguntas, 1º som 1,6–1,8 s; mas na 9ª fala o prompt estourou o
+      contexto (4076 tokens; histórico cortado 8 → 2, resposta em 6,8 s): resultados de ferramenta ficam no
+      histórico. Resultado do clima compactado (189 → ~100 tokens, sem "(RS)" e sem "Celsius"); clima no bench
+      20/21. Teste de fumaça 5/6 (a falha: `oracle_backups` à toa em "para que serve um backup incremental?",
+      ponto fraco antigo). **Decisão pendente do Reinaldo:** como evitar que o histórico encha com resultados
+      de ferramenta (opções no fim da conversa de 21/10; recomendação: compactar as trocas com ferramenta no
+      histórico, medindo antes). Depois: notícias (RSS).
