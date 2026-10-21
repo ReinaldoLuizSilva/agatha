@@ -1,6 +1,6 @@
 # ADR-014: Wake word no cliente só para o barge-in, treinada com a voz do Reinaldo
 
-- **Status:** Aceito
+- **Status:** Aceito (modelo retreinado em 20/10; ver "Retreino com o headset")
 - **Data:** 2026-10-12
 - **Complementa:** [ADR-008](0008-wake-word-pela-transcricao.md) (a chamada normal continua pela
   transcrição no servidor)
@@ -80,6 +80,49 @@ O que se aprendeu no caminho:
 | Barge-in pela transcrição no servidor | a transcrição só sai depois da frase terminar (~1 s depois do nome) e disputa a GPU com o LLM e o TTS no meio da resposta |
 | Detector do cliente também como porteiro (só envia áudio depois do nome) | perderia 10–25% das chamadas hoje; reavaliar com mais dados |
 
+## Retreino com o headset e features em fluxo (20/10)
+
+O diagnóstico de 20/10 (Fase 9) mostrou que o Reinaldo usa **headset** e que o detector quase nunca
+disparava com ele. Ele gravou mais 94 falas com o mic do headset (`--out gravacoes-headset`, partes
+perto, variado e negativas). Três achados:
+
+1. **O treino e o cliente calculavam features diferentes.** O `train.py` tirava os embeddings do
+   clipe inteiro de uma vez (`AudioFeatures._get_embeddings`); o cliente calcula em fluxo, de 80 em
+   80 ms. Na voz os dois dão o mesmo valor, mas o melspectrograma corta o piso em 80 dB abaixo do
+   ponto mais forte do trecho: no clipe inteiro o silêncio vira 3,08, num bloco só de silêncio vira
+   −8. O mic do headset tem fundo em −90 dBFS (quase zero digital), então as pausas caem nesse piso
+   e o modelo se perdia; o do notebook (−71 dBFS) ficava acima dele e funcionava. Por isso a
+   avaliação dizia 91–100% nas falas do headset e o cliente acertava ~45% (os 3/6 do diagnóstico).
+   O `train.py` agora calcula em fluxo, como o cliente (`embed()`), soma um ruído de fundo mínimo
+   (0,5–3 LSB) no lugar dos zeros e desloca as cópias aumentadas em 0–80 ms dentro do bloco.
+   Os negativos do ACAV100M e a validação de 10,7 h continuam em features do clipe inteiro (vêm
+   prontas do openWakeWord): os falsos/h da validação são aproximados.
+2. **O gravador pega um degrau ao abrir o mic do headset.** Ele abre o microfone a cada fala; o do
+   headset só entrega som ~0,84 s depois, com um degrau de corrente contínua (até −10 dBFS, some em
+   ~2 s) e um estalo de ~60 ms. Descartar 0,5 s no gravador não bastou. No treino as falas do
+   headset passam por um passa-altas de 60 Hz e os primeiros 0,42 s viram silêncio; 9 das 64 falas
+   com o nome começaram antes do mic acordar ("gatha") e ficaram de fora dos positivos.
+3. **O nível do headset é ~20 dB menor** (voz em −50 dBFS, contra −30 no notebook), o mesmo do uso
+   real; as gravações novas entram no treino como estão.
+
+Resultado no limiar do cliente (0,6), no caminho do cliente, só com falas que nenhum dos modelos
+viu no treino (`bench/results/wake-baseline-20261020-200511.md` e `wake-train-20261020-200528.md`):
+
+| | modelo de 12/10 | modelo de 20/10 (2 dobras) |
+|---|---|---|
+| headset, perto | 44% (34) | **100% (34)** |
+| headset, variado | 48% (21) | **95% (21)** |
+| negativas do headset (30) | 0 | 1 ("a gata subiu no telhado") |
+| falsos/h na validação 10,7 h | 21,6 | 15,7 (modelo final: 17,9) |
+
+Na rodada do notebook (avaliação honesta): perto 95%, variado 83%, longe 83%, eco com AEC 73%; as
+negativas parecidas disparam 8/30 ("a gata", "agora não dá", "a batata", "Atacama"…), como em 12/10.
+No barge-in um falso disparo só pausa a resposta até o servidor conferir a transcrição.
+
+**Decisão:** o modelo de 20/10 substitui o de 12/10 em `/dados/agatha/models/wakeword/agatha.onnx`
+(o anterior fica em `agatha-20261012.onnx`). Toda avaliação de detector daqui em diante usa o
+caminho em fluxo; o autoteste do cliente (`python -m agatha_client.wakeword`) mede o mesmo.
+
 ## Consequências
 
 **Positivas**
@@ -93,8 +136,8 @@ O que se aprendeu no caminho:
 - **Com eco, o acerto cai para ~25%.** O barge-in depende do cancelamento de eco (próxima etapa);
   sem ele, não funciona com as caixas do notebook.
 - **Poucos dados**: 82 falas de teste; cada ponto percentual é incerto (±5–10%).
-- **Modelo pessoal**: treinado só com a voz do Reinaldo e o microfone do notebook. Outra pessoa
-  ou outro microfone precisa de novas gravações.
+- **Modelo pessoal**: treinado só com a voz do Reinaldo, no mic do notebook e no do headset (20/10).
+  Outra pessoa ou outro microfone precisa de novas gravações.
 - **Mais uma dependência no cliente** (`openwakeword`, `onnxruntime`) e ~3 MB de modelos.
 - Para melhorar, o caminho é mais gravações reais (os sintéticos não ajudaram). Guardar o áudio
   das falas do dia a dia para retreinar exige autorização do Reinaldo, ainda não dada.

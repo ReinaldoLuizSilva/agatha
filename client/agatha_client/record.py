@@ -198,8 +198,9 @@ NEAR_REPEATS = 2
 VARIED_REPEATS = 2
 AMBIENT_CHUNK_S = 60
 ECO_TAIL_S = 1.5  # depois do fim da resposta, para pegar uma interrupção atrasada
-# Começo de cada gravação jogado fora: o mic do headset dá um tranco de ~−6 dBFS ao abrir o stream
-# (Fase 9). O aviso "● gravando" só aparece depois dele, então a fala não cai no trecho descartado.
+# Começo de cada gravação jogado fora; o aviso "● gravando" só aparece depois dele. Não basta para o
+# mic do headset, que só acorda ~0,84 s depois de aberto, com um degrau de corrente contínua: o
+# train.py filtra e corta o começo dessas falas (ADR-014, "Retreino com o headset").
 LEAD_IN_S = 0.5
 
 

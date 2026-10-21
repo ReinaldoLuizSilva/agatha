@@ -216,8 +216,8 @@ O detector foi treinado com o microfone do notebook e erra com o do headset. Par
    .venv\Scripts\python -m agatha_client.record --out gravacoes-headset --part perto variado negativas --device 1
    ```
 
-   O gravador descarta o primeiro meio segundo de cada fala (o tranco que o headset dá ao abrir o
-   microfone): espere o `● gravando` aparecer para começar a falar. Troque o `1` pelo número que o
+   O mic do headset só acorda ~0,8 s depois de cada `● gravando`: espere um instante antes de falar,
+   senão o começo do nome se perde. Troque o `1` pelo número que o
    `--list-devices` mostrar para o "Microfone Externo" do tipo `[MME]` (o Bluetooth "Headset" não serve).
 3. **Envie** para o servidor e, como root lá, acerte o dono:
 
