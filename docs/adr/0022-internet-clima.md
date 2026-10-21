@@ -67,6 +67,13 @@ graus, chance de chuva 39%, garoa fraca"`), ~100 tokens, só com o nome da cidad
 dizia "Novo Hamburgo RS" em toda resposta) e sem "graus Celsius". Casos de clima no `tools_bench`:
 20/21.
 
+### Segundo teste (21/10, 15 falas, com o ADR-023)
+
+Nenhum estouro de contexto (maior prompt 3696 tokens); 1º som 1,7–2,4 s; "e Porto Alegre", "Em São
+Paulo" e "E na sexta?" consultam de novo e respondem certo. Ela ainda dizia "Novo Hamburgo RS": o
+modelo copia "Novo Hamburgo (RS)" do argumento, e a limpeza para a fala tirava só os parênteses.
+Agora a sigla de estado entre parênteses sai do texto falado (`text.clean`).
+
 ## Consequências
 
 **Positivas**

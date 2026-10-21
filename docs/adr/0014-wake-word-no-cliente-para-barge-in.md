@@ -134,6 +134,15 @@ no uso.
 dois testes: 5 de 5 interrupções, 1 disparo à toa. "Agatha, Paras" (o Whisper) e "Agatha, espera"
 iam ao LLM como pergunta: entraram nas palavras de parar (`wake.STOP_WORDS`).
 
+**Trava de silêncio (21/10, cliente 0.5.1):** numa sessão de 15 falas, 2 disparos à toa com nota
+0,88 e 1,00 num quase silêncio (microfone em ~−60 dBFS; o servidor não achou fala e retomou depois
+de ~2 s de pausa). Agora o cliente só dispara se o áudio limpo teve pico acima de −52 dBFS no último
+segundo (`BargeIn.min_level_dbfs`): a voz dele no headset vai de −31 a −47 dBFS (o "baixinho" das
+gravações), o silêncio dos disparos à toa de −57 a −66. A linha `ⓘ barge-in` mostra quantos blocos
+com nota alta a trava barrou. Causa provável: o treino cobriu o fundo do headset em −80 a −90 dBFS
+(ruído de 0,5–3 LSB), e o fundo no uso real chega a −60; retreinar com silêncio real do headset
+pediria gravar o fundo (com autorização dele).
+
 ## Consequências
 
 **Positivas**

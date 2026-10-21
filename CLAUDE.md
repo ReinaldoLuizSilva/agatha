@@ -238,4 +238,9 @@ agatha/
       vira marcador no histórico (a chamada fica; pequenos ficam inteiros); "com o tempo pode ter que ser B"
       (contexto 6144, medir VRAM com o pod parado). Cache: +18 tokens reprocessados (~50 ms); depois de troca
       compactada consulta de novo 18/18; tools_bench antigos 120/135, novos 29/30. No ar.
-      Próximo: notícias (RSS: G1, Folha, Tecnoblog).
+      2º teste no Windows (21/10, 15 falas): sem estouro (maior prompt 3696), 1º som 1,7–2,4 s, acompanhamentos
+      certos. Corrigido: "(RS)" sai da fala (`text.clean`); 2 disparos à toa do barge-in em quase silêncio
+      (−60 dBFS, pausa ~2 s) → trava no cliente 0.5.1: só dispara com pico > −52 dBFS no último segundo (ADR-014).
+      Visto: "alerta no banco Zabbix" chamou oracle_banco (o "banco" puxou o Oracle); "El Ninho" → "não reconheço
+      como termo técnico" (a confirmação de siglas vale também fora de TI; acompanhar).
+      Próximo: ele testa o cliente 0.5.1 (git pull); depois notícias (RSS: G1, Folha, Tecnoblog).
