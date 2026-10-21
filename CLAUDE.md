@@ -188,7 +188,7 @@ agatha/
       95/111, invenções 0, 1º áudio p50 ~2,07 s. GitHub com 1 nova tentativa se a conexão falhar (a rede oscilou
       no 1º teste). Ponto fraco: pergunta sobre fato da memória às vezes chama uma ferramenta antes (ex.:
       "nome do banco de produção" → oracle_banco), só atrasa ~1 s.
-- [ ] Fase 9: cliente funcional — **em andamento** (escopo aprovado em 19/10).
+- [x] Fase 9: cliente funcional (fechada em 21/10; escopo aprovado em 19/10; ADR-014, ADR-021).
       B) segundo plano: **feito e testado no Windows** (ADR-021): `pythonw -m agatha_client --tray` (ícone por
       estado, pausar mic = manda silêncio, barge-in on/off, abrir log, sair), log em %LOCALAPPDATA%\Agatha,
       `--autostart ligar|desligar`, uma instância só (mutex). Extra `[tray]` (pystray, Pillow); cliente 0.5.0.
@@ -212,7 +212,12 @@ agatha/
       (ADR-018, "Revisão de 20/10"): só inventava com histórico (sozinha 5/5 confirma); `precision_bench
       --history`; prompt **v8** (sigla de Oracle/Zabbix fora do glossário → confirma) no ar: com histórico 93 →
       95/114, invenções 2 → 0; sem histórico 97 → 96; tools_bench 119/132; prefixo 2354 tokens. STT sem mudança.
-      Pendente também: varredura do AEC (só importa com as caixas do notebook).
+      2º teste no Windows (21/10, 12 falas): interrupções 3/3; 1 disparo à toa (ruído sem fala, descartado
+      pela transcrição vazia, ela continuou). Somando: 5/5, 1 à toa. "paras", "espera", "espere" viraram
+      palavras de parar (iam ao LLM). 1ª resposta da sessão às vezes mais lenta (LLM 2,35 s, depois ~1,3–1,5 s).
+      Melhorar aos poucos (não bloqueiam): varredura do AEC (só com as caixas do notebook); gravador mantendo o
+      stream aberto (só para gravar outra rodada); falsos disparos em ruído sem fala; "Fato guardado. Já estava
+      na memória." (frase contraditória ao guardar um fato repetido).
 - [ ] Fase 10: integração com a internet (pedida em 19/10; escopo a aprovar depois da 9): busca na web, clima,
       notícias, documentação técnica. Ideia: SearXNG no agatha-srv, Open-Meteo, RSS, busca restrita a sites
       oficiais. Começar enxugando o prompt (2354 tokens).

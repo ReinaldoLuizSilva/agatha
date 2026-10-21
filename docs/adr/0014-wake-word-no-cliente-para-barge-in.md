@@ -128,6 +128,12 @@ resposta interromperam (disparo 485 ms depois do começo da fala, confirmado pel
 disparo à toa durante as respostas; CPU 2,2 ms por bloco de 32 ms. Amostra pequena: seguir medindo
 no uso.
 
+**Segundo teste (21/10, 12 falas):** 3 de 3 interrupções pararam a resposta ("para", "espera",
+"chega"; disparo 515–578 ms depois do começo da fala); 1 disparo à toa (nota 0,76) num ruído de
+~800 ms sem fala, que o servidor descartou pela transcrição vazia, e ela continuou. Somando os
+dois testes: 5 de 5 interrupções, 1 disparo à toa. "Agatha, Paras" (o Whisper) e "Agatha, espera"
+iam ao LLM como pergunta: entraram nas palavras de parar (`wake.STOP_WORDS`).
+
 ## Consequências
 
 **Positivas**
