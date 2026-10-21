@@ -123,6 +123,11 @@ No barge-in um falso disparo só pausa a resposta até o servidor conferir a tra
 (o anterior fica em `agatha-20261012.onnx`). Toda avaliação de detector daqui em diante usa o
 caminho em fluxo; o autoteste do cliente (`python -m agatha_client.wakeword`) mede o mesmo.
 
+**Teste no Windows (20/10, headset, `--barge-debug`, 9 falas):** 2 de 2 "Agatha, para" no meio da
+resposta interromperam (disparo 485 ms depois do começo da fala, confirmado pelo servidor); nenhum
+disparo à toa durante as respostas; CPU 2,2 ms por bloco de 32 ms. Amostra pequena: seguir medindo
+no uso.
+
 ## Consequências
 
 **Positivas**

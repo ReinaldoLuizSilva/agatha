@@ -206,8 +206,10 @@ agatha/
       em `agatha-20261012.onnx`): headset perto 44% → 100%, variado 48% → 95%, falsos/h validação 21,6 → 15,7.
       O gravador abre o mic a cada fala e o do headset só acorda ~0,84 s depois, com degrau de −10 dBFS: o
       treino filtra/corta; para gravar mais, o certo é o gravador manter o stream aberto (não feito).
-      **Próximo passo:** ele copia o `agatha.onnx` novo para `client\models` e testa o barge-in com o headset
-      (`--barge-debug`); medir acerto ao vivo e falsos disparos durante a fala dela.
+      Teste no Windows em 20/10 (headset, modelo novo): barge-in 2/2 (disparo 485 ms após o começo da fala),
+      0 disparos à toa; "muito melhor". Seguir medindo no uso (amostra pequena).
+      Visto no teste: STT entregou "OWR" (AWR) e ela inventou "Oracle WebLogic Repository" em vez de confirmar
+      o termo; caso para o precision_bench.
       Pendente também: varredura do AEC (só importa com as caixas do notebook).
 - [ ] Fase 10: integração com a internet (pedida em 19/10; escopo a aprovar depois da 9): busca na web, clima,
       notícias, documentação técnica. Ideia: SearXNG no agatha-srv, Open-Meteo, RSS, busca restrita a sites
