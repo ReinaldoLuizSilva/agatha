@@ -218,6 +218,11 @@ agatha/
       Melhorar aos poucos (não bloqueiam): varredura do AEC (só com as caixas do notebook); gravador mantendo o
       stream aberto (só para gravar outra rodada); falsos disparos em ruído sem fala; "Fato guardado. Já estava
       na memória." (frase contraditória ao guardar um fato repetido).
-- [ ] Fase 10: integração com a internet (pedida em 19/10; escopo a aprovar depois da 9): busca na web, clima,
-      notícias, documentação técnica. Ideia: SearXNG no agatha-srv, Open-Meteo, RSS, busca restrita a sites
-      oficiais. Começar enxugando o prompt (2354 tokens).
+- [ ] Fase 10: integração com a internet — **em andamento** (escopo aprovado em 21/10).
+      Ordem: 0) enxugar o prompt (2354 tokens; meta ~2000 sem piorar tools_bench nem precision_bench com e sem
+      histórico); 1) clima (Open-Meteo, sem chave); 2) notícias por RSS (G1, Folha e Tecnoblog); 3) busca na web
+      com SearXNG no agatha-srv, restrita a documentação oficial para dúvida técnica. Cada uma com casos no
+      tools_bench, latência medida e ADR; se o prompt apertar, juntar clima e notícias numa ferramenta.
+      Decisões do Reinaldo: cidade do clima na memória (fato 9: "A cidade do Reinaldo para o clima é Novo
+      Hamburgo (RS)", gravado em 21/10); ok que cidade, buscas e pedidos de notícia saiam para a internet (o
+      processamento continua local).
