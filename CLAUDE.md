@@ -208,9 +208,11 @@ agatha/
       treino filtra/corta; para gravar mais, o certo é o gravador manter o stream aberto (não feito).
       Teste no Windows em 20/10 (headset, modelo novo): barge-in 2/2 (disparo 485 ms após o começo da fala),
       0 disparos à toa; "muito melhor". Seguir medindo no uso (amostra pequena).
-      Visto no teste: STT entregou "OWR" (AWR) e ela inventou "Oracle WebLogic Repository" em vez de confirmar
-      o termo; caso para o precision_bench.
+      Visto no teste: STT entregou "OWR" (AWR) e ela inventou "Oracle WebLogic Repository". Corrigido em 20/10
+      (ADR-018, "Revisão de 20/10"): só inventava com histórico (sozinha 5/5 confirma); `precision_bench
+      --history`; prompt **v8** (sigla de Oracle/Zabbix fora do glossário → confirma) no ar: com histórico 93 →
+      95/114, invenções 2 → 0; sem histórico 97 → 96; tools_bench 119/132; prefixo 2354 tokens. STT sem mudança.
       Pendente também: varredura do AEC (só importa com as caixas do notebook).
 - [ ] Fase 10: integração com a internet (pedida em 19/10; escopo a aprovar depois da 9): busca na web, clima,
       notícias, documentação técnica. Ideia: SearXNG no agatha-srv, Open-Meteo, RSS, busca restrita a sites
-      oficiais. Começar enxugando o prompt (2311 tokens).
+      oficiais. Começar enxugando o prompt (2354 tokens).
