@@ -32,7 +32,8 @@ Dados em `/dados/agatha/data/wakeword/`:
 
 | pasta | conteúdo |
 |---|---|
-| `gravacoes/` | gravações do Reinaldo (`manifest.jsonl`: vale a última linha de cada id) |
+| `gravacoes/` | gravações do Reinaldo, mic do notebook (`manifest.jsonl`: vale a última linha de cada id) |
+| `gravacoes-headset/` | rodada com o mic do headset (20/10; grupos `hs-*` na tabela) |
 | `sintetico/` | saída do `generate.py` |
 | `oww/` | 2.000 h de áudio variado já em embeddings (ACAV100M, 17,3 GB) e 10,7 h de validação, do [openWakeWord](https://huggingface.co/datasets/davidscripka/openwakeword_features) |
 | `features/` | cache dos embeddings calculados pelo `train.py` (apague para recalcular) |
@@ -43,8 +44,13 @@ Dados em `/dados/agatha/data/wakeword/`:
 cap="systemd-run --user --scope -p MemoryMax=5G -p MemorySwapMax=0 nice -n 19"
 $cap .venv-wake/bin/python client/wakeword/generate.py --out /dados/agatha/data/wakeword/sintetico
 $cap .venv-wake/bin/python client/wakeword/train.py --eval     # tabela em bench/results/wake-train-*.md
-$cap .venv-wake/bin/python client/wakeword/train.py --final    # → /dados/agatha/models/wakeword/agatha.onnx
+$cap .venv-wake/bin/python client/wakeword/train.py --baseline /dados/agatha/models/wakeword/agatha.onnx  # o modelo atual, mesmas falas
+$cap .venv-wake/bin/python client/wakeword/train.py --final --out /dados/agatha/models/wakeword/agatha-candidato.onnx
 ```
+
+Os embeddings saem em fluxo, de 80 em 80 ms, como no cliente: calculados no clipe inteiro eles
+divergem no silêncio e a avaliação enganava (ADR-014, "Retreino com o headset"). Troque o
+`agatha.onnx` só se o candidato ganhar do `--baseline`.
 
 A Agatha continua no ar durante o treino, então ele roda com a menor prioridade de CPU
 (`nice -n 19`) e com **teto de 5 GB de memória**. Sem o teto, um teste que carregou 6 GB de uma vez

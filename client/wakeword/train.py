@@ -2,11 +2,13 @@
 
 Usa o pipeline do openWakeWord: melspectrograma → embedding pré-treinado (96 valores a cada
 80 ms) → classificador pequeno sobre janelas de 16 embeddings (~2 s de áudio), que dispara quando
-o nome termina no fim da janela. Só o classificador é treinado, no CPU.
+o nome termina no fim da janela. Só o classificador é treinado, no CPU. Os embeddings saem em
+fluxo, de 80 em 80 ms, exatamente como no cliente (ver embed()).
 
 Dados:
 - positivos: gravações do Reinaldo (python -m agatha_client.record) e amostras sintéticas
-  (generate.py), com ruído, reverberação e volume aleatórios;
+  (generate.py), com ruído, reverberação e volume aleatórios. Duas rodadas: gravacoes/ (12/10,
+  notebook) e gravacoes-headset/ (20/10, mic do headset, ~20 dB mais baixo; grupos hs-*);
 - negativos: 2.000 h de áudio variado já convertido em embeddings (ACAV100M, do openWakeWord),
   frases parecidas e respostas da Agatha (generate.py), FLEURS PT-BR, ambiente e eco gravados,
   e o resto das frases depois do nome.
@@ -20,7 +22,8 @@ Uso (venv do treino, ver README.md desta pasta), sempre com teto de memória e p
 para não atrapalhar a Agatha:
     systemd-run --user --scope -p MemoryMax=5G -p MemorySwapMax=0 nice -n 19 \
         .venv-wake/bin/python client/wakeword/train.py --eval     # 2 dobras + tabela
-    (idem) ... train.py --final                                   # usa tudo, exporta ONNX
+    (idem) ... train.py --baseline /dados/agatha/models/wakeword/agatha.onnx   # o modelo atual, mesmo teste
+    (idem) ... train.py --final --out candidato.onnx              # usa tudo, exporta ONNX
 """
 
 import argparse
@@ -38,6 +41,7 @@ ROOT = Path(__file__).resolve().parents[2]
 sys.path.insert(0, str(ROOT / "client"))  # agatha_client.aec: o mesmo cancelamento de eco do cliente
 DATA = Path("/dados/agatha/data/wakeword")
 RECORDINGS = DATA / "gravacoes"
+HEADSET = DATA / "gravacoes-headset"  # Fase 9: rodada com o mic do headset
 SYNTHETIC = DATA / "sintetico"
 FEATURES = DATA / "features"
 ACAV = DATA / "oww" / "openwakeword_features_ACAV100M_2000_hrs_16bit.npy"
@@ -51,6 +55,11 @@ WIN = 16  # embeddings por janela
 EMB = 96
 STEP_S = 0.08  # um embedding a cada 80 ms
 FIRST_END_S = 0.76  # o 1º embedding cobre o áudio até ~0,76 s
+CHUNK = 1280  # 80 ms: o cliente calcula um embedding a cada bloco desse tamanho
+STREAM_SKIP = 9  # embeddings do começo do fluxo que ainda veem o buffer inicial (alinha com o lote)
+# Ruído de fundo somado a todo áudio antes do embedding (desvio em LSB de int16, sorteado): no
+# cliente o microfone nunca entrega zero exato, e o fluxo trata o silêncio digital de outro jeito.
+FLOOR_LSB = (0.5, 3.0)
 # Silêncio antes e depois de cada gravação: a 1ª janela completa só termina em ~1,96 s, e o nome
 # costuma terminar antes disso. No cliente o microfone é contínuo e sempre há áudio antes.
 LEAD_S, TAIL_S = 1.5, 0.5
@@ -58,10 +67,12 @@ LEAD_S, TAIL_S = 1.5, 0.5
 # começa 16 ms antes, porque não modela eco que chegue antes do atraso informado.
 AEC_DELAY_MS, AEC_MU = 273, 1.0
 ECHO_GROUPS = ("eco-fala", "eco-calado")
-THRESHOLDS = (0.5, 0.7, 0.8, 0.9, 0.95, 0.98, 0.99)
+THRESHOLDS = (0.5, 0.6, 0.7, 0.8, 0.9, 0.95, 0.98, 0.99)  # o cliente usa 0,6
 REFRACTORY_S = 2.0
-POS_GROUPS = ("perto", "variado", "longe", "eco-fala")
-NEG_GROUPS = ("negativas", "eco-calado", "ambiente", "fleurs")
+NAME_GROUPS = ("perto", "variado", "longe", "hs-perto", "hs-variado")  # o nome dito, sem eco
+POS_GROUPS = ("perto", "variado", "longe", "eco-fala", "hs-perto", "hs-variado")
+NEG_GROUPS = ("negativas", "hs-negativas", "eco-calado", "ambiente", "fleurs")
+COUNT_GROUPS = ("negativas", "hs-negativas")  # frases curtas: disparos contados, não por hora
 rng = np.random.default_rng(0)
 
 
@@ -83,21 +94,35 @@ _features = None
 
 
 def embed(audio: np.ndarray) -> np.ndarray:
-    """(T, 96): o embedding t cobre o áudio até FIRST_END_S + t * STEP_S."""
+    """(T, 96): o embedding t cobre o áudio até FIRST_END_S + t * STEP_S.
+
+    Calculado em fluxo, bloco a bloco, como o openWakeWord faz no cliente. O cálculo do clipe
+    inteiro de uma vez (_get_embeddings) corta o piso do melspectrograma em 80 dB abaixo do ponto
+    mais forte do clipe, e o fluxo corta bloco a bloco: no silêncio quase digital (o mic do headset
+    fica em −90 dBFS) os dois divergem. Treinado no clipe inteiro, o modelo acertava 91% das falas
+    do headset aqui e 55% no cliente (20/10)."""
     global _features
     if _features is None:
         from openwakeword.utils import AudioFeatures
 
         _features = AudioFeatures(inference_framework="onnx", ncpu=3)
-    audio = np.clip(audio, -32768, 32767).astype(np.int16)
     if len(audio) < int((FIRST_END_S + 0.1) * SR):
-        audio = np.concatenate([np.zeros(int(FIRST_END_S * SR), np.int16), audio])
-    return _features._get_embeddings(audio).astype(np.float32)
+        audio = np.concatenate([np.zeros(int(FIRST_END_S * SR), np.float32), audio])
+    audio = audio + rng.normal(0, rng.uniform(*FLOOR_LSB), len(audio))
+    audio = np.clip(np.round(audio), -32768, 32767).astype(np.int16)
+    audio = audio[: len(audio) // CHUNK * CHUNK]
+    _features.reset()
+    out = []
+    for i in range(0, len(audio), CHUNK):
+        _features(audio[i : i + CHUNK])
+        out.append(_features.feature_buffer[-1])
+    return np.array(out[STREAM_SKIP:], np.float32).reshape(-1, EMB)
 
 
-def embed_padded(audio: np.ndarray) -> np.ndarray:
-    """Embeddings com LEAD_S de silêncio antes e TAIL_S depois (tempos: some LEAD_S de volta)."""
-    return embed(np.concatenate([np.zeros(int(LEAD_S * SR), np.float32), audio,
+def embed_padded(audio: np.ndarray, extra_lead: float = 0.0) -> np.ndarray:
+    """Embeddings com LEAD_S (+ extra_lead) de silêncio antes e TAIL_S depois (tempos: some
+    LEAD_S + extra_lead de volta). extra_lead muda a posição da fala dentro dos blocos de 80 ms."""
+    return embed(np.concatenate([np.zeros(int((LEAD_S + extra_lead) * SR), np.float32), audio,
                                  np.zeros(int(TAIL_S * SR), np.float32)]))
 
 
@@ -167,16 +192,42 @@ def augment(x: np.ndarray, noise: NoiseBank, clean_prob: float = 0.2) -> np.ndar
 
 # --- Gravações do Reinaldo -------------------------------------------------------------
 
+def highpass(x: np.ndarray) -> np.ndarray:
+    """Tira o degrau de corrente contínua que o gravador pega ao abrir o mic do headset (até
+    −10 dBFS, some em ~2 s). O cliente no ar não tem esse degrau: abre o microfone uma vez só."""
+    from scipy.signal import butter, sosfilt
+
+    return sosfilt(butter(4, 60, "highpass", fs=SR, output="sos"), x).astype(np.float32)
+
+
+# Rodada do headset: o mic só acorda ~0,34 s depois do começo do WAV (antes, quase zero) e acorda com
+# um estalo de ~60 ms que o passa-altas não tira. Até aqui vira silêncio.
+HEADSET_MUTE_S = 0.42
+
+
+def read_item(item: dict) -> np.ndarray:
+    x = read(item["path"])
+    if item.get("highpass"):
+        x = highpass(x)
+        x[: int(HEADSET_MUTE_S * SR)] = 0
+    return x
+
+
 def load_recordings() -> list[dict]:
-    rows = {}
-    for line in (RECORDINGS / "manifest.jsonl").read_text(encoding="utf-8").splitlines():
-        if line.strip():
-            row = json.loads(line)
-            rows[row["id"]] = row
     group = {"no_wake": "negativas", "echo_wake": "eco-fala", "echo_only": "eco-calado", "ambient": "ambiente"}
-    items = [{"id": r["id"], "group": group.get(r["label"], r["part"]), "text": r["text"],
-              "path": RECORDINGS / r["file"], "ref": RECORDINGS / r["ref_file"] if r.get("ref_file") else None}
-             for r in rows.values()]
+    items = []
+    for root, prefix in ((RECORDINGS, ""), (HEADSET, "hs-")):
+        if prefix and not root.is_dir():
+            continue
+        rows = {}
+        for line in (root / "manifest.jsonl").read_text(encoding="utf-8").splitlines():
+            if line.strip():
+                row = json.loads(line)
+                rows[row["id"]] = row
+        items += [{"id": prefix + r["id"], "group": prefix + group.get(r["label"], r["part"]), "text": r["text"],
+                   "path": root / r["file"], "ref": root / r["ref_file"] if r.get("ref_file") else None,
+                   "highpass": bool(prefix)}
+                  for r in rows.values()]
     items += [{"id": f"fleurs-{p.stem}", "group": "fleurs", "text": None, "path": p}
               for p in sorted(FLEURS.glob("*.wav"))]
     return items
@@ -198,6 +249,8 @@ def name_end(item: dict, x: np.ndarray) -> float | None:
     bounds = speech_bounds(x)
     if not bounds or not item["text"]:
         return None
+    if item.get("highpass") and bounds[0] <= HEADSET_MUTE_S + 0.02:
+        return None  # a fala começou antes de o mic acordar: o nome veio cortado ("gatha"), fica de fora
     words = [w.strip(",.!?").lower() for w in item["text"].split()]
     if words[0] == "agatha":
         return bounds[0] + 0.65
@@ -213,6 +266,9 @@ def is_test(item: dict, fold: int | None) -> bool:
     g, num = item["group"], int(item["id"].rsplit("-", 1)[-1])
     if g == "eco-fala":
         return True
+    if g in ("hs-perto", "hs-variado"):  # o roteiro tem 2 repetições: cada dobra testa uma
+        first = num <= (20 if g == "hs-perto" else 12)
+        return first == (fold == 1)
     if g in ("perto", "variado", "longe"):
         if fold == 0:
             return g == "longe" or (g == "variado" and num > 12)
@@ -286,16 +342,16 @@ def recording_features(items: list[dict]) -> dict:
     def build():
         out = {}
         for n, it in enumerate(items):
-            x = read(it["path"])
+            x = read_item(it)
             out[it["id"]] = embed_padded(x)
-            ne = name_end(it, x) if it["group"] in ("perto", "variado", "longe") else None
+            ne = name_end(it, x) if it["group"] in NAME_GROUPS else None
             out[f"{it['id']}::meta"] = np.array([len(x) / SR, -1 if ne is None else ne])
             if it["group"] in ECHO_GROUPS:  # o que o detector do cliente vê: depois do AEC
                 out[f"{it['id']}::aec"] = embed_padded(run_aec(warm_aec(items), x, read(it["ref"])))
             if n % 100 == 0:
                 print(f"  gravações {n}/{len(items)}", file=sys.stderr, flush=True)
         return out
-    return cached("gravacoes-v4", build)
+    return cached("gravacoes-v6-fluxo", build)
 
 
 def synthetic_rows() -> list[dict]:
@@ -322,7 +378,7 @@ def synthetic_positive_windows(noise: NoiseBank, variant: str, copies: int = 2) 
             if n % 500 == 0:
                 print(f"  sintéticos positivos {n}/{len(rows)}", file=sys.stderr, flush=True)
         return {"x": np.array(out, np.float16)}
-    return cached(f"sintetico-positivos-{variant}", build)["x"]
+    return cached(f"sintetico-positivos-fluxo-{variant}", build)["x"]
 
 
 def synthetic_negative_windows(noise: NoiseBank, variant: str) -> np.ndarray:
@@ -338,7 +394,7 @@ def synthetic_negative_windows(noise: NoiseBank, variant: str) -> np.ndarray:
             if n % 500 == 0:
                 print(f"  sintéticos negativos {n}/{len(rows)}", file=sys.stderr, flush=True)
         return {"x": np.concatenate(out).astype(np.float16)}
-    return cached(f"sintetico-negativos-{variant}", build)["x"]
+    return cached(f"sintetico-negativos-fluxo-{variant}", build)["x"]
 
 
 def acav_sample(n_windows: int) -> np.ndarray:
@@ -429,6 +485,9 @@ def predict(model, w: np.ndarray) -> np.ndarray:
 
     if not len(w):
         return np.zeros(0)
+    if hasattr(model, "run"):  # onnxruntime.InferenceSession (--baseline)
+        return np.concatenate([model.run(None, {model.get_inputs()[0].name: w[i : i + 4096].astype(np.float32)})[0][:, 0]
+                               for i in range(0, len(w), 4096)])
     with torch.no_grad():
         return np.concatenate([model(torch.from_numpy(w[i : i + 4096].astype(np.float32))).squeeze(1).numpy()
                                for i in range(0, len(w), 4096)])
@@ -454,33 +513,36 @@ def recording_windows(items, feats, fold, noise: NoiseBank, pos_copies: int = 8,
             continue
         w, end_s = windows(feats[it["id"]])
         end_s = end_s - LEAD_S
-        if it["group"] in ("perto", "variado", "longe"):
+        if it["group"] in NAME_GROUPS:
             ne = feats[f"{it['id']}::meta"][1]
             if ne < 0:
                 continue
             near = np.abs(end_s - ne) <= 0.16
             pos.append(w[near])
             neg.append(w[(end_s < ne - 0.6) | (end_s > ne + 1.0)])  # o resto da frase
-            x = read(it["path"])
+            x = read_item(it)
             for _ in range(pos_copies):
                 speed = rng.uniform(0.92, 1.08)
                 from scipy.signal import resample_poly
 
                 y = resample_poly(x, 100, int(round(100 * speed))) if abs(speed - 1) > 0.01 else x
                 y = augment(y, noise)
-                e2 = embed_padded(y)
+                shift = rng.uniform(0, STEP_S)
+                e2 = embed_padded(y, shift)
                 for jitter in (-STEP_S, 0.0):
-                    win = window_at(e2, LEAD_S + ne / speed + jitter)
+                    win = window_at(e2, LEAD_S + shift + ne / speed + jitter)
                     if win is not None:
                         pos.append(win[None])
             bounds = speech_bounds(x)
-            for _ in range(echo_copies if bounds else 0):
+            # com o headset não há eco: as cópias por cima da voz dela são só para a rodada do notebook
+            for _ in range(echo_copies if bounds and not it["highpass"] else 0):
                 ser = rng.uniform(-10, 0)  # medido nas interrupções reais: voz 0 a 10 dB abaixo do eco
                 mixed, voice_at = echo_mix(x, bounds, echo_takes[rng.integers(len(echo_takes))], ser,
                                            warm_aec(items))
-                e3 = embed_padded(mixed)
+                shift = rng.uniform(0, STEP_S)
+                e3 = embed_padded(mixed, shift)
                 for jitter in (-STEP_S, 0.0):
-                    win = window_at(e3, LEAD_S + voice_at + ne + jitter)
+                    win = window_at(e3, LEAD_S + shift + voice_at + ne + jitter)
                     if win is not None:
                         pos.append(win[None])
         elif it["group"] == "eco-calado":
@@ -511,7 +573,9 @@ def evaluate(model, items, feats, fold) -> dict:
         w, end_s = windows(feats[key])
         scores = predict(model, w)
         end_s = end_s - LEAD_S
-        dur = feats[f"{it['id']}::meta"][0]
+        dur, ne = feats[f"{it['id']}::meta"]
+        if it["group"] in NAME_GROUPS and ne < 0:
+            continue  # sem o nome inteiro (ver name_end)
         if it["group"] in POS_GROUPS:
             out["pos"].append({"id": it["id"], "group": it["group"], "max": float(scores.max(initial=0))})
         else:
@@ -534,7 +598,7 @@ def report(evals: list[dict], val: list[dict]) -> str:
             rows = [r for e in evals for r in e["neg"].get(g, [])]
             fires = sum(r["fires"][str(t)] for r in rows)
             cells.append(str(fires))
-            if g != "negativas":
+            if g not in COUNT_GROUPS:
                 f_sum += fires
                 h_sum += sum(r["hours"] for r in rows)
         cells.append(f"{f_sum / h_sum:.1f}")
@@ -556,17 +620,35 @@ def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     parser.add_argument("--eval", action="store_true", help="avalia em 2 dobras (não exporta)")
     parser.add_argument("--final", action="store_true", help="treina com tudo e exporta o ONNX")
+    parser.add_argument("--out", type=Path, default=MODEL_OUT, help=f"ONNX do --final (padrão: {MODEL_OUT})")
+    parser.add_argument("--baseline", type=Path, metavar="ONNX",
+                        help="avalia um modelo já treinado nas mesmas falas de teste das 2 dobras (não treina)")
     parser.add_argument("--steps", type=int, default=12000)
     parser.add_argument("--synthetic", type=float, default=0.0,
                         help="fração sintética dos positivos (padrão 0: na avaliação, os sintéticos "
                              "dobraram os falsos disparos sem melhorar o acerto na voz do Reinaldo)")
     parser.add_argument("--acav", type=int, default=800_000, help="janelas do ACAV100M carregadas na RAM")
     args = parser.parse_args()
-    if not (args.eval or args.final):
-        parser.error("escolha --eval e/ou --final")
+    if not (args.eval or args.final or args.baseline):
+        parser.error("escolha --eval, --final ou --baseline")
 
     items = load_recordings()
     feats = recording_features(items)
+    stamp = datetime.now().strftime("%Y%m%d-%H%M%S")
+    if args.baseline:
+        import onnxruntime as ort
+
+        model = ort.InferenceSession(str(args.baseline), providers=["CPUExecutionProvider"])
+        evals = [evaluate(model, items, feats, fold) for fold in (0, 1)]
+        table = report(evals, [validation_fires(model, THRESHOLDS)])
+        print(table)
+        out = RESULTS / f"wake-baseline-{stamp}"
+        out.with_suffix(".md").write_text(f"# Wake word: modelo {args.baseline.name} nas falas de teste das 2 dobras "
+                                          f"({stamp})\n\n{table}\n", encoding="utf-8")
+        out.with_suffix(".json").write_text(json.dumps({"evals": evals}, indent=1), encoding="utf-8")
+        print(f"→ {out.with_suffix('.md')}")
+        if not (args.eval or args.final):
+            return 0
     acav = acav_sample(args.acav)
     agatha_voice = sorted((SYNTHETIC / "negativos").glob("resp-*.wav"))[:150]
 
@@ -581,7 +663,6 @@ def main() -> int:
               file=sys.stderr)
         return noise, syn_pos, syn_neg
 
-    stamp = datetime.now().strftime("%Y%m%d-%H%M%S")
     if args.eval:
         noise, syn_pos, syn_neg = datasets("eval")
         evals, vals = [], []
@@ -605,8 +686,8 @@ def main() -> int:
         noise, syn_pos, syn_neg = datasets("eval")  # mesma configuração que foi avaliada
         rec_pos, rec_neg = recording_windows(items, feats, None, noise)
         model = fit(rec_pos, syn_pos, np.concatenate([syn_neg, rec_neg]), acav, args)
-        export_onnx(model, MODEL_OUT)
-        print(f"modelo final → {MODEL_OUT}; falsos/h na validação: {validation_fires(model, THRESHOLDS)}")
+        export_onnx(model, args.out)
+        print(f"modelo final → {args.out}; falsos/h na validação: {validation_fires(model, THRESHOLDS)}")
     return 0
 
 
