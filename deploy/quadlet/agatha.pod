@@ -11,6 +11,10 @@ Description=Agatha: pod (LLM + servidor)
 PodName=agatha
 PublishPort=8765:8765
 PublishPort=127.0.0.1:8080:8080
+# Os DNS IPv4 do provedor perdem ~1 consulta em 5 (medido em 21/10); com o timeout padrão (5 s) do
+# resolvedor, a consulta seguinte a uma perdida levava 5–8 s. Com 1 s, tenta o próximo servidor logo.
+DNSOption=timeout:1
+DNSOption=attempts:2
 
 [Install]
 WantedBy=default.target

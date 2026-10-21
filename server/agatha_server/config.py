@@ -8,6 +8,7 @@ from .conversation import ConversationConfig
 from .llm import LLMConfig
 from .memory import MemoryConfig
 from .tools.github import GitHubConfig
+from .tools.weather import WeatherConfig
 from .tools.oracle import OracleConfig
 from .tools.zabbix import ZabbixConfig
 from .stt import STTConfig
@@ -36,6 +37,7 @@ class ServerConfig:
     zabbix: ZabbixConfig = ZabbixConfig()
     oracle: OracleConfig = OracleConfig()
     github: GitHubConfig = GitHubConfig()
+    weather: WeatherConfig = WeatherConfig()
     log_dir: str | None = None  # server.log (com rotação) e turns-AAAA-MM.jsonl; None: só no stderr
 
 
@@ -148,6 +150,7 @@ def load_config(env: dict | None = None) -> ServerConfig:
             max_facts=get("MEMORY_MAX_FACTS", memory_defaults.max_facts, int),
         ),
         github=GitHubConfig(token=get("GITHUB_TOKEN", ""), repos=items("GITHUB_REPOS") or ()),
+        weather=WeatherConfig(enabled=flag("CLIMA", True)),
         zabbix=ZabbixConfig(url=get("ZABBIX_URL", ""), token=get("ZABBIX_TOKEN", ""),
                             default_host=get("ZABBIX_DEFAULT_HOST", "")),
         oracle=OracleConfig(dsn=get("ORACLE_DSN", ""), user=get("ORACLE_USER", ""),

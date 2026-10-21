@@ -36,6 +36,7 @@ from agatha_server.tools.calc import calculator, evaluate
 from agatha_server.tools.github import GitHubClient, GitHubConfig, github_tools
 from agatha_server.tools.memory import memory_tools
 from agatha_server.tools.oracle import oracle_tools
+from agatha_server.tools.weather import WeatherClient, weather_tools
 from agatha_server.tools.zabbix import ZabbixClient, ZabbixConfig, zabbix_tools
 
 URL = "http://127.0.0.1:8080/v1/chat/completions"
@@ -47,6 +48,7 @@ FACTS = [
     "O Reinaldo usa o padrão ambiente-servidor-host nos hosts do Zabbix",  # 1
     "O banco de produção se chama PRDORA",                                  # 2
     "A reunião com o time é na quinta às 10h",                              # 3
+    "A cidade do Reinaldo para o clima é Novo Hamburgo (RS)",               # 4 (Fase 10, como na memória real)
 ]
 
 
@@ -72,6 +74,11 @@ _ORACLE_FAKE = {
     "oracle_banco": {"instancia": "aberta", "modo": "leitura e escrita", "modo_archivelog": "ligado", "papel": "primário",
                      "versao": "23.9.0.25.07", "no_ar_ha": "4 dias", "sessoes_bloqueadas": 2,
                      "sessoes_bloqueando": 1, "maior_espera": "3 minutos", "data_guard": "sem standby configurado"},
+    "clima": {"cidade": "Novo Hamburgo (RS)", "agora": {"temperatura": 23, "sensacao": 24, "condicao": "nublado"},
+              "previsao": [{"dia": "hoje", "minima": 12, "maxima": 25, "chance_de_chuva": "10%", "condicao": "nublado"},
+                           {"dia": "amanhã", "minima": 14, "maxima": 19, "chance_de_chuva": "80%", "condicao": "chuva"},
+                           {"dia": "sexta-feira", "minima": 11, "maxima": 21, "chance_de_chuva": "20%",
+                            "condicao": "céu limpo"}], "unidade": "graus Celsius"},
     "oracle_backups": {"backups": [{"inicio": "ontem às 02h31", "tipo": "completo", "status": "concluído",
                                     "tamanho": "437 MB", "duracao": "1 minuto"}], "ultimo_concluido_ha": "19 horas"},
 }
@@ -84,6 +91,8 @@ ZABBIX_ORACLE = [
     # GitHub: definição real (ADR-020), resultado simulado
     *[dataclasses.replace(t, handler=fake(_ORACLE_FAKE[t.name]))
       for t in github_tools(GitHubClient(GitHubConfig(token="x", repos=("ReinaldoLuizSilva/agatha",))))],
+    # Clima (Fase 10): definição real, resultado simulado
+    *[dataclasses.replace(t, handler=fake(_ORACLE_FAKE[t.name])) for t in weather_tools(WeatherClient())],
 ]
 
 
@@ -132,6 +141,16 @@ SAVED_THEN_MISHEARD_3 = [
     {"role": "assistant", "content": "Não entendi o que você quer dizer com formatão. Você pode repetir, por favor?"},
 ]
 
+# Acabou de perguntar o tempo de Novo Hamburgo (para o "E em Curitiba?")
+ASKED_WEATHER = [
+    user_message("Como está o tempo hoje?", NOW),
+    {"role": "assistant", "content": "", "tool_calls": [{"id": "call_0", "type": "function", "function": {
+        "name": "clima", "arguments": json.dumps({"cidade": "Novo Hamburgo (RS)"}, ensure_ascii=False)}}]},
+    {"role": "tool", "tool_call_id": "call_0", "content": json.dumps({"cidade": "Novo Hamburgo (RS)", "agora": {
+        "temperatura": 23, "condicao": "nublado"}}, ensure_ascii=False)},
+    {"role": "assistant", "content": "Está nublado, 23 graus em Novo Hamburgo."},
+]
+
 # (pergunta, ferramenta esperada ou None, verificação dos argumentos, texto que deve aparecer na resposta,
 #  texto que NÃO pode aparecer na resposta[, histórico antes da pergunta])
 CASES = [
@@ -158,6 +177,15 @@ CASES = [
     ("Qual foi o último commit no GitHub?", "github_repo", lambda a: True, "commit", None),
     ("Tem issue aberta no repositório da Agatha?", "github_repo", lambda a: True, "48", None),
     ("O que é um pull request?", None, None, None, None),
+    # Fase 10: clima; a cidade vem da memória (fato 4) ou da pergunta
+    ("Como está o tempo hoje?", "clima", lambda a: "novo hamburgo" in a.get("cidade", "").lower(), "nublado", None),
+    ("Vai chover amanhã?", "clima", lambda a: "novo hamburgo" in a.get("cidade", "").lower(), "80", None),
+    ("Qual a temperatura agora?", "clima", lambda a: "novo hamburgo" in a.get("cidade", "").lower(), "23", None),
+    ("Como vai estar o tempo em Porto Alegre amanhã?", "clima",
+     lambda a: "porto alegre" in a.get("cidade", "").lower(), None, None),
+    ("E em Curitiba?", "clima", lambda a: "curitiba" in a.get("cidade", "").lower(), None, None, ASKED_WEATHER),
+    ("O que é o El Niño?", None, None, None, None),
+    ("Qual a diferença entre clima e tempo?", None, None, None, None),
     ("Lembra que o meu servidor de testes se chama lab01.", "guardar_fato", lambda a: "lab01" in a.get("fato", "").lower(), None, None),
     ("Anota aí: o backup roda todo dia às 2h.", "guardar_fato", lambda a: "backup" in a.get("fato", "").lower(), None, None),
     ("Esquece que o banco de produção se chama PRDORA.", "esquecer", lambda a: int(a.get("numero")) == 2, None, None),
