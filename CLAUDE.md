@@ -199,12 +199,15 @@ agatha/
       pausa 453 ms após o começo da fala + ~96 ms de saída (ok). Mic do headset baixo (picos −31 a −40 dBFS) e
       com um "tranco" de −6 dBFS ao abrir o stream. Corrigido no caminho: disparo não espera mais a medição do
       atraso do eco (com fone travava ~6 s); nota NaN agora avisa.
-      **Próximo passo (aprovado em 20/10):** 1) ~~gravador descarta o 1º meio segundo de cada fala~~ feito em
-      20/10 (`LEAD_IN_S`; roteiro em client/README.md, "Rodada com o headset", pasta `gravacoes-headset`); 2) ele aumenta o nível do mic do headset (mmsys.cpl → Gravação → Níveis
-      80–100); 3) gravar com o headset as partes perto, variado e negativas (~15 min; sem longe/eco) e mandar para
-      /dados/agatha/data/wakeword (chown como root depois do scp); 4) retreinar com gravações antigas + novas
-      (`client/wakeword/train.py --eval` e `--final`, CPU, com teto de memória), trocar o modelo só se melhorar
-      sem subir falsos disparos; ele copia o .onnx para `client\models`. Registrar no ADR-014.
+      Retreino de 20/10 (ADR-014, "Retreino com o headset"): 94 falas com o headset em
+      /dados/agatha/data/wakeword/gravacoes-headset. Causa real: o `train.py` calculava os embeddings no clipe
+      inteiro e o cliente em fluxo; no silêncio quase digital do headset (−90 dBFS) eles divergem (avaliação
+      91–100%, cliente ~45%). Agora o treino é em fluxo; modelo novo no ar no servidor (`agatha.onnx`; o antigo
+      em `agatha-20261012.onnx`): headset perto 44% → 100%, variado 48% → 95%, falsos/h validação 21,6 → 15,7.
+      O gravador abre o mic a cada fala e o do headset só acorda ~0,84 s depois, com degrau de −10 dBFS: o
+      treino filtra/corta; para gravar mais, o certo é o gravador manter o stream aberto (não feito).
+      **Próximo passo:** ele copia o `agatha.onnx` novo para `client\models` e testa o barge-in com o headset
+      (`--barge-debug`); medir acerto ao vivo e falsos disparos durante a fala dela.
       Pendente também: varredura do AEC (só importa com as caixas do notebook).
 - [ ] Fase 10: integração com a internet (pedida em 19/10; escopo a aprovar depois da 9): busca na web, clima,
       notícias, documentação técnica. Ideia: SearXNG no agatha-srv, Open-Meteo, RSS, busca restrita a sites
