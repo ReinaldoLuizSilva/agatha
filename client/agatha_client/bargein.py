@@ -8,7 +8,10 @@ Cada bloco do stream duplex chega com o microfone e o que foi tocado no mesmo in
 3. o detector (ADR-014) ouve o áudio limpo o tempo todo, mas só dispara quando `active` (ela
    respondendo) e com o atraso já medido;
 4. os últimos `pre_roll_s` ficam guardados: num disparo, o servidor recebe o áudio desde antes do
-   nome, para transcrever a frase inteira ("Agatha, para") e confirmar.
+   nome, para transcrever a frase inteira ("Agatha, para") e confirmar;
+5. só dispara se o microfone teve nível de voz no último segundo (`min_level_dbfs`): no teste de
+   21/10 o detector deu nota 0,88–1,00 num quase silêncio (−60 dBFS) duas vezes, e cada disparo à
+   toa pausava a resposta ~2 s até o servidor desistir.
 """
 
 import time
@@ -34,7 +37,7 @@ class BargeIn:
                  pre_roll_s: float = 1.5, delay_ms: float | None = None, refractory_s: float = 1.5,
                  measure_s: float = 2.0, min_confidence: float = 10.0, max_attempts: int = 3,
                  frame_samples: int = 512, on_delay: Callable[[float, float | None], None] | None = None,
-                 debug: Callable[[str], None] | None = None):
+                 debug: Callable[[str], None] | None = None, min_level_dbfs: float = -52.0, level_s: float = 1.0):
         self.detector = detector
         self.sample_rate = sample_rate
         self.frame_ms = 1000 * frame_samples / sample_rate
@@ -51,6 +54,9 @@ class BargeIn:
         self.latency_s = self.aec.n / sample_rate  # o AEC atrasa a saída em um bloco
         self.delay_ms: float | None = None
         self._ring: deque[tuple[bytes, float]] = deque(maxlen=max(1, round(pre_roll_s * sample_rate / frame_samples)))
+        # voz dele no headset: picos de −31 a −47 dBFS; o quase silêncio dos disparos à toa, −57 a −66
+        self.min_peak = 32768 * 10 ** (min_level_dbfs / 20)
+        self._peaks: deque[int] = deque(maxlen=max(1, round(level_s * sample_rate / frame_samples)))
         self._mic: list[np.ndarray] = []
         self._ref: list[np.ndarray] = []
         self._attempts = 0
@@ -70,6 +76,7 @@ class BargeIn:
         out = np.clip(np.round(self.aec.process(m, r)), -32768, 32767).astype("<i2")
         pcm, at = out.tobytes(), captured_at - self.latency_s
         self._ring.append((pcm, at))
+        self._peaks.append(int(np.max(np.abs(out.astype(np.int32)))) if len(out) else 0)
         score = self.detector.feed(out)
         if active and self._stats is not None:
             self._update_stats(m, r, out, score, at)
@@ -81,15 +88,18 @@ class BargeIn:
         # sem esperar o atraso do eco: com fone não há eco para medir, e a medição levava ~6 s para desistir
         # (o barge-in ficava mudo até lá); com caixas, um disparo à toa nesse começo o servidor descarta
         if active and at >= self._hold_until and score >= self.threshold:
-            fired = score
-            self.hold(at)
+            if max(self._peaks) >= self.min_peak:
+                fired = score
+                self.hold(at)
+            elif self._stats is not None:
+                self._stats["silent"] += 1
         return pcm, at, fired
 
     # --- Diagnóstico por resposta (sem guardar áudio) ---
 
     def begin_stats(self, now: float) -> None:
         self._stats = {"t0": now, "max": 0.0, "max_at": 0.0, "over": 0, "mic": 0.0, "out": 0.0, "n": 0,
-                       "cpu": 0.0, "blocks": 0}
+                       "cpu": 0.0, "blocks": 0, "silent": 0}
 
     def _update_stats(self, m: np.ndarray, r: np.ndarray, out: np.ndarray, score: float, at: float) -> None:
         st = self._stats
@@ -113,6 +123,8 @@ class BargeIn:
             erle = 10 * np.log10(st["mic"] / st["out"])
             level = 10 * np.log10(st["mic"] / st["n"] / 32768**2 + 1e-12)
             line += f" · AEC tirou {erle:.1f} dB · eco no microfone {level:.0f} dBFS"
+        if st["silent"]:
+            line += f" · {st['silent']} blocos com nota alta barrados por silêncio"
         if st["blocks"]:
             line += f" · CPU {1000 * st['cpu'] / st['blocks']:.1f} ms por bloco de {self.frame_ms:.0f} ms"
         return line

@@ -69,6 +69,24 @@ def test_abaixo_do_limiar_nao_dispara():
     assert all(f is None for _, _, f in feed(b, frames(2.0)))
 
 
+def test_nota_alta_em_silencio_nao_dispara():
+    # teste de 21/10: nota 0,88–1,00 com o microfone em −60 dBFS (ninguém falando)
+    quiet = [(np.full(FRAME, 20, "<i2").tobytes(), np.zeros(FRAME, "<i2").tobytes())] * 60
+    b = BargeIn(FakeDetector(fire_at=0), delay_ms=0)
+    b.begin_stats(0.0)
+    assert all(f is None for _, _, f in feed(b, quiet))
+    assert "barrados por silêncio" in b.end_stats()
+
+
+def test_voz_no_ultimo_segundo_libera_o_disparo():
+    voice = np.zeros(FRAME, "<i2")
+    voice[::7] = 400  # ~−38 dBFS de pico: a voz dele no headset
+    quiet = (np.full(FRAME, 20, "<i2").tobytes(), np.zeros(FRAME, "<i2").tobytes())
+    b = BargeIn(FakeDetector(fire_at=0), delay_ms=0)
+    out = feed(b, [(voice.tobytes(), np.zeros(FRAME, "<i2").tobytes()), *[quiet] * 10])
+    assert out[0][2] is not None  # o nome termina quando a voz ainda está na janela de 1 s
+
+
 def test_pre_roll_tem_o_audio_ainda_nao_enviado_em_ordem():
     b = BargeIn(FakeDetector(), delay_ms=200, pre_roll_s=1.0)
     out = feed(b, frames(3.0))
