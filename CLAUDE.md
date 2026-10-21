@@ -226,3 +226,8 @@ agatha/
       Decisões do Reinaldo: cidade do clima na memória (fato 9: "A cidade do Reinaldo para o clima é Novo
       Hamburgo (RS)", gravado em 21/10); ok que cidade, buscas e pedidos de notícia saiam para a internet (o
       processamento continua local).
+      0) prompt fica na v8 (v9/v10 cortavam 108–157 tokens e pioravam o tools_bench; ADR-018); maior prompt real
+      visto 2887/4096. 1) **clima no ar** (21/10, ADR-022): `clima(cidade)` no Open-Meteo, cidade pela memória,
+      cache de 10 min; tools_bench clima 18/21 (falhas eram da régua), antigos 114/132, precision 95 e 93/114;
+      prefixo 2488 tokens. DNS do pod `timeout:1 attempts:2` (os DNS IPv4 do provedor perdem ~1 em 5: 5–8 s).
+      Próximo: ele testa o clima no Windows; depois notícias (RSS).
