@@ -56,6 +56,17 @@ exemplo de conversa, como as da Fase 8.
 | OpenWeatherMap, INMET | chave de API ou API instável; o Open-Meteo não pede cadastro |
 | Resolver o DNS no host (`ipv4.dns-options` no NetworkManager) | pede root; a opção do pod resolve a Agatha sem tocar no sistema |
 
+### Teste no Windows (21/10) e resultado compacto
+
+11 falas: clima certo em todas as 5 perguntas (hoje, amanhã, agora, Porto Alegre na sexta e "e
+Curitiba", que manteve a sexta); 1º som 1,6–1,8 s com o "Deixa eu ver". Mas na 9ª fala o prompt
+**estourou o contexto** (4076 tokens): o servidor cortou o histórico de 8 para 2 trocas e a resposta
+levou 6,8 s. O resultado de cada ferramenta fica no histórico, e o do clima tinha 189 tokens; cada
+troca de clima somava ~230–280. Agora o resultado vem em frases curtas (`"amanhã": "de 14 a 28
+graus, chance de chuva 39%, garoa fraca"`), ~100 tokens, só com o nome da cidade (com o estado ela
+dizia "Novo Hamburgo RS" em toda resposta) e sem "graus Celsius". Casos de clima no `tools_bench`:
+20/21.
+
 ## Consequências
 
 **Positivas**

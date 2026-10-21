@@ -1,7 +1,7 @@
 """Ferramenta do clima (Fase 10): previsão do Open-Meteo, grátis e sem chave.
 
-- clima(cidade): agora (temperatura, sensação, condição) e os próximos 3 dias (mínima, máxima,
-  chance de chuva, condição).
+- clima(cidade): agora (temperatura, condição e a sensação, se for diferente) e os próximos 3 dias
+  (mínima, máxima, chance de chuva, condição), em frases curtas.
 
 A cidade vem da pergunta ou da memória (fato "A cidade do Reinaldo para o clima é Novo Hamburgo
 (RS)"): o LLM preenche. O estado entre parênteses, depois de vírgula ou hífen ("Novo Hamburgo
@@ -169,24 +169,21 @@ def _day_name(day: date, today: date) -> str:
 
 
 def summarize(place: Place, data: dict) -> dict:
-    """Só o que vira fala, em poucos tokens: temperaturas inteiras em graus Celsius."""
+    """Frases curtas, prontas para a fala, em poucos tokens: o resultado fica no histórico da
+    conversa (o JSON com campos por dia tinha 189 tokens e estourou o contexto em 21/10; assim, ~100).
+    Só o nome da cidade: com o estado ela falava "Novo Hamburgo RS" em toda resposta."""
     current, daily = data["current"], data["daily"]
     today = date.fromisoformat(daily["time"][0])
-    state = next((uf for uf, name in UF.items() if name == place.state), place.state)
-    days = []
+    temp, feel = round(current["temperature_2m"]), round(current["apparent_temperature"])
+    now = f"{temp} graus" + (f", sensação de {feel}" if abs(feel - temp) >= 3 else "")
+    result = {"cidade": place.name, "agora": f"{now}, {CONDITIONS.get(current['weather_code'], 'sem dado')}"}
     for i, day in enumerate(daily["time"]):
         rain = daily["precipitation_probability_max"][i]
-        days.append({"dia": _day_name(date.fromisoformat(day), today),
-                     "minima": round(daily["temperature_2m_min"][i]), "maxima": round(daily["temperature_2m_max"][i]),
-                     "chance_de_chuva": f"{rain}%" if rain is not None else "sem dado",
-                     "condicao": CONDITIONS.get(daily["weather_code"][i], "sem dado")})
-    return {
-        "cidade": f"{place.name} ({state})" if state else place.name,
-        "agora": {"temperatura": round(current["temperature_2m"]), "sensacao": round(current["apparent_temperature"]),
-                  "condicao": CONDITIONS.get(current["weather_code"], "sem dado")},
-        "previsao": days,
-        "unidade": "graus Celsius",
-    }
+        result[_day_name(date.fromisoformat(day), today)] = (
+            f"de {round(daily['temperature_2m_min'][i])} a {round(daily['temperature_2m_max'][i])} graus, "
+            f"chance de chuva {f'{rain}%' if rain is not None else 'sem dado'}, "
+            f"{CONDITIONS.get(daily['weather_code'][i], 'sem dado')}")
+    return result
 
 
 def weather_tools(client: WeatherClient) -> list[Tool]:

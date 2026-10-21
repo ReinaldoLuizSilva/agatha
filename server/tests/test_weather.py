@@ -49,12 +49,24 @@ def fake_api(calls):
 def test_agora_e_proximos_dias():
     calls = []
     result = asyncio.run(tool(fake_api(calls)).handler({"cidade": "Novo Hamburgo (RS)"}))
-    assert result["cidade"] == "Novo Hamburgo (RS)"
-    assert result["agora"] == {"temperatura": 18, "sensacao": 17, "condicao": "nublado"}
-    assert [d["dia"] for d in result["previsao"]] == ["hoje", "amanhã", "sexta-feira"]
-    assert result["previsao"][1] == {"dia": "amanhã", "minima": 15, "maxima": 19, "chance_de_chuva": "85%",
-                                     "condicao": "chuva"}
-    assert result["previsao"][2]["chance_de_chuva"] == "sem dado"
+    assert result == {
+        "cidade": "Novo Hamburgo",
+        "agora": "18 graus, nublado",  # sensação 17: diferença pequena, fica de fora
+        "hoje": "de 14 a 22 graus, chance de chuva 10%, parcialmente nublado",
+        "amanhã": "de 15 a 19 graus, chance de chuva 85%, chuva",
+        "sexta-feira": "de 12 a 24 graus, chance de chuva sem dado, céu limpo",
+    }
+
+
+def test_sensacao_aparece_quando_difere():
+    data = {**FORECAST, "current": {"temperature_2m": 30.2, "apparent_temperature": 34.6, "weather_code": 0}}
+    calls = []
+
+    def api(request):
+        calls.append(1)
+        return httpx.Response(200, json=GEO if request.url.host.startswith("geocoding") else data)
+
+    assert asyncio.run(tool(api).handler({"cidade": "Novo Hamburgo"}))["agora"] == "30 graus, sensação de 35, céu limpo"
 
 
 def test_cidade_e_previsao_ficam_em_cache():

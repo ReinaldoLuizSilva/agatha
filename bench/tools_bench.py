@@ -74,11 +74,10 @@ _ORACLE_FAKE = {
     "oracle_banco": {"instancia": "aberta", "modo": "leitura e escrita", "modo_archivelog": "ligado", "papel": "primário",
                      "versao": "23.9.0.25.07", "no_ar_ha": "4 dias", "sessoes_bloqueadas": 2,
                      "sessoes_bloqueando": 1, "maior_espera": "3 minutos", "data_guard": "sem standby configurado"},
-    "clima": {"cidade": "Novo Hamburgo (RS)", "agora": {"temperatura": 23, "sensacao": 24, "condicao": "nublado"},
-              "previsao": [{"dia": "hoje", "minima": 12, "maxima": 25, "chance_de_chuva": "10%", "condicao": "nublado"},
-                           {"dia": "amanhã", "minima": 14, "maxima": 19, "chance_de_chuva": "80%", "condicao": "chuva"},
-                           {"dia": "sexta-feira", "minima": 11, "maxima": 21, "chance_de_chuva": "20%",
-                            "condicao": "céu limpo"}], "unidade": "graus Celsius"},
+    "clima": {"cidade": "Novo Hamburgo", "agora": "23 graus, nublado",
+              "hoje": "de 12 a 25 graus, chance de chuva 10%, nublado",
+              "amanhã": "de 14 a 19 graus, chance de chuva 80%, chuva",
+              "sexta-feira": "de 11 a 21 graus, chance de chuva 20%, céu limpo"},
     "oracle_backups": {"backups": [{"inicio": "ontem às 02h31", "tipo": "completo", "status": "concluído",
                                     "tamanho": "437 MB", "duracao": "1 minuto"}], "ultimo_concluido_ha": "19 horas"},
 }
@@ -146,8 +145,8 @@ ASKED_WEATHER = [
     user_message("Como está o tempo hoje?", NOW),
     {"role": "assistant", "content": "", "tool_calls": [{"id": "call_0", "type": "function", "function": {
         "name": "clima", "arguments": json.dumps({"cidade": "Novo Hamburgo (RS)"}, ensure_ascii=False)}}]},
-    {"role": "tool", "tool_call_id": "call_0", "content": json.dumps({"cidade": "Novo Hamburgo (RS)", "agora": {
-        "temperatura": 23, "condicao": "nublado"}}, ensure_ascii=False)},
+    {"role": "tool", "tool_call_id": "call_0", "content": json.dumps({"cidade": "Novo Hamburgo",
+                                                                     "agora": "23 graus, nublado"}, ensure_ascii=False)},
     {"role": "assistant", "content": "Está nublado, 23 graus em Novo Hamburgo."},
 ]
 

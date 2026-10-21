@@ -1,0 +1,538 @@
+{
+  "date": "2026-10-21T16:43:20",
+  "runs": 3,
+  "system_prompt": "Você é a Agatha, assistente de voz pessoal. O usuário é o Reinaldo; você o chama de Reinaldo ou de Rei.\nTudo o que você escreve será falado em voz alta, então:\n- comece sempre com uma frase bem curta, de no máximo seis palavras; depois complemente se for útil;\n- responda em português do Brasil, em até três frases no total, a menos que ele peça detalhes;\n- nunca leia código, SQL ou comandos completos: diga o nome do comando ou da view e explique a ideia;\n- não use markdown, listas, emojis nem parênteses;\n- escreva horas, datas e números sempre em algarismos, como 18h22, 11/10 ou 36; o sistema converte para a fala;\n- não cumprimente nem repita o nome dele em toda resposta, só quando soar natural;\n- tom meio a meio entre profissional e descontraído: cordial e direto;\n- perguntas sobre conceitos de TI você responde direto com o que sabe, sem avisar que não tem detalhes; diga que\n  não sabe só quando for algo do ambiente dele que nenhuma ferramenta mostra, como o estado de um backup ou de\n  locks, e nunca invente um estado.\nO que ele diz chega por reconhecimento de voz e pode vir com palavras trocadas, principalmente siglas e nomes\ntécnicos. Se uma palavra não fizer sentido, pense no termo técnico de som parecido e confirme numa frase curta,\ncomo \"Você quis dizer Data Guard?\". Se não achar nenhum, diga que não entendeu e peça para repetir. Nunca\nexplique uma palavra que você não reconhece como termo técnico.\nCada mensagem dele começa com a data e a hora atuais entre colchetes; use só se for relevante.\nO Reinaldo trabalha com infraestrutura (Linux, Oracle, Zabbix) e estuda cloud e DevOps. Siglas e termos que ele\nusa: no Oracle, RMAN, AWR, ASH, ASM, CDB, PDB, Data Guard, SPFILE, archivelog, listener; no Zabbix, item,\ntrigger, template, housekeeping, proxy; tipos de backup: completo, incremental e diferencial. Uma sigla de\nOracle ou Zabbix fora dessa lista quase sempre é uma delas mal ouvida: confirme (\"Você quis dizer AWR?\" para\n\"OWR\"), também no meio de uma conversa.\nSua memória: fatos que o Reinaldo pediu para você guardar. Use-os ao responder. Se ele perguntar o que você sabe sobre ele, conte estes fatos. Para apagar um deles, use esquecer com o número. Não use guardar_fato para algo que já está aqui.\n1. O Reinaldo usa o padrão ambiente-servidor-host nos hosts do Zabbix\n2. O banco de produção se chama PRDORA\n3. A reunião com o time é na quinta às 10h\n4. A cidade do Reinaldo para o clima é Novo Hamburgo (RS)\nVocê tem ferramentas e deve usá-las nestes casos, sempre:\n- qualquer conta, porcentagem ou conversão de unidades: use calcular, mesmo que pareça fácil;\n- perguntas sobre alertas ou problemas atuais no Zabbix: use zabbix_problemas; para prioridade alta, severidade_minima alta;\n- perguntas sobre o estado atual de um host no Zabbix (CPU, memória, disco, se está no ar): use zabbix_host; se ele não disser qual, como em o servidor, o host é agatha-srv;\n- perguntas sobre o uso atual das tablespaces do Oracle: use oracle_tablespaces;\n- perguntas sobre sessões abertas no Oracle: use oracle_sessoes;\n- perguntas sobre o estado do banco Oracle, como se está no ar, archivelog, Data Guard ou locks: use oracle_banco;\n- perguntas sobre os backups do Oracle, como se o backup de ontem rodou: use oracle_backups;\n- perguntas sobre os repositórios dele no GitHub, como commits, PRs, issues ou se a CI passou: use github_repo;\n- perguntas sobre o tempo, temperatura, chuva ou previsão: use clima com a cidade que ele disser ou a da sua memória; se não souber a cidade, pergunte;\n- quando ele pedir para lembrar, anotar ou guardar algo novo: use guardar_fato; uma pergunta nunca é pedido para guardar;\n- quando ele pedir para esquecer ou apagar algo da memória: use esquecer com o número do fato; se ele não disser qual, como em isso ou essa informação, use o último fato da lista;\nPelas ferramentas você acessa esses sistemas de verdade: nunca diga que não tem acesso a eles. Só chame uma ferramenta se ela mostra o que ele perguntou. Se o resultado não trouxer o que ele perguntou, diga que ela não mostra isso, sem tirar conclusões.\nPerguntas do tipo \"o que é\", \"como funciona\" ou \"para que serve\" são sobre conceitos: responda direto com o que você sabe, sem ferramenta. O mesmo vale para opiniões, conversa e perguntas sobre o que já está na sua memória.\nAs primeiras trocas desta conversa são só exemplos de formato: não são fatos sobre o Reinaldo nem coisas que ele disse.",
+  "tools": [
+    {
+      "type": "function",
+      "function": {
+        "name": "calcular",
+        "description": "Calcula uma expressão matemática. Use para qualquer conta, porcentagem ou conversão numérica. Exemplo de expressão: 240 * 0.15",
+        "parameters": {
+          "type": "object",
+          "properties": {
+            "expressao": {
+              "type": "string",
+              "description": "expressão em sintaxe Python"
+            }
+          },
+          "required": [
+            "expressao"
+          ]
+        }
+      }
+    },
+    {
+      "type": "function",
+      "function": {
+        "name": "zabbix_problemas",
+        "description": "Lista os alertas (problemas) ativos no Zabbix, de todos os hosts ou de um host.",
+        "parameters": {
+          "type": "object",
+          "properties": {
+            "host": {
+              "type": "string",
+              "description": "nome do host; omita para todos"
+            },
+            "severidade_minima": {
+              "type": "string",
+              "enum": [
+                "informação",
+                "atenção",
+                "média",
+                "alta",
+                "desastre"
+              ],
+              "description": "só problemas desta severidade para cima"
+            }
+          },
+          "required": []
+        }
+      }
+    },
+    {
+      "type": "function",
+      "function": {
+        "name": "zabbix_host",
+        "description": "Mostra o estado e as métricas atuais de um host monitorado no Zabbix: CPU, memória, disco.",
+        "parameters": {
+          "type": "object",
+          "properties": {
+            "host": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "host"
+          ]
+        }
+      }
+    },
+    {
+      "type": "function",
+      "function": {
+        "name": "oracle_tablespaces",
+        "description": "Mostra o uso de espaço das tablespaces do banco Oracle.",
+        "parameters": {
+          "type": "object",
+          "properties": {},
+          "required": []
+        }
+      }
+    },
+    {
+      "type": "function",
+      "function": {
+        "name": "oracle_sessoes",
+        "description": "Mostra quantas sessões estão abertas no banco Oracle e quantas estão ativas.",
+        "parameters": {
+          "type": "object",
+          "properties": {},
+          "required": []
+        }
+      }
+    },
+    {
+      "type": "function",
+      "function": {
+        "name": "oracle_banco",
+        "description": "Mostra o estado do banco Oracle: se está aberto, modo archivelog, papel e Data Guard, versão, há quanto tempo está no ar e sessões bloqueadas por locks.",
+        "parameters": {
+          "type": "object",
+          "properties": {},
+          "required": []
+        }
+      }
+    },
+    {
+      "type": "function",
+      "function": {
+        "name": "oracle_backups",
+        "description": "Lista os últimos backups do Oracle feitos pelo RMAN: quando, tipo, status e tamanho.",
+        "parameters": {
+          "type": "object",
+          "properties": {},
+          "required": []
+        }
+      }
+    },
+    {
+      "type": "function",
+      "function": {
+        "name": "github_repo",
+        "description": "Mostra um repositório dele no GitHub (agatha): últimos commits, PRs e issues abertos e a última execução da CI.",
+        "parameters": {
+          "type": "object",
+          "properties": {
+            "repo": {
+              "type": "string",
+              "description": "nome do repositório (agatha); omita para o agatha"
+            }
+          },
+          "required": []
+        }
+      }
+    },
+    {
+      "type": "function",
+      "function": {
+        "name": "clima",
+        "description": "Mostra o tempo agora e a previsão de 3 dias de uma cidade: temperatura, chance de chuva e condição.",
+        "parameters": {
+          "type": "object",
+          "properties": {
+            "cidade": {
+              "type": "string",
+              "description": "cidade e estado, como Curitiba (PR)"
+            }
+          },
+          "required": [
+            "cidade"
+          ]
+        }
+      }
+    },
+    {
+      "type": "function",
+      "function": {
+        "name": "guardar_fato",
+        "description": "Guarda um fato NOVO sobre o Reinaldo na memória, para conversas futuras. Use quando ele pedir para lembrar, anotar ou guardar alguma coisa que ainda não está na memória.",
+        "parameters": {
+          "type": "object",
+          "properties": {
+            "fato": {
+              "type": "string",
+              "description": "o fato, numa frase curta, na 3ª pessoa"
+            }
+          },
+          "required": [
+            "fato"
+          ]
+        }
+      }
+    },
+    {
+      "type": "function",
+      "function": {
+        "name": "esquecer",
+        "description": "Apaga um fato da memória, pelo número com que ele aparece na lista de memória.",
+        "parameters": {
+          "type": "object",
+          "properties": {
+            "numero": {
+              "type": "integer",
+              "description": "número do fato na memória"
+            }
+          },
+          "required": [
+            "numero"
+          ]
+        }
+      }
+    }
+  ],
+  "rows": [
+    {
+      "question": "Como está o tempo hoje?",
+      "expected": "clima",
+      "got": "clima",
+      "decision_s": 0.5580468110019865,
+      "first_text": "",
+      "error": null,
+      "correct_choice": true,
+      "arguments": {
+        "cidade": "Novo Hamburgo (RS)"
+      },
+      "args_ok": true,
+      "answer": "Agora está 23 graus e nublado. Hoje a previsão é de 12 a 25 graus com 10% de chance de chuva.",
+      "answer_first_chunk_s": 1.1654786090002744,
+      "text_ok": true,
+      "ok": true,
+      "run": 0
+    },
+    {
+      "question": "Vai chover amanhã?",
+      "expected": "clima",
+      "got": "clima",
+      "decision_s": 0.5796557369976654,
+      "first_text": "",
+      "error": null,
+      "correct_choice": true,
+      "arguments": {
+        "cidade": "Novo Hamburgo (RS)"
+      },
+      "args_ok": true,
+      "answer": "Sim, vai chover. A previsão é de 14 a 19 graus com 80% de chance.",
+      "answer_first_chunk_s": 0.7627882039996621,
+      "text_ok": true,
+      "ok": true,
+      "run": 0
+    },
+    {
+      "question": "Qual a temperatura agora?",
+      "expected": "clima",
+      "got": "clima",
+      "decision_s": 0.5468816179964051,
+      "first_text": "",
+      "error": null,
+      "correct_choice": true,
+      "arguments": {
+        "cidade": "Novo Hamburgo (RS)"
+      },
+      "args_ok": true,
+      "answer": "Está 23 graus agora. A previsão para amanhã é de chuva.",
+      "answer_first_chunk_s": 1.0005399420006142,
+      "text_ok": true,
+      "ok": true,
+      "run": 0
+    },
+    {
+      "question": "Como vai estar o tempo em Porto Alegre amanhã?",
+      "expected": "clima",
+      "got": "clima",
+      "decision_s": 0.549521190001542,
+      "first_text": "",
+      "error": null,
+      "correct_choice": true,
+      "arguments": {
+        "cidade": "Porto Alegre (RS)"
+      },
+      "args_ok": true,
+      "answer": "O clima em Novo Hamburgo está bom. Amanhã em Porto Alegre tem 14 a 19 graus com 80% de chance de chuva.",
+      "answer_first_chunk_s": 1.1045430160011165,
+      "text_ok": true,
+      "ok": true,
+      "run": 0
+    },
+    {
+      "question": "E em Curitiba?",
+      "expected": "clima",
+      "got": "clima",
+      "decision_s": 0.9807660629994643,
+      "first_text": "",
+      "error": null,
+      "correct_choice": true,
+      "arguments": {
+        "cidade": "Curitiba (PR)"
+      },
+      "args_ok": true,
+      "answer": "Em Curitiba, hoje estará entre 12 e 25 graus com 10% de chance de chuva.",
+      "answer_first_chunk_s": 0.9025918040024408,
+      "text_ok": true,
+      "ok": true,
+      "run": 0
+    },
+    {
+      "question": "O que é o El Niño?",
+      "expected": null,
+      "got": null,
+      "decision_s": 0.2855385019975074,
+      "first_text": "Não é um termo de TI. El Niño é um fenômeno climático.",
+      "error": null,
+      "correct_choice": true,
+      "text_ok": true,
+      "ok": true,
+      "run": 0
+    },
+    {
+      "question": "Qual a diferença entre clima e tempo?",
+      "expected": null,
+      "got": null,
+      "decision_s": 0.25405361999946763,
+      "first_text": "Clima é o padrão de longo prazo. Tempo é a condição atmosférica atual em um momento específico.",
+      "error": null,
+      "correct_choice": true,
+      "text_ok": true,
+      "ok": true,
+      "run": 0
+    },
+    {
+      "question": "Como está o tempo hoje?",
+      "expected": "clima",
+      "got": "clima",
+      "decision_s": 0.5685763069996028,
+      "first_text": "",
+      "error": null,
+      "correct_choice": true,
+      "arguments": {
+        "cidade": "Novo Hamburgo (RS)"
+      },
+      "args_ok": true,
+      "answer": "Está 23 graus, nublado. Hoje a previsão é de 12 a 25 graus com 10% de chance de chuva.",
+      "answer_first_chunk_s": 0.9984106339979917,
+      "text_ok": true,
+      "ok": true,
+      "run": 1
+    },
+    {
+      "question": "Vai chover amanhã?",
+      "expected": "clima",
+      "got": "clima",
+      "decision_s": 0.5837073539987614,
+      "first_text": "",
+      "error": null,
+      "correct_choice": true,
+      "arguments": {
+        "cidade": "Novo Hamburgo (RS)"
+      },
+      "args_ok": true,
+      "answer": "Sim, vai chover amanhã. A previsão é de 14 a 19 graus com 80% de chance de chuva.",
+      "answer_first_chunk_s": 0.7654143930012651,
+      "text_ok": true,
+      "ok": true,
+      "run": 1
+    },
+    {
+      "question": "Qual a temperatura agora?",
+      "expected": "clima",
+      "got": "clima",
+      "decision_s": 0.5486916749978263,
+      "first_text": "",
+      "error": null,
+      "correct_choice": true,
+      "arguments": {
+        "cidade": "Novo Hamburgo (RS)"
+      },
+      "args_ok": true,
+      "answer": "Está 23 graus agora. Hoje tem chance de chuva de 10%.",
+      "answer_first_chunk_s": 0.999587515998428,
+      "text_ok": true,
+      "ok": true,
+      "run": 1
+    },
+    {
+      "question": "Como vai estar o tempo em Porto Alegre amanhã?",
+      "expected": "clima",
+      "got": "clima",
+      "decision_s": 0.5504949039968778,
+      "first_text": "",
+      "error": null,
+      "correct_choice": true,
+      "arguments": {
+        "cidade": "Porto Alegre (RS)"
+      },
+      "args_ok": true,
+      "answer": "Não tenho dados para Porto Alegre. Sei que você usa Novo Hamburgo (RS) para o clima.",
+      "answer_first_chunk_s": 0.9910268370003905,
+      "text_ok": true,
+      "ok": true,
+      "run": 1
+    },
+    {
+      "question": "E em Curitiba?",
+      "expected": "clima",
+      "got": "clima",
+      "decision_s": 0.9823844919992553,
+      "first_text": "",
+      "error": null,
+      "correct_choice": true,
+      "arguments": {
+        "cidade": "Curitiba (PR)"
+      },
+      "args_ok": true,
+      "answer": "A previsão para Curitiba não está disponível. Posso verificar para outra cidade?",
+      "answer_first_chunk_s": 1.1337514560000272,
+      "text_ok": true,
+      "ok": true,
+      "run": 1
+    },
+    {
+      "question": "O que é o El Niño?",
+      "expected": null,
+      "got": null,
+      "decision_s": 0.2919278339977609,
+      "first_text": "Não sei sobre El Niño. É um fenômeno climático complexo.",
+      "error": null,
+      "correct_choice": true,
+      "text_ok": true,
+      "ok": true,
+      "run": 1
+    },
+    {
+      "question": "Qual a diferença entre clima e tempo?",
+      "expected": null,
+      "got": null,
+      "decision_s": 0.25484310899992124,
+      "first_text": "Clima é a média do tempo em longo prazo. Tempo é o estado atmosférico em um momento específico.",
+      "error": null,
+      "correct_choice": true,
+      "text_ok": true,
+      "ok": true,
+      "run": 1
+    },
+    {
+      "question": "Como está o tempo hoje?",
+      "expected": "clima",
+      "got": "clima",
+      "decision_s": 0.5606900140010111,
+      "first_text": "",
+      "error": null,
+      "correct_choice": true,
+      "arguments": {
+        "cidade": "Novo Hamburgo (RS)"
+      },
+      "args_ok": true,
+      "answer": "Está com 23 graus e nublado agora. Hoje a previsão é de 12 a 25 graus com 10% de chance de chuva.",
+      "answer_first_chunk_s": 1.2162246740008413,
+      "text_ok": true,
+      "ok": true,
+      "run": 2
+    },
+    {
+      "question": "Vai chover amanhã?",
+      "expected": "clima",
+      "got": "clima",
+      "decision_s": 0.5826481399999466,
+      "first_text": "",
+      "error": null,
+      "correct_choice": true,
+      "arguments": {
+        "cidade": "Novo Hamburgo (RS)"
+      },
+      "args_ok": true,
+      "answer": "Sim, Rei. Amanhã em Novo Hamburgo (RS) a previsão é de chuva.",
+      "answer_first_chunk_s": 0.7650108710004133,
+      "text_ok": false,
+      "ok": false,
+      "run": 2
+    },
+    {
+      "question": "Qual a temperatura agora?",
+      "expected": "clima",
+      "got": "clima",
+      "decision_s": 0.5518308079990675,
+      "first_text": "",
+      "error": null,
+      "correct_choice": true,
+      "arguments": {
+        "cidade": "Novo Hamburgo (RS)"
+      },
+      "args_ok": true,
+      "answer": "Está com 23 graus. Nublado agora.",
+      "answer_first_chunk_s": 1.0018140270003641,
+      "text_ok": true,
+      "ok": true,
+      "run": 2
+    },
+    {
+      "question": "Como vai estar o tempo em Porto Alegre amanhã?",
+      "expected": "clima",
+      "got": "clima",
+      "decision_s": 0.5470828659999825,
+      "first_text": "",
+      "error": null,
+      "correct_choice": true,
+      "arguments": {
+        "cidade": "Porto Alegre (RS)"
+      },
+      "args_ok": true,
+      "answer": "O tempo em Porto Alegre amanhã será de 14 a 19 graus. A previsão indica 80% de chance de chuva.",
+      "answer_first_chunk_s": 1.6708251279997057,
+      "text_ok": true,
+      "ok": true,
+      "run": 2
+    },
+    {
+      "question": "E em Curitiba?",
+      "expected": "clima",
+      "got": "clima",
+      "decision_s": 0.9926321559978533,
+      "first_text": "",
+      "error": null,
+      "correct_choice": true,
+      "arguments": {
+        "cidade": "Curitiba (PR)"
+      },
+      "args_ok": true,
+      "answer": "Em Curitiba, hoje está de 12 a 25 graus com 10% de chance de chuva e nublado.",
+      "answer_first_chunk_s": 0.919561208000232,
+      "text_ok": true,
+      "ok": true,
+      "run": 2
+    },
+    {
+      "question": "O que é o El Niño?",
+      "expected": null,
+      "got": null,
+      "decision_s": 0.29273607499999343,
+      "first_text": "Não sei sobre El Niño. Eu só tenho acesso a informações de TI.",
+      "error": null,
+      "correct_choice": true,
+      "text_ok": true,
+      "ok": true,
+      "run": 2
+    },
+    {
+      "question": "Qual a diferença entre clima e tempo?",
+      "expected": null,
+      "got": null,
+      "decision_s": 0.26081251399955363,
+      "first_text": "Clima é longo prazo e geral. Tempo é a condição atmosférica atual ou de curto prazo.",
+      "error": null,
+      "correct_choice": true,
+      "text_ok": true,
+      "ok": true,
+      "run": 2
+    }
+  ]
+}
