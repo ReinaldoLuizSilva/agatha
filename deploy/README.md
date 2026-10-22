@@ -7,12 +7,13 @@ serviço do systemd do usuário `agatha` ([ADR-013](../docs/adr/0013-systemd-qua
 deploy/
 ├── install-systemd.sh   # instala as units do Quadlet e sobe o pod
 ├── install-labs.sh      # instala os laboratórios no systemd (ADR-017; --uninstall para tirar)
-├── quadlet/             # agatha.pod, agatha-llm.container, agatha-server.container
+├── quadlet/             # agatha.pod, agatha-llm, agatha-server e agatha-search (.container)
 │   └── lab/             # zabbix.pod, zabbix-*.container, oracle-free.container
 ├── up.sh                # sobe (ou reinicia) o pod "agatha" pelo systemd
 ├── down.sh              # derruba o pod
 ├── llama/Containerfile  # imagem do llama-server (CUDA 12, sm_61)
 ├── server/Containerfile # imagem do servidor da Agatha
+├── searxng/settings.yml # buscadores do SearXNG da ferramenta buscar_documentacao (ADR-025)
 ├── zabbix/              # Zabbix de laboratório: up.sh, down.sh, setup.py (ADR-011)
 └── oracle/              # Oracle 23ai Free de laboratório: up.sh, down.sh, setup.py (ADR-012)
 ```
@@ -23,13 +24,27 @@ deploy/
 deploy/install-systemd.sh       # uma vez (e a cada mudança em deploy/quadlet/)
 sudo loginctl enable-linger agatha   # uma vez, como root: sobe no boot sem sessão aberta
 
-deploy/up.sh                    # sobe (ou reinicia) e espera os dois serviços ficarem saudáveis
+deploy/up.sh                    # sobe (ou reinicia) e espera os serviços ficarem saudáveis
 podman logs -f agatha-server    # transcrições, respostas e tempos de cada etapa
 podman logs -f agatha-llm       # llama-server
 tail -f /dados/agatha/logs/server.log   # o mesmo, persistente
 systemctl --user status agatha-server agatha-llm
 systemctl --user restart agatha-server   # ex.: depois de reconstruir a imagem do servidor
 deploy/down.sh                  # derruba
+```
+
+### Busca (SearXNG)
+
+O `agatha-search` (ADR-025) roda o SearXNG dentro do pod, só em `127.0.0.1:8888`: o servidor chega
+por ali e nada fica aberto no host. A imagem é baixada na primeira subida (`Pull=missing`, versão
+fixa na unit). O `install-systemd.sh` copia `deploy/searxng/settings.yml` para
+`~/.config/agatha/searxng/` e gera a chave em `~/.config/agatha/search.env` (uma vez, fora do git);
+mudou o `settings.yml`, rode o instalador de novo ou copie e `systemctl --user restart agatha-search`.
+
+```bash
+podman exec agatha-server python3.12 -c "import urllib.request; print(urllib.request.urlopen(
+  'http://127.0.0.1:8888/search?q=zabbix+proxy&format=json').read()[:300])"   # teste rápido
+podman logs agatha-search      # buscador suspenso aparece como "too many requests" ou "CAPTCHA"
 ```
 
 ### Teste de fumaça

@@ -4,8 +4,8 @@
 #   deploy/install-systemd.sh     instala/atualiza as units e (re)inicia o pod
 #
 # As units ficam em ~/.config/containers/systemd/ (cópia de deploy/quadlet/); o systemd gera
-# agatha-pod.service, agatha-llm.service e agatha-server.service. Depois disso, use deploy/up.sh,
-# deploy/down.sh e journalctl --user -u agatha-server.
+# agatha-pod.service, agatha-llm.service, agatha-server.service e agatha-search.service. Depois disso,
+# use deploy/up.sh, deploy/down.sh e journalctl --user -u agatha-server.
 #
 # Para subir no boot sem ninguém logado, o usuário precisa de "linger" (uma vez, como root):
 #   sudo loginctl enable-linger agatha
@@ -19,6 +19,13 @@ for image in localhost/agatha-llama:b11205 localhost/agatha-server:0.2.0; do
     podman image exists "$image" || { echo "falta a imagem $image (veja deploy/README.md)"; exit 1; }
 done
 mkdir -p "$DEST" /dados/agatha/data/memory
+# busca (ADR-025): configuração do SearXNG e a chave secreta dele, gerada uma vez
+AGATHA_CONF=${XDG_CONFIG_HOME:-$HOME/.config}/agatha
+mkdir -p "$AGATHA_CONF/searxng"
+install -m 0644 "$REPO"/deploy/searxng/settings.yml "$AGATHA_CONF/searxng/"
+if [ ! -f "$AGATHA_CONF/search.env" ]; then
+    (umask 077; printf 'SEARXNG_SECRET=%s\n' "$(openssl rand -hex 32)" > "$AGATHA_CONF/search.env")
+fi
 install -m 0644 "$REPO"/deploy/quadlet/agatha.pod "$REPO"/deploy/quadlet/agatha-*.container "$DEST"/
 systemctl --user daemon-reload
 echo "units instaladas em $DEST"

@@ -1,0 +1,26 @@
+# SearXNG da Agatha (ADR-025): só a API JSON para a ferramenta buscar_documentacao, no pod, sem acesso
+# de fora. O deploy/install-systemd.sh copia este arquivo para ~/.config/agatha/searxng/.
+use_default_settings:
+  engines:
+    # Medido em 22/10: Google e Qwant negam acesso a instâncias próprias; Bing e Yahoo respondem em
+    # ~0,5 s; Brave, Google CSE e DuckDuckGo limitam rajadas (too many requests, CAPTCHA) e voltam depois.
+    keep_only: [bing, yahoo, duckduckgo, brave, google cse]
+general:
+  instance_name: agatha-search
+search:
+  formats: [html, json]
+  safe_search: 0
+  # padrão: 1 h por CAPTCHA; para um usuário só, o buscador volta antes
+  suspended_times:
+    SearxEngineAccessDenied: 600
+    SearxEngineCaptcha: 600
+    SearxEngineTooManyRequests: 300
+server:
+  limiter: false  # só o servidor da Agatha chega aqui (127.0.0.1 do pod)
+  image_proxy: false
+  method: GET
+engines:
+  - name: bing
+    disabled: false
+  - name: yahoo
+    disabled: false

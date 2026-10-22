@@ -1,0 +1,31 @@
+# Busca da Agatha (ADR-025): SearXNG para a ferramenta buscar_documentacao. Ouve só em 127.0.0.1:8888
+# dentro do pod (o servidor chega por ali; nenhuma porta no host). ~155 MB de RAM.
+# Buscadores e suspensões: deploy/searxng/settings.yml (copiado pelo deploy/install-systemd.sh).
+
+[Unit]
+Description=Agatha: busca (SearXNG, 127.0.0.1:8888 no pod)
+
+[Container]
+ContainerName=agatha-search
+Pod=agatha.pod
+Image=docker.io/searxng/searxng:2026.10.19-81371861f
+Pull=missing
+Environment=GRANIAN_HOST=127.0.0.1 GRANIAN_PORT=8888
+# SEARXNG_SECRET, gerado pelo deploy/install-systemd.sh (fora do git)
+EnvironmentFile=%h/.config/agatha/search.env
+Volume=%h/.config/agatha/searxng/settings.yml:/etc/searxng/settings.yml:ro,Z
+HealthCmd=wget -q -O /dev/null http://127.0.0.1:8888/healthz
+HealthInterval=30s
+Notify=healthy
+StopTimeout=10
+
+[Service]
+# não pode disputar memória com o LLM
+MemoryMax=512M
+MemorySwapMax=0
+Restart=on-failure
+RestartSec=5
+TimeoutStartSec=120
+
+[Install]
+WantedBy=default.target

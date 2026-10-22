@@ -17,7 +17,7 @@ echo "subindo a Agatha (pode levar ~1 min)..."
 if systemctl --user is-active -q agatha-pod.service; then
     systemctl --user restart agatha-pod.service
 fi
-if ! systemctl --user start agatha-pod.service agatha-llm.service agatha-server.service; then
+if ! systemctl --user start agatha-pod.service agatha-llm.service agatha-search.service agatha-server.service; then
     systemctl --user --no-pager status agatha-llm.service agatha-server.service | tail -30
     exit 1
 fi
