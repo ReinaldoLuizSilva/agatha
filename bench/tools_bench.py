@@ -35,6 +35,7 @@ from agatha_server.tools import Example, Tool, ToolRegistry
 from agatha_server.tools.calc import calculator, evaluate
 from agatha_server.tools.github import GitHubClient, GitHubConfig, github_tools
 from agatha_server.tools.memory import memory_tools
+from agatha_server.tools.news import NewsClient, news_tools, section_of
 from agatha_server.tools.oracle import oracle_tools
 from agatha_server.tools.weather import WeatherClient, weather_tools
 from agatha_server.tools.zabbix import ZabbixClient, ZabbixConfig, zabbix_tools
@@ -94,6 +95,49 @@ ZABBIX_ORACLE = [
     *[dataclasses.replace(t, handler=fake(_ORACLE_FAKE[t.name])) for t in weather_tools(WeatherClient())],
 ]
 
+# Notícias (Fase 10): manchetes reais de 22/10, no formato da ferramenta
+_HEADLINES = {
+    "geral": ["G1: Flávio x Lula: veja quem os candidatos derrotados no 1º turno apoiam",
+              "Folha: Bradesco segura despesas e lucro sobe para R$ 7,1 bilhões no 3º tri",
+              "G1: Estátua de João Goulart é vandalizada em Porto Alegre",
+              "Folha: Morre Tom Skerritt, ator de 'Alien' e 'Top Gun', aos 93 anos"],
+    "tecnologia": ["Tecnoblog: Microsoft diz que IA superou médicos em testes de diagnóstico",
+                   "G1: Falhas no PHP levam tribunais no Brasil e Anatel a suspender sistemas",
+                   "Folha: Spotify registra alta de receita e lucro com avanço global de usuários",
+                   "Tecnoblog: Xbox testa venda de horas para jogar na nuvem sem o Game Pass"],
+    "economia": ["G1: LemFi amplia serviços financeiros para brasileiros que vivem no exterior",
+                 "Folha: Bradesco segura despesas e lucro sobe para R$ 7,1 bilhões no 3º tri",
+                 "G1: Dólar fecha em queda com exterior favorável",
+                 "Folha: Hitachi Energy anuncia nova unidade no Brasil e investe US$ 350 milhões"],
+    "Rio Grande do Sul": ["G1: Procurada pela Interpol por assassinato é presa em hotel no RS",
+                          "G1: Investigação aponta ao menos 16 vítimas de 'falso médico' no Norte do RS",
+                          "G1: Estátua de João Goulart é vandalizada em Porto Alegre",
+                          "G1: ONG resgata leitoa que seria rifada em Santa Cruz do Sul"],
+}
+_PHP = ["Tecnoblog: Hackers tentaram explorar falhas no PHP antes do alerta. AWS detectou a primeira tentativa quatro "
+        "dias antes da divulgação oficial",
+        "G1: Falhas no PHP levam tribunais no Brasil e Anatel a suspender sistemas. Vulnerabilidade pode permitir que "
+        "invasores controlem servidores sem login ou senha"]
+
+
+def fake_news(args: dict) -> dict:
+    subject, source = args.get("assunto") or "", args.get("fonte")
+    section = section_of(subject)
+    if section is None:
+        found = _PHP if "php" in subject.lower() else []
+        return {"tema": subject, "noticias": found} | ({} if found else {
+            "aviso": "nenhuma notícia dos últimos 7 dias fala disso"})
+    if source == "Tecnoblog":
+        section = "tecnologia"
+    lines = _HEADLINES.get(section, _HEADLINES["geral"])
+    if source:
+        own = [h.split(": ", 1)[1] for h in lines if h.startswith(source + ":")]
+        return {"assunto": section, "fonte": source, "manchetes": own}
+    return {"assunto": section, "manchetes": lines}
+
+
+NEWS = [dataclasses.replace(t, handler=fake_news) for t in news_tools(NewsClient())]
+
 
 def build_registry() -> tuple[ToolRegistry, MemoryStore]:
     store = MemoryStore(MemoryConfig(db=":memory:"))
@@ -102,7 +146,7 @@ def build_registry() -> tuple[ToolRegistry, MemoryStore]:
     # guardar_fato/esquecer com esquema, regra e exemplo reais, mas sem alterar a memória de teste
     mem = [dataclasses.replace(t, handler=fake({"ok": True, "numero": 4} if t.name == "guardar_fato"
                                                else {"ok": True})) for t in memory_tools(store)]
-    return ToolRegistry([calculator, *ZABBIX_ORACLE, *mem]), store
+    return ToolRegistry([calculator, *ZABBIX_ORACLE, *NEWS, *mem]), store
 
 
 def calc_is(value):
@@ -155,6 +199,12 @@ def tool_turn(question, tool, arguments, answer):
 # Acabou de perguntar o tempo de Novo Hamburgo (para o "E em Curitiba?")
 ASKED_WEATHER = tool_turn("Como está o tempo hoje?", "clima", {"cidade": "Novo Hamburgo (RS)"},
                           "Está nublado, 23 graus em Novo Hamburgo.")
+ASKED_NEWS = tool_turn("Quais são as notícias de hoje?", "noticias", {},
+                       "A principal é sobre o 2º turno: os candidatos derrotados se dividem entre Lula e Flávio. "
+                       "E o Bradesco lucrou R$ 7,1 bilhões no trimestre.")
+ASKED_NEWS_TECH = tool_turn("Tem alguma notícia de tecnologia?", "noticias", {"assunto": "tecnologia"},
+                            "A Microsoft diz que uma IA superou médicos em diagnósticos. E falhas no PHP fizeram "
+                            "tribunais e a Anatel suspenderem sistemas.")
 ASKED_TABLESPACES = tool_turn("Como estão as tablespaces do Oracle?", "oracle_tablespaces", {},
                               "A USERS está com 91%, quase cheia. As outras estão tranquilas.")
 
@@ -198,6 +248,27 @@ CASES = [
     ("O que é uma tablespace?", None, None, None, None, ASKED_TABLESPACES),
     ("O que é o El Niño?", None, None, None, None),
     ("Qual a diferença entre clima e tempo?", None, None, None, None),
+    # Fase 10: notícias (seção, fonte ou tema; acompanhamento depois de troca compactada, ADR-023)
+    ("Quais são as notícias de hoje?", "noticias", lambda a: section_of(a.get("assunto") or "") == "geral", None, None),
+    ("Tem alguma notícia de tecnologia?", "noticias",
+     lambda a: section_of(a.get("assunto") or "") == "tecnologia", None, None),
+    ("O que tem de novo no Tecnoblog?", "noticias", lambda a: a.get("fonte") == "Tecnoblog", None, None),
+    ("Quais são as manchetes da Folha?", "noticias", lambda a: a.get("fonte") == "Folha", "Bradesco", None),
+    ("Me conta as notícias de economia.", "noticias",
+     lambda a: section_of(a.get("assunto") or "") == "economia", None, None),
+    ("O que aconteceu no Rio Grande do Sul hoje?", "noticias",
+     lambda a: section_of(a.get("assunto") or "") == "Rio Grande do Sul", None, None),
+    ("Tem alguma notícia sobre a falha do PHP?", "noticias", lambda a: "php" in (a.get("assunto") or "").lower(),
+     "explor", None),
+    ("E de tecnologia?", "noticias", lambda a: section_of(a.get("assunto") or "") == "tecnologia", None, None,
+     ASKED_NEWS),
+    ("E na Folha?", "noticias", lambda a: a.get("fonte") == "Folha", None, None, ASKED_NEWS_TECH),
+    ("Me conta mais sobre essa do PHP.", "noticias", lambda a: "php" in (a.get("assunto") or "").lower(), "PHP",
+     None, ASKED_NEWS_TECH),
+    ("O que é PHP?", None, None, None, None, ASKED_NEWS_TECH),
+    ("O que é um feed RSS?", None, None, None, None),
+    ("Quem ganhou a Copa do Mundo de 2002?", None, None, "Brasil", None),
+    ("Quando caiu o Muro de Berlim?", None, None, "1989", None),
     ("Lembra que o meu servidor de testes se chama lab01.", "guardar_fato", lambda a: "lab01" in a.get("fato", "").lower(), None, None),
     ("Anota aí: o backup roda todo dia às 2h.", "guardar_fato", lambda a: "backup" in a.get("fato", "").lower(), None, None),
     ("Esquece que o banco de produção se chama PRDORA.", "esquecer", lambda a: int(a.get("numero")) == 2, None, None),

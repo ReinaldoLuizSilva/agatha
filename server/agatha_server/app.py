@@ -39,6 +39,7 @@ from .memory import MemoryStore
 from .tools import ToolRegistry
 from .tools.calc import calculator
 from .tools.github import GitHubClient, github_tools
+from .tools.news import NewsClient, news_tools
 from .tools.weather import WeatherClient, weather_tools
 from .tools.memory import memory_tools
 from .tools.oracle import OracleClient, oracle_tools
@@ -553,7 +554,8 @@ class Session:
 
 def build_tools(memory: MemoryStore, zabbix: ZabbixClient | None = None,
                 oracle: OracleClient | None = None, oracle_cdb: OracleClient | None = None,
-                github: GitHubClient | None = None, weather: WeatherClient | None = None) -> ToolRegistry:
+                github: GitHubClient | None = None, weather: WeatherClient | None = None,
+                news: NewsClient | None = None) -> ToolRegistry:
     tools = [calculator, *memory_tools(memory)]
     if zabbix is not None:
         tools += zabbix_tools(zabbix)
@@ -563,6 +565,8 @@ def build_tools(memory: MemoryStore, zabbix: ZabbixClient | None = None,
         tools += github_tools(github)
     if weather is not None:
         tools += weather_tools(weather)
+    if news is not None:
+        tools += news_tools(news)
     return ToolRegistry(tools)
 
 
@@ -574,7 +578,8 @@ async def run(config: ServerConfig, transcriber: SupportsTranscribe, llm, synthe
     oracle_cdb = OracleClient(config.oracle, cdb=True) if config.oracle.enabled and config.oracle.cdb_enabled else None
     github = GitHubClient(config.github) if config.github.enabled else None
     weather = WeatherClient(config.weather) if config.weather.enabled else None
-    tools = build_tools(memory, zabbix, oracle, oracle_cdb, github, weather)
+    news = NewsClient(config.news) if config.news.enabled else None
+    tools = build_tools(memory, zabbix, oracle, oracle_cdb, github, weather, news)
     log.info("ferramentas: %s · memória: %d fatos em %s", ", ".join(tools.tools), len(memory.facts()),
              config.memory.db)
     turn_log = TurnLog(config.log_dir) if config.log_dir else None
@@ -614,7 +619,7 @@ async def run(config: ServerConfig, transcriber: SupportsTranscribe, llm, synthe
         server.shutdown()
         tts_executor.shutdown(wait=False, cancel_futures=True)
         memory.close()
-        for client in (zabbix, oracle, oracle_cdb, github, weather):
+        for client in (zabbix, oracle, oracle_cdb, github, weather, news):
             if client is not None:
                 await client.aclose()
         await llm.aclose()
