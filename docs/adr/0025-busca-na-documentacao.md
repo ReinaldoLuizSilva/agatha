@@ -98,6 +98,21 @@ novo é processado).
 - Sem a busca, "Qual a porta padrão do Zabbix agent?" é "não sei" (3 de 3, modelo de 4B): o caminho
   é ele dizer "pesquisa isso".
 
+### Teste no Windows (22/10, headset, 12 falas)
+
+- "Pesquisa ... como funciona o housekeeping" (STT: "interpretação dos Zabbix") → resposta certa da
+  documentação, 1º som 1,2 s. "Pesquisa isso" depois da porta padrão buscou a pergunta anterior.
+  "O que mudou no PostgreSQL 17?" buscou sozinho (versão na fala). 1º som 1,1–1,2 s em todas as
+  falas com busca. "Pra que serve o RMAN?" respondeu direto, sem busca.
+- STT trocou "do Zabbix" por "dos apps": sem produto, a busca aberta não achou nada e ela perguntou
+  "Você quis dizer housekeeping do Zabbix?". Corrigido: "housekeeping" (termo do Zabbix no
+  glossário) também escolhe a documentação do Zabbix.
+- Porta padrão: sem pedir, "não tenho essa informação"; com "pesquisa isso", 10050 para o agente
+  (certo) e "10051 para a interface web" (errado: 10051 é o trapper do servidor). O trecho não
+  trazia a porta; ela completou de memória.
+- PostgreSQL 17: os trechos eram do índice das notas de versão, e a resposta ficou genérica.
+- Barge-in com o headset: 0 disparos à toa.
+
 ### Alternativas consideradas
 
 | alternativa | por que não |

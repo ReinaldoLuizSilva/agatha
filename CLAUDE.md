@@ -278,13 +278,17 @@ agatha/
       tokens, benchmarks antigos iguais à versão com notícias (tools 189/207, precision 113 e 113/129).
       1º som ~0,95 s nas falas com busca (frase de espera), busca 0,5–0,9 s. Sem pedir, "porta padrão do Zabbix
       agent" é "não sei" (4B): ele diz "pesquisa isso".
+      Teste no Windows da busca (22/10, headset, 12 falas): housekeeping do Zabbix certo; "pesquisa isso" ok;
+      PostgreSQL 17 genérico (trechos do índice das notas de versão); porta padrão: 10050 do agente certo, mas
+      "10051 para a interface web" errado (trecho sem a porta); 1º som 1,1–1,2 s com busca; RMAN sem busca;
+      barge-in 0 à toa. Corrigido: "housekeeping" escolhe a documentação do Zabbix (o STT trocou "do Zabbix"
+      por "dos apps" e a busca aberta não achou nada).
       **RETOMAR DAQUI (próxima sessão):**
-      1. Teste do Reinaldo no Windows com a busca (headset): "pesquisa na documentação do Zabbix...", "pesquisa
-         isso", "o que mudou no PostgreSQL 17?". Conferir STT do verbo "pesquisa" e se os trechos respondem.
-      2. Com o teste ok, fechar a Fase 10 (README e status) e combinar a próxima fase com ele.
-      3. Acompanhar no uso, sem pressa: limites dos buscadores (`podman logs agatha-search`); trecho fora de
-         contexto (disse "10051 para o agente"); "Firebird" e outras perguntas de TI fora do glossário; barge-in com
-         as caixas do notebook (AEC fraco, 2 disparos à toa em 22/10); "alerta no banco Zabbix" puxando o Oracle;
-         conhecimento geral depois de histórico (Copa de 2002); "Brasileirão compromissos em atraso" lido como
-         atraso de jogos.
-      Para o Reinaldo: testar a busca no Windows (cliente 0.5.1, headset, `--barge-debug`) e colar o log.
+      1. Os 3 itens da Fase 10 estão no ar e testados (clima, notícias, busca). Falta o Reinaldo aprovar o
+         fechamento da Fase 10 e combinar a próxima fase.
+      2. Acompanhar no uso, sem pressa: limites dos buscadores (`podman logs agatha-search`); trecho de busca
+         sem a resposta (ela completa de memória: "10051 para a interface web"); "Firebird" e outras perguntas de
+         TI fora do glossário; barge-in com as caixas do notebook (AEC fraco, 2 disparos à toa em 22/10);
+         "alerta no banco Zabbix" puxando o Oracle; conhecimento geral depois de histórico (Copa de 2002);
+         "Brasileirão compromissos em atraso" lido como atraso de jogos.
+      Para o Reinaldo: aprovar o fechamento da Fase 10 e escolher a próxima fase.
