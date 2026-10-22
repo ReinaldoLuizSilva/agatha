@@ -60,7 +60,7 @@ tudo sobre X x Y"): ficaram de fora.
   essa do PHP" respondido sem consultar. Copa de 2002 e Muro de Berlim sem ferramenta, 6/6. Casos
   antigos 150/165, igual à v12.
 - `precision_bench`: 113/129 sem histórico (v12 110) e 113/129 com histórico (v12 106), invenções 0.
-- Prefixo 2558 → 2705 tokens (esquema ~110, regra ~35). O pré-aquecimento do prompt ao subir passou
+- Prefixo 2558 → 2716 tokens (esquema ~110, regra ~45). O pré-aquecimento do prompt ao subir passou
   a ~10 s.
 - Ponta a ponta (voz sintética, 22/10): teste de fumaça ok (1º áudio p50 2,0 s); "quais são as
   notícias de hoje?" respondida em 1,5 s e "tem alguma notícia de tecnologia?" em 1,9 s, do fim da
@@ -111,5 +111,5 @@ desequilibra. Fica para acompanhar com o precision_bench com histórico; não fo
   pode vir antes de política.
 - A busca por tema só acha o que está nos feeds (100 itens por feed, de horas a poucos dias); time
   de futebol, por exemplo, quase nunca aparece no feed de esporte da Folha.
-- Prefixo do prompt +147 tokens (2558 → 2705).
+- Prefixo do prompt +158 tokens (2558 → 2716).
 - Depende do formato dos feeds; se um mudar, a fonte some do resultado com um aviso no log.

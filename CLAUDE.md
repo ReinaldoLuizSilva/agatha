@@ -263,17 +263,28 @@ agatha/
       assunto → busca local nos feeds (o tema não sai do servidor), até 3 com resumo; cache de 5 min. Regra:
       "fatos passados, como quem ganhou uma Copa, você responde direto" (sem ela, Copa de 2002 → noticias 3/3).
       Fala: "R$ 7,1 bilhões", US$ e siglas de manchete corrigidas. tools_bench notícias 39/42, antigos 150/165
-      (= v12); precision 113 e 113/129 (v12 110 e 106), invenções 0; prefixo 2705 tokens; pré-aquecimento ~10 s.
+      (= v12); precision 113 e 113/129 (v12 110 e 106), invenções 0; prefixo 2716 tokens; pré-aquecimento ~10 s.
       Feeds do pod ~150 ms (1–2 s quando o DNS perde consulta). Visto: "Copa de 2002" erra depois de QUALQUER
       histórico (Brasil 5/5 sem, 1–4/5 com; modelo 4B), não é das notícias; acompanhar.
+      Teste no Windows (22/10, 12 falas, mic e caixas do notebook): "muito bom", notícias certas em todas, 1º som
+      1,9–2,1 s; o "travou" foram 2 barge-in falsos com a voz dela voltando pelo mic (notas 0,89 e 0,96, AEC 6,3 dB).
+      Decisão dele: seguir para a busca e usar o headset para o barge-in.
+      3) **busca no ar** (22/10, ADR-025): SearXNG no pod (`agatha-search`, só 127.0.0.1:8888, ~130 MB, Bing e
+      Yahoo respondem; Brave, DDG e Google CSE limitam rajadas). **Não é ferramenta do LLM**: como ferramenta ela
+      buscava à toa em perguntas de conceito (7–15 de 24 em 4 redações; precision 113 → 108). O servidor detecta
+      o pedido na fala (`search.search_request`: "pesquisa...", "procura na documentação...", "o que mudou no X
+      7.0"; "pesquisa isso" usa a fala anterior), busca e entrega como chamada de ferramenta já respondida
+      (16/16 respostas usaram os trechos, nenhuma chamou outra ferramenta); fora do histórico. Prefixo segue 2716
+      tokens, benchmarks antigos iguais à versão com notícias (tools 189/207, precision 113 e 113/129).
+      1º som ~0,95 s nas falas com busca (frase de espera), busca 0,5–0,9 s. Sem pedir, "porta padrão do Zabbix
+      agent" é "não sei" (4B): ele diz "pesquisa isso".
       **RETOMAR DAQUI (próxima sessão):**
-      1. Teste do Reinaldo no Windows (22/10, 12 falas, mic e caixas do notebook): "muito bom"; notícias certas
-         em todas, 1º som 1,9–2,1 s. "Travou": 2 barge-in falsos com a voz dela voltando pelo mic (notas 0,89 e
-         0,96, eco −29 dBFS, AEC 6,3 dB) → 2 pausas de ~2–3 s. Decidir com ele: headset, ou "abaixar o volume"
-         em vez de pausar até o servidor confirmar (cliente), ou seguir para o item 2.
-      2. Item 3, **busca na web com SearXNG** no agatha-srv (container no systemd do usuário, como os
-         laboratórios; medir RAM), restrita a documentação oficial para dúvida técnica; ADR próprio.
-      3. Acompanhar no uso, sem pressa: "Firebird" e outras perguntas de TI fora do glossário; barge-in com as
-         caixas do notebook (AEC fraco); "alerta no banco Zabbix" puxando o Oracle; 1ª resposta depois de
-         restart ~2,1 s (aquecimento); conhecimento geral depois de histórico (Copa de 2002).
-      Para o Reinaldo: testar as notícias no Windows (cliente 0.5.1, `--barge-debug`) e colar o log.
+      1. Teste do Reinaldo no Windows com a busca (headset): "pesquisa na documentação do Zabbix...", "pesquisa
+         isso", "o que mudou no PostgreSQL 17?". Conferir STT do verbo "pesquisa" e se os trechos respondem.
+      2. Com o teste ok, fechar a Fase 10 (README e status) e combinar a próxima fase com ele.
+      3. Acompanhar no uso, sem pressa: limites dos buscadores (`podman logs agatha-search`); trecho fora de
+         contexto (disse "10051 para o agente"); "Firebird" e outras perguntas de TI fora do glossário; barge-in com
+         as caixas do notebook (AEC fraco, 2 disparos à toa em 22/10); "alerta no banco Zabbix" puxando o Oracle;
+         conhecimento geral depois de histórico (Copa de 2002); "Brasileirão compromissos em atraso" lido como
+         atraso de jogos.
+      Para o Reinaldo: testar a busca no Windows (cliente 0.5.1, headset, `--barge-debug`) e colar o log.

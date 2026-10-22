@@ -1,0 +1,3879 @@
+{
+  "date": "2026-10-22T19:58:18",
+  "runs": 3,
+  "system_prompt": "Você é a Agatha, assistente de voz pessoal para o trabalho e o dia a dia. O usuário é o Reinaldo; você o chama de Reinaldo ou de Rei.\nTudo o que você escreve será falado em voz alta, então:\n- comece sempre com uma frase bem curta, de no máximo seis palavras; depois complemente se for útil;\n- responda em português do Brasil, em até três frases no total, a menos que ele peça detalhes;\n- nunca leia código, SQL ou comandos completos: diga o nome do comando ou da view e explique a ideia;\n- não use markdown, listas, emojis nem parênteses;\n- escreva horas, datas e números sempre em algarismos, como 18h22, 11/10 ou 36; o sistema converte para a fala;\n- não cumprimente nem repita o nome dele em toda resposta, só quando soar natural;\n- tom meio a meio entre profissional e descontraído: cordial e direto;\n- perguntas de conhecimento geral ou sobre conceitos de TI você responde direto com o que sabe, sem avisar que não tem detalhes; diga que\n  não sabe só quando for algo do ambiente dele que nenhuma ferramenta mostra, como o estado de um backup ou de\n  locks, e nunca invente um estado.\nO que ele diz chega por reconhecimento de voz e pode vir com palavras trocadas, principalmente siglas e nomes\ntécnicos. Se uma palavra não fizer sentido, pense no termo de som parecido, de TI ou não, e confirme numa frase curta,\ncomo \"Você quis dizer Data Guard?\". Se não achar nenhum, diga que não entendeu e peça para repetir. Nunca\nexplique uma palavra que você não reconhece como termo técnico.\nCada mensagem dele começa com a data e a hora atuais entre colchetes; use só se for relevante.\nO Reinaldo trabalha com infraestrutura (Linux, Oracle, Zabbix) e estuda cloud e DevOps. Siglas e termos que ele\nusa: no Oracle, RMAN, AWR, ASH, ASM, CDB, PDB, Data Guard, SPFILE, archivelog, listener; no Zabbix, item,\ntrigger, template, housekeeping, proxy; tipos de backup: completo, incremental e diferencial. Uma sigla de\nOracle ou Zabbix fora dessa lista quase sempre é uma delas mal ouvida: confirme (\"Você quis dizer AWR?\" para\n\"OWR\"), também no meio de uma conversa.\nSua memória: fatos que o Reinaldo pediu para você guardar. Use-os ao responder. Se ele perguntar o que você sabe sobre ele, conte estes fatos. Para apagar um deles, use esquecer com o número. Não use guardar_fato para algo que já está aqui.\n1. O Reinaldo usa o padrão ambiente-servidor-host nos hosts do Zabbix\n2. O banco de produção se chama PRDORA\n3. A reunião com o time é na quinta às 10h\n4. A cidade do Reinaldo para o clima é Novo Hamburgo (RS)\nVocê tem ferramentas e deve usá-las nestes casos, sempre:\n- qualquer conta, porcentagem ou conversão de unidades: use calcular, mesmo que pareça fácil;\n- perguntas sobre alertas ou problemas atuais no Zabbix: use zabbix_problemas; para prioridade alta, severidade_minima alta;\n- perguntas sobre o estado atual de um host no Zabbix (CPU, memória, disco, se está no ar): use zabbix_host; se ele não disser qual, como em o servidor, o host é agatha-srv;\n- perguntas sobre o uso atual das tablespaces do Oracle: use oracle_tablespaces;\n- perguntas sobre sessões abertas no Oracle: use oracle_sessoes;\n- perguntas sobre o estado do banco Oracle, como se está no ar, archivelog, Data Guard ou locks: use oracle_banco;\n- perguntas sobre os backups do Oracle, como se o backup de ontem rodou: use oracle_backups;\n- perguntas sobre os repositórios dele no GitHub, como commits, PRs, issues ou se a CI passou: use github_repo;\n- perguntas sobre o tempo, temperatura, chuva ou previsão: use clima com a cidade que ele disser ou a da sua memória; se não souber a cidade, pergunte;\n- notícias e manchetes de agora: use noticias, com o assunto e a fonte só se ele disser; fatos passados, como quem ganhou uma Copa, você responde direto;\n- quando ele pedir para pesquisar ou ver na documentação, ou perguntar um detalhe exato de produto, como parâmetro, porta padrão, sintaxe de comando ou o que mudou numa versão: use buscar_documentacao; o que é, como funciona e diferenças você responde direto, sem buscar;\n- quando ele pedir para lembrar, anotar ou guardar algo novo: use guardar_fato; uma pergunta nunca é pedido para guardar;\n- quando ele pedir para esquecer ou apagar algo da memória: use esquecer com o número do fato; se ele não disser qual, como em isso ou essa informação, use o último fato da lista;\nPelas ferramentas você acessa esses sistemas de verdade: nunca diga que não tem acesso a eles. Só chame uma ferramenta se ela mostra o que ele perguntou. Se o resultado não trouxer o que ele perguntou, diga que ela não mostra isso, sem tirar conclusões.\nPerguntas do tipo \"o que é\", \"como funciona\" ou \"para que serve\" são sobre conceitos: responda direto com o que você sabe, sem ferramenta. O mesmo vale para opiniões, conversa e perguntas sobre o que já está na sua memória.\nAs primeiras trocas desta conversa são só exemplos de formato: não são fatos sobre o Reinaldo nem coisas que ele disse.",
+  "tools": [
+    {
+      "type": "function",
+      "function": {
+        "name": "calcular",
+        "description": "Calcula uma expressão matemática. Use para qualquer conta, porcentagem ou conversão numérica. Exemplo de expressão: 240 * 0.15",
+        "parameters": {
+          "type": "object",
+          "properties": {
+            "expressao": {
+              "type": "string",
+              "description": "expressão em sintaxe Python"
+            }
+          },
+          "required": [
+            "expressao"
+          ]
+        }
+      }
+    },
+    {
+      "type": "function",
+      "function": {
+        "name": "zabbix_problemas",
+        "description": "Lista os alertas (problemas) ativos no Zabbix, de todos os hosts ou de um host.",
+        "parameters": {
+          "type": "object",
+          "properties": {
+            "host": {
+              "type": "string",
+              "description": "nome do host; omita para todos"
+            },
+            "severidade_minima": {
+              "type": "string",
+              "enum": [
+                "informação",
+                "atenção",
+                "média",
+                "alta",
+                "desastre"
+              ],
+              "description": "só problemas desta severidade para cima"
+            }
+          },
+          "required": []
+        }
+      }
+    },
+    {
+      "type": "function",
+      "function": {
+        "name": "zabbix_host",
+        "description": "Mostra o estado e as métricas atuais de um host monitorado no Zabbix: CPU, memória, disco.",
+        "parameters": {
+          "type": "object",
+          "properties": {
+            "host": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "host"
+          ]
+        }
+      }
+    },
+    {
+      "type": "function",
+      "function": {
+        "name": "oracle_tablespaces",
+        "description": "Mostra o uso de espaço das tablespaces do banco Oracle.",
+        "parameters": {
+          "type": "object",
+          "properties": {},
+          "required": []
+        }
+      }
+    },
+    {
+      "type": "function",
+      "function": {
+        "name": "oracle_sessoes",
+        "description": "Mostra quantas sessões estão abertas no banco Oracle e quantas estão ativas.",
+        "parameters": {
+          "type": "object",
+          "properties": {},
+          "required": []
+        }
+      }
+    },
+    {
+      "type": "function",
+      "function": {
+        "name": "oracle_banco",
+        "description": "Mostra o estado do banco Oracle: se está aberto, modo archivelog, papel e Data Guard, versão, há quanto tempo está no ar e sessões bloqueadas por locks.",
+        "parameters": {
+          "type": "object",
+          "properties": {},
+          "required": []
+        }
+      }
+    },
+    {
+      "type": "function",
+      "function": {
+        "name": "oracle_backups",
+        "description": "Lista os últimos backups do Oracle feitos pelo RMAN: quando, tipo, status e tamanho.",
+        "parameters": {
+          "type": "object",
+          "properties": {},
+          "required": []
+        }
+      }
+    },
+    {
+      "type": "function",
+      "function": {
+        "name": "github_repo",
+        "description": "Mostra um repositório dele no GitHub (agatha): últimos commits, PRs e issues abertos e a última execução da CI.",
+        "parameters": {
+          "type": "object",
+          "properties": {
+            "repo": {
+              "type": "string",
+              "description": "nome do repositório (agatha); omita para o agatha"
+            }
+          },
+          "required": []
+        }
+      }
+    },
+    {
+      "type": "function",
+      "function": {
+        "name": "clima",
+        "description": "Mostra o tempo agora e a previsão de 3 dias de uma cidade: temperatura, chance de chuva e condição.",
+        "parameters": {
+          "type": "object",
+          "properties": {
+            "cidade": {
+              "type": "string",
+              "description": "cidade e estado, como Curitiba (PR)"
+            }
+          },
+          "required": [
+            "cidade"
+          ]
+        }
+      }
+    },
+    {
+      "type": "function",
+      "function": {
+        "name": "noticias",
+        "description": "Manchetes recentes do G1, da Folha e do Tecnoblog, de uma seção ou sobre um tema.",
+        "parameters": {
+          "type": "object",
+          "properties": {
+            "assunto": {
+              "type": "string",
+              "description": "tecnologia, economia, política, mundo, esporte, Rio Grande do Sul ou um tema, como a falha do PHP; vazio para as principais"
+            },
+            "fonte": {
+              "type": "string",
+              "enum": [
+                "G1",
+                "Folha",
+                "Tecnoblog"
+              ]
+            }
+          },
+          "required": []
+        }
+      }
+    },
+    {
+      "type": "function",
+      "function": {
+        "name": "buscar_documentacao",
+        "description": "Pesquisa na documentação oficial de Oracle, Zabbix, Linux, Podman, Docker, Kubernetes, bancos e nuvens e devolve trechos.",
+        "parameters": {
+          "type": "object",
+          "properties": {
+            "consulta": {
+              "type": "string",
+              "description": "produto e termos curtos, como zabbix agent porta padrão"
+            }
+          },
+          "required": [
+            "consulta"
+          ]
+        }
+      }
+    },
+    {
+      "type": "function",
+      "function": {
+        "name": "guardar_fato",
+        "description": "Guarda um fato NOVO sobre o Reinaldo na memória, para conversas futuras. Use quando ele pedir para lembrar, anotar ou guardar alguma coisa que ainda não está na memória.",
+        "parameters": {
+          "type": "object",
+          "properties": {
+            "fato": {
+              "type": "string",
+              "description": "o fato, numa frase curta, na 3ª pessoa"
+            }
+          },
+          "required": [
+            "fato"
+          ]
+        }
+      }
+    },
+    {
+      "type": "function",
+      "function": {
+        "name": "esquecer",
+        "description": "Apaga um fato da memória, pelo número com que ele aparece na lista de memória.",
+        "parameters": {
+          "type": "object",
+          "properties": {
+            "numero": {
+              "type": "integer",
+              "description": "número do fato na memória"
+            }
+          },
+          "required": [
+            "numero"
+          ]
+        }
+      }
+    }
+  ],
+  "rows": [
+    {
+      "question": "Quanto é 15% de 240?",
+      "expected": "calcular",
+      "got": "calcular",
+      "decision_s": 0.5065783970003395,
+      "first_text": "",
+      "error": null,
+      "correct_choice": true,
+      "arguments": {
+        "expressao": "240 * 0.15"
+      },
+      "args_ok": true,
+      "answer": "O resultado é 36.",
+      "answer_first_chunk_s": 0.627274928998304,
+      "text_ok": true,
+      "ok": true,
+      "run": 0
+    },
+    {
+      "question": "Quanto é 1234 vezes 56?",
+      "expected": "calcular",
+      "got": "calcular",
+      "decision_s": 0.5027888590011571,
+      "first_text": "",
+      "error": null,
+      "correct_choice": true,
+      "arguments": {
+        "expressao": "1234 * 56"
+      },
+      "args_ok": true,
+      "answer": "O resultado é 69104.",
+      "answer_first_chunk_s": 0.8293279539993819,
+      "text_ok": true,
+      "ok": true,
+      "run": 0
+    },
+    {
+      "question": "Quanto é 2 elevado a 10?",
+      "expected": "calcular",
+      "got": "calcular",
+      "decision_s": 0.5371455740005331,
+      "first_text": "",
+      "error": null,
+      "correct_choice": true,
+      "arguments": {
+        "expressao": "2**10"
+      },
+      "args_ok": true,
+      "answer": "É 1024.",
+      "answer_first_chunk_s": 0.6320090560002427,
+      "text_ok": true,
+      "ok": true,
+      "run": 0
+    },
+    {
+      "question": "Quanto é 25% de 250?",
+      "expected": "calcular",
+      "got": "calcular",
+      "decision_s": 0.5035550009997678,
+      "first_text": "",
+      "error": null,
+      "correct_choice": true,
+      "arguments": {
+        "expressao": "250 * 0.25"
+      },
+      "args_ok": true,
+      "answer": "O valor é 62,5.",
+      "answer_first_chunk_s": 0.7461668409996491,
+      "text_ok": true,
+      "ok": true,
+      "run": 0
+    },
+    {
+      "question": "Tenho 1,5 tera usados e cresce 20 gigas por dia. Em quantos dias chego a 2 tera?",
+      "expected": "calcular",
+      "got": "calcular",
+      "decision_s": 0.5676872780004487,
+      "first_text": "",
+      "error": null,
+      "correct_choice": true,
+      "arguments": {
+        "expressao": "(2 * 1024 - 1.5 * 1024) / 20"
+      },
+      "args_ok": true,
+      "answer": "Você chega em 2 tera em cerca de 25,6 dias.",
+      "answer_first_chunk_s": 1.1454860280009598,
+      "text_ok": true,
+      "ok": true,
+      "run": 0
+    },
+    {
+      "question": "Tem algum alerta no Zabbix agora?",
+      "expected": "zabbix_problemas",
+      "got": "zabbix_problemas",
+      "decision_s": 0.7867517260001478,
+      "first_text": "",
+      "error": null,
+      "correct_choice": true,
+      "arguments": {},
+      "args_ok": true,
+      "answer": "Sim, tem um alerta. O host agatha-srv está com uso de disco acima de 80%.",
+      "answer_first_chunk_s": 0.5620444350006437,
+      "text_ok": true,
+      "ok": true,
+      "run": 0
+    },
+    {
+      "question": "Como está o host agatha-srv no Zabbix?",
+      "expected": "zabbix_host",
+      "got": "zabbix_host",
+      "decision_s": 0.7386260060011409,
+      "first_text": "",
+      "error": null,
+      "correct_choice": true,
+      "arguments": {
+        "host": "agatha-srv"
+      },
+      "args_ok": true,
+      "answer": "O agatha-srv está no ar. CPU em 23% e memória em 61%.",
+      "answer_first_chunk_s": 1.0057362989991816,
+      "text_ok": true,
+      "ok": true,
+      "run": 0
+    },
+    {
+      "question": "Qual o uso de CPU do servidor agatha-srv?",
+      "expected": "zabbix_host",
+      "got": "zabbix_host",
+      "decision_s": 0.7413827749987831,
+      "first_text": "",
+      "error": null,
+      "correct_choice": true,
+      "arguments": {
+        "host": "agatha-srv"
+      },
+      "args_ok": true,
+      "answer": "A CPU do agatha-srv está em 23%. A memória está em 61% e o disco de dados em 41%.",
+      "answer_first_chunk_s": 1.2365602329991816,
+      "text_ok": true,
+      "ok": true,
+      "run": 0
+    },
+    {
+      "question": "Como estão as tablespaces do Oracle?",
+      "expected": "oracle_tablespaces",
+      "got": "oracle_tablespaces",
+      "decision_s": 0.6834532099983335,
+      "first_text": "",
+      "error": null,
+      "correct_choice": true,
+      "arguments": {},
+      "args_ok": true,
+      "answer": "As tablespaces estão assim: USERS com 91%, SYSTEM com 74%, e SYSAUX com 66%.",
+      "answer_first_chunk_s": 0.7959076209990599,
+      "text_ok": true,
+      "ok": true,
+      "run": 0
+    },
+    {
+      "question": "Tem alguma tablespace quase cheia?",
+      "expected": "oracle_tablespaces",
+      "got": "oracle_tablespaces",
+      "decision_s": 0.6781043419996422,
+      "first_text": "",
+      "error": null,
+      "correct_choice": true,
+      "arguments": {},
+      "args_ok": true,
+      "answer": "A USERS está quase cheia com 91%.",
+      "answer_first_chunk_s": 1.087035479999031,
+      "text_ok": true,
+      "ok": true,
+      "run": 0
+    },
+    {
+      "question": "Quantas sessões tem abertas no banco?",
+      "expected": "oracle_sessoes",
+      "got": "oracle_sessoes",
+      "decision_s": 0.7297755079998751,
+      "first_text": "",
+      "error": null,
+      "correct_choice": true,
+      "arguments": {},
+      "args_ok": true,
+      "answer": "Existem 48 sessões abertas. Cinco delas estão ativas.",
+      "answer_first_chunk_s": 0.8442923139991763,
+      "text_ok": true,
+      "ok": true,
+      "run": 0
+    },
+    {
+      "question": "Tem algum lock no banco agora?",
+      "expected": "oracle_banco",
+      "got": "oracle_banco",
+      "decision_s": 0.7104484789997514,
+      "first_text": "",
+      "error": null,
+      "correct_choice": true,
+      "arguments": {},
+      "args_ok": true,
+      "answer": "Sim, tem 2 sessões bloqueadas. O banco está no modo de leitura e escrita, e o Data Guard não está configurado.",
+      "answer_first_chunk_s": 0.8167977760003851,
+      "text_ok": true,
+      "ok": true,
+      "run": 0
+    },
+    {
+      "question": "O banco está em modo archivelog?",
+      "expected": "oracle_banco",
+      "got": "oracle_banco",
+      "decision_s": 0.6778493309993792,
+      "first_text": "",
+      "error": null,
+      "correct_choice": true,
+      "arguments": {},
+      "args_ok": true,
+      "answer": "Sim, o banco está em modo archivelog. Ele está aberto, no papel primário e tem 2 sessões bloqueadas.",
+      "answer_first_chunk_s": 0.8199077230001421,
+      "text_ok": true,
+      "ok": true,
+      "run": 0
+    },
+    {
+      "question": "O Data Guard está sincronizado?",
+      "expected": "oracle_banco",
+      "got": "oracle_banco",
+      "decision_s": 0.7008473280002363,
+      "first_text": "",
+      "error": null,
+      "correct_choice": true,
+      "arguments": {},
+      "args_ok": true,
+      "answer": "O Data Guard não está configurado. O banco está aberto e no modo leitura e escrita.",
+      "answer_first_chunk_s": 1.1062059340001724,
+      "text_ok": true,
+      "ok": true,
+      "run": 0
+    },
+    {
+      "question": "O backup de ontem rodou?",
+      "expected": "oracle_backups",
+      "got": "oracle_backups",
+      "decision_s": 0.6989728189982998,
+      "first_text": "",
+      "error": null,
+      "correct_choice": true,
+      "arguments": {},
+      "args_ok": true,
+      "answer": "Sim, o backup de ontem completou. Foi um completo de 437 MB.",
+      "answer_first_chunk_s": 0.6692547200000263,
+      "text_ok": false,
+      "ok": false,
+      "run": 0
+    },
+    {
+      "question": "Me mostra os problemas de alta prioridade no Zabbix.",
+      "expected": "zabbix_problemas",
+      "got": "zabbix_problemas",
+      "decision_s": 0.8050021819999529,
+      "first_text": "",
+      "error": null,
+      "correct_choice": true,
+      "arguments": {
+        "severidade_minima": "alta"
+      },
+      "args_ok": true,
+      "answer": "Tem um problema ativo. O host agatha-srv tem uso de disco em /dados acima de 80% desde as 21h02.",
+      "answer_first_chunk_s": 0.6828979599995364,
+      "text_ok": true,
+      "ok": true,
+      "run": 0
+    },
+    {
+      "question": "A CI do agatha passou?",
+      "expected": "github_repo",
+      "got": "github_repo",
+      "decision_s": 0.6538089079986094,
+      "first_text": "",
+      "error": null,
+      "correct_choice": true,
+      "arguments": {
+        "repo": "agatha"
+      },
+      "args_ok": true,
+      "answer": "Sim, a última CI passou. Foi o workflow tests, há 2 horas.",
+      "answer_first_chunk_s": 0.7994201940000494,
+      "text_ok": true,
+      "ok": true,
+      "run": 0
+    },
+    {
+      "question": "Qual foi o último commit no GitHub?",
+      "expected": "github_repo",
+      "got": "github_repo",
+      "decision_s": 0.6186399149992212,
+      "first_text": "",
+      "error": null,
+      "correct_choice": true,
+      "arguments": {},
+      "args_ok": true,
+      "answer": "O último commit foi um ajuste no archivelog, feito há 3 horas. A CI mais recente passou há 2 horas.",
+      "answer_first_chunk_s": 1.3089681299989024,
+      "text_ok": true,
+      "ok": true,
+      "run": 0
+    },
+    {
+      "question": "Tem issue aberta no repositório da Agatha?",
+      "expected": "github_repo",
+      "got": "github_repo",
+      "decision_s": 0.620826357999249,
+      "first_text": "",
+      "error": null,
+      "correct_choice": true,
+      "arguments": {
+        "repo": "agatha"
+      },
+      "args_ok": true,
+      "answer": "Tem uma issue aberta. É sobre \"voz a 48 kHz\".",
+      "answer_first_chunk_s": 0.9114519779996044,
+      "text_ok": true,
+      "ok": true,
+      "run": 0
+    },
+    {
+      "question": "O que é um pull request?",
+      "expected": null,
+      "got": null,
+      "decision_s": 0.3029709610000282,
+      "first_text": "É um pedido para revisar código. Ele permite que outros colaboradores revisem suas mudanças antes de mesclá-las ao projeto principal.",
+      "error": null,
+      "correct_choice": true,
+      "text_ok": true,
+      "ok": true,
+      "run": 0
+    },
+    {
+      "question": "Como está o tempo hoje?",
+      "expected": "clima",
+      "got": "clima",
+      "decision_s": 0.5791184960016835,
+      "first_text": "",
+      "error": null,
+      "correct_choice": true,
+      "arguments": {
+        "cidade": "Novo Hamburgo (RS)"
+      },
+      "args_ok": true,
+      "answer": "Está 23 graus e nublado agora. Hoje, a previsão é de 12 a 25 graus, com 10% de chance de chuva.",
+      "answer_first_chunk_s": 1.2027478660002089,
+      "text_ok": true,
+      "ok": true,
+      "run": 0
+    },
+    {
+      "question": "Vai chover amanhã?",
+      "expected": "clima",
+      "got": "clima",
+      "decision_s": 0.5958355540005869,
+      "first_text": "",
+      "error": null,
+      "correct_choice": true,
+      "arguments": {
+        "cidade": "Novo Hamburgo (RS)"
+      },
+      "args_ok": true,
+      "answer": "Sim, vai chover amanhã. A previsão é de 14 a 19 graus com 80% de chance.",
+      "answer_first_chunk_s": 0.7951513850002812,
+      "text_ok": true,
+      "ok": true,
+      "run": 0
+    },
+    {
+      "question": "Qual a temperatura agora?",
+      "expected": "clima",
+      "got": "clima",
+      "decision_s": 0.5666445339993516,
+      "first_text": "",
+      "error": null,
+      "correct_choice": true,
+      "arguments": {
+        "cidade": "Novo Hamburgo (RS)"
+      },
+      "args_ok": true,
+      "answer": "Agora está 23 graus, nublado. Amanhã a previsão é de chuva com temperaturas de 14 a 19 graus.",
+      "answer_first_chunk_s": 1.0913269900011073,
+      "text_ok": true,
+      "ok": true,
+      "run": 0
+    },
+    {
+      "question": "Como vai estar o tempo em Porto Alegre amanhã?",
+      "expected": "clima",
+      "got": "clima",
+      "decision_s": 0.5660394439983065,
+      "first_text": "",
+      "error": null,
+      "correct_choice": true,
+      "arguments": {
+        "cidade": "Porto Alegre (RS)"
+      },
+      "args_ok": true,
+      "answer": "O clima em Novo Hamburgo está nublado agora. Amanhã, em Porto Alegre, a previsão é de chuva com temperaturas entre 14 e 19 graus.",
+      "answer_first_chunk_s": 1.2674191459991562,
+      "text_ok": true,
+      "ok": true,
+      "run": 0
+    },
+    {
+      "question": "E em Curitiba?",
+      "expected": "clima",
+      "got": "clima",
+      "decision_s": 1.0196449740014941,
+      "first_text": "",
+      "error": null,
+      "correct_choice": true,
+      "arguments": {
+        "cidade": "Curitiba (PR)"
+      },
+      "args_ok": true,
+      "answer": "Em Curitiba, o tempo está de 12 a 25 graus. Há 10% de chance de chuva hoje.",
+      "answer_first_chunk_s": 0.9392608139987715,
+      "text_ok": true,
+      "ok": true,
+      "run": 0
+    },
+    {
+      "question": "Vai chover amanhã?",
+      "expected": "clima",
+      "got": "clima",
+      "decision_s": 0.619037965001553,
+      "first_text": "",
+      "error": null,
+      "correct_choice": true,
+      "arguments": {
+        "cidade": "Novo Hamburgo (RS)"
+      },
+      "args_ok": true,
+      "answer": "Sim, amanhã tem 80% de chance de chuva.",
+      "answer_first_chunk_s": 0.8216781810006069,
+      "text_ok": true,
+      "ok": true,
+      "run": 0
+    },
+    {
+      "question": "E as sessões?",
+      "expected": "oracle_sessoes",
+      "got": "oracle_sessoes",
+      "decision_s": 1.183890968999549,
+      "first_text": "",
+      "error": null,
+      "correct_choice": true,
+      "arguments": {},
+      "args_ok": true,
+      "answer": "Tem 48 sessões abertas. Dessas, 5 estão ativas no momento.",
+      "answer_first_chunk_s": 0.8102761190002639,
+      "text_ok": true,
+      "ok": true,
+      "run": 0
+    },
+    {
+      "question": "Qual a mais cheia agora?",
+      "expected": "oracle_tablespaces",
+      "got": "oracle_tablespaces",
+      "decision_s": 0.7265144630000577,
+      "first_text": "",
+      "error": null,
+      "correct_choice": true,
+      "arguments": {},
+      "args_ok": true,
+      "answer": "A USERS está com 91%.",
+      "answer_first_chunk_s": 0.9336284670007444,
+      "text_ok": true,
+      "ok": true,
+      "run": 0
+    },
+    {
+      "question": "O que é uma tablespace?",
+      "expected": null,
+      "got": null,
+      "decision_s": 0.3154041090001556,
+      "first_text": "É um espaço lógico que armazena os dados do banco Oracle. Ele organiza os objetos de dados do sistema.",
+      "error": null,
+      "correct_choice": true,
+      "text_ok": true,
+      "ok": true,
+      "run": 0
+    },
+    {
+      "question": "O que é o El Niño?",
+      "expected": null,
+      "got": null,
+      "decision_s": 0.3463155650006229,
+      "first_text": "El Niño é um fenômeno climático. Ele causa mudanças nas temperaturas do oceano Pacífico. Isso afeta o clima globalmente.",
+      "error": null,
+      "correct_choice": true,
+      "text_ok": true,
+      "ok": true,
+      "run": 0
+    },
+    {
+      "question": "Qual a diferença entre clima e tempo?",
+      "expected": null,
+      "got": null,
+      "decision_s": 0.2788689830013027,
+      "first_text": "Clima é o padrão de longo prazo de uma região. Tempo é o estado atmosférico em um momento específico.",
+      "error": null,
+      "correct_choice": true,
+      "text_ok": true,
+      "ok": true,
+      "run": 0
+    },
+    {
+      "question": "Quais são as notícias de hoje?",
+      "expected": "noticias",
+      "got": "noticias",
+      "decision_s": 0.5980271799999173,
+      "first_text": "",
+      "error": null,
+      "correct_choice": true,
+      "arguments": {},
+      "args_ok": true,
+      "answer": "Tem notícias variadas. No G1, fala sobre apoios de candidatos derrotados. A Folha reporta sobre o lucro do Bradesco.",
+      "answer_first_chunk_s": 0.9270045920002303,
+      "text_ok": true,
+      "ok": true,
+      "run": 0
+    },
+    {
+      "question": "Tem alguma notícia de tecnologia?",
+      "expected": "noticias",
+      "got": "noticias",
+      "decision_s": 0.5824919570004568,
+      "first_text": "",
+      "error": null,
+      "correct_choice": true,
+      "arguments": {
+        "assunto": "tecnologia"
+      },
+      "args_ok": true,
+      "answer": "Tem notícias de tecnologia. A Microsoft teve IA superior a médicos em testes de diagnóstico, e o Spotify registrou alta de receita.",
+      "answer_first_chunk_s": 0.9136321109999699,
+      "text_ok": true,
+      "ok": true,
+      "run": 0
+    },
+    {
+      "question": "O que tem de novo no Tecnoblog?",
+      "expected": "noticias",
+      "got": "noticias",
+      "decision_s": 0.5649334770005225,
+      "first_text": "",
+      "error": null,
+      "correct_choice": true,
+      "arguments": {
+        "assunto": "tecnologia",
+        "fonte": "Tecnoblog"
+      },
+      "args_ok": true,
+      "answer": "Tem sobre IA e jogos. A Microsoft teve avanços em diagnóstico e o Xbox está testando vendas de horas na nuvem.",
+      "answer_first_chunk_s": 0.7481519630000548,
+      "text_ok": true,
+      "ok": true,
+      "run": 0
+    },
+    {
+      "question": "Quais são as manchetes da Folha?",
+      "expected": "noticias",
+      "got": "noticias",
+      "decision_s": 0.5639424720011448,
+      "first_text": "",
+      "error": null,
+      "correct_choice": true,
+      "arguments": {
+        "fonte": "Folha"
+      },
+      "args_ok": true,
+      "answer": "Aqui estão as manchetes da Folha. O Bradesco teve lucro de R$ 7,1 bilhões no 3º tri. Também noticiam a morte de Tom Skerritt.",
+      "answer_first_chunk_s": 1.0246098009993148,
+      "text_ok": true,
+      "ok": true,
+      "run": 0
+    },
+    {
+      "question": "Me conta as notícias de economia.",
+      "expected": "noticias",
+      "got": "noticias",
+      "decision_s": 0.5997796089995973,
+      "first_text": "",
+      "error": null,
+      "correct_choice": true,
+      "arguments": {
+        "assunto": "economia"
+      },
+      "args_ok": true,
+      "answer": "Tem notícias de economia. O G1 fala sobre a LemFi e o dólar em queda. A Folha mostra o lucro do Bradesco e um investimento da Hitachi Energy.",
+      "answer_first_chunk_s": 0.9216330879989982,
+      "text_ok": true,
+      "ok": true,
+      "run": 0
+    },
+    {
+      "question": "O que aconteceu no Rio Grande do Sul hoje?",
+      "expected": "noticias",
+      "got": "noticias",
+      "decision_s": 0.565298358000291,
+      "first_text": "",
+      "error": null,
+      "correct_choice": true,
+      "arguments": {
+        "assunto": "Rio Grande do Sul"
+      },
+      "args_ok": true,
+      "answer": "Tem notícias sobre o RS. Há relatos de uma prisão por assassinato e investigação de um falso médico.",
+      "answer_first_chunk_s": 0.9839617240013467,
+      "text_ok": true,
+      "ok": true,
+      "run": 0
+    },
+    {
+      "question": "Tem alguma notícia sobre a falha do PHP?",
+      "expected": "noticias",
+      "got": "noticias",
+      "decision_s": 0.564769881999382,
+      "first_text": "",
+      "error": null,
+      "correct_choice": true,
+      "arguments": {
+        "assunto": "falha do PHP"
+      },
+      "args_ok": true,
+      "answer": "Tem notícias sobre isso. O Tecnoblog fala de tentativas de exploração e o G1 menciona suspensões de sistemas.",
+      "answer_first_chunk_s": 0.8340038250007638,
+      "text_ok": true,
+      "ok": true,
+      "run": 0
+    },
+    {
+      "question": "E de tecnologia?",
+      "expected": "noticias",
+      "got": "noticias",
+      "decision_s": 1.0751429129995813,
+      "first_text": "",
+      "error": null,
+      "correct_choice": true,
+      "arguments": {
+        "assunto": "tecnologia"
+      },
+      "args_ok": true,
+      "answer": "Tem notícias sobre IA da Microsoft superando médicos, e falhas no PHP afetando sistemas no Brasil. Também há novidades do Spotify e do Xbox.",
+      "answer_first_chunk_s": 1.273224429000038,
+      "text_ok": true,
+      "ok": true,
+      "run": 0
+    },
+    {
+      "question": "E na Folha?",
+      "expected": "noticias",
+      "got": "noticias",
+      "decision_s": 1.0636982129999524,
+      "first_text": "",
+      "error": null,
+      "correct_choice": true,
+      "arguments": {
+        "assunto": "tecnologia",
+        "fonte": "Folha"
+      },
+      "args_ok": true,
+      "answer": "Na Folha, o Spotify registrou alta de receita e lucro com avanço global de usuários.",
+      "answer_first_chunk_s": 0.6559554529994784,
+      "text_ok": true,
+      "ok": true,
+      "run": 0
+    },
+    {
+      "question": "Me conta mais sobre essa do PHP.",
+      "expected": "noticias",
+      "got": "buscar_documentacao",
+      "decision_s": 0.7039100649999455,
+      "first_text": "",
+      "error": null,
+      "correct_choice": false,
+      "arguments": {
+        "consulta": "falha PHP"
+      },
+      "args_ok": false,
+      "answer": "Não tenho detalhes sobre isso na documentação. Parece que foi um problema mais específico do dia.",
+      "answer_first_chunk_s": 0.8617052740009967,
+      "text_ok": false,
+      "ok": false,
+      "run": 0
+    },
+    {
+      "question": "O que é PHP?",
+      "expected": null,
+      "got": null,
+      "decision_s": 0.29071436100093706,
+      "first_text": "PHP é uma linguagem de script de código aberto. Ela é usada principalmente para desenvolvimento web do lado do servidor.",
+      "error": null,
+      "correct_choice": true,
+      "text_ok": true,
+      "ok": true,
+      "run": 0
+    },
+    {
+      "question": "O que é um feed RSS?",
+      "expected": null,
+      "got": null,
+      "decision_s": 0.30451068799993664,
+      "first_text": "É um formato de arquivo que distribui conteúdo de forma automatizada. Permite que você assine atualizações de vários sites em um só lugar.",
+      "error": null,
+      "correct_choice": true,
+      "text_ok": true,
+      "ok": true,
+      "run": 0
+    },
+    {
+      "question": "Quem ganhou a Copa do Mundo de 2002?",
+      "expected": null,
+      "got": null,
+      "decision_s": 0.2785990899992612,
+      "first_text": "A Brasil ganhou a Copa de 2002.",
+      "error": null,
+      "correct_choice": true,
+      "text_ok": true,
+      "ok": true,
+      "run": 0
+    },
+    {
+      "question": "Quando caiu o Muro de Berlim?",
+      "expected": null,
+      "got": null,
+      "decision_s": 0.27221906799968565,
+      "first_text": "Caiu em 9 de novembro de 1989.",
+      "error": null,
+      "correct_choice": true,
+      "text_ok": true,
+      "ok": true,
+      "run": 0
+    },
+    {
+      "question": "Pesquisa na documentação do Zabbix como funciona o housekeeping.",
+      "expected": "buscar_documentacao",
+      "got": "buscar_documentacao",
+      "decision_s": 0.6840971439996792,
+      "first_text": "",
+      "error": null,
+      "correct_choice": true,
+      "arguments": {
+        "consulta": "zabbix housekeeping"
+      },
+      "args_ok": true,
+      "answer": "O housekeeper é um processo periódico do servidor Zabbix. Ele remove informações desatualizadas ou que foram deletadas pelo usuário.",
+      "answer_first_chunk_s": 1.5782435949986393,
+      "text_ok": true,
+      "ok": true,
+      "run": 0
+    },
+    {
+      "question": "Qual a porta padrão do Zabbix agent?",
+      "expected": "buscar_documentacao",
+      "got": "buscar_documentacao",
+      "decision_s": 0.6798317640004825,
+      "first_text": "",
+      "error": null,
+      "correct_choice": true,
+      "arguments": {
+        "consulta": "zabbix agent porta padrão"
+      },
+      "args_ok": true,
+      "answer": "A porta padrão do Zabbix Agent é a 10050 TCP.",
+      "answer_first_chunk_s": 1.9305918570007634,
+      "text_ok": true,
+      "ok": true,
+      "run": 0
+    },
+    {
+      "question": "Qual o comando para ativar o archivelog no Oracle?",
+      "expected": "buscar_documentacao",
+      "got": "buscar_documentacao",
+      "decision_s": 0.6792973760002496,
+      "first_text": "",
+      "error": null,
+      "correct_choice": true,
+      "arguments": {
+        "consulta": "oracle ativar archivelog"
+      },
+      "args_ok": true,
+      "answer": "Para ativar o archivelog você usa o comando ALTER DATABASE. Ele permite mudar o modo de arquivamento do banco de dados.",
+      "answer_first_chunk_s": 1.3913261939997028,
+      "text_ok": true,
+      "ok": true,
+      "run": 0
+    },
+    {
+      "question": "O que mudou no Zabbix 7.0?",
+      "expected": "buscar_documentacao",
+      "got": "buscar_documentacao",
+      "decision_s": 0.6844481939988327,
+      "first_text": "",
+      "error": null,
+      "correct_choice": true,
+      "arguments": {
+        "consulta": "Zabbix 7.0 mudanças"
+      },
+      "args_ok": true,
+      "answer": "A documentação mostra algumas mudanças. Houve uma verificação de atualização de software adicionada por padrão. Também há menção a portas específicas abertas e ao processo Housekeeping.",
+      "answer_first_chunk_s": 1.3083592999992106,
+      "text_ok": true,
+      "ok": true,
+      "run": 0
+    },
+    {
+      "question": "Procura na documentação do Podman o que faz o DNSOption.",
+      "expected": "buscar_documentacao",
+      "got": "buscar_documentacao",
+      "decision_s": 0.6835817150004004,
+      "first_text": "",
+      "error": null,
+      "correct_choice": true,
+      "arguments": {
+        "consulta": "Podman DNSOption"
+      },
+      "args_ok": true,
+      "answer": "O DNSOption no Podman define opções de DNS para o contêiner. O resultado mostra que ele pode ser configurado com ndots:1.",
+      "answer_first_chunk_s": 1.4135314539998944,
+      "text_ok": true,
+      "ok": true,
+      "run": 0
+    },
+    {
+      "question": "O que é um backup incremental?",
+      "expected": null,
+      "got": null,
+      "decision_s": 0.3034810139997717,
+      "first_text": "Ele copia apenas os dados que mudaram desde o último backup. É mais rápido e economiza espaço que um completo.",
+      "error": null,
+      "correct_choice": true,
+      "text_ok": true,
+      "ok": true,
+      "run": 0
+    },
+    {
+      "question": "Como funciona o Data Guard?",
+      "expected": null,
+      "got": null,
+      "decision_s": 0.2882259320012963,
+      "first_text": "O Data Guard é um recurso de replicação de banco de dados. Ele garante a alta disponibilidade, mantendo cópias dos dados em outro local.",
+      "error": null,
+      "correct_choice": true,
+      "text_ok": true,
+      "ok": true,
+      "run": 0
+    },
+    {
+      "question": "Lembra que o meu servidor de testes se chama lab01.",
+      "expected": "guardar_fato",
+      "got": "guardar_fato",
+      "decision_s": 0.6906496439987677,
+      "first_text": "",
+      "error": null,
+      "correct_choice": true,
+      "arguments": {
+        "fato": "O servidor de testes do Reinaldo se chama lab01"
+      },
+      "args_ok": true,
+      "answer": "Guardo isso para você, Rei.",
+      "answer_first_chunk_s": 0.6802291549993242,
+      "text_ok": true,
+      "ok": true,
+      "run": 0
+    },
+    {
+      "question": "Anota aí: o backup roda todo dia às 2h.",
+      "expected": "guardar_fato",
+      "got": "guardar_fato",
+      "decision_s": 0.6914438639996661,
+      "first_text": "",
+      "error": null,
+      "correct_choice": true,
+      "arguments": {
+        "fato": "O backup roda todo dia às 2h"
+      },
+      "args_ok": true,
+      "answer": "Anotei isso para você.",
+      "answer_first_chunk_s": 0.6790358399994147,
+      "text_ok": true,
+      "ok": true,
+      "run": 0
+    },
+    {
+      "question": "Esquece que o banco de produção se chama PRDORA.",
+      "expected": "esquecer",
+      "got": "esquecer",
+      "decision_s": 0.6245220809996681,
+      "first_text": "",
+      "error": null,
+      "correct_choice": true,
+      "arguments": {
+        "numero": 2
+      },
+      "args_ok": true,
+      "answer": "Esqueci essa informação.",
+      "answer_first_chunk_s": 0.574720298000102,
+      "text_ok": true,
+      "ok": true,
+      "run": 0
+    },
+    {
+      "question": "Pode apagar aquilo da reunião.",
+      "expected": "esquecer",
+      "got": "esquecer",
+      "decision_s": 0.6655847519996314,
+      "first_text": "",
+      "error": null,
+      "correct_choice": true,
+      "arguments": {
+        "numero": 3
+      },
+      "args_ok": true,
+      "answer": "Apaguei a informação da reunião.",
+      "answer_first_chunk_s": 0.7015386359998956,
+      "text_ok": true,
+      "ok": true,
+      "run": 0
+    },
+    {
+      "question": "Esquece isso.",
+      "expected": "esquecer",
+      "got": "esquecer",
+      "decision_s": 1.1160353060004127,
+      "first_text": "",
+      "error": null,
+      "correct_choice": true,
+      "arguments": {
+        "numero": 3
+      },
+      "args_ok": true,
+      "answer": "Esqueci o que você pediu.",
+      "answer_first_chunk_s": 0.7047742759987159,
+      "text_ok": true,
+      "ok": true,
+      "run": 0
+    },
+    {
+      "question": "Na verdade, apaga isso aí.",
+      "expected": "esquecer",
+      "got": "esquecer",
+      "decision_s": 0.648730044000331,
+      "first_text": "",
+      "error": null,
+      "correct_choice": true,
+      "arguments": {
+        "numero": 3
+      },
+      "args_ok": true,
+      "answer": "Apaguei a informação.",
+      "answer_first_chunk_s": 0.601693542999783,
+      "text_ok": true,
+      "ok": true,
+      "run": 0
+    },
+    {
+      "question": "Esqueça essa informação.",
+      "expected": "esquecer",
+      "got": "esquecer",
+      "decision_s": 0.6634809770002903,
+      "first_text": "",
+      "error": null,
+      "correct_choice": true,
+      "arguments": {
+        "numero": 3
+      },
+      "args_ok": true,
+      "answer": "Certo, esqueci essa informação.",
+      "answer_first_chunk_s": 0.4860733669993351,
+      "text_ok": true,
+      "ok": true,
+      "run": 0
+    },
+    {
+      "question": "Esqueça essa informação.",
+      "expected": "esquecer",
+      "got": "esquecer",
+      "decision_s": 0.8943107249997411,
+      "first_text": "",
+      "error": null,
+      "correct_choice": true,
+      "arguments": {
+        "numero": 3
+      },
+      "args_ok": true,
+      "answer": "Esqueci a informação.",
+      "answer_first_chunk_s": 0.6115774549998605,
+      "text_ok": true,
+      "ok": true,
+      "run": 0
+    },
+    {
+      "question": "Esqueça essa informação.",
+      "expected": "esquecer",
+      "got": "esquecer",
+      "decision_s": 0.9606242429999838,
+      "first_text": "",
+      "error": null,
+      "correct_choice": true,
+      "arguments": {},
+      "args_ok": false,
+      "answer": "Esqueci o último fato.",
+      "answer_first_chunk_s": 0.6660514849991159,
+      "text_ok": true,
+      "ok": false,
+      "run": 0
+    },
+    {
+      "question": "Pode esquecer o que eu te falei.",
+      "expected": "esquecer",
+      "got": null,
+      "decision_s": 0.5475443630002701,
+      "first_text": "Qual fato você quer esquecer?",
+      "error": null,
+      "correct_choice": false,
+      "text_ok": true,
+      "ok": false,
+      "run": 0
+    },
+    {
+      "question": "Oi Agatha, tudo bem?",
+      "expected": null,
+      "got": null,
+      "decision_s": 0.2882425659990986,
+      "first_text": "Estou bem, Rei. Como posso ajudar?",
+      "error": null,
+      "correct_choice": true,
+      "text_ok": true,
+      "ok": true,
+      "run": 0
+    },
+    {
+      "question": "O que é um trigger no Zabbix?",
+      "expected": null,
+      "got": "buscar_documentacao",
+      "decision_s": 0.6846484480010986,
+      "first_text": "",
+      "error": null,
+      "correct_choice": false,
+      "arguments": {
+        "consulta": "zabbix trigger"
+      },
+      "args_ok": false,
+      "answer": "Um trigger no Zabbix é uma condição que dispara um alerta. Ele monitora os valores dos itens que você configurou.",
+      "answer_first_chunk_s": 1.7060589649991016,
+      "text_ok": true,
+      "ok": false,
+      "run": 0
+    },
+    {
+      "question": "O que é uma tablespace?",
+      "expected": null,
+      "got": null,
+      "decision_s": 0.26265186599994195,
+      "first_text": "É um espaço lógico no banco de dados. Ele agrupa objetos de dados, como tabelas e índices.",
+      "error": null,
+      "correct_choice": true,
+      "text_ok": true,
+      "ok": true,
+      "run": 0
+    },
+    {
+      "question": "Qual a diferença entre Podman e Docker?",
+      "expected": null,
+      "got": null,
+      "decision_s": 0.2794000049998431,
+      "first_text": "Eles são similares em conceito. O Docker usa daemon, enquanto o Podman roda os containers sem precisar de um daemon central.",
+      "error": null,
+      "correct_choice": true,
+      "text_ok": true,
+      "ok": true,
+      "run": 0
+    },
+    {
+      "question": "Que horas são agora?",
+      "expected": null,
+      "got": null,
+      "decision_s": 0.28222249099962937,
+      "first_text": "São 21h30 agora.",
+      "error": null,
+      "correct_choice": true,
+      "text_ok": true,
+      "ok": true,
+      "run": 0
+    },
+    {
+      "question": "Me sugere um filme de ação.",
+      "expected": null,
+      "got": null,
+      "decision_s": 0.27215784700092627,
+      "first_text": "Não tenho sugestões de filmes. Você gostaria de saber sobre algum tema de TI?",
+      "error": null,
+      "correct_choice": true,
+      "text_ok": true,
+      "ok": true,
+      "run": 0
+    },
+    {
+      "question": "Obrigado, Agatha.",
+      "expected": null,
+      "got": null,
+      "decision_s": 0.2724836500001402,
+      "first_text": "De nada, Reinaldo. Fico à disposição.",
+      "error": null,
+      "correct_choice": true,
+      "text_ok": true,
+      "ok": true,
+      "run": 0
+    },
+    {
+      "question": "O que você sabe sobre mim?",
+      "expected": null,
+      "got": null,
+      "decision_s": 0.30547452499922656,
+      "first_text": "Você usa o padrão ambiente-servidor-host nos hosts do Zabbix. O banco de produção é PRDORA. Sua reunião é na quinta às 10h. E você mora em Novo Hamburgo (RS).",
+      "error": null,
+      "correct_choice": true,
+      "text_ok": true,
+      "ok": true,
+      "run": 0
+    },
+    {
+      "question": "Qual o padrão de nome que eu uso nos hosts?",
+      "expected": null,
+      "got": null,
+      "decision_s": 0.27294893299949763,
+      "first_text": "Seu padrão é ambiente-servidor-host. É o que você usa para os hosts no Zabbix.",
+      "error": null,
+      "correct_choice": true,
+      "text_ok": true,
+      "ok": true,
+      "run": 0
+    },
+    {
+      "question": "Que horas é a reunião com o time?",
+      "expected": null,
+      "got": null,
+      "decision_s": 0.27153936099966813,
+      "first_text": "É na quinta às 10h.",
+      "error": null,
+      "correct_choice": true,
+      "text_ok": true,
+      "ok": true,
+      "run": 0
+    },
+    {
+      "question": "Qual é mesmo o nome do meu banco de produção?",
+      "expected": null,
+      "got": "oracle_banco",
+      "decision_s": 0.6795692690011492,
+      "first_text": "",
+      "error": null,
+      "correct_choice": false,
+      "arguments": {},
+      "args_ok": false,
+      "answer": "O banco de produção é o PRDORA.",
+      "answer_first_chunk_s": 1.2246366389990726,
+      "text_ok": true,
+      "ok": false,
+      "run": 0
+    },
+    {
+      "question": "Qual é o nome do meu banco de produção?",
+      "expected": null,
+      "got": null,
+      "decision_s": 0.8138314589996298,
+      "first_text": "Ele é PRDORA.",
+      "error": null,
+      "correct_choice": true,
+      "text_ok": true,
+      "ok": true,
+      "run": 0
+    },
+    {
+      "question": "Quando é mesmo a reunião com o time?",
+      "expected": null,
+      "got": null,
+      "decision_s": 0.7667612630011718,
+      "first_text": "Lembro que a reunião é na quinta às 10h.",
+      "error": null,
+      "correct_choice": true,
+      "text_ok": true,
+      "ok": true,
+      "run": 0
+    },
+    {
+      "question": "Qual o nome do meu notebook?",
+      "expected": null,
+      "got": null,
+      "decision_s": 0.30407426199963083,
+      "first_text": "Não sei o nome do seu notebook. Eu não tenho essa informação guardada.",
+      "error": null,
+      "correct_choice": true,
+      "text_ok": true,
+      "ok": true,
+      "run": 0
+    },
+    {
+      "question": "Quanto é 15% de 240?",
+      "expected": "calcular",
+      "got": "calcular",
+      "decision_s": 0.5096678999998403,
+      "first_text": "",
+      "error": null,
+      "correct_choice": true,
+      "arguments": {
+        "expressao": "240 * 0.15"
+      },
+      "args_ok": true,
+      "answer": "O resultado é 36.",
+      "answer_first_chunk_s": 0.6337408290000894,
+      "text_ok": true,
+      "ok": true,
+      "run": 1
+    },
+    {
+      "question": "Quanto é 1234 vezes 56?",
+      "expected": "calcular",
+      "got": "calcular",
+      "decision_s": 0.5062657929993293,
+      "first_text": "",
+      "error": null,
+      "correct_choice": true,
+      "arguments": {
+        "expressao": "1234 * 56"
+      },
+      "args_ok": true,
+      "answer": "O resultado é 69104.",
+      "answer_first_chunk_s": 0.8382075280005665,
+      "text_ok": true,
+      "ok": true,
+      "run": 1
+    },
+    {
+      "question": "Quanto é 2 elevado a 10?",
+      "expected": "calcular",
+      "got": "calcular",
+      "decision_s": 0.5413136600000144,
+      "first_text": "",
+      "error": null,
+      "correct_choice": true,
+      "arguments": {
+        "expressao": "2**10"
+      },
+      "args_ok": true,
+      "answer": "É 1024.",
+      "answer_first_chunk_s": 0.6342348669986677,
+      "text_ok": true,
+      "ok": true,
+      "run": 1
+    },
+    {
+      "question": "Quanto é 25% de 250?",
+      "expected": "calcular",
+      "got": "calcular",
+      "decision_s": 0.5080586809999659,
+      "first_text": "",
+      "error": null,
+      "correct_choice": true,
+      "arguments": {
+        "expressao": "250 * 0.25"
+      },
+      "args_ok": true,
+      "answer": "O resultado é 62,5.",
+      "answer_first_chunk_s": 0.7478885589989659,
+      "text_ok": true,
+      "ok": true,
+      "run": 1
+    },
+    {
+      "question": "Tenho 1,5 tera usados e cresce 20 gigas por dia. Em quantos dias chego a 2 tera?",
+      "expected": "calcular",
+      "got": "calcular",
+      "decision_s": 0.5756109140002081,
+      "first_text": "",
+      "error": null,
+      "correct_choice": true,
+      "arguments": {
+        "expressao": "(2 - 1.5) / 20"
+      },
+      "args_ok": false,
+      "answer": "Levaria cerca de 0,025 dias.",
+      "answer_first_chunk_s": 0.9553307930000301,
+      "text_ok": true,
+      "ok": false,
+      "run": 1
+    },
+    {
+      "question": "Tem algum alerta no Zabbix agora?",
+      "expected": "zabbix_problemas",
+      "got": "zabbix_problemas",
+      "decision_s": 0.804345831998944,
+      "first_text": "",
+      "error": null,
+      "correct_choice": true,
+      "arguments": {},
+      "args_ok": true,
+      "answer": "Tem um problema no agatha-srv. É sobre uso de disco em /dados acima de 80%.",
+      "answer_first_chunk_s": 0.9138404969999101,
+      "text_ok": true,
+      "ok": true,
+      "run": 1
+    },
+    {
+      "question": "Como está o host agatha-srv no Zabbix?",
+      "expected": "zabbix_host",
+      "got": "zabbix_host",
+      "decision_s": 0.74661761400057,
+      "first_text": "",
+      "error": null,
+      "correct_choice": true,
+      "arguments": {
+        "host": "agatha-srv"
+      },
+      "args_ok": true,
+      "answer": "O agatha-srv está disponível. A CPU está em 23% e a memória em 61%.",
+      "answer_first_chunk_s": 0.9569174910011498,
+      "text_ok": true,
+      "ok": true,
+      "run": 1
+    },
+    {
+      "question": "Qual o uso de CPU do servidor agatha-srv?",
+      "expected": "zabbix_host",
+      "got": "zabbix_host",
+      "decision_s": 0.7440090220006823,
+      "first_text": "",
+      "error": null,
+      "correct_choice": true,
+      "arguments": {
+        "host": "agatha-srv"
+      },
+      "args_ok": true,
+      "answer": "A CPU do agatha-srv está em 23%. A memória está em 61% e o disco em 41%.",
+      "answer_first_chunk_s": 1.2443909170015104,
+      "text_ok": true,
+      "ok": true,
+      "run": 1
+    },
+    {
+      "question": "Como estão as tablespaces do Oracle?",
+      "expected": "oracle_tablespaces",
+      "got": "oracle_tablespaces",
+      "decision_s": 0.6798254080003971,
+      "first_text": "",
+      "error": null,
+      "correct_choice": true,
+      "arguments": {},
+      "args_ok": true,
+      "answer": "As tablespaces estão assim. USERS está com 91%, SYSTEM com 74% e SYSAUX com 66%.",
+      "answer_first_chunk_s": 0.7473461709996627,
+      "text_ok": true,
+      "ok": true,
+      "run": 1
+    },
+    {
+      "question": "Tem alguma tablespace quase cheia?",
+      "expected": "oracle_tablespaces",
+      "got": "oracle_tablespaces",
+      "decision_s": 0.6797097520011448,
+      "first_text": "",
+      "error": null,
+      "correct_choice": true,
+      "arguments": {},
+      "args_ok": true,
+      "answer": "Sim, a USERS está com 91%.",
+      "answer_first_chunk_s": 0.5741865209984098,
+      "text_ok": true,
+      "ok": true,
+      "run": 1
+    },
+    {
+      "question": "Quantas sessões tem abertas no banco?",
+      "expected": "oracle_sessoes",
+      "got": "oracle_sessoes",
+      "decision_s": 0.7462418390005041,
+      "first_text": "",
+      "error": null,
+      "correct_choice": true,
+      "arguments": {},
+      "args_ok": true,
+      "answer": "Tem 48 sessões abertas. Dessas, 5 estão ativas no momento.",
+      "answer_first_chunk_s": 0.7845564019989979,
+      "text_ok": true,
+      "ok": true,
+      "run": 1
+    },
+    {
+      "question": "Tem algum lock no banco agora?",
+      "expected": "oracle_banco",
+      "got": "oracle_banco",
+      "decision_s": 0.7194647950000217,
+      "first_text": "",
+      "error": null,
+      "correct_choice": true,
+      "arguments": {},
+      "args_ok": true,
+      "answer": "Sim, existem bloqueios. O banco tem 2 sessões bloqueadas e 1 sessão bloqueando.",
+      "answer_first_chunk_s": 0.8202736010007357,
+      "text_ok": true,
+      "ok": true,
+      "run": 1
+    },
+    {
+      "question": "O banco está em modo archivelog?",
+      "expected": "oracle_banco",
+      "got": "oracle_banco",
+      "decision_s": 0.6883171270001185,
+      "first_text": "",
+      "error": null,
+      "correct_choice": true,
+      "arguments": {},
+      "args_ok": true,
+      "answer": "Sim, o banco está em modo archivelog. Ele está no papel primário e há 2 sessões bloqueadas.",
+      "answer_first_chunk_s": 0.8211920599987934,
+      "text_ok": true,
+      "ok": true,
+      "run": 1
+    },
+    {
+      "question": "O Data Guard está sincronizado?",
+      "expected": "oracle_banco",
+      "got": "oracle_banco",
+      "decision_s": 0.7058400420010003,
+      "first_text": "",
+      "error": null,
+      "correct_choice": true,
+      "arguments": {},
+      "args_ok": true,
+      "answer": "O Data Guard não está configurado.",
+      "answer_first_chunk_s": 1.109443500999987,
+      "text_ok": true,
+      "ok": true,
+      "run": 1
+    },
+    {
+      "question": "O backup de ontem rodou?",
+      "expected": "oracle_backups",
+      "got": "oracle_backups",
+      "decision_s": 0.699055519000467,
+      "first_text": "",
+      "error": null,
+      "correct_choice": true,
+      "arguments": {},
+      "args_ok": true,
+      "answer": "Sim, o backup completo de ontem rodou. Ele foi concluído às 02h31 e levou 1 minuto.",
+      "answer_first_chunk_s": 0.6891695939993951,
+      "text_ok": true,
+      "ok": true,
+      "run": 1
+    },
+    {
+      "question": "Me mostra os problemas de alta prioridade no Zabbix.",
+      "expected": "zabbix_problemas",
+      "got": "zabbix_problemas",
+      "decision_s": 0.7970982210008515,
+      "first_text": "",
+      "error": null,
+      "correct_choice": true,
+      "arguments": {
+        "severidade_minima": "alta"
+      },
+      "args_ok": true,
+      "answer": "Não tem problemas de alta prioridade. Há um problema de média no agatha-srv sobre disco.",
+      "answer_first_chunk_s": 0.8592516589997103,
+      "text_ok": true,
+      "ok": true,
+      "run": 1
+    },
+    {
+      "question": "A CI do agatha passou?",
+      "expected": "github_repo",
+      "got": "github_repo",
+      "decision_s": 0.6627966849991935,
+      "first_text": "",
+      "error": null,
+      "correct_choice": true,
+      "arguments": {
+        "repo": "agatha"
+      },
+      "args_ok": true,
+      "answer": "Sim, a CI passou. O último teste foi concluído há 2 horas.",
+      "answer_first_chunk_s": 0.8010578560006252,
+      "text_ok": true,
+      "ok": true,
+      "run": 1
+    },
+    {
+      "question": "Qual foi o último commit no GitHub?",
+      "expected": "github_repo",
+      "got": "github_repo",
+      "decision_s": 0.631886660001328,
+      "first_text": "",
+      "error": null,
+      "correct_choice": true,
+      "arguments": {},
+      "args_ok": true,
+      "answer": "O último commit foi um fix no servidor, há 3 horas.",
+      "answer_first_chunk_s": 1.2159548239997093,
+      "text_ok": true,
+      "ok": true,
+      "run": 1
+    },
+    {
+      "question": "Tem issue aberta no repositório da Agatha?",
+      "expected": "github_repo",
+      "got": "github_repo",
+      "decision_s": 0.6286717120001413,
+      "first_text": "",
+      "error": null,
+      "correct_choice": true,
+      "arguments": {
+        "repo": "agatha"
+      },
+      "args_ok": true,
+      "answer": "Sim, tem uma issue aberta. É sobre \"voz a 48 kHz\".",
+      "answer_first_chunk_s": 0.8091357510002126,
+      "text_ok": true,
+      "ok": true,
+      "run": 1
+    },
+    {
+      "question": "O que é um pull request?",
+      "expected": null,
+      "got": null,
+      "decision_s": 0.30276242299987643,
+      "first_text": "É um pedido para revisar código. Permite que outros revisem suas mudanças antes de integrá-las ao projeto principal.",
+      "error": null,
+      "correct_choice": true,
+      "text_ok": true,
+      "ok": true,
+      "run": 1
+    },
+    {
+      "question": "Como está o tempo hoje?",
+      "expected": "clima",
+      "got": "clima",
+      "decision_s": 0.5910435780006082,
+      "first_text": "",
+      "error": null,
+      "correct_choice": true,
+      "arguments": {
+        "cidade": "Novo Hamburgo (RS)"
+      },
+      "args_ok": true,
+      "answer": "Está 23 graus e nublado. Hoje a previsão é de 12 a 25 graus com 10% de chance de chuva.",
+      "answer_first_chunk_s": 1.1503036499998416,
+      "text_ok": true,
+      "ok": true,
+      "run": 1
+    },
+    {
+      "question": "Vai chover amanhã?",
+      "expected": "clima",
+      "got": "clima",
+      "decision_s": 0.5975377979993937,
+      "first_text": "",
+      "error": null,
+      "correct_choice": true,
+      "arguments": {
+        "cidade": "Novo Hamburgo (RS)"
+      },
+      "args_ok": true,
+      "answer": "Sim, vai chover amanhã. A previsão é de 14 a 19 graus com 80% de chance de chuva.",
+      "answer_first_chunk_s": 0.8032899990012083,
+      "text_ok": true,
+      "ok": true,
+      "run": 1
+    },
+    {
+      "question": "Qual a temperatura agora?",
+      "expected": "clima",
+      "got": "clima",
+      "decision_s": 0.5772876150003867,
+      "first_text": "",
+      "error": null,
+      "correct_choice": true,
+      "arguments": {
+        "cidade": "Novo Hamburgo (RS)"
+      },
+      "args_ok": true,
+      "answer": "Está 23 graus agora. Hoje tem 12 a 25 graus com chance de chuva de 10%.",
+      "answer_first_chunk_s": 1.0358386910011177,
+      "text_ok": true,
+      "ok": true,
+      "run": 1
+    },
+    {
+      "question": "Como vai estar o tempo em Porto Alegre amanhã?",
+      "expected": "clima",
+      "got": "clima",
+      "decision_s": 0.5665242969989777,
+      "first_text": "",
+      "error": null,
+      "correct_choice": true,
+      "arguments": {
+        "cidade": "Porto Alegre (RS)"
+      },
+      "args_ok": true,
+      "answer": "Não sei sobre Porto Alegre. O clima em Novo Hamburgo, sua cidade, será de 14 a 19 graus com chance de chuva de 80% amanhã.",
+      "answer_first_chunk_s": 0.9848509349994856,
+      "text_ok": true,
+      "ok": true,
+      "run": 1
+    },
+    {
+      "question": "E em Curitiba?",
+      "expected": "clima",
+      "got": "clima",
+      "decision_s": 1.0209648529998958,
+      "first_text": "",
+      "error": null,
+      "correct_choice": true,
+      "arguments": {
+        "cidade": "Curitiba (PR)"
+      },
+      "args_ok": true,
+      "answer": "Em Curitiba, hoje está com 15 graus, com chance de chuva de 40%. Amanhã a previsão é de 14 a 19 graus com 50% de chance de chuva.",
+      "answer_first_chunk_s": 0.9388072390011075,
+      "text_ok": true,
+      "ok": true,
+      "run": 1
+    },
+    {
+      "question": "Vai chover amanhã?",
+      "expected": "clima",
+      "got": "clima",
+      "decision_s": 0.6130288049989758,
+      "first_text": "",
+      "error": null,
+      "correct_choice": true,
+      "arguments": {
+        "cidade": "Novo Hamburgo (RS)"
+      },
+      "args_ok": true,
+      "answer": "Sim, amanhã há 80% de chance de chuva.",
+      "answer_first_chunk_s": 0.8344574999991892,
+      "text_ok": true,
+      "ok": true,
+      "run": 1
+    },
+    {
+      "question": "E as sessões?",
+      "expected": "oracle_sessoes",
+      "got": "oracle_sessoes",
+      "decision_s": 1.2015790599998581,
+      "first_text": "",
+      "error": null,
+      "correct_choice": true,
+      "arguments": {},
+      "args_ok": true,
+      "answer": "Tem 48 sessões abertas. Das quais, 5 estão ativas no momento.",
+      "answer_first_chunk_s": 0.8030855380002322,
+      "text_ok": true,
+      "ok": true,
+      "run": 1
+    },
+    {
+      "question": "Qual a mais cheia agora?",
+      "expected": "oracle_tablespaces",
+      "got": "oracle_tablespaces",
+      "decision_s": 0.7309396460004791,
+      "first_text": "",
+      "error": null,
+      "correct_choice": true,
+      "arguments": {},
+      "args_ok": true,
+      "answer": "A tablespace USERS está com 91%. É a mais cheia no momento.",
+      "answer_first_chunk_s": 1.0551729279995925,
+      "text_ok": true,
+      "ok": true,
+      "run": 1
+    },
+    {
+      "question": "O que é uma tablespace?",
+      "expected": null,
+      "got": null,
+      "decision_s": 0.3190816839996842,
+      "first_text": "Tablespace é um agrupamento de um ou mais segmentos de dados. Ela organiza e gerencia o armazenamento físico dos dados do banco Oracle.",
+      "error": null,
+      "correct_choice": true,
+      "text_ok": true,
+      "ok": true,
+      "run": 1
+    },
+    {
+      "question": "O que é o El Niño?",
+      "expected": null,
+      "got": null,
+      "decision_s": 0.30472291099977156,
+      "first_text": "É um fenômeno climático do Pacífico. Ele causa aquecimento anormal das águas superficiais.",
+      "error": null,
+      "correct_choice": true,
+      "text_ok": true,
+      "ok": true,
+      "run": 1
+    },
+    {
+      "question": "Qual a diferença entre clima e tempo?",
+      "expected": null,
+      "got": null,
+      "decision_s": 0.27270728000075906,
+      "first_text": "Clima é a média de longo prazo. Tempo é o estado momentâneo da atmosfera.",
+      "error": null,
+      "correct_choice": true,
+      "text_ok": true,
+      "ok": true,
+      "run": 1
+    },
+    {
+      "question": "Quais são as notícias de hoje?",
+      "expected": "noticias",
+      "got": "noticias",
+      "decision_s": 0.59780873300042,
+      "first_text": "",
+      "error": null,
+      "correct_choice": true,
+      "arguments": {
+        "assunto": ""
+      },
+      "args_ok": true,
+      "answer": "Tem notícias de política, economia e cultura. O G1 fala sobre apoios de candidatos derrotados, e a Folha mostra o lucro do Bradesco.",
+      "answer_first_chunk_s": 0.9914549889999762,
+      "text_ok": true,
+      "ok": true,
+      "run": 1
+    },
+    {
+      "question": "Tem alguma notícia de tecnologia?",
+      "expected": "noticias",
+      "got": "noticias",
+      "decision_s": 0.5826302740006213,
+      "first_text": "",
+      "error": null,
+      "correct_choice": true,
+      "arguments": {
+        "assunto": "tecnologia"
+      },
+      "args_ok": true,
+      "answer": "Tem algumas notícias. A Microsoft teve IA superando médicos em testes de diagnóstico. Você quer mais detalhes sobre alguma?",
+      "answer_first_chunk_s": 0.8597409480007627,
+      "text_ok": true,
+      "ok": true,
+      "run": 1
+    },
+    {
+      "question": "O que tem de novo no Tecnoblog?",
+      "expected": "noticias",
+      "got": "noticias",
+      "decision_s": 0.5645589730011125,
+      "first_text": "",
+      "error": null,
+      "correct_choice": true,
+      "arguments": {
+        "assunto": "tecnologia",
+        "fonte": "Tecnoblog"
+      },
+      "args_ok": true,
+      "answer": "Tem sobre IA superando médicos e testes do Xbox.",
+      "answer_first_chunk_s": 1.0307362759995158,
+      "text_ok": true,
+      "ok": true,
+      "run": 1
+    },
+    {
+      "question": "Quais são as manchetes da Folha?",
+      "expected": "noticias",
+      "got": "noticias",
+      "decision_s": 0.5641737749992899,
+      "first_text": "",
+      "error": null,
+      "correct_choice": true,
+      "arguments": {
+        "fonte": "Folha"
+      },
+      "args_ok": true,
+      "answer": "Aqui estão as manchetes da Folha. O Bradesco teve lucro de R$ 7,1 bilhões no 3º tri. Tom Skerritt, ator, faleceu aos 93 anos.",
+      "answer_first_chunk_s": 1.0225981019993924,
+      "text_ok": true,
+      "ok": true,
+      "run": 1
+    },
+    {
+      "question": "Me conta as notícias de economia.",
+      "expected": "noticias",
+      "got": "noticias",
+      "decision_s": 0.6008931929991377,
+      "first_text": "",
+      "error": null,
+      "correct_choice": true,
+      "arguments": {
+        "assunto": "economia"
+      },
+      "args_ok": true,
+      "answer": "Aqui estão as notícias de economia. O G1 fala sobre a LemFi e o dólar em queda. A Folha menciona o lucro do Bradesco e o investimento da Hitachi Energy.",
+      "answer_first_chunk_s": 1.042393968999022,
+      "text_ok": true,
+      "ok": true,
+      "run": 1
+    },
+    {
+      "question": "O que aconteceu no Rio Grande do Sul hoje?",
+      "expected": "noticias",
+      "got": "noticias",
+      "decision_s": 0.5679152060001798,
+      "first_text": "",
+      "error": null,
+      "correct_choice": true,
+      "arguments": {
+        "assunto": "Rio Grande do Sul"
+      },
+      "args_ok": true,
+      "answer": "Tem notícias sobre o RS. Houve prisão de uma procurada pela Interpol e investigação de um falso médico.",
+      "answer_first_chunk_s": 0.9789239049987373,
+      "text_ok": true,
+      "ok": true,
+      "run": 1
+    },
+    {
+      "question": "Tem alguma notícia sobre a falha do PHP?",
+      "expected": "noticias",
+      "got": "noticias",
+      "decision_s": 0.5695025360000727,
+      "first_text": "",
+      "error": null,
+      "correct_choice": true,
+      "arguments": {
+        "assunto": "falha do PHP"
+      },
+      "args_ok": true,
+      "answer": "Tem notícias. O Tecnoblog diz que hackers tentaram explorar falhas no PHP antes do alerta. O G1 informa que falhas no PHP levaram sistemas a serem suspensos.",
+      "answer_first_chunk_s": 0.7214516969997931,
+      "text_ok": true,
+      "ok": true,
+      "run": 1
+    },
+    {
+      "question": "E de tecnologia?",
+      "expected": "noticias",
+      "got": "noticias",
+      "decision_s": 1.0707179750006617,
+      "first_text": "",
+      "error": null,
+      "correct_choice": true,
+      "arguments": {
+        "assunto": "tecnologia"
+      },
+      "args_ok": true,
+      "answer": "No Tecnoblog, a Microsoft diz que IA superou médicos em testes de diagnóstico. A Folha reporta sobre falhas no PHP que levaram suspensões de sistemas.",
+      "answer_first_chunk_s": 0.9979130720003013,
+      "text_ok": true,
+      "ok": true,
+      "run": 1
+    },
+    {
+      "question": "E na Folha?",
+      "expected": "noticias",
+      "got": "noticias",
+      "decision_s": 1.0647100349997345,
+      "first_text": "",
+      "error": null,
+      "correct_choice": true,
+      "arguments": {
+        "assunto": "tecnologia",
+        "fonte": "Folha"
+      },
+      "args_ok": true,
+      "answer": "A Folha reporta que o Spotify registrou alta de receita e lucro com avanço global de usuários.",
+      "answer_first_chunk_s": 1.6379772959990078,
+      "text_ok": true,
+      "ok": true,
+      "run": 1
+    },
+    {
+      "question": "Me conta mais sobre essa do PHP.",
+      "expected": "noticias",
+      "got": "buscar_documentacao",
+      "decision_s": 0.6950516190008784,
+      "first_text": "",
+      "error": null,
+      "correct_choice": false,
+      "arguments": {
+        "consulta": "falha no PHP"
+      },
+      "args_ok": false,
+      "answer": "A documentação não detalha o motivo exato. Parece ser uma falha ampla que afetou vários sistemas.",
+      "answer_first_chunk_s": 0.9780368359988643,
+      "text_ok": false,
+      "ok": false,
+      "run": 1
+    },
+    {
+      "question": "O que é PHP?",
+      "expected": null,
+      "got": null,
+      "decision_s": 0.2910660520010424,
+      "first_text": "PHP é uma linguagem de script de código aberto. É usada principalmente para desenvolvimento web do lado do servidor.",
+      "error": null,
+      "correct_choice": true,
+      "text_ok": true,
+      "ok": true,
+      "run": 1
+    },
+    {
+      "question": "O que é um feed RSS?",
+      "expected": null,
+      "got": null,
+      "decision_s": 0.30368729600013467,
+      "first_text": "RSS é um formato de arquivo. Ele permite que você leia atualizações de conteúdo de sites em um só lugar.",
+      "error": null,
+      "correct_choice": true,
+      "text_ok": true,
+      "ok": true,
+      "run": 1
+    },
+    {
+      "question": "Quem ganhou a Copa do Mundo de 2002?",
+      "expected": null,
+      "got": null,
+      "decision_s": 0.28419708799992804,
+      "first_text": "A Alemanha venceu a Copa de 2002.",
+      "error": null,
+      "correct_choice": true,
+      "text_ok": false,
+      "ok": false,
+      "run": 1
+    },
+    {
+      "question": "Quando caiu o Muro de Berlim?",
+      "expected": null,
+      "got": null,
+      "decision_s": 0.2792569619996357,
+      "first_text": "O Muro de Berlim caiu em 9 de novembro de 1989.",
+      "error": null,
+      "correct_choice": true,
+      "text_ok": true,
+      "ok": true,
+      "run": 1
+    },
+    {
+      "question": "Pesquisa na documentação do Zabbix como funciona o housekeeping.",
+      "expected": "buscar_documentacao",
+      "got": "buscar_documentacao",
+      "decision_s": 0.6844149950011342,
+      "first_text": "",
+      "error": null,
+      "correct_choice": true,
+      "arguments": {
+        "consulta": "zabbix housekeeping"
+      },
+      "args_ok": true,
+      "answer": "O Housekeeping é um processo periódico do Zabbix server. Ele serve para remover informações desatualizadas ou que foram excluídas pelo usuário.",
+      "answer_first_chunk_s": 1.6398070949999237,
+      "text_ok": true,
+      "ok": true,
+      "run": 1
+    },
+    {
+      "question": "Qual a porta padrão do Zabbix agent?",
+      "expected": "buscar_documentacao",
+      "got": "buscar_documentacao",
+      "decision_s": 0.689018829001725,
+      "first_text": "",
+      "error": null,
+      "correct_choice": true,
+      "arguments": {
+        "consulta": "zabbix agent porta padrão"
+      },
+      "args_ok": true,
+      "answer": "A porta padrão do Zabbix Agent é a 10050 TCP.",
+      "answer_first_chunk_s": 1.9361461369990138,
+      "text_ok": true,
+      "ok": true,
+      "run": 1
+    },
+    {
+      "question": "Qual o comando para ativar o archivelog no Oracle?",
+      "expected": "buscar_documentacao",
+      "got": "buscar_documentacao",
+      "decision_s": 0.6809000369994465,
+      "first_text": "",
+      "error": null,
+      "correct_choice": true,
+      "arguments": {
+        "consulta": "oracle ativar archivelog"
+      },
+      "args_ok": true,
+      "answer": "Você deve usar o comando ALTER DATABASE. Ele permite mudar o modo de arquivamento do banco.",
+      "answer_first_chunk_s": 1.1026487950002775,
+      "text_ok": true,
+      "ok": true,
+      "run": 1
+    },
+    {
+      "question": "O que mudou no Zabbix 7.0?",
+      "expected": "buscar_documentacao",
+      "got": "buscar_documentacao",
+      "decision_s": 0.6934579949993349,
+      "first_text": "",
+      "error": null,
+      "correct_choice": true,
+      "arguments": {
+        "consulta": "Zabbix 7.0 mudanças"
+      },
+      "args_ok": true,
+      "answer": "A documentação mostra algumas mudanças. Por exemplo, o Housekeeping é um processo periódico que remove informações antigas. Também há uma verificação de atualização de software adicionada por padrão.",
+      "answer_first_chunk_s": 1.303551836999759,
+      "text_ok": true,
+      "ok": true,
+      "run": 1
+    },
+    {
+      "question": "Procura na documentação do Podman o que faz o DNSOption.",
+      "expected": "buscar_documentacao",
+      "got": "buscar_documentacao",
+      "decision_s": 0.6837432660013292,
+      "first_text": "",
+      "error": null,
+      "correct_choice": true,
+      "arguments": {
+        "consulta": "Podman DNSOption"
+      },
+      "args_ok": true,
+      "answer": "O DNSOption no Podman permite configurar opções de DNS personalizadas para o container. A documentação indica que ele pode ser usado para definir o parâmetro ndots.",
+      "answer_first_chunk_s": 1.47836417399958,
+      "text_ok": true,
+      "ok": true,
+      "run": 1
+    },
+    {
+      "question": "O que é um backup incremental?",
+      "expected": null,
+      "got": null,
+      "decision_s": 0.30259795900019526,
+      "first_text": "É um tipo de backup que salva apenas o que mudou desde o último backup. Ele economiza muito espaço e tempo.",
+      "error": null,
+      "correct_choice": true,
+      "text_ok": true,
+      "ok": true,
+      "run": 1
+    },
+    {
+      "question": "Como funciona o Data Guard?",
+      "expected": null,
+      "got": null,
+      "decision_s": 0.2891110309992655,
+      "first_text": "É um recurso de replicação de banco de dados Oracle. Ele garante alta disponibilidade espelhando dados para um banco secundário.",
+      "error": null,
+      "correct_choice": true,
+      "text_ok": true,
+      "ok": true,
+      "run": 1
+    },
+    {
+      "question": "Lembra que o meu servidor de testes se chama lab01.",
+      "expected": "guardar_fato",
+      "got": "guardar_fato",
+      "decision_s": 0.682750871999815,
+      "first_text": "",
+      "error": null,
+      "correct_choice": true,
+      "arguments": {
+        "fato": "O servidor de testes do Reinaldo se chama lab01"
+      },
+      "args_ok": true,
+      "answer": "Guardo essa informação.",
+      "answer_first_chunk_s": 0.553828276000786,
+      "text_ok": true,
+      "ok": true,
+      "run": 1
+    },
+    {
+      "question": "Anota aí: o backup roda todo dia às 2h.",
+      "expected": "guardar_fato",
+      "got": "guardar_fato",
+      "decision_s": 0.6873693359993922,
+      "first_text": "",
+      "error": null,
+      "correct_choice": true,
+      "arguments": {
+        "fato": "O backup roda todo dia às 2h"
+      },
+      "args_ok": true,
+      "answer": "Anotei. O backup roda todo dia às 2h.",
+      "answer_first_chunk_s": 0.4968885289999889,
+      "text_ok": true,
+      "ok": true,
+      "run": 1
+    },
+    {
+      "question": "Esquece que o banco de produção se chama PRDORA.",
+      "expected": "esquecer",
+      "got": "esquecer",
+      "decision_s": 0.6271532490009122,
+      "first_text": "",
+      "error": null,
+      "correct_choice": true,
+      "arguments": {
+        "numero": 2
+      },
+      "args_ok": true,
+      "answer": "Esqueci essa informação.",
+      "answer_first_chunk_s": 0.5778195460006827,
+      "text_ok": true,
+      "ok": true,
+      "run": 1
+    },
+    {
+      "question": "Pode apagar aquilo da reunião.",
+      "expected": "esquecer",
+      "got": "esquecer",
+      "decision_s": 0.6546416390010563,
+      "first_text": "",
+      "error": null,
+      "correct_choice": true,
+      "arguments": {
+        "numero": 3
+      },
+      "args_ok": true,
+      "answer": "Apaguei a informação da reunião.",
+      "answer_first_chunk_s": 0.6907463679999637,
+      "text_ok": true,
+      "ok": true,
+      "run": 1
+    },
+    {
+      "question": "Esquece isso.",
+      "expected": "esquecer",
+      "got": "esquecer",
+      "decision_s": 1.1173883770006796,
+      "first_text": "",
+      "error": null,
+      "correct_choice": true,
+      "arguments": {
+        "numero": 3
+      },
+      "args_ok": true,
+      "answer": "Ok, apaguei essa informação.",
+      "answer_first_chunk_s": 0.41872333900028025,
+      "text_ok": true,
+      "ok": true,
+      "run": 1
+    },
+    {
+      "question": "Na verdade, apaga isso aí.",
+      "expected": "esquecer",
+      "got": "esquecer",
+      "decision_s": 0.6493318649991124,
+      "first_text": "",
+      "error": null,
+      "correct_choice": true,
+      "arguments": {
+        "numero": 3
+      },
+      "args_ok": true,
+      "answer": "Ok, apaguei essa informação.",
+      "answer_first_chunk_s": 0.4177881619998516,
+      "text_ok": true,
+      "ok": true,
+      "run": 1
+    },
+    {
+      "question": "Esqueça essa informação.",
+      "expected": "esquecer",
+      "got": "esquecer",
+      "decision_s": 0.6642126700007793,
+      "first_text": "",
+      "error": null,
+      "correct_choice": true,
+      "arguments": {
+        "numero": 3
+      },
+      "args_ok": true,
+      "answer": "Pronto, apaguei.",
+      "answer_first_chunk_s": 0.4774983500010421,
+      "text_ok": true,
+      "ok": true,
+      "run": 1
+    },
+    {
+      "question": "Esqueça essa informação.",
+      "expected": "esquecer",
+      "got": "esquecer",
+      "decision_s": 0.8845456950002699,
+      "first_text": "",
+      "error": null,
+      "correct_choice": true,
+      "arguments": {
+        "numero": 3
+      },
+      "args_ok": true,
+      "answer": "Pronto, apaguei a informação.",
+      "answer_first_chunk_s": 0.4939469269993424,
+      "text_ok": true,
+      "ok": true,
+      "run": 1
+    },
+    {
+      "question": "Esqueça essa informação.",
+      "expected": "esquecer",
+      "got": "esquecer",
+      "decision_s": 0.9534720859992376,
+      "first_text": "",
+      "error": null,
+      "correct_choice": true,
+      "arguments": {},
+      "args_ok": false,
+      "answer": "Esqueci o último fato guardado.",
+      "answer_first_chunk_s": 0.7845612970013462,
+      "text_ok": true,
+      "ok": false,
+      "run": 1
+    },
+    {
+      "question": "Pode esquecer o que eu te falei.",
+      "expected": "esquecer",
+      "got": null,
+      "decision_s": 0.5466324059998442,
+      "first_text": "Qual informação devo esquecer?",
+      "error": null,
+      "correct_choice": false,
+      "text_ok": true,
+      "ok": false,
+      "run": 1
+    },
+    {
+      "question": "Oi Agatha, tudo bem?",
+      "expected": null,
+      "got": null,
+      "decision_s": 0.2873900920003507,
+      "first_text": "Tudo ótimo por aqui. Como posso ajudar?",
+      "error": null,
+      "correct_choice": true,
+      "text_ok": true,
+      "ok": true,
+      "run": 1
+    },
+    {
+      "question": "O que é um trigger no Zabbix?",
+      "expected": null,
+      "got": null,
+      "decision_s": 0.2719995209990884,
+      "first_text": "Um trigger é uma condição que monitora um item. Quando essa condição é atendida, ele dispara um alerta no Zabbix.",
+      "error": null,
+      "correct_choice": true,
+      "text_ok": true,
+      "ok": true,
+      "run": 1
+    },
+    {
+      "question": "O que é uma tablespace?",
+      "expected": null,
+      "got": null,
+      "decision_s": 0.27142099699995015,
+      "first_text": "É um espaço lógico no banco de dados. Ele agrupa dados de objetos como tabelas e índices.",
+      "error": null,
+      "correct_choice": true,
+      "text_ok": true,
+      "ok": true,
+      "run": 1
+    },
+    {
+      "question": "Qual a diferença entre Podman e Docker?",
+      "expected": null,
+      "got": "buscar_documentacao",
+      "decision_s": 0.6792177770003036,
+      "first_text": "",
+      "error": null,
+      "correct_choice": false,
+      "arguments": {
+        "consulta": "Podman vs Docker"
+      },
+      "args_ok": false,
+      "answer": "Podman e Docker são ferramentas de contêineres. O Podman roda contêineres sem depender de um daemon centralizado, diferente do Docker tradicional.",
+      "answer_first_chunk_s": 1.1831183670001337,
+      "text_ok": true,
+      "ok": false,
+      "run": 1
+    },
+    {
+      "question": "Que horas são agora?",
+      "expected": null,
+      "got": null,
+      "decision_s": 0.2757522230003815,
+      "first_text": "São 21h30 agora.",
+      "error": null,
+      "correct_choice": true,
+      "text_ok": true,
+      "ok": true,
+      "run": 1
+    },
+    {
+      "question": "Me sugere um filme de ação.",
+      "expected": null,
+      "got": null,
+      "decision_s": 0.27107428000090295,
+      "first_text": "Não sei nada sobre filmes. Posso buscar notícias ou checar o clima se precisar.",
+      "error": null,
+      "correct_choice": true,
+      "text_ok": true,
+      "ok": true,
+      "run": 1
+    },
+    {
+      "question": "Obrigado, Agatha.",
+      "expected": null,
+      "got": null,
+      "decision_s": 0.26190518499970494,
+      "first_text": "De nada, Rei. Estou à disposição.",
+      "error": null,
+      "correct_choice": true,
+      "text_ok": true,
+      "ok": true,
+      "run": 1
+    },
+    {
+      "question": "O que você sabe sobre mim?",
+      "expected": null,
+      "got": null,
+      "decision_s": 0.30266510500041477,
+      "first_text": "Você usa o padrão ambiente-servidor-host nos hosts do Zabbix. O banco de produção é PRDORA e a reunião é na quinta às 10h.",
+      "error": null,
+      "correct_choice": true,
+      "text_ok": true,
+      "ok": true,
+      "run": 1
+    },
+    {
+      "question": "Qual o padrão de nome que eu uso nos hosts?",
+      "expected": null,
+      "got": null,
+      "decision_s": 0.27234350799881213,
+      "first_text": "Você usa ambiente-servidor-host.",
+      "error": null,
+      "correct_choice": true,
+      "text_ok": true,
+      "ok": true,
+      "run": 1
+    },
+    {
+      "question": "Que horas é a reunião com o time?",
+      "expected": null,
+      "got": "guardar_fato",
+      "decision_s": 0.6786308729988377,
+      "first_text": "",
+      "error": null,
+      "correct_choice": false,
+      "arguments": {
+        "fato": "A reunião com o time do Reinaldo é na quinta às 10h"
+      },
+      "args_ok": false,
+      "answer": "A reunião é quinta às 10h.",
+      "answer_first_chunk_s": 0.8402577020005992,
+      "text_ok": true,
+      "ok": false,
+      "run": 1
+    },
+    {
+      "question": "Qual é mesmo o nome do meu banco de produção?",
+      "expected": null,
+      "got": "oracle_banco",
+      "decision_s": 0.6779984530003276,
+      "first_text": "",
+      "error": null,
+      "correct_choice": false,
+      "arguments": {},
+      "args_ok": false,
+      "answer": "Seu banco de produção é o PRDORA.",
+      "answer_first_chunk_s": 1.2855586000005133,
+      "text_ok": true,
+      "ok": false,
+      "run": 1
+    },
+    {
+      "question": "Qual é o nome do meu banco de produção?",
+      "expected": null,
+      "got": "guardar_fato",
+      "decision_s": 1.2189705990003858,
+      "first_text": "",
+      "error": null,
+      "correct_choice": false,
+      "arguments": {
+        "fato": "O banco de produção do Reinaldo se chama PRDORA"
+      },
+      "args_ok": false,
+      "answer": "Você disse que o nome é PRDORA.",
+      "answer_first_chunk_s": 0.8634017950007546,
+      "text_ok": true,
+      "ok": false,
+      "run": 1
+    },
+    {
+      "question": "Quando é mesmo a reunião com o time?",
+      "expected": null,
+      "got": null,
+      "decision_s": 0.7669433270002628,
+      "first_text": "A reunião é na quinta às 10h.",
+      "error": null,
+      "correct_choice": true,
+      "text_ok": true,
+      "ok": true,
+      "run": 1
+    },
+    {
+      "question": "Qual o nome do meu notebook?",
+      "expected": null,
+      "got": null,
+      "decision_s": 0.31139428399910685,
+      "first_text": "Não tenho essa informação. Você pediu para esquecer o nome dele.",
+      "error": null,
+      "correct_choice": true,
+      "text_ok": true,
+      "ok": true,
+      "run": 1
+    },
+    {
+      "question": "Quanto é 15% de 240?",
+      "expected": "calcular",
+      "got": "calcular",
+      "decision_s": 0.5237184460002027,
+      "first_text": "",
+      "error": null,
+      "correct_choice": true,
+      "arguments": {
+        "expressao": "240 * 0.15"
+      },
+      "args_ok": true,
+      "answer": "O valor é 36.",
+      "answer_first_chunk_s": 0.6374928960012767,
+      "text_ok": true,
+      "ok": true,
+      "run": 2
+    },
+    {
+      "question": "Quanto é 1234 vezes 56?",
+      "expected": "calcular",
+      "got": "calcular",
+      "decision_s": 0.5151787799986778,
+      "first_text": "",
+      "error": null,
+      "correct_choice": true,
+      "arguments": {
+        "expressao": "1234 * 56"
+      },
+      "args_ok": true,
+      "answer": "O resultado é 69104.",
+      "answer_first_chunk_s": 0.8376810529989598,
+      "text_ok": true,
+      "ok": true,
+      "run": 2
+    },
+    {
+      "question": "Quanto é 2 elevado a 10?",
+      "expected": "calcular",
+      "got": "calcular",
+      "decision_s": 0.5464027170000918,
+      "first_text": "",
+      "error": null,
+      "correct_choice": true,
+      "arguments": {
+        "expressao": "2**10"
+      },
+      "args_ok": true,
+      "answer": "O resultado é 1024.",
+      "answer_first_chunk_s": 0.7570982790002745,
+      "text_ok": true,
+      "ok": true,
+      "run": 2
+    },
+    {
+      "question": "Quanto é 25% de 250?",
+      "expected": "calcular",
+      "got": "calcular",
+      "decision_s": 0.5150274569987232,
+      "first_text": "",
+      "error": null,
+      "correct_choice": true,
+      "arguments": {
+        "expressao": "250 * 0.25"
+      },
+      "args_ok": true,
+      "answer": "O resultado é 62,5.",
+      "answer_first_chunk_s": 0.7502771999988909,
+      "text_ok": true,
+      "ok": true,
+      "run": 2
+    },
+    {
+      "question": "Tenho 1,5 tera usados e cresce 20 gigas por dia. Em quantos dias chego a 2 tera?",
+      "expected": "calcular",
+      "got": "calcular",
+      "decision_s": 0.5816491599998699,
+      "first_text": "",
+      "error": null,
+      "correct_choice": true,
+      "arguments": {
+        "expressao": "(2 - 1.5) / 20"
+      },
+      "args_ok": false,
+      "answer": "Levaria cerca de 0,025 dias para atingir 2 tera.",
+      "answer_first_chunk_s": 1.2976702850010042,
+      "text_ok": true,
+      "ok": false,
+      "run": 2
+    },
+    {
+      "question": "Tem algum alerta no Zabbix agora?",
+      "expected": "zabbix_problemas",
+      "got": "zabbix_problemas",
+      "decision_s": 0.8006663269989076,
+      "first_text": "",
+      "error": null,
+      "correct_choice": true,
+      "arguments": {},
+      "args_ok": true,
+      "answer": "Tem um alerta médio. O host agatha-srv está com uso de disco em /dados acima de 80%.",
+      "answer_first_chunk_s": 0.6831303919989296,
+      "text_ok": true,
+      "ok": true,
+      "run": 2
+    },
+    {
+      "question": "Como está o host agatha-srv no Zabbix?",
+      "expected": "zabbix_host",
+      "got": "zabbix_host",
+      "decision_s": 0.7433136700001342,
+      "first_text": "",
+      "error": null,
+      "correct_choice": true,
+      "arguments": {
+        "host": "agatha-srv"
+      },
+      "args_ok": true,
+      "answer": "O agatha-srv está disponível. A CPU está em 23% e a memória em 61%.",
+      "answer_first_chunk_s": 0.957931381999515,
+      "text_ok": true,
+      "ok": true,
+      "run": 2
+    },
+    {
+      "question": "Qual o uso de CPU do servidor agatha-srv?",
+      "expected": "zabbix_host",
+      "got": "zabbix_host",
+      "decision_s": 0.742373791999853,
+      "first_text": "",
+      "error": null,
+      "correct_choice": true,
+      "arguments": {
+        "host": "agatha-srv"
+      },
+      "args_ok": true,
+      "answer": "A CPU do agatha-srv está em 23%. O servidor está ligado há 8 horas e o disco em /dados está com 41%.",
+      "answer_first_chunk_s": 1.2409628299992619,
+      "text_ok": true,
+      "ok": true,
+      "run": 2
+    },
+    {
+      "question": "Como estão as tablespaces do Oracle?",
+      "expected": "oracle_tablespaces",
+      "got": "oracle_tablespaces",
+      "decision_s": 0.678952586999003,
+      "first_text": "",
+      "error": null,
+      "correct_choice": true,
+      "arguments": {},
+      "args_ok": true,
+      "answer": "As tablespaces estão assim. USERS está em 91%, SYSTEM em 74% e SYSAUX em 66%.",
+      "answer_first_chunk_s": 0.7456778430005215,
+      "text_ok": true,
+      "ok": true,
+      "run": 2
+    },
+    {
+      "question": "Tem alguma tablespace quase cheia?",
+      "expected": "oracle_tablespaces",
+      "got": "oracle_tablespaces",
+      "decision_s": 0.6792342739991,
+      "first_text": "",
+      "error": null,
+      "correct_choice": true,
+      "arguments": {},
+      "args_ok": true,
+      "answer": "Sim, a USERS está quase cheia, com 91%.",
+      "answer_first_chunk_s": 0.5709110370007693,
+      "text_ok": true,
+      "ok": true,
+      "run": 2
+    },
+    {
+      "question": "Quantas sessões tem abertas no banco?",
+      "expected": "oracle_sessoes",
+      "got": "oracle_sessoes",
+      "decision_s": 0.7433173560002615,
+      "first_text": "",
+      "error": null,
+      "correct_choice": true,
+      "arguments": {},
+      "args_ok": true,
+      "answer": "Tem 48 sessões abertas. Dessas, 5 estão ativas no momento.",
+      "answer_first_chunk_s": 0.791297821999251,
+      "text_ok": true,
+      "ok": true,
+      "run": 2
+    },
+    {
+      "question": "Tem algum lock no banco agora?",
+      "expected": "oracle_banco",
+      "got": "oracle_banco",
+      "decision_s": 0.7128396169991902,
+      "first_text": "",
+      "error": null,
+      "correct_choice": true,
+      "arguments": {},
+      "args_ok": true,
+      "answer": "Sim, existem 2 sessões bloqueadas. O banco está no modo de leitura e escrita.",
+      "answer_first_chunk_s": 0.8278994350002904,
+      "text_ok": true,
+      "ok": true,
+      "run": 2
+    },
+    {
+      "question": "O banco está em modo archivelog?",
+      "expected": "oracle_banco",
+      "got": "oracle_banco",
+      "decision_s": 0.6786074339997867,
+      "first_text": "",
+      "error": null,
+      "correct_choice": true,
+      "arguments": {},
+      "args_ok": true,
+      "answer": "Sim, o banco está em modo archivelog. Ele está aberto e o papel é primário.",
+      "answer_first_chunk_s": 0.8299675090001983,
+      "text_ok": true,
+      "ok": true,
+      "run": 2
+    },
+    {
+      "question": "O Data Guard está sincronizado?",
+      "expected": "oracle_banco",
+      "got": "oracle_banco",
+      "decision_s": 0.6976626830000896,
+      "first_text": "",
+      "error": null,
+      "correct_choice": true,
+      "arguments": {},
+      "args_ok": true,
+      "answer": "O Data Guard não está configurado. O banco está aberto e no modo primário.",
+      "answer_first_chunk_s": 1.1083506169998145,
+      "text_ok": true,
+      "ok": true,
+      "run": 2
+    },
+    {
+      "question": "O backup de ontem rodou?",
+      "expected": "oracle_backups",
+      "got": "oracle_backups",
+      "decision_s": 0.703986217999045,
+      "first_text": "",
+      "error": null,
+      "correct_choice": true,
+      "arguments": {},
+      "args_ok": true,
+      "answer": "Sim, o backup de ontem completou. Ele foi um completo de 437 MB.",
+      "answer_first_chunk_s": 0.674665679998725,
+      "text_ok": false,
+      "ok": false,
+      "run": 2
+    },
+    {
+      "question": "Me mostra os problemas de alta prioridade no Zabbix.",
+      "expected": "zabbix_problemas",
+      "got": "zabbix_problemas",
+      "decision_s": 0.7993967849997716,
+      "first_text": "",
+      "error": null,
+      "correct_choice": true,
+      "arguments": {
+        "severidade_minima": "alta"
+      },
+      "args_ok": true,
+      "answer": "Não tem problemas de alta prioridade. Tem um alerta de média no agatha-srv sobre uso de disco.",
+      "answer_first_chunk_s": 0.8653500039999926,
+      "text_ok": true,
+      "ok": true,
+      "run": 2
+    },
+    {
+      "question": "A CI do agatha passou?",
+      "expected": "github_repo",
+      "got": "github_repo",
+      "decision_s": 0.6638929540004028,
+      "first_text": "",
+      "error": null,
+      "correct_choice": true,
+      "arguments": {
+        "repo": "agatha"
+      },
+      "args_ok": true,
+      "answer": "Sim, a CI passou. O workflow tests passou há 2 horas.",
+      "answer_first_chunk_s": 0.809201251999184,
+      "text_ok": true,
+      "ok": true,
+      "run": 2
+    },
+    {
+      "question": "Qual foi o último commit no GitHub?",
+      "expected": "github_repo",
+      "got": "github_repo",
+      "decision_s": 0.6283017400000972,
+      "first_text": "",
+      "error": null,
+      "correct_choice": true,
+      "arguments": {},
+      "args_ok": true,
+      "answer": "O último commit foi um fix no servidor sobre archivelog, feito há 3 horas.",
+      "answer_first_chunk_s": 1.4356737920006708,
+      "text_ok": true,
+      "ok": true,
+      "run": 2
+    },
+    {
+      "question": "Tem issue aberta no repositório da Agatha?",
+      "expected": "github_repo",
+      "got": "github_repo",
+      "decision_s": 0.629668342999139,
+      "first_text": "",
+      "error": null,
+      "correct_choice": true,
+      "arguments": {
+        "repo": "agatha"
+      },
+      "args_ok": true,
+      "answer": "Tem uma issue aberta. É a \"voz a 48 kHz\". A última CI passou há 2 horas.",
+      "answer_first_chunk_s": 0.9182224579999456,
+      "text_ok": true,
+      "ok": true,
+      "run": 2
+    },
+    {
+      "question": "O que é um pull request?",
+      "expected": null,
+      "got": null,
+      "decision_s": 0.3107174090000626,
+      "first_text": "Um pull request é um pedido para revisar código. Ele sinaliza que você quer que seu código seja integrado ao projeto principal.",
+      "error": null,
+      "correct_choice": true,
+      "text_ok": true,
+      "ok": true,
+      "run": 2
+    },
+    {
+      "question": "Como está o tempo hoje?",
+      "expected": "clima",
+      "got": "clima",
+      "decision_s": 0.5841604220004228,
+      "first_text": "",
+      "error": null,
+      "correct_choice": true,
+      "arguments": {
+        "cidade": "Novo Hamburgo (RS)"
+      },
+      "args_ok": true,
+      "answer": "Hoje em Novo Hamburgo (RS) está com 23 graus e nublado. Amanhã tem chance de chuva e sexta-feira deve ter céu limpo.",
+      "answer_first_chunk_s": 1.672935986000084,
+      "text_ok": true,
+      "ok": true,
+      "run": 2
+    },
+    {
+      "question": "Vai chover amanhã?",
+      "expected": "clima",
+      "got": "clima",
+      "decision_s": 0.5971476560007432,
+      "first_text": "",
+      "error": null,
+      "correct_choice": true,
+      "arguments": {
+        "cidade": "Novo Hamburgo (RS)"
+      },
+      "args_ok": true,
+      "answer": "Amanhã tem chance de chuva. A previsão é de 14 a 19 graus com chuva.",
+      "answer_first_chunk_s": 1.1520630849990994,
+      "text_ok": false,
+      "ok": false,
+      "run": 2
+    },
+    {
+      "question": "Qual a temperatura agora?",
+      "expected": "clima",
+      "got": "clima",
+      "decision_s": 0.591182193998975,
+      "first_text": "",
+      "error": null,
+      "correct_choice": true,
+      "arguments": {
+        "cidade": "Novo Hamburgo (RS)"
+      },
+      "args_ok": true,
+      "answer": "Está 23 graus agora, com tempo nublado. Amanhã a previsão é de chuva.",
+      "answer_first_chunk_s": 1.0947091409998393,
+      "text_ok": true,
+      "ok": true,
+      "run": 2
+    },
+    {
+      "question": "Como vai estar o tempo em Porto Alegre amanhã?",
+      "expected": "clima",
+      "got": "clima",
+      "decision_s": 0.571334324999043,
+      "first_text": "",
+      "error": null,
+      "correct_choice": true,
+      "arguments": {
+        "cidade": "Porto Alegre (RS)"
+      },
+      "args_ok": true,
+      "answer": "O clima em Novo Hamburgo está nublado. Amanhã em Porto Alegre terá de 14 a 19 graus com 80% de chance de chuva.",
+      "answer_first_chunk_s": 1.2061083389999112,
+      "text_ok": true,
+      "ok": true,
+      "run": 2
+    },
+    {
+      "question": "E em Curitiba?",
+      "expected": "clima",
+      "got": "clima",
+      "decision_s": 1.0203872809997847,
+      "first_text": "",
+      "error": null,
+      "correct_choice": true,
+      "arguments": {
+        "cidade": "Curitiba (PR)"
+      },
+      "args_ok": true,
+      "answer": "Em Curitiba está 20 graus e com chance de chuva 40%.",
+      "answer_first_chunk_s": 1.6344501149997086,
+      "text_ok": true,
+      "ok": true,
+      "run": 2
+    },
+    {
+      "question": "Vai chover amanhã?",
+      "expected": "clima",
+      "got": "clima",
+      "decision_s": 0.6104288039987296,
+      "first_text": "",
+      "error": null,
+      "correct_choice": true,
+      "arguments": {
+        "cidade": "Novo Hamburgo (RS)"
+      },
+      "args_ok": true,
+      "answer": "Sim, há 80% de chance de chuva amanhã.",
+      "answer_first_chunk_s": 0.8259535420002067,
+      "text_ok": true,
+      "ok": true,
+      "run": 2
+    },
+    {
+      "question": "E as sessões?",
+      "expected": "oracle_sessoes",
+      "got": "oracle_sessoes",
+      "decision_s": 1.199576054001227,
+      "first_text": "",
+      "error": null,
+      "correct_choice": true,
+      "arguments": {},
+      "args_ok": true,
+      "answer": "Tem 48 sessões abertas no total. Cinco delas estão ativas no momento.",
+      "answer_first_chunk_s": 0.916586532999645,
+      "text_ok": true,
+      "ok": true,
+      "run": 2
+    },
+    {
+      "question": "Qual a mais cheia agora?",
+      "expected": "oracle_tablespaces",
+      "got": "oracle_tablespaces",
+      "decision_s": 0.7262975129997358,
+      "first_text": "",
+      "error": null,
+      "correct_choice": true,
+      "arguments": {},
+      "args_ok": true,
+      "answer": "A USERS está a mais cheia, com 91%.",
+      "answer_first_chunk_s": 0.9940291119983158,
+      "text_ok": true,
+      "ok": true,
+      "run": 2
+    },
+    {
+      "question": "O que é uma tablespace?",
+      "expected": null,
+      "got": null,
+      "decision_s": 0.31678864900095505,
+      "first_text": "É um espaço lógico no banco de dados. Ele armazena os dados de um ou mais objetos do banco.",
+      "error": null,
+      "correct_choice": true,
+      "text_ok": true,
+      "ok": true,
+      "run": 2
+    },
+    {
+      "question": "O que é o El Niño?",
+      "expected": null,
+      "got": null,
+      "decision_s": 0.31103681399872585,
+      "first_text": "É um fenômeno climático. Envolve aquecimento anormal das águas do Oceano Pacífico Equatorial.",
+      "error": null,
+      "correct_choice": true,
+      "text_ok": true,
+      "ok": true,
+      "run": 2
+    },
+    {
+      "question": "Qual a diferença entre clima e tempo?",
+      "expected": null,
+      "got": null,
+      "decision_s": 0.27284114099893486,
+      "first_text": "Clima é o padrão de tempo de longo prazo. Tempo é o estado momentâneo da atmosfera.",
+      "error": null,
+      "correct_choice": true,
+      "text_ok": true,
+      "ok": true,
+      "run": 2
+    },
+    {
+      "question": "Quais são as notícias de hoje?",
+      "expected": "noticias",
+      "got": "noticias",
+      "decision_s": 0.5993712010003946,
+      "first_text": "",
+      "error": null,
+      "correct_choice": true,
+      "arguments": {
+        "assunto": "",
+        "fonte": "G1"
+      },
+      "args_ok": true,
+      "answer": "As manchetes do G1 são: Flávio x Lula: veja quem os candidatos derrotados no 1º turno apoiam e Estátua de João Goulart é vandalizada em Porto Alegre.",
+      "answer_first_chunk_s": 1.015321106000556,
+      "text_ok": true,
+      "ok": true,
+      "run": 2
+    },
+    {
+      "question": "Tem alguma notícia de tecnologia?",
+      "expected": "noticias",
+      "got": "noticias",
+      "decision_s": 0.5906959969997843,
+      "first_text": "",
+      "error": null,
+      "correct_choice": true,
+      "arguments": {
+        "assunto": "tecnologia"
+      },
+      "args_ok": true,
+      "answer": "Tem algumas notícias. A Microsoft superou médicos em testes de diagnóstico com IA. O G1 fala sobre falhas no PHP afetando sistemas.",
+      "answer_first_chunk_s": 0.8654786150000291,
+      "text_ok": true,
+      "ok": true,
+      "run": 2
+    },
+    {
+      "question": "O que tem de novo no Tecnoblog?",
+      "expected": "noticias",
+      "got": "noticias",
+      "decision_s": 0.5658132000007754,
+      "first_text": "",
+      "error": null,
+      "correct_choice": true,
+      "arguments": {
+        "assunto": "tudo",
+        "fonte": "Tecnoblog"
+      },
+      "args_ok": true,
+      "answer": "Não tem novidade recente no Tecnoblog.",
+      "answer_first_chunk_s": 0.9021886080008699,
+      "text_ok": true,
+      "ok": true,
+      "run": 2
+    },
+    {
+      "question": "Quais são as manchetes da Folha?",
+      "expected": "noticias",
+      "got": "noticias",
+      "decision_s": 0.573866018001354,
+      "first_text": "",
+      "error": null,
+      "correct_choice": true,
+      "arguments": {
+        "fonte": "Folha"
+      },
+      "args_ok": true,
+      "answer": "As manchetes da Folha são sobre Bradesco e Tom Skerritt.",
+      "answer_first_chunk_s": 1.491156112999306,
+      "text_ok": true,
+      "ok": true,
+      "run": 2
+    },
+    {
+      "question": "Me conta as notícias de economia.",
+      "expected": "noticias",
+      "got": "noticias",
+      "decision_s": 0.6081382089996623,
+      "first_text": "",
+      "error": null,
+      "correct_choice": true,
+      "arguments": {
+        "assunto": "economia"
+      },
+      "args_ok": true,
+      "answer": "As manchetes de economia são: LemFi amplia serviços financeiros para brasileiros que vivem no exterior no G1. O Bradesco teve lucro de R$ 7,1 bilhões no 3º tri segundo a Folha.",
+      "answer_first_chunk_s": 1.0902122729985422,
+      "text_ok": true,
+      "ok": true,
+      "run": 2
+    },
+    {
+      "question": "O que aconteceu no Rio Grande do Sul hoje?",
+      "expected": "noticias",
+      "got": "noticias",
+      "decision_s": 0.57115825999972,
+      "first_text": "",
+      "error": null,
+      "correct_choice": true,
+      "arguments": {
+        "assunto": "Rio Grande do Sul"
+      },
+      "args_ok": true,
+      "answer": "Tem algumas notícias do RS. O G1 reportou sobre uma prisão em hotel e investigações de \"falso médico\".",
+      "answer_first_chunk_s": 0.9814961809988745,
+      "text_ok": true,
+      "ok": true,
+      "run": 2
+    },
+    {
+      "question": "Tem alguma notícia sobre a falha do PHP?",
+      "expected": "noticias",
+      "got": "noticias",
+      "decision_s": 0.5740332879995549,
+      "first_text": "",
+      "error": null,
+      "correct_choice": true,
+      "arguments": {
+        "assunto": "falha do PHP"
+      },
+      "args_ok": true,
+      "answer": "Tem notícias sobre isso. O Tecnoblog fala de tentativas de exploração, e o G1 mostra que sistemas foram suspensos no Brasil.",
+      "answer_first_chunk_s": 0.8450999069991667,
+      "text_ok": true,
+      "ok": true,
+      "run": 2
+    },
+    {
+      "question": "E de tecnologia?",
+      "expected": "noticias",
+      "got": "noticias",
+      "decision_s": 1.072855205000451,
+      "first_text": "",
+      "error": null,
+      "correct_choice": true,
+      "arguments": {
+        "assunto": "tecnologia"
+      },
+      "args_ok": true,
+      "answer": "A manchete do Tecnoblog fala que IA superou médicos em testes de diagnóstico. O G1 aponta falhas no PHP que levam suspensões de sistemas.",
+      "answer_first_chunk_s": 1.687678345999302,
+      "text_ok": true,
+      "ok": true,
+      "run": 2
+    },
+    {
+      "question": "E na Folha?",
+      "expected": "noticias",
+      "got": "noticias",
+      "decision_s": 1.0799680499985698,
+      "first_text": "",
+      "error": null,
+      "correct_choice": true,
+      "arguments": {
+        "assunto": "tecnologia",
+        "fonte": "Folha"
+      },
+      "args_ok": true,
+      "answer": "Na Folha, o Spotify registrou alta de receita e lucro com avanço global de usuários.",
+      "answer_first_chunk_s": 0.6572520669997175,
+      "text_ok": true,
+      "ok": true,
+      "run": 2
+    },
+    {
+      "question": "Me conta mais sobre essa do PHP.",
+      "expected": "noticias",
+      "got": "buscar_documentacao",
+      "decision_s": 0.7063095339999563,
+      "first_text": "",
+      "error": null,
+      "correct_choice": false,
+      "arguments": {
+        "consulta": "falhas no PHP"
+      },
+      "args_ok": false,
+      "answer": "Não encontrei detalhes específicos sobre as falhas do PHP na documentação. Você gostaria de saber sobre algum outro tópico?",
+      "answer_first_chunk_s": 1.2170839509999496,
+      "text_ok": true,
+      "ok": false,
+      "run": 2
+    },
+    {
+      "question": "O que é PHP?",
+      "expected": null,
+      "got": null,
+      "decision_s": 0.28970837100132485,
+      "first_text": "PHP é uma linguagem de script de código aberto. Ela é muito usada para desenvolver páginas dinâmicas na web.",
+      "error": null,
+      "correct_choice": true,
+      "text_ok": true,
+      "ok": true,
+      "run": 2
+    },
+    {
+      "question": "O que é um feed RSS?",
+      "expected": null,
+      "got": null,
+      "decision_s": 0.3023987019987544,
+      "first_text": "Um feed RSS é um formato de arquivo. Ele permite que leitores agreguem conteúdo de vários sites em um só lugar.",
+      "error": null,
+      "correct_choice": true,
+      "text_ok": true,
+      "ok": true,
+      "run": 2
+    },
+    {
+      "question": "Quem ganhou a Copa do Mundo de 2002?",
+      "expected": null,
+      "got": null,
+      "decision_s": 0.27763315599986527,
+      "first_text": "A Alemanha venceu a Copa de 2002.",
+      "error": null,
+      "correct_choice": true,
+      "text_ok": false,
+      "ok": false,
+      "run": 2
+    },
+    {
+      "question": "Quando caiu o Muro de Berlim?",
+      "expected": null,
+      "got": null,
+      "decision_s": 0.27513607800028694,
+      "first_text": "Caiu em 9 de novembro de 1989.",
+      "error": null,
+      "correct_choice": true,
+      "text_ok": true,
+      "ok": true,
+      "run": 2
+    },
+    {
+      "question": "Pesquisa na documentação do Zabbix como funciona o housekeeping.",
+      "expected": "buscar_documentacao",
+      "got": "buscar_documentacao",
+      "decision_s": 0.6833894259998488,
+      "first_text": "",
+      "error": null,
+      "correct_choice": true,
+      "arguments": {
+        "consulta": "zabbix housekeeping"
+      },
+      "args_ok": true,
+      "answer": "O housekeeping é um processo periódico no servidor Zabbix. Ele remove informações desatualizadas ou deletadas pelo usuário. Você pode ver mais detalhes no site oficial.",
+      "answer_first_chunk_s": 1.5821460120005213,
+      "text_ok": true,
+      "ok": true,
+      "run": 2
+    },
+    {
+      "question": "Qual a porta padrão do Zabbix agent?",
+      "expected": "buscar_documentacao",
+      "got": "buscar_documentacao",
+      "decision_s": 0.6782161589999305,
+      "first_text": "",
+      "error": null,
+      "correct_choice": true,
+      "arguments": {
+        "consulta": "zabbix agent porta padrão"
+      },
+      "args_ok": true,
+      "answer": "A porta padrão do Zabbix Agent é a 10050 TCP.",
+      "answer_first_chunk_s": 1.9347014340000896,
+      "text_ok": true,
+      "ok": true,
+      "run": 2
+    },
+    {
+      "question": "Qual o comando para ativar o archivelog no Oracle?",
+      "expected": "buscar_documentacao",
+      "got": "buscar_documentacao",
+      "decision_s": 0.6898649550003029,
+      "first_text": "",
+      "error": null,
+      "correct_choice": true,
+      "arguments": {
+        "consulta": "oracle ativar archivelog"
+      },
+      "args_ok": true,
+      "answer": "Você usa o comando ALTER DATABASE. Ele serve para ligar ou desligar o modo de arquivamento de redo logs no banco.",
+      "answer_first_chunk_s": 1.0431012059998466,
+      "text_ok": true,
+      "ok": true,
+      "run": 2
+    },
+    {
+      "question": "O que mudou no Zabbix 7.0?",
+      "expected": "buscar_documentacao",
+      "got": "buscar_documentacao",
+      "decision_s": 0.6826243890009209,
+      "first_text": "",
+      "error": null,
+      "correct_choice": true,
+      "arguments": {
+        "consulta": "Zabbix 7.0 novidades"
+      },
+      "args_ok": true,
+      "answer": "A documentação mostra algumas coisas. Houve uma verificação de atualização de software adicionada por padrão em instalações novas ou existentes no Zabbix 7.0.0. Também há menção a mudanças nas portas do Zabbix Agent e Trapper.",
+      "answer_first_chunk_s": 1.3010447939996084,
+      "text_ok": true,
+      "ok": true,
+      "run": 2
+    },
+    {
+      "question": "Procura na documentação do Podman o que faz o DNSOption.",
+      "expected": "buscar_documentacao",
+      "got": "buscar_documentacao",
+      "decision_s": 0.6909582139996928,
+      "first_text": "",
+      "error": null,
+      "correct_choice": true,
+      "arguments": {
+        "consulta": "Podman DNSOption"
+      },
+      "args_ok": true,
+      "answer": "No Podman, DNSOption permite definir opções de DNS customizadas. O trecho indica que o ndots:1 é usado para definir opções de DNS.",
+      "answer_first_chunk_s": 0.7940494810009113,
+      "text_ok": true,
+      "ok": true,
+      "run": 2
+    },
+    {
+      "question": "O que é um backup incremental?",
+      "expected": null,
+      "got": null,
+      "decision_s": 0.30353219700009504,
+      "first_text": "É um tipo de backup que só salva o que mudou desde o último backup. Ele é mais rápido e ocupa menos espaço que um completo.",
+      "error": null,
+      "correct_choice": true,
+      "text_ok": true,
+      "ok": true,
+      "run": 2
+    },
+    {
+      "question": "Como funciona o Data Guard?",
+      "expected": null,
+      "got": null,
+      "decision_s": 0.28697787700002664,
+      "first_text": "Ele replica dados de um banco de dados primário para um standby. Garante alta disponibilidade e recuperação de desastres.",
+      "error": null,
+      "correct_choice": true,
+      "text_ok": true,
+      "ok": true,
+      "run": 2
+    },
+    {
+      "question": "Lembra que o meu servidor de testes se chama lab01.",
+      "expected": "guardar_fato",
+      "got": "guardar_fato",
+      "decision_s": 0.6899567170003138,
+      "first_text": "",
+      "error": null,
+      "correct_choice": true,
+      "arguments": {
+        "fato": "O servidor de testes do Reinaldo se chama lab01"
+      },
+      "args_ok": true,
+      "answer": "Guardei essa informação.",
+      "answer_first_chunk_s": 0.5547137489993474,
+      "text_ok": true,
+      "ok": true,
+      "run": 2
+    },
+    {
+      "question": "Anota aí: o backup roda todo dia às 2h.",
+      "expected": "guardar_fato",
+      "got": "guardar_fato",
+      "decision_s": 0.6843467369999416,
+      "first_text": "",
+      "error": null,
+      "correct_choice": true,
+      "arguments": {
+        "fato": "O backup roda todo dia às 2h"
+      },
+      "args_ok": true,
+      "answer": "Anotei. O backup roda todo dia às 2h.",
+      "answer_first_chunk_s": 0.49630304600032105,
+      "text_ok": true,
+      "ok": true,
+      "run": 2
+    },
+    {
+      "question": "Esquece que o banco de produção se chama PRDORA.",
+      "expected": "esquecer",
+      "got": "esquecer",
+      "decision_s": 0.6277619190004771,
+      "first_text": "",
+      "error": null,
+      "correct_choice": true,
+      "arguments": {
+        "numero": 2
+      },
+      "args_ok": true,
+      "answer": "Ok, apaguei essa informação.",
+      "answer_first_chunk_s": 0.41307177799899364,
+      "text_ok": true,
+      "ok": true,
+      "run": 2
+    },
+    {
+      "question": "Pode apagar aquilo da reunião.",
+      "expected": "esquecer",
+      "got": "esquecer",
+      "decision_s": 0.6973242399999435,
+      "first_text": "",
+      "error": null,
+      "correct_choice": true,
+      "arguments": {
+        "numero": 3
+      },
+      "args_ok": true,
+      "answer": "Apaguei a informação da reunião.",
+      "answer_first_chunk_s": 0.6907539190015086,
+      "text_ok": true,
+      "ok": true,
+      "run": 2
+    },
+    {
+      "question": "Esquece isso.",
+      "expected": "esquecer",
+      "got": "esquecer",
+      "decision_s": 1.1257671149996895,
+      "first_text": "",
+      "error": null,
+      "correct_choice": true,
+      "arguments": {
+        "numero": 3
+      },
+      "args_ok": true,
+      "answer": "Esqueci essa informação.",
+      "answer_first_chunk_s": 0.5943643880000309,
+      "text_ok": true,
+      "ok": true,
+      "run": 2
+    },
+    {
+      "question": "Na verdade, apaga isso aí.",
+      "expected": "esquecer",
+      "got": "esquecer",
+      "decision_s": 0.6394226209995395,
+      "first_text": "",
+      "error": null,
+      "correct_choice": true,
+      "arguments": {
+        "numero": 3
+      },
+      "args_ok": true,
+      "answer": "Entendi, apaguei.",
+      "answer_first_chunk_s": 0.476741423999556,
+      "text_ok": true,
+      "ok": true,
+      "run": 2
+    },
+    {
+      "question": "Esqueça essa informação.",
+      "expected": "esquecer",
+      "got": "esquecer",
+      "decision_s": 0.6537557100000413,
+      "first_text": "",
+      "error": null,
+      "correct_choice": true,
+      "arguments": {
+        "numero": 3
+      },
+      "args_ok": true,
+      "answer": "Entendido, apaguei.",
+      "answer_first_chunk_s": 0.47696192500006873,
+      "text_ok": true,
+      "ok": true,
+      "run": 2
+    },
+    {
+      "question": "Esqueça essa informação.",
+      "expected": "esquecer",
+      "got": "esquecer",
+      "decision_s": 0.8933100359990931,
+      "first_text": "",
+      "error": null,
+      "correct_choice": true,
+      "arguments": {
+        "numero": 3
+      },
+      "args_ok": true,
+      "answer": "Certo, esqueci essa informação.",
+      "answer_first_chunk_s": 0.48400208200109773,
+      "text_ok": true,
+      "ok": true,
+      "run": 2
+    },
+    {
+      "question": "Esqueça essa informação.",
+      "expected": "esquecer",
+      "got": "esquecer",
+      "decision_s": 0.9453869499993743,
+      "first_text": "",
+      "error": null,
+      "correct_choice": true,
+      "arguments": {},
+      "args_ok": false,
+      "answer": "Esqueci o último fato.",
+      "answer_first_chunk_s": 0.6685862449994602,
+      "text_ok": true,
+      "ok": false,
+      "run": 2
+    },
+    {
+      "question": "Pode esquecer o que eu te falei.",
+      "expected": "esquecer",
+      "got": "esquecer",
+      "decision_s": 0.8967842419988301,
+      "first_text": "",
+      "error": null,
+      "correct_choice": true,
+      "arguments": {},
+      "args_ok": false,
+      "answer": "Apaguei o último fato que você me passou.",
+      "answer_first_chunk_s": 0.8996850459989219,
+      "text_ok": true,
+      "ok": false,
+      "run": 2
+    },
+    {
+      "question": "Oi Agatha, tudo bem?",
+      "expected": null,
+      "got": null,
+      "decision_s": 0.2869669559986505,
+      "first_text": "Tudo ótimo por aqui. Como posso ajudar?",
+      "error": null,
+      "correct_choice": true,
+      "text_ok": true,
+      "ok": true,
+      "run": 2
+    },
+    {
+      "question": "O que é um trigger no Zabbix?",
+      "expected": null,
+      "got": null,
+      "decision_s": 0.28076528000019607,
+      "first_text": "Ele é uma regra que monitora um item. Quando a condição é atingida, ele dispara um alerta.",
+      "error": null,
+      "correct_choice": true,
+      "text_ok": true,
+      "ok": true,
+      "run": 2
+    },
+    {
+      "question": "O que é uma tablespace?",
+      "expected": null,
+      "got": null,
+      "decision_s": 0.2705286429991247,
+      "first_text": "É um espaço lógico no banco de dados. Ele agrupa objetos de dados como tabelas e índices.",
+      "error": null,
+      "correct_choice": true,
+      "text_ok": true,
+      "ok": true,
+      "run": 2
+    },
+    {
+      "question": "Qual a diferença entre Podman e Docker?",
+      "expected": null,
+      "got": null,
+      "decision_s": 0.28081431899954623,
+      "first_text": "Eles são ambos para conteinerização. O Podman geralmente roda processos como um usuário comum, sem depender de um daemon.",
+      "error": null,
+      "correct_choice": true,
+      "text_ok": true,
+      "ok": true,
+      "run": 2
+    },
+    {
+      "question": "Que horas são agora?",
+      "expected": null,
+      "got": null,
+      "decision_s": 0.2824833390004642,
+      "first_text": "São 21h30 agora.",
+      "error": null,
+      "correct_choice": true,
+      "text_ok": true,
+      "ok": true,
+      "run": 2
+    },
+    {
+      "question": "Me sugere um filme de ação.",
+      "expected": null,
+      "got": null,
+      "decision_s": 0.2720252409999375,
+      "first_text": "Não sei sobre filmes. Que tal eu checar o clima em Novo Hamburgo?",
+      "error": null,
+      "correct_choice": true,
+      "text_ok": true,
+      "ok": true,
+      "run": 2
+    },
+    {
+      "question": "Obrigado, Agatha.",
+      "expected": null,
+      "got": null,
+      "decision_s": 0.2664195720008138,
+      "first_text": "De nada, Reinaldo. Bom descanso.",
+      "error": null,
+      "correct_choice": true,
+      "text_ok": true,
+      "ok": true,
+      "run": 2
+    },
+    {
+      "question": "O que você sabe sobre mim?",
+      "expected": null,
+      "got": null,
+      "decision_s": 0.30949698999938846,
+      "first_text": "Você usa o padrão ambiente-servidor-host nos hosts do Zabbix. O banco de produção se chama PRDORA. A reunião com o time é na quinta às 10h.",
+      "error": null,
+      "correct_choice": true,
+      "text_ok": true,
+      "ok": true,
+      "run": 2
+    },
+    {
+      "question": "Qual o padrão de nome que eu uso nos hosts?",
+      "expected": null,
+      "got": null,
+      "decision_s": 0.2802914600015356,
+      "first_text": "Seu padrão é ambiente-servidor-host.",
+      "error": null,
+      "correct_choice": true,
+      "text_ok": true,
+      "ok": true,
+      "run": 2
+    },
+    {
+      "question": "Que horas é a reunião com o time?",
+      "expected": null,
+      "got": "guardar_fato",
+      "decision_s": 0.6817773040002066,
+      "first_text": "",
+      "error": null,
+      "correct_choice": false,
+      "arguments": {
+        "fato": "A reunião com o time do Reinaldo é na quinta às 10h"
+      },
+      "args_ok": false,
+      "answer": "A reunião é na quinta às 10h.",
+      "answer_first_chunk_s": 0.9001775790002284,
+      "text_ok": true,
+      "ok": false,
+      "run": 2
+    },
+    {
+      "question": "Qual é mesmo o nome do meu banco de produção?",
+      "expected": null,
+      "got": "oracle_banco",
+      "decision_s": 0.6782577959984337,
+      "first_text": "",
+      "error": null,
+      "correct_choice": false,
+      "arguments": {},
+      "args_ok": false,
+      "answer": "O banco de produção é o PRDORA, como eu sei.",
+      "answer_first_chunk_s": 1.2846059460007382,
+      "text_ok": true,
+      "ok": false,
+      "run": 2
+    },
+    {
+      "question": "Qual é o nome do meu banco de produção?",
+      "expected": null,
+      "got": "guardar_fato",
+      "decision_s": 1.2088722349999443,
+      "first_text": "",
+      "error": null,
+      "correct_choice": false,
+      "arguments": {
+        "fato": "O banco de produção do Reinaldo se chama PRDORA"
+      },
+      "args_ok": false,
+      "answer": "Você quis dizer PRDORA? É o nome que guardei para o banco de produção.",
+      "answer_first_chunk_s": 0.6868848340000113,
+      "text_ok": true,
+      "ok": false,
+      "run": 2
+    },
+    {
+      "question": "Quando é mesmo a reunião com o time?",
+      "expected": null,
+      "got": null,
+      "decision_s": 0.7664807029996155,
+      "first_text": "A reunião é na quinta às 10h.",
+      "error": null,
+      "correct_choice": true,
+      "text_ok": true,
+      "ok": true,
+      "run": 2
+    },
+    {
+      "question": "Qual o nome do meu notebook?",
+      "expected": null,
+      "got": null,
+      "decision_s": 0.31043176499952096,
+      "first_text": "Não tenho essa informação. Você pediu para esquecer essa informação antes.",
+      "error": null,
+      "correct_choice": true,
+      "text_ok": true,
+      "ok": true,
+      "run": 2
+    }
+  ]
+}
