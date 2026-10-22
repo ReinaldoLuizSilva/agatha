@@ -199,7 +199,19 @@ ACRONYMS = {
     "CDB": "cê dê bê",
     "PDB": "pê dê bê",
     "SPFILE": "ésse pê fáiou",
+    # manchetes (Fase 10, notícias)
+    "G1": "gê um",
+    "IA": "i a",
+    "EUA": "ê u a",
+    "STF": "ésse tê éfe",
+    "TSE": "tê ésse é",
+    "PT": "pê tê",
+    "PL": "pê éle",
+    "PHP": "pê agá pê",
+    "AWS": "a dáblio ésse",
 }
+
+CURRENCIES = {"R$": ("real", "reais"), "US$": ("dólar", "dólares"), "€": ("euro", "euros")}
 
 UNITS = {
     "TB": "terabytes", "GB": "gigabytes", "MB": "megabytes", "KB": "kilobytes",
@@ -214,7 +226,8 @@ _DATE = re.compile(r"\b(0?[1-9]|[12]\d|3[01])/(0?[1-9]|1[0-2])(?:/(\d{4}|\d{2}))
 _TIME = re.compile(r"\b([01]?\d|2[0-3])(?::|h)([0-5]\d)\b")
 _HOURS = re.compile(r"\b([01]?\d|2[0-3])h\b")
 _PERCENT = re.compile(r"(\d+(?:[.,]\d+)?)\s?%")
-_MONEY = re.compile(r"R\$\s?(\d{1,3}(?:\.\d{3})*|\d+)(?:,(\d{2}))?")
+_MONEY = re.compile(r"(R\$|US\$|€)\s?(\d{1,3}(?:\.\d{3})+|\d+)(?:,(\d+))?"
+                    r"(?:\s(mil|milhão|milhões|bilhão|bilhões|trilhão|trilhões)\b)?")
 _ORDINAL = re.compile(r"\b(\d+)\s?[ºª°]")
 _UNIT = re.compile(r"\b(\d+(?:[.,]\d+)?)\s?(" + "|".join(UNITS) + r")\b")
 _THOUSANDS = re.compile(r"\b\d{1,3}(?:\.\d{3})+\b")
@@ -234,6 +247,19 @@ def _number(token: str) -> str:
         parts = [m[1]] + m[2].lstrip(".").split(".")
         return " ponto ".join(_int(int(p)) for p in parts)
     return _int(int(token))
+
+
+def _money(m: re.Match) -> str:
+    """"R$ 10,50" → "dez reais e cinquenta centavos"; "R$ 7,1 bilhões" → "sete vírgula um bilhões de
+    reais" (nas manchetes; antes saía "sete reais,um bilhões")."""
+    one, many = CURRENCIES[m[1]]
+    if m[4]:
+        number = _number(f"{m[2]},{m[3]}" if m[3] else m[2])
+        return f"{number} {m[4]} {'' if m[4] == 'mil' else 'de '}{many}"
+    whole = int(m[2].replace(".", ""))
+    words = f"{_int(whole)} {one if whole == 1 else many}"
+    cents = int(m[3].ljust(2, "0")[:2]) if m[3] else 0
+    return words + (f" e {_int(cents)} {'centavo' if cents == 1 else 'centavos'}" if cents else "")
 
 
 def _date(m: re.Match) -> str:
@@ -259,11 +285,7 @@ def _measure(token: str) -> str:
 def normalize_for_speech(text: str) -> str:
     text = _IP.sub(lambda m: " ponto ".join(_int(int(g)) for g in m.groups()), text)
     text = _DATE.sub(_date, text)
-    text = _MONEY.sub(
-        lambda m: _int(int(m[1].replace(".", ""))) + " reais"
-        + (f" e {_int(int(m[2]))} centavos" if m[2] and int(m[2]) else ""),
-        text,
-    )
+    text = _MONEY.sub(_money, text)
     text = _TIME.sub(lambda m: f"{_hour(int(m[1]))} e {_int(int(m[2]))}" if int(m[2]) else _hours(int(m[1])), text)
     text = _HOURS.sub(lambda m: _hours(int(m[1])), text)
     text = _PERCENT.sub(lambda m: f"{_measure(m[1])} por cento", text)
