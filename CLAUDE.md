@@ -243,4 +243,9 @@ agatha/
       (−60 dBFS, pausa ~2 s) → trava no cliente 0.5.1: só dispara com pico > −52 dBFS no último segundo (ADR-014).
       Visto: "alerta no banco Zabbix" chamou oracle_banco (o "banco" puxou o Oracle); "El Ninho" → "não reconheço
       como termo técnico" (a confirmação de siglas vale também fora de TI; acompanhar).
-      Próximo: ele testa o cliente 0.5.1 (git pull); depois notícias (RSS: G1, Folha, Tecnoblog).
+      3º teste (21/10, cliente 0.5.1, 28 falas): barge-in 3/3, 0 à toa (a trava barrou 1 nota 0,78 em −58 dBFS);
+      clima sem "RS"; Oracle/Zabbix e acompanhamentos certos; 1º áudio p50 2,0 s (máx 2,66), LLM p50 1,4 s;
+      sem estouro, mas **maior prompt 3832/4096** (a opção B, contexto 6144, deve vir antes das notícias ou logo
+      depois). "espero" virou palavra de parar. El Niño pela 3ª vez errado ("não reconheço em conceitos de TI.
+      Você quis dizer Data Guard?": copia o exemplo do prompt) — proposta: casos no precision_bench + ajuste.
+      Próximo (a decidir com ele): El Niño; medir VRAM com ctx 6144; notícias (RSS: G1, Folha, Tecnoblog).

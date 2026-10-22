@@ -47,6 +47,7 @@ def test_palavras_configuraveis():
     ("do banco Agatha chega", "stop"),
     ("Agatha, Paras", "stop"),  # o Whisper em 21/10
     ("Agatha, espera.", "stop"),
+    ("Agatha, espero.", "stop"),  # o Whisper para "espera" (21/10)
     ("Agatha, espera que eu vou ver uma coisa", "question"),
 ])
 def test_tipo_de_interrupcao(text, kind):
