@@ -135,7 +135,22 @@ em "quando é a reunião com o time?" (chama `guardar_fato`: 5 → 1 de 6) e na 
 Ganho pequeno (−108 tokens) contra piora medida: ficou a v8. Os resultados estão em
 `bench/results/precision-v9*`, `precision-v10*` e `tools-servidor-20261021-*`.
 
-## Consequências
+### Conhecimento geral (21/10, prompt v12)
+
+No uso, "El Ninho" virou três vezes "não reconheço em conceitos de TI. Você quis dizer Data Guard?".
+Medido com casos novos (El Niño, Mona Lisa, fotossíntese e as variantes do STT): a v8 recusava
+**qualquer** pergunta fora de TI ("Não sei sobre isso. Eu sou sua assistente de TI"), 0/18 nas três
+perguntas claras, mesmo sabendo a resposta ("É um fenômeno climático"). A v11 (só "conhecimento geral
+ou conceitos de TI" e "termo de som parecido, de TI ou não") chegou a 8 e 12/15; a **v12** acrescenta
+"para o trabalho e o dia a dia" na apresentação e um exemplo sem ferramenta de conhecimento geral
+("Quem escreveu Dom Casmurro?"). "Elninho" agora vira "Não sei o que é Elninho, pode me dar mais
+contexto?" (a régua passou a aceitar "mais contexto" como pedido de confirmação).
+
+| prompt | antigos sem histórico | antigos com histórico | novos (sem / com) | `tools_bench` | tokens |
+|---|---|---|---|---|---|
+| v8 | 95/114 | 93/114 | 6/15 e 7/15 | 149/165 | 2488 |
+| **v12** | 96/114 | 93/114 | 14/15 e 13/15 | 150/165 | 2558 |
+
 
 **Positivas**
 

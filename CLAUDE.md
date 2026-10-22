@@ -247,5 +247,8 @@ agatha/
       clima sem "RS"; Oracle/Zabbix e acompanhamentos certos; 1º áudio p50 2,0 s (máx 2,66), LLM p50 1,4 s;
       sem estouro, mas **maior prompt 3832/4096** (a opção B, contexto 6144, deve vir antes das notícias ou logo
       depois). "espero" virou palavra de parar. El Niño pela 3ª vez errado ("não reconheço em conceitos de TI.
-      Você quis dizer Data Guard?": copia o exemplo do prompt) — proposta: casos no precision_bench + ajuste.
-      Próximo (a decidir com ele): El Niño; medir VRAM com ctx 6144; notícias (RSS: G1, Folha, Tecnoblog).
+      Você quis dizer Data Guard?").
+      Ctx 6144 medido (ADR-023): +34 MiB (pico 3695/4096 com prompt de 6070 tokens), latência igual; voltou
+      para 4096, **adotar é decisão dele** (recomendado antes das notícias). Prompt **v12** no ar (ADR-018): a
+      v8 recusava todo conhecimento geral ("sou assistente de TI"); v12 18/18 nesses casos, antigos 96 e 93/114,
+      tools 150/165, prefixo 2558 tokens. Próximo: notícias (RSS: G1, Folha, Tecnoblog).

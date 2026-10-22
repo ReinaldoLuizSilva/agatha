@@ -39,7 +39,7 @@ from tools_bench import NOW, RESULTS_DIR, build_registry, stream
 
 CLARIFY = re.compile(r"quis dizer|pode repetir|não entendi|pode reformular|poderia repetir|confirmar|"
                      r"se refere|seria (o|a) |não reconheço|não conheço (esse|essa)|pode explicar melhor|"
-                     r"qual (servidor|host|banco)|o que (exatamente )?você", re.I)
+                     r"qual (servidor|host|banco)|o que (exatamente )?você|mais contexto", re.I)
 CANNOT = re.compile(r"não (consigo|sei|tenho (acesso|como|ferramenta|a função|controle)|posso|é possível)|"
                     r"não tenho essa informação|sem acesso|não mostra", re.I)
 
@@ -72,6 +72,11 @@ CASES = [
     case("responder", "e o que significa o STT.", any_of=["fala", "speech"]),
     case("responder", "Agatha, o que que significa LLM?", any_of=["linguagem", "language"]),
     case("responder", "Agatha, o que é um protocolo HTTP?", any_of=["web", "navegador", "hipertexto"]),
+    # conhecimento geral, fora de TI (21/10: "El Ninho" → "não reconheço em conceitos de TI. Você quis dizer
+    # Data Guard?", 3 vezes no Windows)
+    case("responder", "Agatha, o que é o El Niño?", any_of=["pacífico", "oceano", "aquec"], not_any=["data guard"]),
+    case("responder", "Agatha, quem pintou a Mona Lisa?", any_of=["vinci"]),
+    case("responder", "Agatha, o que é fotossíntese?", any_of=["luz", "planta"]),
     # --- confirmar: termos estragados pelo STT
     case("confirmar", "Agatha, eu quero que tu me explique pra que serve o RMA", alt=["rman"],
          not_any=["merchandise", "devolução", "mercadoria"]),
@@ -83,6 +88,8 @@ CASES = [
     case("confirmar", "Agatha, Kiora, Zabbix"),
     case("confirmar", "Zabbix Touchpad", not_any=["touchpad é", "touchpad serve"]),
     case("confirmar", "Agatha, qual é a diferença entre host"),
+    case("confirmar", "Agatha, o que é o Elninho?", alt=["el niño", "pacífico", "oceano"], not_any=["data guard"]),
+    case("confirmar", "El Ninho", alt=["el niño", "pacífico", "oceano"], not_any=["data guard"]),
     # 20/10, headset: ele disse AWR; a v5 inventou "Oracle WebLogic Repository"
     case("confirmar", "Agatha consegue explicar para que serve um OWR no Oracle.", alt=["awr"],
          not_any=["weblogic", "owr significa", "owr é"]),
