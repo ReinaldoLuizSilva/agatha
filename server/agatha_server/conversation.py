@@ -3,6 +3,10 @@
 Com ferramentas (ADR-009): se o LLM pede uma ferramenta, a Agatha fala uma frase curta de espera
 ("Deixa eu ver."), executa a ferramenta e volta ao LLM com o resultado, até `max_tool_rounds`.
 
+Busca na documentação (ADR-025): se a fala pede ("pesquisa..."), a busca roda antes do LLM, com a
+mesma frase de espera, e entra no turno como uma chamada de ferramenta já respondida; no histórico
+ficam só a pergunta e a resposta.
+
 Cada sessão (conexão) tem a sua `Conversation`. O histórico vive só na memória e é perdido
 quando a conexão fecha.
 """
@@ -11,7 +15,7 @@ import asyncio
 import json
 import logging
 import time
-from collections.abc import AsyncIterator, Callable
+from collections.abc import AsyncIterator, Awaitable, Callable
 from concurrent.futures import Executor
 from dataclasses import dataclass, field
 from datetime import datetime
@@ -23,6 +27,8 @@ from .memory import MemoryStore
 from .prompts import few_shot_messages, system_message, user_message
 from .text import Chunker, LeadingTimestampFilter, clean, normalize_for_speech
 from .tools import ToolRegistry
+from .tools.base import TOOL_TIMEOUT_S
+from .tools.search import search_request
 
 log = logging.getLogger(__name__)
 
@@ -32,6 +38,11 @@ FILLERS = ("Deixa eu ver.", "Um instante.", "Só um momento.")
 # ficam inteiros: o "esquece isso" logo depois de guardar usa o número que o guardar_fato devolveu.
 COMPACT_MIN_CHARS = 150
 OMITTED = json.dumps({"omitido": "já usado na resposta; consulte de novo se precisar"}, ensure_ascii=False)
+# A busca entra no turno como chamada de ferramenta (ADR-025): com os trechos na mensagem do usuário, o
+# modelo chamava outra ferramenta depois (noticias, zabbix_problemas); assim responde, 16 de 16. A
+# função não é declarada (o prompt fixo não cresce) e a chamada não fica no histórico, para o modelo não
+# imitá-la em perguntas de conceito.
+SEARCH_CALL_ID = "busca"
 
 
 @dataclass(frozen=True)
@@ -93,6 +104,7 @@ class Conversation:
         now: Callable[[], datetime] = datetime.now,
         tools: ToolRegistry | None = None,
         memory: MemoryStore | None = None,
+        search: Callable[[str], Awaitable[dict]] | None = None,
     ):
         self._llm = llm
         self._synth = synthesizer
@@ -103,6 +115,7 @@ class Conversation:
         self._tools = tools or ToolRegistry([])
         self._schemas = self._tools.schemas() or None
         self._memory = memory
+        self._search = search
         self._prefix = build_prefix(self._tools, memory)
         self._prefix_version = memory.version if memory else 0
         self._fillers = cycle(FILLERS)
@@ -112,6 +125,12 @@ class Conversation:
 
     def _flat_history(self) -> list[dict]:
         return [m for turn in self.history for m in turn]
+
+    def _last_user_text(self) -> str | None:
+        """A fala anterior, sem o carimbo de data ("pesquisa isso" busca o assunto dela)."""
+        if not self.history:
+            return None
+        return self.history[-1][0]["content"].split("] ", 1)[-1]
 
     def _refresh_prefix(self) -> bool:
         """Refaz o começo do prompt se a memória mudou. Devolve True se mudou."""
@@ -149,6 +168,25 @@ class Conversation:
             timings.setdefault("tts_first_ms", round((self._clock() - t0) * 1000))
             if pcm:
                 yield Audio(pcm)
+
+        query = search_request(user_text, self._last_user_text()) if self._search else None
+        if query:
+            async for event in speak(next(self._fillers)):
+                yield event
+            t0 = self._clock()
+            try:
+                result = await asyncio.wait_for(self._search(query), TOOL_TIMEOUT_S)
+            except Exception as e:
+                log.warning("busca falhou: %s", e)
+                result = {"erro": f"a busca não respondeu ({type(e).__name__})"}
+            timings["tool_ms"] = round((self._clock() - t0) * 1000)
+            used_tools.append("busca")
+            log.info("busca %r → %s", query, json.dumps(result, ensure_ascii=False)[:300])
+            turn += [
+                {"role": "assistant", "content": "", "tool_calls": [{"id": SEARCH_CALL_ID, "type": "function", "function": {
+                    "name": "buscar_documentacao", "arguments": json.dumps({"consulta": query}, ensure_ascii=False)}}]},
+                {"role": "tool", "tool_call_id": SEARCH_CALL_ID, "content": json.dumps(result, ensure_ascii=False)},
+            ]
 
         rounds = 0
         while True:
@@ -249,6 +287,9 @@ class Conversation:
         # reprocessa ~85 tokens a mais que antes (~50 ms).
         turn = [{**m, "content": OMITTED} if m["role"] == "tool" and len(m["content"]) > COMPACT_MIN_CHARS else m
                 for m in turn]
+        # a busca (ADR-025) sai inteira: chamada e resultado
+        turn = [m for m in turn if m.get("tool_call_id") != SEARCH_CALL_ID
+                and not any(c["id"] == SEARCH_CALL_ID for c in m.get("tool_calls") or ())]
         self.history.append(turn)
         reasons = []
         if len(self.history) > self.config.history_turns:

@@ -269,6 +269,10 @@ CASES = [
     ("O que é um feed RSS?", None, None, None, None),
     ("Quem ganhou a Copa do Mundo de 2002?", None, None, "Brasil", None),
     ("Quando caiu o Muro de Berlim?", None, None, "1989", None),
+    # Fase 10: a busca na documentação é pedida na fala e feita pelo servidor (ADR-025); estas não usam nada
+    ("Qual a porta padrão do Zabbix agent?", None, None, "10050", None),
+    ("O que é um backup incremental?", None, None, None, None),
+    ("Como funciona o Data Guard?", None, None, None, None),
     ("Lembra que o meu servidor de testes se chama lab01.", "guardar_fato", lambda a: "lab01" in a.get("fato", "").lower(), None, None),
     ("Anota aí: o backup roda todo dia às 2h.", "guardar_fato", lambda a: "backup" in a.get("fato", "").lower(), None, None),
     ("Esquece que o banco de produção se chama PRDORA.", "esquecer", lambda a: int(a.get("numero")) == 2, None, None),

@@ -10,6 +10,7 @@ from agatha_server.llm import ContextOverflow, TextDelta, ToolCallDelta
 from agatha_server.memory import MemoryConfig, MemoryStore
 from agatha_server.tools.memory import memory_tools
 from agatha_server.prompts import describe_now
+from agatha_server.text import normalize_for_speech
 from agatha_server.tools import Example, Tool, ToolRegistry
 
 
@@ -67,11 +68,11 @@ def run(conversation: Conversation, text: str) -> list:
     return asyncio.run(collect())
 
 
-def make(*replies, tools: ToolRegistry | None = None, memory: MemoryStore | None = None,
+def make(*replies, tools: ToolRegistry | None = None, memory: MemoryStore | None = None, search=None,
          **kwargs) -> tuple[Conversation, FakeLLM, FakeSynth]:
     llm, synth = FakeLLM(*replies, **kwargs), FakeSynth()
     conv = Conversation(llm, synth, ThreadPoolExecutor(1), ConversationConfig(history_turns=4),
-                        clock=lambda: 1.0, now=lambda: NOW, tools=tools, memory=memory)
+                        clock=lambda: 1.0, now=lambda: NOW, tools=tools, memory=memory, search=search)
     return conv, llm, synth
 
 
@@ -295,3 +296,51 @@ def test_contexto_estourado_sem_historico_e_erro():
     llm, synth = OverflowLLM(1, "Ok."), FakeSynth()
     conv = Conversation(llm, synth, ThreadPoolExecutor(1), clock=lambda: 1.0, now=lambda: NOW)
     assert run(conv, "pergunta")[-1].reason == "error"
+
+
+def fake_search(queries, result=None):
+    async def search(query):
+        queries.append(query)
+        return result or {"consulta": query, "resultados": ["zabbix.com, 3 Housekeeping: The housekeeper is a "
+                                                            "periodical process"]}
+    return search
+
+
+def test_busca_a_pedido_vai_com_a_pergunta_e_sai_do_historico():
+    queries = []
+    conv, llm, synth = make("Segundo o zabbix.com, o housekeeper limpa dados antigos.", search=fake_search(queries))
+    events = run(conv, "Agatha, pesquisa na documentação do Zabbix como funciona o housekeeping.")
+    assert queries == ["Zabbix como funciona o housekeeping"]
+    assert synth.spoken[0] == normalize_for_speech(FILLERS[0])  # frase de espera enquanto busca
+    call, result = llm.calls[0][-2:]  # a busca entra como chamada de ferramenta já respondida
+    assert call["tool_calls"][0]["function"] == {"name": "buscar_documentacao",
+                                                 "arguments": '{"consulta": "Zabbix como funciona o housekeeping"}'}
+    assert "The housekeeper is" in result["content"]
+    assert events[-1].tools == ["busca"]
+    assert [m["role"] for m in conv.history[-1]] == ["user", "assistant"]  # no histórico, sem a busca
+    assert conv.history[-1][1]["content"] == "Segundo o zabbix.com, o housekeeper limpa dados antigos."
+
+
+def test_pesquisa_isso_usa_a_pergunta_anterior():
+    queries = []
+    conv, _, _ = make("Resposta.", search=fake_search(queries))
+    run(conv, "O que é o housekeeping do Zabbix?")
+    run(conv, "Pesquisa isso na documentação.")
+    assert queries == ["O que é o housekeeping do Zabbix"]
+
+
+def test_sem_pedido_nao_busca():
+    queries = []
+    conv, llm, synth = make("O RMAN faz backup.", search=fake_search(queries))
+    run(conv, "Agatha, pra que serve o RMAN?")
+    assert queries == [] and synth.spoken == [normalize_for_speech("O RMAN faz backup.")]
+
+
+def test_busca_que_falha_vira_erro_para_o_llm():
+    async def broken(query):
+        raise ConnectionError("fora")
+
+    conv, llm, _ = make("Não consegui pesquisar agora.", search=broken)
+    run(conv, "Pesquisa o que mudou no Zabbix 7.0.")
+    assert llm.calls[0][-1] == {"role": "tool", "tool_call_id": "busca",
+                                "content": '{"erro": "a busca não respondeu (ConnectionError)"}'}
