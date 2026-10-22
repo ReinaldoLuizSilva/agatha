@@ -68,6 +68,7 @@ def test_mesma_pagina_em_versoes_fica_a_mais_nova_na_posicao_da_primeira():
 
 def test_site_for():
     assert site_for("Zabbix agent porta padrão") == "zabbix.com/documentation"
+    assert site_for("apps, como funciona o housekeeping") == "zabbix.com/documentation"  # STT trocou "do Zabbix"
     assert site_for("como configurar o Data Guard") == "docs.oracle.com"
     assert site_for("github actions cache") == "docs.github.com"
     assert site_for("git rebase") == "git-scm.com/docs"

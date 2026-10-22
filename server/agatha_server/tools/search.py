@@ -24,7 +24,7 @@ log = logging.getLogger(__name__)
 # palavra da consulta → site da documentação oficial (a primeira que aparecer vale)
 PRODUCTS = [
     (("oracle", "rman", "awr", "asm", "sqlplus", "spfile", "dataguard", "plsql"), "docs.oracle.com"),
-    (("zabbix",), "zabbix.com/documentation"),
+    (("zabbix", "housekeeping", "housekeeper"), "zabbix.com/documentation"),  # termo do Zabbix no glossário
     (("podman", "quadlet"), "docs.podman.io"),
     (("docker", "dockerfile"), "docs.docker.com"),
     (("kubernetes", "k8s", "kubectl"), "kubernetes.io/docs"),
