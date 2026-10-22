@@ -59,8 +59,9 @@ mudou) e o pod inteiro no ar, STT e LLM juntos:
 O contexto maior quase não custa VRAM porque o Gemma 4 usa sliding window attention: só parte das
 camadas guarda o contexto inteiro. O custo é reprocessar um prompt grande do zero (~250 tok/s: 4646
 tokens em ~20 s), o que só acontece quando o histórico é cortado, e o pré-aquecimento em segundo
-plano cobre boa parte enquanto ela fala. Voltou para 4096 depois da medição: adotar é decisão do
-Reinaldo.
+plano cobre boa parte enquanto ela fala. Voltou para 4096 depois da medição, e o Reinaldo **adotou o
+6144 em 22/10** (`deploy/quadlet/agatha-llm.container`), antes das notícias. O marcador continua: os
+dois se somam.
 
 ## Consequências
 

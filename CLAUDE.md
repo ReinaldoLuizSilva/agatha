@@ -27,7 +27,8 @@ e no trabalho (infra, Oracle, Zabbix). Também é peça de portfólio Cloud/DevO
 - Não adicionar repos NVIDIA que tragam driver 590+, nem usar os módulos open da NVIDIA (não suportam Pascal).
 - CUDA **12.x** para compilar/rodar (o `nvidia-smi` mostra "CUDA 13.0", mas isso é só o máximo do driver; o toolkit 13 não suporta Pascal).
 - Orçamento de VRAM: 4 GB. STT (faster-whisper `small`, int8) ~0,4 GB (ADR-002) + LLM Gemma 4 E4B Q4_K_M com
-  ctx 4096 ~3,27 GB (ADR-004) = pico de 3,66 GB. Sobra ~0,4 GB: qualquer coisa nova na GPU precisa ser medida antes.
+  ctx 6144 ~3,30 GB (ADR-004, ADR-023; com ctx 4096 era 3,27) = pico de 3,70 GB. Sobra ~0,4 GB: qualquer coisa
+  nova na GPU precisa ser medida antes.
 - Kernel UEK atualizado exige `kernel-uek-devel` da mesma versão para o DKMS recompilar.
 - GPU em container: NVIDIA Container Toolkit 1.20.1 (repo oficial `libnvidia-container`, que só tem o toolkit,
   sem driver), CDI em `/etc/cdi/nvidia.yaml` (regenerado por `nvidia-cdi-refresh.path`), SELinux
@@ -249,6 +250,6 @@ agatha/
       depois). "espero" virou palavra de parar. El Niño pela 3ª vez errado ("não reconheço em conceitos de TI.
       Você quis dizer Data Guard?").
       Ctx 6144 medido (ADR-023): +34 MiB (pico 3695/4096 com prompt de 6070 tokens), latência igual; voltou
-      para 4096, **adotar é decisão dele** (recomendado antes das notícias). Prompt **v12** no ar (ADR-018): a
+      para 4096; **adotado em 22/10** a pedido dele (unit do LLM com `-c 6144`). Prompt **v12** no ar (ADR-018): a
       v8 recusava todo conhecimento geral ("sou assistente de TI"); v12 18/18 nesses casos, antigos 96 e 93/114,
       tools 150/165, prefixo 2558 tokens. Próximo: notícias (RSS: G1, Folha, Tecnoblog).

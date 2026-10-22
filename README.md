@@ -93,8 +93,9 @@ transcrição e o prompt crescem.
   antes (`bench/`).
 - **GPU Pascal**: driver NVIDIA fixado no branch 580 e CUDA 12.x, porque o branch 590+ e o CUDA 13
   não suportam mais a arquitetura.
-- **Contexto de 4096 tokens**: o prompt fixo (regras, exemplos das ferramentas, memória) ocupa
-  ~1.670 tokens e não pode mudar entre turnos, para o cache do llama.cpp valer (ADR-007).
+- **Contexto de 6144 tokens** (era 4096; ADR-023): o prompt fixo (regras, exemplos das ferramentas,
+  memória) ocupa ~2.560 tokens e não pode mudar entre turnos, para o cache do llama.cpp valer (ADR-007);
+  resultados grandes de ferramenta viram um marcador no histórico.
 
 ## Decisões de arquitetura
 

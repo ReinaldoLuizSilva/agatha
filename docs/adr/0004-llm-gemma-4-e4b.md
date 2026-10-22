@@ -123,6 +123,8 @@ ou comandos errados. Isso é limitação de modelo de 4B, não de um candidato e
 - **VRAM apertada:** sobram ~0,43 GB na GPU, e o E4B fica perto do teto de 3,4 GB do ADR-002.
   Contextos maiores que 4096 tokens exigirão quantizar o KV cache (`--cache-type-k/v q8_0`) ou
   limitar o histórico. Qualquer componente novo na GPU precisa ser medido antes.
+  *Revisão de 22/10 (ADR-023):* medido, o contexto de 6144 custou só +34 MiB (sliding window
+  attention), sem quantizar o KV cache; adotado.
 - **Geração mais lenta que os outros** (18 tok/s): respostas longas demoram mais para terminar,
   embora comecem rápido. O prompt de respostas curtas é parte da decisão.
 - **Conhecimento técnico limitado:** um modelo de 4B erra detalhes de Oracle e Zabbix e não é

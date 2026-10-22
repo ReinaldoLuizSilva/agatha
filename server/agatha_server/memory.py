@@ -26,7 +26,7 @@ DEFAULT_DB = "/dados/agatha/data/memory/agatha.db"
 @dataclass(frozen=True)
 class MemoryConfig:
     db: str = DEFAULT_DB
-    # cada fato custa ~20-25 tokens no prompt; 30 fatos ≈ 700 tokens dos 4096 de contexto (ADR-010)
+    # cada fato custa ~20-25 tokens no prompt; 30 fatos ≈ 700 tokens dos 6144 de contexto (ADR-010, ADR-023)
     max_facts: int = 30
     max_chars: int = 200
 
