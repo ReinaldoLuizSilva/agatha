@@ -1,0 +1,887 @@
+{
+  "date": "2026-10-22T18:49:57",
+  "runs": 3,
+  "system_prompt": "Você é a Agatha, assistente de voz pessoal para o trabalho e o dia a dia. O usuário é o Reinaldo; você o chama de Reinaldo ou de Rei.\nTudo o que você escreve será falado em voz alta, então:\n- comece sempre com uma frase bem curta, de no máximo seis palavras; depois complemente se for útil;\n- responda em português do Brasil, em até três frases no total, a menos que ele peça detalhes;\n- nunca leia código, SQL ou comandos completos: diga o nome do comando ou da view e explique a ideia;\n- não use markdown, listas, emojis nem parênteses;\n- escreva horas, datas e números sempre em algarismos, como 18h22, 11/10 ou 36; o sistema converte para a fala;\n- não cumprimente nem repita o nome dele em toda resposta, só quando soar natural;\n- tom meio a meio entre profissional e descontraído: cordial e direto;\n- perguntas de conhecimento geral ou sobre conceitos de TI você responde direto com o que sabe, sem avisar que não tem detalhes; diga que\n  não sabe só quando for algo do ambiente dele que nenhuma ferramenta mostra, como o estado de um backup ou de\n  locks, e nunca invente um estado.\nO que ele diz chega por reconhecimento de voz e pode vir com palavras trocadas, principalmente siglas e nomes\ntécnicos. Se uma palavra não fizer sentido, pense no termo de som parecido, de TI ou não, e confirme numa frase curta,\ncomo \"Você quis dizer Data Guard?\". Se não achar nenhum, diga que não entendeu e peça para repetir. Nunca\nexplique uma palavra que você não reconhece como termo técnico.\nCada mensagem dele começa com a data e a hora atuais entre colchetes; use só se for relevante.\nO Reinaldo trabalha com infraestrutura (Linux, Oracle, Zabbix) e estuda cloud e DevOps. Siglas e termos que ele\nusa: no Oracle, RMAN, AWR, ASH, ASM, CDB, PDB, Data Guard, SPFILE, archivelog, listener; no Zabbix, item,\ntrigger, template, housekeeping, proxy; tipos de backup: completo, incremental e diferencial. Uma sigla de\nOracle ou Zabbix fora dessa lista quase sempre é uma delas mal ouvida: confirme (\"Você quis dizer AWR?\" para\n\"OWR\"), também no meio de uma conversa.\nSua memória: fatos que o Reinaldo pediu para você guardar. Use-os ao responder. Se ele perguntar o que você sabe sobre ele, conte estes fatos. Para apagar um deles, use esquecer com o número. Não use guardar_fato para algo que já está aqui.\n1. O Reinaldo usa o padrão ambiente-servidor-host nos hosts do Zabbix\n2. O banco de produção se chama PRDORA\n3. A reunião com o time é na quinta às 10h\n4. A cidade do Reinaldo para o clima é Novo Hamburgo (RS)\nVocê tem ferramentas e deve usá-las nestes casos, sempre:\n- qualquer conta, porcentagem ou conversão de unidades: use calcular, mesmo que pareça fácil;\n- perguntas sobre alertas ou problemas atuais no Zabbix: use zabbix_problemas; para prioridade alta, severidade_minima alta;\n- perguntas sobre o estado atual de um host no Zabbix (CPU, memória, disco, se está no ar): use zabbix_host; se ele não disser qual, como em o servidor, o host é agatha-srv;\n- perguntas sobre o uso atual das tablespaces do Oracle: use oracle_tablespaces;\n- perguntas sobre sessões abertas no Oracle: use oracle_sessoes;\n- perguntas sobre o estado do banco Oracle, como se está no ar, archivelog, Data Guard ou locks: use oracle_banco;\n- perguntas sobre os backups do Oracle, como se o backup de ontem rodou: use oracle_backups;\n- perguntas sobre os repositórios dele no GitHub, como commits, PRs, issues ou se a CI passou: use github_repo;\n- perguntas sobre o tempo, temperatura, chuva ou previsão: use clima com a cidade que ele disser ou a da sua memória; se não souber a cidade, pergunte;\n- notícias, manchetes ou o que está acontecendo: use noticias, com o assunto e a fonte só se ele disser;\n- quando ele pedir para lembrar, anotar ou guardar algo novo: use guardar_fato; uma pergunta nunca é pedido para guardar;\n- quando ele pedir para esquecer ou apagar algo da memória: use esquecer com o número do fato; se ele não disser qual, como em isso ou essa informação, use o último fato da lista;\nPelas ferramentas você acessa esses sistemas de verdade: nunca diga que não tem acesso a eles. Só chame uma ferramenta se ela mostra o que ele perguntou. Se o resultado não trouxer o que ele perguntou, diga que ela não mostra isso, sem tirar conclusões.\nPerguntas do tipo \"o que é\", \"como funciona\" ou \"para que serve\" são sobre conceitos: responda direto com o que você sabe, sem ferramenta. O mesmo vale para opiniões, conversa e perguntas sobre o que já está na sua memória.\nAs primeiras trocas desta conversa são só exemplos de formato: não são fatos sobre o Reinaldo nem coisas que ele disse.",
+  "tools": [
+    {
+      "type": "function",
+      "function": {
+        "name": "calcular",
+        "description": "Calcula uma expressão matemática. Use para qualquer conta, porcentagem ou conversão numérica. Exemplo de expressão: 240 * 0.15",
+        "parameters": {
+          "type": "object",
+          "properties": {
+            "expressao": {
+              "type": "string",
+              "description": "expressão em sintaxe Python"
+            }
+          },
+          "required": [
+            "expressao"
+          ]
+        }
+      }
+    },
+    {
+      "type": "function",
+      "function": {
+        "name": "zabbix_problemas",
+        "description": "Lista os alertas (problemas) ativos no Zabbix, de todos os hosts ou de um host.",
+        "parameters": {
+          "type": "object",
+          "properties": {
+            "host": {
+              "type": "string",
+              "description": "nome do host; omita para todos"
+            },
+            "severidade_minima": {
+              "type": "string",
+              "enum": [
+                "informação",
+                "atenção",
+                "média",
+                "alta",
+                "desastre"
+              ],
+              "description": "só problemas desta severidade para cima"
+            }
+          },
+          "required": []
+        }
+      }
+    },
+    {
+      "type": "function",
+      "function": {
+        "name": "zabbix_host",
+        "description": "Mostra o estado e as métricas atuais de um host monitorado no Zabbix: CPU, memória, disco.",
+        "parameters": {
+          "type": "object",
+          "properties": {
+            "host": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "host"
+          ]
+        }
+      }
+    },
+    {
+      "type": "function",
+      "function": {
+        "name": "oracle_tablespaces",
+        "description": "Mostra o uso de espaço das tablespaces do banco Oracle.",
+        "parameters": {
+          "type": "object",
+          "properties": {},
+          "required": []
+        }
+      }
+    },
+    {
+      "type": "function",
+      "function": {
+        "name": "oracle_sessoes",
+        "description": "Mostra quantas sessões estão abertas no banco Oracle e quantas estão ativas.",
+        "parameters": {
+          "type": "object",
+          "properties": {},
+          "required": []
+        }
+      }
+    },
+    {
+      "type": "function",
+      "function": {
+        "name": "oracle_banco",
+        "description": "Mostra o estado do banco Oracle: se está aberto, modo archivelog, papel e Data Guard, versão, há quanto tempo está no ar e sessões bloqueadas por locks.",
+        "parameters": {
+          "type": "object",
+          "properties": {},
+          "required": []
+        }
+      }
+    },
+    {
+      "type": "function",
+      "function": {
+        "name": "oracle_backups",
+        "description": "Lista os últimos backups do Oracle feitos pelo RMAN: quando, tipo, status e tamanho.",
+        "parameters": {
+          "type": "object",
+          "properties": {},
+          "required": []
+        }
+      }
+    },
+    {
+      "type": "function",
+      "function": {
+        "name": "github_repo",
+        "description": "Mostra um repositório dele no GitHub (agatha): últimos commits, PRs e issues abertos e a última execução da CI.",
+        "parameters": {
+          "type": "object",
+          "properties": {
+            "repo": {
+              "type": "string",
+              "description": "nome do repositório (agatha); omita para o agatha"
+            }
+          },
+          "required": []
+        }
+      }
+    },
+    {
+      "type": "function",
+      "function": {
+        "name": "clima",
+        "description": "Mostra o tempo agora e a previsão de 3 dias de uma cidade: temperatura, chance de chuva e condição.",
+        "parameters": {
+          "type": "object",
+          "properties": {
+            "cidade": {
+              "type": "string",
+              "description": "cidade e estado, como Curitiba (PR)"
+            }
+          },
+          "required": [
+            "cidade"
+          ]
+        }
+      }
+    },
+    {
+      "type": "function",
+      "function": {
+        "name": "noticias",
+        "description": "Manchetes recentes do G1, da Folha e do Tecnoblog, de uma seção ou sobre um tema.",
+        "parameters": {
+          "type": "object",
+          "properties": {
+            "assunto": {
+              "type": "string",
+              "description": "tecnologia, economia, política, mundo, esporte, Rio Grande do Sul ou um tema, como a falha do PHP; vazio para as principais"
+            },
+            "fonte": {
+              "type": "string",
+              "enum": [
+                "G1",
+                "Folha",
+                "Tecnoblog"
+              ]
+            }
+          },
+          "required": []
+        }
+      }
+    },
+    {
+      "type": "function",
+      "function": {
+        "name": "guardar_fato",
+        "description": "Guarda um fato NOVO sobre o Reinaldo na memória, para conversas futuras. Use quando ele pedir para lembrar, anotar ou guardar alguma coisa que ainda não está na memória.",
+        "parameters": {
+          "type": "object",
+          "properties": {
+            "fato": {
+              "type": "string",
+              "description": "o fato, numa frase curta, na 3ª pessoa"
+            }
+          },
+          "required": [
+            "fato"
+          ]
+        }
+      }
+    },
+    {
+      "type": "function",
+      "function": {
+        "name": "esquecer",
+        "description": "Apaga um fato da memória, pelo número com que ele aparece na lista de memória.",
+        "parameters": {
+          "type": "object",
+          "properties": {
+            "numero": {
+              "type": "integer",
+              "description": "número do fato na memória"
+            }
+          },
+          "required": [
+            "numero"
+          ]
+        }
+      }
+    }
+  ],
+  "rows": [
+    {
+      "question": "Quais são as notícias de hoje?",
+      "expected": "noticias",
+      "got": "noticias",
+      "decision_s": 0.59264579199953,
+      "first_text": "",
+      "error": null,
+      "correct_choice": true,
+      "arguments": {},
+      "args_ok": true,
+      "answer": "Tem várias notícias. No G1, fala sobre apoios pós-eleição. A Folha reporta sobre o lucro do Bradesco.",
+      "answer_first_chunk_s": 0.8527231439993557,
+      "text_ok": true,
+      "ok": true,
+      "run": 0
+    },
+    {
+      "question": "Tem alguma notícia de tecnologia?",
+      "expected": "noticias",
+      "got": "noticias",
+      "decision_s": 0.569704026999716,
+      "first_text": "",
+      "error": null,
+      "correct_choice": true,
+      "arguments": {
+        "assunto": "tecnologia"
+      },
+      "args_ok": true,
+      "answer": "Tem algumas notícias. A Microsoft teve um avanço em IA de diagnóstico, e o Spotify registrou alta de receita.",
+      "answer_first_chunk_s": 0.8347189010000875,
+      "text_ok": true,
+      "ok": true,
+      "run": 0
+    },
+    {
+      "question": "O que tem de novo no Tecnoblog?",
+      "expected": "noticias",
+      "got": "noticias",
+      "decision_s": 0.5691922659998454,
+      "first_text": "",
+      "error": null,
+      "correct_choice": true,
+      "arguments": {
+        "assunto": "tecnologia",
+        "fonte": "Tecnoblog"
+      },
+      "args_ok": true,
+      "answer": "Tem sobre IA superando médicos e o Xbox testando venda de horas na nuvem.",
+      "answer_first_chunk_s": 1.411713683999551,
+      "text_ok": true,
+      "ok": true,
+      "run": 0
+    },
+    {
+      "question": "Quais são as manchetes da Folha?",
+      "expected": "noticias",
+      "got": "noticias",
+      "decision_s": 0.5541786200001297,
+      "first_text": "",
+      "error": null,
+      "correct_choice": true,
+      "arguments": {
+        "fonte": "Folha"
+      },
+      "args_ok": true,
+      "answer": "As manchetes da Folha são: Bradesco segura despesas e lucro sobe para R$ 7,1 bilhões no 3º tri e Morre Tom Skerritt, ator de 'Alien' e 'Top Gun', aos 93 anos.",
+      "answer_first_chunk_s": 1.0142040909995558,
+      "text_ok": true,
+      "ok": true,
+      "run": 0
+    },
+    {
+      "question": "Me conta as notícias de economia.",
+      "expected": "noticias",
+      "got": "noticias",
+      "decision_s": 0.5860772100004397,
+      "first_text": "",
+      "error": null,
+      "correct_choice": true,
+      "arguments": {
+        "assunto": "economia"
+      },
+      "args_ok": true,
+      "answer": "Tem notícias de economia. O G1 fala sobre a LemFi e o dólar em queda. A Folha mostra o lucro do Bradesco e um investimento da Hitachi.",
+      "answer_first_chunk_s": 0.9041326110000227,
+      "text_ok": true,
+      "ok": true,
+      "run": 0
+    },
+    {
+      "question": "O que aconteceu no Rio Grande do Sul hoje?",
+      "expected": "noticias",
+      "got": "noticias",
+      "decision_s": 0.5534842349998144,
+      "first_text": "",
+      "error": null,
+      "correct_choice": true,
+      "arguments": {
+        "assunto": "Rio Grande do Sul"
+      },
+      "args_ok": true,
+      "answer": "Tem notícias recentes do RS. O G1 aponta que uma procurada foi presa em hotel na região.",
+      "answer_first_chunk_s": 0.9591509800002314,
+      "text_ok": true,
+      "ok": true,
+      "run": 0
+    },
+    {
+      "question": "Tem alguma notícia sobre a falha do PHP?",
+      "expected": "noticias",
+      "got": "noticias",
+      "decision_s": 0.5530232359997171,
+      "first_text": "",
+      "error": null,
+      "correct_choice": true,
+      "arguments": {
+        "assunto": "falha do PHP"
+      },
+      "args_ok": true,
+      "answer": "Tem notícias sobre isso. O Tecnoblog fala de tentativas de exploração, e o G1 menciona suspensões de sistemas.",
+      "answer_first_chunk_s": 0.8301292759997523,
+      "text_ok": false,
+      "ok": false,
+      "run": 0
+    },
+    {
+      "question": "E de tecnologia?",
+      "expected": "noticias",
+      "got": "noticias",
+      "decision_s": 1.0475376710001,
+      "first_text": "",
+      "error": null,
+      "correct_choice": true,
+      "arguments": {
+        "assunto": "tecnologia"
+      },
+      "args_ok": true,
+      "answer": "Tem sobre a Microsoft e IA superando médicos. Também há notícias sobre falhas no PHP afetando sistemas no Brasil.",
+      "answer_first_chunk_s": 1.1909284590001334,
+      "text_ok": true,
+      "ok": true,
+      "run": 0
+    },
+    {
+      "question": "E na Folha?",
+      "expected": "noticias",
+      "got": "noticias",
+      "decision_s": 1.0430547579999256,
+      "first_text": "",
+      "error": null,
+      "correct_choice": true,
+      "arguments": {
+        "assunto": "tecnologia",
+        "fonte": "Folha"
+      },
+      "args_ok": true,
+      "answer": "A Folha mostra que o Spotify registrou alta de receita e lucro com avanço de usuários.",
+      "answer_first_chunk_s": 1.4934588229998553,
+      "text_ok": true,
+      "ok": true,
+      "run": 0
+    },
+    {
+      "question": "Me conta mais sobre essa do PHP.",
+      "expected": "noticias",
+      "got": "noticias",
+      "decision_s": 0.5684385750000729,
+      "first_text": "",
+      "error": null,
+      "correct_choice": true,
+      "arguments": {
+        "assunto": "PHP"
+      },
+      "args_ok": true,
+      "answer": "A falha no PHP permite invasores controlarem servidores sem login. A AWS detectou a primeira tentativa antes do alerta sair.",
+      "answer_first_chunk_s": 1.3407064029997855,
+      "text_ok": true,
+      "ok": true,
+      "run": 0
+    },
+    {
+      "question": "O que é PHP?",
+      "expected": null,
+      "got": null,
+      "decision_s": 0.2838134010007707,
+      "first_text": "PHP é uma linguagem de script de código aberto. É muito usada para desenvolvimento web do lado do servidor.",
+      "error": null,
+      "correct_choice": true,
+      "text_ok": true,
+      "ok": true,
+      "run": 0
+    },
+    {
+      "question": "O que é um feed RSS?",
+      "expected": null,
+      "got": null,
+      "decision_s": 0.29676827499952196,
+      "first_text": "É um formato de arquivo que automatiza a distribuição de conteúdo. Permite que leitores de RSS recebam atualizações de sites automaticamente.",
+      "error": null,
+      "correct_choice": true,
+      "text_ok": true,
+      "ok": true,
+      "run": 0
+    },
+    {
+      "question": "Quem ganhou a Copa do Mundo de 2002?",
+      "expected": null,
+      "got": "noticias",
+      "decision_s": 0.5677551809994839,
+      "first_text": "",
+      "error": null,
+      "correct_choice": false,
+      "arguments": {
+        "assunto": "esporte"
+      },
+      "args_ok": false,
+      "answer": "Não encontrei a resposta específica sobre a Copa do Mundo de 2002. As notícias mostram temas atuais.",
+      "answer_first_chunk_s": 1.6557672730004924,
+      "text_ok": false,
+      "ok": false,
+      "run": 0
+    },
+    {
+      "question": "Quais são as notícias de hoje?",
+      "expected": "noticias",
+      "got": "noticias",
+      "decision_s": 0.5884497649994955,
+      "first_text": "",
+      "error": null,
+      "correct_choice": true,
+      "arguments": {},
+      "args_ok": true,
+      "answer": "Tem notícias de política e economia. O G1 fala sobre apoiadores de candidatos, e a Folha mostra o lucro do Bradesco.",
+      "answer_first_chunk_s": 1.030369735000022,
+      "text_ok": true,
+      "ok": true,
+      "run": 1
+    },
+    {
+      "question": "Tem alguma notícia de tecnologia?",
+      "expected": "noticias",
+      "got": "noticias",
+      "decision_s": 0.5755881889999728,
+      "first_text": "",
+      "error": null,
+      "correct_choice": true,
+      "arguments": {
+        "assunto": "tecnologia"
+      },
+      "args_ok": true,
+      "answer": "Tem algumas notícias. A Microsoft teve IA superando médicos em testes de diagnóstico. No G1, houve falhas no PHP afetando sistemas.",
+      "answer_first_chunk_s": 0.8456225079999058,
+      "text_ok": true,
+      "ok": true,
+      "run": 1
+    },
+    {
+      "question": "O que tem de novo no Tecnoblog?",
+      "expected": "noticias",
+      "got": "noticias",
+      "decision_s": 0.5548522569997658,
+      "first_text": "",
+      "error": null,
+      "correct_choice": true,
+      "arguments": {
+        "assunto": "tecnologia",
+        "fonte": "Tecnoblog"
+      },
+      "args_ok": true,
+      "answer": "Tem sobre IA superando médicos e sobre o Xbox testando vendas de horas na nuvem.",
+      "answer_first_chunk_s": 1.4713989740002944,
+      "text_ok": true,
+      "ok": true,
+      "run": 1
+    },
+    {
+      "question": "Quais são as manchetes da Folha?",
+      "expected": "noticias",
+      "got": "noticias",
+      "decision_s": 0.556713635000051,
+      "first_text": "",
+      "error": null,
+      "correct_choice": true,
+      "arguments": {
+        "fonte": "Folha"
+      },
+      "args_ok": true,
+      "answer": "As manchetes da Folha são sobre Bradesco e Tom Skerritt.",
+      "answer_first_chunk_s": 1.4649798169994028,
+      "text_ok": true,
+      "ok": true,
+      "run": 1
+    },
+    {
+      "question": "Me conta as notícias de economia.",
+      "expected": "noticias",
+      "got": "noticias",
+      "decision_s": 0.5910024590002649,
+      "first_text": "",
+      "error": null,
+      "correct_choice": true,
+      "arguments": {
+        "assunto": "economia"
+      },
+      "args_ok": true,
+      "answer": "Aqui estão as manchetes de economia. O G1 fala de serviços financeiros e o dólar em queda. A Folha mostra lucros do Bradesco e investimento da Hitachi Energy.",
+      "answer_first_chunk_s": 1.074534346999826,
+      "text_ok": true,
+      "ok": true,
+      "run": 1
+    },
+    {
+      "question": "O que aconteceu no Rio Grande do Sul hoje?",
+      "expected": "noticias",
+      "got": "noticias",
+      "decision_s": 0.560232900000301,
+      "first_text": "",
+      "error": null,
+      "correct_choice": true,
+      "arguments": {
+        "assunto": "Rio Grande do Sul"
+      },
+      "args_ok": true,
+      "answer": "Tem algumas notícias. O G1 reporta sobre uma pessoa procurada pela Interpol presa no RS e uma investigação de 'falso médico' no Norte do RS.",
+      "answer_first_chunk_s": 0.8563754609995158,
+      "text_ok": true,
+      "ok": true,
+      "run": 1
+    },
+    {
+      "question": "Tem alguma notícia sobre a falha do PHP?",
+      "expected": "noticias",
+      "got": "noticias",
+      "decision_s": 0.5580305960002079,
+      "first_text": "",
+      "error": null,
+      "correct_choice": true,
+      "arguments": {
+        "assunto": "falha do PHP"
+      },
+      "args_ok": true,
+      "answer": "Tem notícias sobre isso. O Tecnoblog aponta tentativas de exploração e o G1 fala em suspensão de sistemas.",
+      "answer_first_chunk_s": 0.8259682120005891,
+      "text_ok": false,
+      "ok": false,
+      "run": 1
+    },
+    {
+      "question": "E de tecnologia?",
+      "expected": "noticias",
+      "got": "noticias",
+      "decision_s": 1.0520776750008736,
+      "first_text": "",
+      "error": null,
+      "correct_choice": true,
+      "arguments": {
+        "assunto": "tecnologia"
+      },
+      "args_ok": true,
+      "answer": "Tem notícia sobre IA superando médicos e falhas no PHP. O Tecnoblog também noticiou sobre o Spotify e o Xbox.",
+      "answer_first_chunk_s": 1.377909542999987,
+      "text_ok": true,
+      "ok": true,
+      "run": 1
+    },
+    {
+      "question": "E na Folha?",
+      "expected": "noticias",
+      "got": "noticias",
+      "decision_s": 1.0447075709998899,
+      "first_text": "",
+      "error": null,
+      "correct_choice": true,
+      "arguments": {
+        "assunto": "tecnologia",
+        "fonte": "Folha"
+      },
+      "args_ok": true,
+      "answer": "A Folha mostra que o Spotify registrou alta de receita e lucro com avanço global de usuários.",
+      "answer_first_chunk_s": 1.554003045999707,
+      "text_ok": true,
+      "ok": true,
+      "run": 1
+    },
+    {
+      "question": "Me conta mais sobre essa do PHP.",
+      "expected": "noticias",
+      "got": "noticias",
+      "decision_s": 0.5699682149997898,
+      "first_text": "",
+      "error": null,
+      "correct_choice": true,
+      "arguments": {
+        "assunto": "falha do PHP"
+      },
+      "args_ok": true,
+      "answer": "O Tecnoblog aponta que hackers tentaram explorar essas falhas antes do alerta. O G1 informa que tribunais e a Anatel suspenderam sistemas por causa disso.",
+      "answer_first_chunk_s": 1.5811824980000893,
+      "text_ok": false,
+      "ok": false,
+      "run": 1
+    },
+    {
+      "question": "O que é PHP?",
+      "expected": null,
+      "got": null,
+      "decision_s": 0.2839570360001744,
+      "first_text": "É uma linguagem de programação de script. Ela é muito usada para desenvolver páginas web dinâmicas no lado do servidor.",
+      "error": null,
+      "correct_choice": true,
+      "text_ok": true,
+      "ok": true,
+      "run": 1
+    },
+    {
+      "question": "O que é um feed RSS?",
+      "expected": null,
+      "got": null,
+      "decision_s": 0.29757885199978773,
+      "first_text": "É um formato de arquivo que distribui conteúdo automaticamente. Ele permite que você assine atualizações de sites em um só lugar.",
+      "error": null,
+      "correct_choice": true,
+      "text_ok": true,
+      "ok": true,
+      "run": 1
+    },
+    {
+      "question": "Quem ganhou a Copa do Mundo de 2002?",
+      "expected": null,
+      "got": "noticias",
+      "decision_s": 0.560552361000191,
+      "first_text": "",
+      "error": null,
+      "correct_choice": false,
+      "arguments": {
+        "assunto": "esporte"
+      },
+      "args_ok": false,
+      "answer": "A notícia não menciona o campeão de 2002.",
+      "answer_first_chunk_s": 1.4385571269995125,
+      "text_ok": false,
+      "ok": false,
+      "run": 1
+    },
+    {
+      "question": "Quais são as notícias de hoje?",
+      "expected": "noticias",
+      "got": "noticias",
+      "decision_s": 0.5957710809998389,
+      "first_text": "",
+      "error": null,
+      "correct_choice": true,
+      "arguments": {},
+      "args_ok": true,
+      "answer": "Tem notícias gerais. O G1 fala sobre apoios eleitorais, a Folha tem sobre o lucro do Bradesco e o G1 noticiou vandalismo em Porto Alegre.",
+      "answer_first_chunk_s": 0.8629599239993695,
+      "text_ok": true,
+      "ok": true,
+      "run": 2
+    },
+    {
+      "question": "Tem alguma notícia de tecnologia?",
+      "expected": "noticias",
+      "got": "noticias",
+      "decision_s": 0.5802234029997635,
+      "first_text": "",
+      "error": null,
+      "correct_choice": true,
+      "arguments": {
+        "assunto": "tecnologia"
+      },
+      "args_ok": true,
+      "answer": "Tem algumas notícias. A Microsoft teve IA superando médicos em testes de diagnóstico. Também tem sobre falhas no PHP e Spotify.",
+      "answer_first_chunk_s": 0.8475306400005138,
+      "text_ok": true,
+      "ok": true,
+      "run": 2
+    },
+    {
+      "question": "O que tem de novo no Tecnoblog?",
+      "expected": "noticias",
+      "got": "noticias",
+      "decision_s": 0.5567930810002508,
+      "first_text": "",
+      "error": null,
+      "correct_choice": true,
+      "arguments": {
+        "assunto": "tecnologia",
+        "fonte": "Tecnoblog"
+      },
+      "args_ok": true,
+      "answer": "Tem sobre IA da Microsoft e testes de jogos na nuvem.",
+      "answer_first_chunk_s": 1.1323121679997712,
+      "text_ok": true,
+      "ok": true,
+      "run": 2
+    },
+    {
+      "question": "Quais são as manchetes da Folha?",
+      "expected": "noticias",
+      "got": "noticias",
+      "decision_s": 0.5588728969996737,
+      "first_text": "",
+      "error": null,
+      "correct_choice": true,
+      "arguments": {
+        "fonte": "Folha"
+      },
+      "args_ok": true,
+      "answer": "As manchetes da Folha são: Bradesco segura despesas e lucro sobe para R$ 7,1 bilhões no 3º tri e Morre Tom Skerritt, ator de 'Alien' e 'Top Gun', aos 93 anos.",
+      "answer_first_chunk_s": 1.0119388999992225,
+      "text_ok": true,
+      "ok": true,
+      "run": 2
+    },
+    {
+      "question": "Me conta as notícias de economia.",
+      "expected": "noticias",
+      "got": "noticias",
+      "decision_s": 0.5970608950001406,
+      "first_text": "",
+      "error": null,
+      "correct_choice": true,
+      "arguments": {
+        "assunto": "economia"
+      },
+      "args_ok": true,
+      "answer": "Tem algumas notícias de economia. O G1 fala de expansão de serviços da LemFi para o exterior. A Folha mostra que o Bradesco teve lucro de R$ 7,1 bilhões no 3º tri.",
+      "answer_first_chunk_s": 0.9626386939999065,
+      "text_ok": true,
+      "ok": true,
+      "run": 2
+    },
+    {
+      "question": "O que aconteceu no Rio Grande do Sul hoje?",
+      "expected": "noticias",
+      "got": "noticias",
+      "decision_s": 0.5558258600003683,
+      "first_text": "",
+      "error": null,
+      "correct_choice": true,
+      "arguments": {
+        "assunto": "Rio Grande do Sul"
+      },
+      "args_ok": true,
+      "answer": "Tem algumas notícias sobre o RS. Há um caso de prisão por assassinato e investigação sobre um falso médico.",
+      "answer_first_chunk_s": 1.0236232890001702,
+      "text_ok": true,
+      "ok": true,
+      "run": 2
+    },
+    {
+      "question": "Tem alguma notícia sobre a falha do PHP?",
+      "expected": "noticias",
+      "got": "noticias",
+      "decision_s": 0.5585433489995921,
+      "first_text": "",
+      "error": null,
+      "correct_choice": true,
+      "arguments": {
+        "assunto": "falha do PHP"
+      },
+      "args_ok": true,
+      "answer": "Tem sim. O Tecnoblog fala que hackers tentaram explorar falhas no PHP antes do alerta. O G1 menciona que falhas no PHP levaram a suspensão de sistemas no Brasil.",
+      "answer_first_chunk_s": 0.7093331179994493,
+      "text_ok": true,
+      "ok": true,
+      "run": 2
+    },
+    {
+      "question": "E de tecnologia?",
+      "expected": "noticias",
+      "got": "noticias",
+      "decision_s": 1.052287989999968,
+      "first_text": "",
+      "error": null,
+      "correct_choice": true,
+      "arguments": {
+        "assunto": "tecnologia"
+      },
+      "args_ok": true,
+      "answer": "Tem notícias sobre IA superando médicos e falhas no PHP. Também tem sobre Spotify e Xbox.",
+      "answer_first_chunk_s": 1.37145529099962,
+      "text_ok": true,
+      "ok": true,
+      "run": 2
+    },
+    {
+      "question": "E na Folha?",
+      "expected": "noticias",
+      "got": "noticias",
+      "decision_s": 1.0476403100001335,
+      "first_text": "",
+      "error": null,
+      "correct_choice": true,
+      "arguments": {
+        "assunto": "tecnologia",
+        "fonte": "Folha"
+      },
+      "args_ok": true,
+      "answer": "Na Folha, o Spotify registrou alta de receita e lucro com avanço global de usuários.",
+      "answer_first_chunk_s": 0.6540376140001172,
+      "text_ok": true,
+      "ok": true,
+      "run": 2
+    },
+    {
+      "question": "Me conta mais sobre essa do PHP.",
+      "expected": "noticias",
+      "got": "noticias",
+      "decision_s": 0.5706148990002475,
+      "first_text": "",
+      "error": null,
+      "correct_choice": true,
+      "arguments": {
+        "assunto": "falha do PHP"
+      },
+      "args_ok": true,
+      "answer": "A falha no PHP é uma vulnerabilidade séria. Ela permitiu que invasores tentassem controlar servidores sem precisar de login ou senha.",
+      "answer_first_chunk_s": 1.2382817300003808,
+      "text_ok": true,
+      "ok": true,
+      "run": 2
+    },
+    {
+      "question": "O que é PHP?",
+      "expected": null,
+      "got": null,
+      "decision_s": 0.2835055600007763,
+      "first_text": "PHP é uma linguagem de programação de código aberto. Ela é muito usada para criar páginas web dinâmicas.",
+      "error": null,
+      "correct_choice": true,
+      "text_ok": true,
+      "ok": true,
+      "run": 2
+    },
+    {
+      "question": "O que é um feed RSS?",
+      "expected": null,
+      "got": null,
+      "decision_s": 0.30455245199937053,
+      "first_text": "É um formato para distribuir conteúdo automaticamente. Permite que leitores agreguem notícias de vários sites em um só lugar.",
+      "error": null,
+      "correct_choice": true,
+      "text_ok": true,
+      "ok": true,
+      "run": 2
+    },
+    {
+      "question": "Quem ganhou a Copa do Mundo de 2002?",
+      "expected": null,
+      "got": "noticias",
+      "decision_s": 0.5614571750002142,
+      "first_text": "",
+      "error": null,
+      "correct_choice": false,
+      "arguments": {
+        "assunto": "esporte"
+      },
+      "args_ok": false,
+      "answer": "Não encontrei a informação exata. As notícias mostram manchetes gerais de esporte.",
+      "answer_first_chunk_s": 1.0930500810000012,
+      "text_ok": false,
+      "ok": false,
+      "run": 2
+    }
+  ]
+}

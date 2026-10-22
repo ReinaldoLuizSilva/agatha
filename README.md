@@ -23,8 +23,9 @@ agatha: "Só um momento. A tablespace DADOS_APP está com 85.2% de uso."       (
 - **Memória explícita**: "lembra que meu banco de produção se chama PRDORA", "o que você lembra de
   mim?", "esquece isso". Os fatos ficam num SQLite e valem entre conversas.
 - **Ferramentas** que o LLM decide chamar: calculadora; Zabbix (alertas ativos, CPU, memória,
-  disco e tempo ligado de um host); Oracle (uso das tablespaces, sessões abertas). Todas somente
-  leitura, com usuários de menor privilégio.
+  disco e tempo ligado de um host); Oracle (tablespaces, sessões, estado do banco, backups do
+  RMAN); GitHub (commits, PRs, issues, CI); clima (Open-Meteo); notícias (feeds do G1, da Folha e
+  do Tecnoblog, por seção ou tema). Todas somente leitura, com usuários de menor privilégio.
 - **Fala natural de números, horas e siglas**: "62,5" vira "sessenta e dois vírgula cinco", "18h22"
   vira "dezoito e vinte e dois", "CPU" vira "cê pê u".
 
@@ -94,7 +95,7 @@ transcrição e o prompt crescem.
 - **GPU Pascal**: driver NVIDIA fixado no branch 580 e CUDA 12.x, porque o branch 590+ e o CUDA 13
   não suportam mais a arquitetura.
 - **Contexto de 6144 tokens** (era 4096; ADR-023): o prompt fixo (regras, exemplos das ferramentas,
-  memória) ocupa ~2.560 tokens e não pode mudar entre turnos, para o cache do llama.cpp valer (ADR-007);
+  memória) ocupa ~2.700 tokens e não pode mudar entre turnos, para o cache do llama.cpp valer (ADR-007);
   resultados grandes de ferramenta viram um marcador no histórico.
 
 ## Decisões de arquitetura
@@ -125,6 +126,7 @@ consequências:
 | [021](docs/adr/0021-cliente-em-segundo-plano.md) | cliente em segundo plano: ícone na bandeja do Windows |
 | [022](docs/adr/0022-internet-clima.md) | internet, parte 1: clima pelo Open-Meteo e DNS do pod |
 | [023](docs/adr/0023-historico-compacto-de-ferramentas.md) | resultado grande de ferramenta vira marcador no histórico |
+| [024](docs/adr/0024-internet-noticias.md) | internet, parte 2: notícias pelos feeds RSS do G1, da Folha e do Tecnoblog |
 
 ## Qualidade e operação
 
