@@ -252,4 +252,23 @@ agatha/
       Ctx 6144 medido (ADR-023): +34 MiB (pico 3695/4096 com prompt de 6070 tokens), latência igual; voltou
       para 4096; **adotado em 22/10** a pedido dele (unit do LLM com `-c 6144`). Prompt **v12** no ar (ADR-018): a
       v8 recusava todo conhecimento geral ("sou assistente de TI"); v12 18/18 nesses casos, antigos 96 e 93/114,
-      tools 150/165, prefixo 2558 tokens. Próximo: notícias (RSS: G1, Folha, Tecnoblog).
+      tools 150/165, prefixo 2558 tokens.
+      Teste de 22/10 (ctx 6144 + v12, mic e **caixas do notebook**, 11 falas): tudo ok — Mona Lisa e fotossíntese
+      direto; El Niño mal transcrito ("Aluninho", "ninho") → pede detalhes e depois "Você quis dizer El Niño?";
+      Oracle, Zabbix e servidor certos; 1º som ~2,0 s; 0 disparos à toa. Visto: "Banco Firebird" → "não tenho
+      informações, quer que eu verifique o Oracle?" (acompanhar); com as caixas o AEC tirou só 0–0,8 dB (eco no
+      mic −28 dBFS); barge-in com as caixas não foi testado.
+      **RETOMAR DAQUI (próxima sessão):**
+      1. Fase 10, item 2: **notícias por RSS** (G1, Folha, Tecnoblog; fontes escolhidas por ele em 21/10).
+         Conferir os feeds (URLs, formato, tempo de resposta a partir do pod), ferramenta enxuta (ex.:
+         `noticias(fonte?, assunto?)`), resultado compacto em frases (manchetes curtas, poucas por fonte: o
+         histórico já compacta resultado > 150 caracteres, ADR-023), cache de alguns minutos, sem exemplo de
+         conversa. Casos no tools_bench (incluindo "e de tecnologia?" com histórico compactado e conceito sem
+         ferramenta), precision com e sem histórico sem piorar (v12: antigos 96 e 93/114, tools 150/165), medir
+         latência e o maior prompt real; ADR-024; publicar e ele testa no Windows.
+      2. Depois: item 3, **busca na web com SearXNG** no agatha-srv (container no systemd do usuário, como os
+         laboratórios; medir RAM), restrita a documentação oficial para dúvida técnica; ADR próprio.
+      3. Acompanhar no uso, sem pressa: "Firebird" e outras perguntas de TI fora do glossário; barge-in com as
+         caixas do notebook (AEC fraco); "alerta no banco Zabbix" puxando o Oracle; 1ª resposta depois de
+         restart ~2,1 s (aquecimento).
+      Para o Reinaldo: nada pendente; testar quando quiser (cliente 0.5.1, `--barge-debug`) e colar o log.
