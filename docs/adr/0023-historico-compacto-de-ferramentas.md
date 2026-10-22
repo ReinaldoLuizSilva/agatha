@@ -43,6 +43,25 @@ guardar menos trocas (12 → 8). Ele escolheu A, sabendo que com o tempo pode pr
 - `tools_bench` completo: casos antigos 120/135 (v8 117–119/132), casos novos 29/30. Teste de
   fumaça ok.
 
+### Opção B medida (21/10, à noite)
+
+No 3º teste do dia (28 falas, já com o marcador) o maior prompt foi 3832 de 4096 tokens: a folga
+acaba antes das notícias. Medido com a unit instalada trocada para `-c 6144` (o repositório não
+mudou) e o pod inteiro no ar, STT e LLM juntos:
+
+| | ctx 4096 | ctx 6144 |
+|---|---|---|
+| VRAM da GPU, em repouso | 3661 MiB | 3695 MiB (LLM 3266 → 3300) |
+| VRAM, pico com prompt de 6070 tokens | — | 3695 MiB |
+| teste de fumaça, 1º token / 1º áudio p50 | ~1,4 s / ~1,9–2,0 s | 1,27–1,38 s / 1,86–1,90 s (3 rodadas, depois do aquecimento) |
+| geração com ~6000 tokens de contexto | — | 17,2 tok/s (ADR-004: 18,3 com contexto curto) |
+
+O contexto maior quase não custa VRAM porque o Gemma 4 usa sliding window attention: só parte das
+camadas guarda o contexto inteiro. O custo é reprocessar um prompt grande do zero (~250 tok/s: 4646
+tokens em ~20 s), o que só acontece quando o histórico é cortado, e o pré-aquecimento em segundo
+plano cobre boa parte enquanto ela fala. Voltou para 4096 depois da medição: adotar é decisão do
+Reinaldo.
+
 ## Consequências
 
 **Positivas**
