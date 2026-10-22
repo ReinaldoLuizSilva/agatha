@@ -267,7 +267,10 @@ agatha/
       Feeds do pod ~150 ms (1–2 s quando o DNS perde consulta). Visto: "Copa de 2002" erra depois de QUALQUER
       histórico (Brasil 5/5 sem, 1–4/5 com; modelo 4B), não é das notícias; acompanhar.
       **RETOMAR DAQUI (próxima sessão):**
-      1. Teste do Reinaldo no Windows com as notícias (aguardando o log).
+      1. Teste do Reinaldo no Windows (22/10, 12 falas, mic e caixas do notebook): "muito bom"; notícias certas
+         em todas, 1º som 1,9–2,1 s. "Travou": 2 barge-in falsos com a voz dela voltando pelo mic (notas 0,89 e
+         0,96, eco −29 dBFS, AEC 6,3 dB) → 2 pausas de ~2–3 s. Decidir com ele: headset, ou "abaixar o volume"
+         em vez de pausar até o servidor confirmar (cliente), ou seguir para o item 2.
       2. Item 3, **busca na web com SearXNG** no agatha-srv (container no systemd do usuário, como os
          laboratórios; medir RAM), restrita a documentação oficial para dúvida técnica; ADR próprio.
       3. Acompanhar no uso, sem pressa: "Firebird" e outras perguntas de TI fora do glossário; barge-in com as

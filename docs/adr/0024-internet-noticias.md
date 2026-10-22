@@ -66,6 +66,20 @@ tudo sobre X x Y"): ficaram de fora.
   notícias de hoje?" respondida em 1,5 s e "tem alguma notícia de tecnologia?" em 1,9 s, do fim da
   fala ao 1º áudio; "fara do PHP" (STT) virou "Você quis dizer falha no PHP?".
 
+### Teste no Windows (22/10, 12 falas, mic e caixas do notebook)
+
+"Muito bom". Notícias de hoje, "e de tecnologia", "e na Folha", Tecnoblog ("Tecna Blog" no STT),
+"Regrângio do Sul", "de economia" e esporte: ferramenta e argumentos certos em todas, e tudo o que
+ela disse estava nas manchetes (conferido no `server.log`). Duas leituras frouxas: "clubes do
+Brasileirão acumulam compromissos em atraso" virou "atrasos de jogos"; "trabalhadora grávida impedida
+de pausar para vomitar" virou "impedida de pausar atendimento". Muro de Berlim sem ferramenta, certo.
+1º som 1,9–2,1 s em 11 de 12 falas (ferramenta 1–266 ms); Muro de Berlim 3,2 s porque ela não abriu
+com a frase curta (1º token 1,65 s, a 1ª frase inteira saiu aos 2,7 s).
+O que ele sentiu como "travou": na resposta do RS, o barge-in disparou duas vezes com a **voz dela**
+voltando pelo microfone (notas 0,89 e 0,96; transcrições "e outros destaques em Google Cloud"):
+ela pausou ~2–3 s em cada e retomou. É o ponto pendente do barge-in com as caixas do notebook (AEC
+tirou 6,3 dB, eco a −29 dBFS no mic); com o headset não acontece.
+
 ### Visto no teste: conhecimento geral depois de um histórico
 
 No mesmo teste, "Quem ganhou a Copa do Mundo de 2002?" saiu "A Coreia do Sul e a Itália". Medido
