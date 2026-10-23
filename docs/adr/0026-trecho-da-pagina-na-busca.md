@@ -82,7 +82,8 @@ procura o texto exato da resposta.
   também vale. Nas 564 falas já registradas, a regra nova só muda essa.
 - Tempos com busca: o 1º som segue em 1,1–1,2 s (frase de espera). A busca levou 1,1–2,4 s (no bench
   do host, 1,45 s) e o 1º token do LLM chegou aos 4,1–5,3 s (em 22/10, sem as páginas, ~3,2 s): depois
-  da frase de espera ficam ~2,5–3,5 s de silêncio.
+  da frase de espera ficam ~2,5–3,5 s de silêncio. O Reinaldo disse que a pausa não incomoda: as
+  páginas ficam ligadas.
 - Sem busca, como esperado: RMAN, clima, notícias e "restart policy" (o STT entregou "restart
   policies on list, stop it" e ela confirmou o termo).
 

@@ -301,5 +301,5 @@ agatha/
          certos; agente 10050 certo (sem o "10051 da interface web"); PostgreSQL 17 ainda genérico (páginas
          do postgresql.org levam 0,65–1,5 s do pod e estouraram o prazo). "Procure **uma** documentação"
          não buscava (STT trocou o "na") → corrigido. Busca 1,1–2,4 s; LLM 1º token 4,1–5,3 s: ~2,5–3,5 s de
-         silêncio depois da frase de espera (perguntar ao Reinaldo se incomoda).
-      **RETOMAR DAQUI (próxima sessão):** se a pausa da busca estiver ok, item 2 fechado; depois o item 1 (pod parado).
+         silêncio depois da frase de espera; o Reinaldo disse que não incomoda (23/10). **Item 2 fechado.**
+      **RETOMAR DAQUI (próxima sessão):** item 1 (transcrição parcial; benchmarks de STT com o pod parado).
