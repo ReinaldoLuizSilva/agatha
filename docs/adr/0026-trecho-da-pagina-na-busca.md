@@ -66,6 +66,26 @@ procura o texto exato da resposta.
 - Testes: `server/tests/test_search.py` (trecho em volta do assunto sem menus nem scripts, página
   sem os termos, página que falha fica com o resumo).
 
+### Teste no Windows (23/10, headset, 15 falas)
+
+- Certas com a página: trapper 10051 (no bench errava; agora a página do trapper trouxe "10051 por
+  padrão"), listener 1521 ("listrador" no STT), ProxyMode, housekeeping. DB_BLOCK_SIZE: "tipicamente
+  4096 ou 8192" (o trecho era o dos valores típicos, não o do padrão).
+- Porta padrão do Zabbix agent: o STT entregou "dos Zabbix, a gente". Ela acertou 10050 para o agente
+  e disse "80 ou 443 para a interface web", o que não está errado. O "10051 para a interface web" de
+  22/10 não voltou.
+- PostgreSQL 17 continua genérico ("melhorias no otimizador"). As 3 páginas do postgresql.org estouraram
+  o prazo: de dentro do pod elas levam 0,65–1,5 s (servidores no exterior), ou 2,2 s com uma consulta
+  de DNS perdida. O prazo ficou como está, porque no bench, com as páginas, a resposta também não saía.
+- "Procure **uma** documentação como ativar o modo archive log" não buscou: o STT trocou o "na". Sem a
+  busca, ela inventou (`LOG_ARCHIVE_DEST_2` e reiniciar o banco). Corrigido: "uma/a documentação"
+  também vale. Nas 564 falas já registradas, a regra nova só muda essa.
+- Tempos com busca: o 1º som segue em 1,1–1,2 s (frase de espera). A busca levou 1,1–2,4 s (no bench
+  do host, 1,45 s) e o 1º token do LLM chegou aos 4,1–5,3 s (em 22/10, sem as páginas, ~3,2 s): depois
+  da frase de espera ficam ~2,5–3,5 s de silêncio.
+- Sem busca, como esperado: RMAN, clima, notícias e "restart policy" (o STT entregou "restart
+  policies on list, stop it" e ela confirmou o termo).
+
 ### Alternativas consideradas
 
 | alternativa | por que não |

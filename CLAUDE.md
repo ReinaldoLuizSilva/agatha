@@ -297,6 +297,9 @@ agatha/
          entrega ~300 caracteres em volta do assunto; página que falha fica com o resumo.
          `bench/search_bench.py` (14 perguntas, SearXNG temporário na 8889): resposta no resultado 5 → 9/14,
          resposta certa da Agatha 4 → 8/14; busca p50 0,48 → 1,45 s (máx 2,0). `AGATHA_BUSCA_PAGINAS=0` desliga.
-         Falta: teste no Windows (porta padrão do Zabbix, PostgreSQL 17; ver se a espera depois da frase de
-         espera incomoda).
-      **RETOMAR DAQUI (próxima sessão):** teste no Windows da busca com páginas; depois o item 1 (pod parado).
+         Teste no Windows (23/10, 15 falas, ADR-026): trapper 10051, listener 1521, ProxyMode e housekeeping
+         certos; agente 10050 certo (sem o "10051 da interface web"); PostgreSQL 17 ainda genérico (páginas
+         do postgresql.org levam 0,65–1,5 s do pod e estouraram o prazo). "Procure **uma** documentação"
+         não buscava (STT trocou o "na") → corrigido. Busca 1,1–2,4 s; LLM 1º token 4,1–5,3 s: ~2,5–3,5 s de
+         silêncio depois da frase de espera (perguntar ao Reinaldo se incomoda).
+      **RETOMAR DAQUI (próxima sessão):** se a pausa da busca estiver ok, item 2 fechado; depois o item 1 (pod parado).
