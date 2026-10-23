@@ -1,0 +1,1447 @@
+{
+  "date": "2026-10-23T09:54:21",
+  "vad": {
+    "threshold": 0.5,
+    "min_silence_ms": 500,
+    "pre_roll_ms": 300,
+    "min_speech_ms": 250,
+    "max_segment_s": 25.0,
+    "continuation_ms": 700
+  },
+  "early_frames": [
+    3,
+    5,
+    6,
+    8
+  ],
+  "rows": [
+    {
+      "id": "jargao-001",
+      "ref": "Agatha, para que serve o RMAN?",
+      "full": "Agatha, pra que serve o RMAN?",
+      "segments": 1,
+      "pauses_ms": [],
+      "early": {
+        "3": "Agatha, pra que serve o RMAN?",
+        "5": "Agatha, pra que serve o RMAN?",
+        "6": "Agatha, pra que serve o RMAN?",
+        "8": "Agatha, pra que serve o RMAN?"
+      }
+    },
+    {
+      "id": "jargao-002",
+      "ref": "Agatha, explica a diferença entre backup completo, incremental e diferencial.",
+      "full": "Agatha explica a diferença entre o backup completo, incremental e diferencial.",
+      "segments": 1,
+      "pauses_ms": [],
+      "early": {
+        "3": "Agatha explica a diferença entre o backup completo, incremental e diferencial.",
+        "5": "Agatha explica a diferença entre o backup completo, incremental e diferencial.",
+        "6": "Agatha explica a diferença entre o backup completo, incremental e diferencial.",
+        "8": "Agatha explica a diferença entre o backup completo, incremental e diferencial."
+      }
+    },
+    {
+      "id": "jargao-003",
+      "ref": "Agatha, como eu gero um relatório AWR no Oracle?",
+      "full": "Agatha como o Geron relatório AWR no Oracle.",
+      "segments": 1,
+      "pauses_ms": [],
+      "early": {
+        "3": "Agatha como o Geron relatório AWR no Oracle.",
+        "5": "Agatha como o Geron relatório AWR no Oracle.",
+        "6": "Agatha como o Geron relatório AWR no Oracle.",
+        "8": "Agatha como o Geron relatório AWR no Oracle."
+      }
+    },
+    {
+      "id": "jargao-004",
+      "ref": "Agatha, o que é o ASH no Oracle?",
+      "full": "Agatha, o que é o ASH no Oracle?",
+      "segments": 1,
+      "pauses_ms": [
+        96,
+        128
+      ],
+      "early": {
+        "3": "Agatha, o que é o ASH no Oracle?",
+        "5": "Agatha, o que é o ASH no Oracle?",
+        "6": "Agatha, o que é o ASH no Oracle?",
+        "8": "Agatha, o que é o ASH no Oracle?"
+      }
+    },
+    {
+      "id": "jargao-005",
+      "ref": "Agatha, o Data Guard está sincronizado?",
+      "full": "Agatha, o dataguard está sincronizado?",
+      "segments": 1,
+      "pauses_ms": [
+        192,
+        320
+      ],
+      "early": {
+        "3": "Agatha, o dataguard está sincronizado?",
+        "5": "Agatha, o dataguard está sincronizado?",
+        "6": "Agatha, o dataguard está sincronizado?",
+        "8": "Agatha, o dataguard está sincronizado?"
+      }
+    },
+    {
+      "id": "jargao-006",
+      "ref": "Agatha, qual a diferença entre CDB e PDB?",
+      "full": "Agatha, qual a diferença entre CDB e PDB?",
+      "segments": 1,
+      "pauses_ms": [],
+      "early": {
+        "3": "Agatha, qual a diferença entre CDB e PDB?",
+        "5": "Agatha, qual a diferença entre CDB e PDB?",
+        "6": "Agatha, qual a diferença entre CDB e PDB?",
+        "8": "Agatha, qual a diferença entre CDB e PDB?"
+      }
+    },
+    {
+      "id": "jargao-007",
+      "ref": "Agatha, onde fica o SPFILE do banco?",
+      "full": "Agatha onde fica o SP file do banco",
+      "segments": 1,
+      "pauses_ms": [
+        256,
+        64
+      ],
+      "early": {
+        "3": "Agatha onde fica o SP file do banco",
+        "5": "Agatha onde fica o SP file do banco",
+        "6": "Agatha, onde fica o SP file do banco.",
+        "8": "Agatha, onde fica o SP file do banco."
+      }
+    },
+    {
+      "id": "jargao-008",
+      "ref": "Agatha, a tablespace de UNDO está cheia?",
+      "full": "Agatha, attablespace, djandu, está cheia?",
+      "segments": 1,
+      "pauses_ms": [
+        96,
+        224
+      ],
+      "early": {
+        "3": "Agatha, attablespace, djandu, está cheia?",
+        "5": "Agatha, attablespace, djandu, está cheia?",
+        "6": "Agatha, attablespace, djandu, está cheia?",
+        "8": "Agatha, attablespace, djandu, está cheia?"
+      }
+    },
+    {
+      "id": "jargao-009",
+      "ref": "Agatha, quantos grupos de redo log o banco tem?",
+      "full": "Agatha, quantos grupos de redlog o banco tem?",
+      "segments": 1,
+      "pauses_ms": [
+        192,
+        160
+      ],
+      "early": {
+        "3": "Agatha, quantos grupos de redlog o banco tem?",
+        "5": "Agatha, quantos grupos de redlog o banco tem?",
+        "6": "Agatha, quantos grupos de redlog o banco tem?",
+        "8": "Agatha, quantos grupos de redlog o banco tem?"
+      }
+    },
+    {
+      "id": "jargao-010",
+      "ref": "Agatha, o banco está em modo archivelog?",
+      "full": "Agatha, o banco está em modo archive log",
+      "segments": 1,
+      "pauses_ms": [
+        64
+      ],
+      "early": {
+        "3": "Agatha, o banco está em modo archive log",
+        "5": "Agatha, o banco está em modo archive log",
+        "6": "Agatha, o banco está em modo archive log",
+        "8": "Agatha, o banco está em modo Archive Log"
+      }
+    },
+    {
+      "id": "jargao-011",
+      "ref": "Agatha, o listener do Oracle está no ar?",
+      "full": "Agatha, o LISR do Oracle está no ar.",
+      "segments": 1,
+      "pauses_ms": [],
+      "early": {
+        "3": "Agatha, o LISTER do Oracle está no ar.",
+        "5": "Agatha, o LISR do Oracle está no ar.",
+        "6": "Agatha, o LISR do Oracle está no ar.",
+        "8": "Agatha, o LISR do Oracle está no ar."
+      }
+    },
+    {
+      "id": "jargao-012",
+      "ref": "Agatha, o que é o ASM?",
+      "full": "Agatha, Okiwa, SEMI",
+      "segments": 1,
+      "pauses_ms": [],
+      "early": {
+        "3": "Agatha, Okiwa, SCME",
+        "5": "Agatha, OQA, SEMI",
+        "6": "Agatha, Okiwa, SEMI",
+        "8": "Agatha, OQA, SEMI"
+      }
+    },
+    {
+      "id": "jargao-013",
+      "ref": "Agatha, como funciona o flashback database?",
+      "full": "Agatha, como funciona o flashback database?",
+      "segments": 1,
+      "pauses_ms": [],
+      "early": {
+        "3": "Agatha, como funciona o flashback database?",
+        "5": "Agatha, como funciona o flashback database?",
+        "6": "Agatha, como funciona o flashback database?",
+        "8": "Agatha, como funciona o flashback database?"
+      }
+    },
+    {
+      "id": "jargao-014",
+      "ref": "Agatha, quantas sessões ativas tem no PRDORA?",
+      "full": "Agatha, quantas sessões ativas tem no Oracle?",
+      "segments": 1,
+      "pauses_ms": [],
+      "early": {
+        "3": "Agatha, quantas sessões ativas tem no Oracle?",
+        "5": "Agatha, quantas sessões ativas tem no Oracle?",
+        "6": "Agatha, quantas sessões ativas tem no Oracle?",
+        "8": "Agatha, quantas sessões ativas tem no Oracle?"
+      }
+    },
+    {
+      "id": "jargao-015",
+      "ref": "Agatha, tem algum lock no banco agora?",
+      "full": "Agatha, tem algum lock no Oracle agora?",
+      "segments": 1,
+      "pauses_ms": [
+        224
+      ],
+      "early": {
+        "3": "Agatha, tem algum lock no Oracle agora?",
+        "5": "Agatha, tem algum lock no Oracle agora?",
+        "6": "Agatha, tem algum lock no Oracle agora?",
+        "8": "Agatha, tem algum lock no Oracle agora?"
+      }
+    },
+    {
+      "id": "jargao-016",
+      "ref": "Agatha, valida se o Zabbix está no ar.",
+      "full": "Agatha, Valida, Zabbix, Instanoir",
+      "segments": 1,
+      "pauses_ms": [],
+      "early": {
+        "3": "Agatha varida se o Zabbix está no ar.",
+        "5": "Agatha varida se o Zabbix está no ar.",
+        "6": "Agatha varida se o Zabbix está no ar.",
+        "8": "Agatha varida se o Zabbix está no ar."
+      }
+    },
+    {
+      "id": "jargao-017",
+      "ref": "Agatha, verifica o host agatha-srv no Zabbix.",
+      "full": "Agatha, verifica o Volsa Agatha Server no Zabbix",
+      "segments": 1,
+      "pauses_ms": [
+        96,
+        224
+      ],
+      "early": {
+        "3": "Agatha, verifica o Volsa Agatha Server no Zabbix",
+        "5": "Agatha, verifica o Volsa Agatha Server no Zabbix",
+        "6": "Agatha verifica o Volsja Agatha server no Zabbix",
+        "8": "Agatha verifica o vulsa Agatha server no Zabbix"
+      }
+    },
+    {
+      "id": "jargao-018",
+      "ref": "Agatha, qual a diferença entre item, trigger e template no Zabbix?",
+      "full": "Atacou a diferença entre item trigger template nos Agatha",
+      "segments": 1,
+      "pauses_ms": [],
+      "early": {
+        "3": "Atacou a diferença entre item, trigger, template e nuzabx",
+        "5": "Atacou a diferença entre item trigger template nos águas",
+        "6": "Atacou a diferença entre item, trigger, template e nuzabx",
+        "8": "Atacou a diferença entre item trigger template nos águes"
+      }
+    },
+    {
+      "id": "jargao-019",
+      "ref": "Agatha, como funciona o housekeeping do Zabbix?",
+      "full": "Agatha, como funciona o housekeeping nos Zabbix? Zabbix",
+      "segments": 2,
+      "pauses_ms": [],
+      "early": {
+        "3": "Agatha, como funciona o housekeeping nos Zabbix? Zabbix",
+        "5": "Agatha, como funciona o housekeeping nos Zabbix? Zabbix",
+        "6": "Agatha, como funciona o housekeeping nos Zabbix? Zabbix",
+        "8": "Agatha, como funciona o housekeeping nos Zabbix? Zabbix"
+      }
+    },
+    {
+      "id": "jargao-020",
+      "ref": "Agatha, o que é um Zabbix proxy?",
+      "full": "Agatha, o que é um Zabbix Proxy?",
+      "segments": 1,
+      "pauses_ms": [],
+      "early": {
+        "3": "Agatha, o que é um Zabbix Proxy?",
+        "5": "Agatha, o que é um Zabbix próximo?",
+        "6": "Agatha, o que é um Zabbix próximo?",
+        "8": "Agatha, o que é um Zabbix Proxy?"
+      }
+    },
+    {
+      "id": "jargao-021",
+      "ref": "Agatha, como funciona a descoberta de baixo nível no Zabbix?",
+      "full": "Agatha, como funciona a descoberta de baixo nível no Zabbix?",
+      "segments": 1,
+      "pauses_ms": [
+        32
+      ],
+      "early": {
+        "3": "Agatha, como funciona a descoberta de baixo nível nos Zabbix?",
+        "5": "Agatha, como funciona a descoberta de baixo nível nos Zabbix?",
+        "6": "Agatha, como funciona a descoberta de baixo nível no Zabbix?",
+        "8": "Agatha, como funciona a descoberta de baixo nível no Zabbix?"
+      }
+    },
+    {
+      "id": "jargao-022",
+      "ref": "Agatha, quais triggers estão disparadas agora?",
+      "full": "Agatha Core, trigger, desistão, desparados agora.",
+      "segments": 1,
+      "pauses_ms": [],
+      "early": {
+        "3": "Agatha Core, trigger, desistão de paradas agora.",
+        "5": "Agatha Core, trigger, desistão, desparados agora.",
+        "6": "Agatha Core, trigger, desistão, desparados agora.",
+        "8": "Agatha Core, Trigger, Sistão de Paradas, agora."
+      }
+    },
+    {
+      "id": "jargao-023",
+      "ref": "Agatha, o agente do Zabbix está respondendo?",
+      "full": "Agatha, o agente das aulas está respondendo.",
+      "segments": 1,
+      "pauses_ms": [],
+      "early": {
+        "3": "Agatha, o agente das aulas está respondendo.",
+        "5": "Agatha, o agente das aulas está respondendo.",
+        "6": "Agatha, o agente das aulas está respondendo.",
+        "8": "Agatha, o agente das aulas está respondendo."
+      }
+    },
+    {
+      "id": "jargao-024",
+      "ref": "Agatha, qual a severidade desse problema?",
+      "full": "Agatha, qual é a sua realidade desse problema?",
+      "segments": 1,
+      "pauses_ms": [],
+      "early": {
+        "3": "Agatha, qual é a sua realidade desse problema?",
+        "5": "Agatha, qual é a realidade desses problemas?",
+        "6": "Agatha, qual é a realidade desses problemas?",
+        "8": "Agatha, qual é a realidade desse problema?"
+      }
+    },
+    {
+      "id": "jargao-025",
+      "ref": "Agatha, me mostra os problemas de alta prioridade.",
+      "full": "Agatha me mostra os problemas de alta prioridade.",
+      "segments": 1,
+      "pauses_ms": [],
+      "early": {
+        "3": "Agatha me mostra os problemas de alta prioridade.",
+        "5": "Agatha me mostra os problemas de alta prioridade.",
+        "6": "Agatha me mostra os problemas de alta prioridade.",
+        "8": "Agatha me mostra os problemas de alta prioridade."
+      }
+    },
+    {
+      "id": "jargao-026",
+      "ref": "Agatha, para que serve o Grafana?",
+      "full": "Agatha, para aqui serve o Grafana.",
+      "segments": 1,
+      "pauses_ms": [
+        480
+      ],
+      "early": {
+        "3": "Agatha, para aqui serve o Grafana.",
+        "5": "Agatha, para aqui serve o Grafana.",
+        "6": "Agatha, para aqui serve o Grafana.",
+        "8": "Agatha, para aqui serve o Grafana."
+      }
+    },
+    {
+      "id": "jargao-027",
+      "ref": "Agatha, qual a diferença entre PostgreSQL e Oracle?",
+      "full": "Agora a diferença entre Puskas e Oracle.",
+      "segments": 1,
+      "pauses_ms": [
+        256
+      ],
+      "early": {
+        "3": "Acord, diferença entre Puskas e Oracle.",
+        "5": "Acord, diferença entre Puskas e Oracle.",
+        "6": "Acord, diferença entre Puskas e Oracle.",
+        "8": "Acord, diferença entre Puskas e Oracle."
+      }
+    },
+    {
+      "id": "jargao-028",
+      "ref": "Agatha, o que é um container Docker?",
+      "full": "dokeyoncontainerdocker",
+      "segments": 1,
+      "pauses_ms": [
+        96
+      ],
+      "early": {
+        "3": "Qion Container Dock",
+        "5": "Qion Container Docker",
+        "6": "Qion Container Dock",
+        "8": "Qion, container docker."
+      }
+    },
+    {
+      "id": "jargao-029",
+      "ref": "Agatha, qual a diferença entre Podman e Docker?",
+      "full": "Agatha, Qual a diferença entre Podman e Docker?",
+      "segments": 1,
+      "pauses_ms": [
+        64
+      ],
+      "early": {
+        "3": "Agatha, Qual a diferença entre Podman e Docker?",
+        "5": "Agatha, Qual a diferença entre Podman e Docker?",
+        "6": "Agatha, Qual a diferença entre Podman e Docker?",
+        "8": "Agatha, Qual a diferença entre Podman e Docker?"
+      }
+    },
+    {
+      "id": "jargao-030",
+      "ref": "Agatha, o que é um pod no Kubernetes?",
+      "full": "O que um pode no Cobernets?",
+      "segments": 1,
+      "pauses_ms": [
+        128
+      ],
+      "early": {
+        "3": "O que um pode no Kubernetes?",
+        "5": "O que um pode no Cobernets?",
+        "6": "O que um pode no Kubernetes?",
+        "8": "O que um pode no Kubernetes?"
+      }
+    },
+    {
+      "id": "jargao-031",
+      "ref": "Agatha, para que serve o Ansible?",
+      "full": "Agatha, pra que serve o Linux bom?",
+      "segments": 1,
+      "pauses_ms": [],
+      "early": {
+        "3": "Agatha, pra que serve o Linux bom?",
+        "5": "Agatha, pra que serve o Linux bom?",
+        "6": "Agatha, pra que serve o Linux bom?",
+        "8": "Agatha, pra que serve o Linux bom?"
+      }
+    },
+    {
+      "id": "jargao-032",
+      "ref": "Agatha, o que o Terraform faz?",
+      "full": "Agatha, o que Altera Farm faz?",
+      "segments": 1,
+      "pauses_ms": [],
+      "early": {
+        "3": "Agatha, o que eu tenho que farmifaz?",
+        "5": "Agatha, o que eu tenho que farmifaz?",
+        "6": "Agatha, o kill terra farm faz",
+        "8": "Agatha, o kill terra farm fast"
+      }
+    },
+    {
+      "id": "jargao-033",
+      "ref": "Agatha, como está o uso de CPU do servidor?",
+      "full": "Agatha, como está a CPU do servidor?",
+      "segments": 1,
+      "pauses_ms": [],
+      "early": {
+        "3": "Agatha, como está a CPU do servidor?",
+        "5": "Agatha, como está a CPU do servidor?",
+        "6": "Agatha, como está a CPU do servidor?",
+        "8": "Agatha, como está a CPU do servidor?"
+      }
+    },
+    {
+      "id": "jargao-034",
+      "ref": "Agatha, quanto de memória o servidor está usando?",
+      "full": "Quanto de memória o servidor está usando?",
+      "segments": 1,
+      "pauses_ms": [
+        96
+      ],
+      "early": {
+        "3": "Quanto de memória o servidor está usando?",
+        "5": "Quanto de memória o servidor está usando?",
+        "6": "Quanto de memória o servidor está usando?",
+        "8": "Quanto de memória o servidor está usando?"
+      }
+    },
+    {
+      "id": "jargao-035",
+      "ref": "Agatha, o disco do barra dados está cheio?",
+      "full": "Agatha, o disco do barra, barra dados, está cheio?",
+      "segments": 1,
+      "pauses_ms": [
+        128,
+        96
+      ],
+      "early": {
+        "3": "Agatha, o disco do barra, de barra dados, está cheio?",
+        "5": "Agatha, o disco do barra, barra dados, está cheio?",
+        "6": "Agatha, o disco do barra, barra dados, está cheio?",
+        "8": "Agatha, o disco do barra, barra dados, está cheio?"
+      }
+    },
+    {
+      "id": "jargao-036",
+      "ref": "Agatha, quanto é dois terabytes em gigabytes?",
+      "full": "Agatha, quanto é 2 terabytes em gigabyte?",
+      "segments": 1,
+      "pauses_ms": [
+        64
+      ],
+      "early": {
+        "3": "Agatha, quanto é 2 terabytes em gigabyte?",
+        "5": "Agatha, quanto é 2 terabytes em gigabyte?",
+        "6": "Agatha, quanto é 2 terabytes em gigabyte?",
+        "8": "Agatha, quanto é 2 terabytes em gigabyte?"
+      }
+    },
+    {
+      "id": "jargao-037",
+      "ref": "Agatha, guarda que o PRDORA roda na porta mil quinhentos e vinte e um.",
+      "full": "Agatha, guarda que o PRDORA roda no portal 1521",
+      "segments": 1,
+      "pauses_ms": [
+        32,
+        128,
+        288
+      ],
+      "early": {
+        "3": "Agatha, guarda que o PRDORA roda no portal 1521",
+        "5": "Agatha, guarda que o PRDORA roda no portal 1521",
+        "6": "Agatha, guarda que o PRDORA roda no portal 1521",
+        "8": "Agatha, guarda que o PRDORA roda no portal 1521"
+      }
+    },
+    {
+      "id": "jargao-038",
+      "ref": "Agatha, o que você sabe sobre o meu ambiente?",
+      "full": "Agatha, o que você sabe sobre o meu ambiente?",
+      "segments": 1,
+      "pauses_ms": [],
+      "early": {
+        "3": "Agatha, o que você sabe sobre o meu ambiente?",
+        "5": "Agatha, o que você sabe sobre o meu ambiente?",
+        "6": "Agatha, o que você sabe sobre o meu ambiente?",
+        "8": "Agatha, o que você sabe sobre o meu ambiente?"
+      }
+    },
+    {
+      "id": "jargao-039",
+      "ref": "Agatha, valida o backup de ontem.",
+      "full": "Agatha, Valida, Valida, backup de ontem.",
+      "segments": 1,
+      "pauses_ms": [
+        416
+      ],
+      "early": {
+        "3": "Agatha, Valida, Valida, backup de ontem.",
+        "5": "Agatha, Valida, Valida, backup de ontem.",
+        "6": "Agatha, Valida, Valida, backup de ontem.",
+        "8": "Agatha, Valida, Valida, backup de ontem."
+      }
+    },
+    {
+      "id": "jargao-040",
+      "ref": "Agatha, reinicia o serviço do listener.",
+      "full": "Agatha, RADN, srv, Lidl, listener",
+      "segments": 1,
+      "pauses_ms": [],
+      "early": {
+        "3": "Agatha, RADN, srv, Lidl, listener",
+        "5": "Agatha, RADN, srv, Lidl, listener",
+        "6": "Agatha, RADN, srv, Lidl, listener",
+        "8": "Agatha, RADN, srv, Lidl, listener"
+      }
+    },
+    {
+      "id": "perto-001",
+      "ref": "Agatha",
+      "full": "Agatha",
+      "segments": 1,
+      "pauses_ms": [],
+      "early": {
+        "3": "Agatha",
+        "5": "Agatha",
+        "6": "Agatha",
+        "8": "Agatha"
+      }
+    },
+    {
+      "id": "perto-002",
+      "ref": "Agatha?",
+      "full": "",
+      "segments": 0,
+      "pauses_ms": [],
+      "early": {
+        "3": "",
+        "5": "",
+        "6": "",
+        "8": ""
+      }
+    },
+    {
+      "id": "perto-003",
+      "ref": "Agatha, que horas são?",
+      "full": "Agatha, que horas são?",
+      "segments": 1,
+      "pauses_ms": [],
+      "early": {
+        "3": "Agatha, que horas são?",
+        "5": "Agatha, que horas são?",
+        "6": "Agatha, que horas são?",
+        "8": "Agatha, que horas são?"
+      }
+    },
+    {
+      "id": "perto-004",
+      "ref": "Agatha, tem algum problema no Zabbix?",
+      "full": "Agatha, tem algum problema nos Zabbix?",
+      "segments": 1,
+      "pauses_ms": [],
+      "early": {
+        "3": "Agatha, tem algum problema nos Zabbix?",
+        "5": "Agatha, tem algum problema nos Zabbix?",
+        "6": "Agatha, tem algum problema nos Zabbix?",
+        "8": "Agatha, tem algum problema nos Zabbix?"
+      }
+    },
+    {
+      "id": "perto-005",
+      "ref": "Agatha, como está a tablespace USERS?",
+      "full": ", tata-bix-space, users.",
+      "segments": 1,
+      "pauses_ms": [],
+      "early": {
+        "3": ", tablespace, users",
+        "5": ", tablespace, users",
+        "6": ", tablespace, users",
+        "8": ", untatabix-spaces, users"
+      }
+    },
+    {
+      "id": "perto-006",
+      "ref": "Agatha, quantas sessões tem no Oracle?",
+      "full": "Quatro sessões tem no Oracle.",
+      "segments": 1,
+      "pauses_ms": [],
+      "early": {
+        "3": "Quatro sessões tem no Oracle.",
+        "5": "Quatro sessões tem no Oracle.",
+        "6": "Quatro sessões tem no Oracle.",
+        "8": "Quatro sessões tem no Oracle."
+      }
+    },
+    {
+      "id": "perto-007",
+      "ref": "Agatha, quanto é quinze por cento de duzentos?",
+      "full": "Agatha, quanto é 15% de 200?",
+      "segments": 1,
+      "pauses_ms": [
+        96
+      ],
+      "early": {
+        "3": "Agatha, quanto é 15% de 200?",
+        "5": "Agatha, quanto é 15% de 200?",
+        "6": "Agatha, quanto é 15% de 200?",
+        "8": "Agatha, quanto é 15% de 200?"
+      }
+    },
+    {
+      "id": "perto-008",
+      "ref": "Agatha, o que é housekeeping no Zabbix?",
+      "full": "Agatha, Oracle housekeeping, nuzabbix",
+      "segments": 1,
+      "pauses_ms": [],
+      "early": {
+        "3": "Agatha, Oracle housekeeping, nuzabbix",
+        "5": "Agatha, Oracle housekeeping, nuzabbix",
+        "6": "Agatha, Oracle housekeeping, nuzabbix",
+        "8": "Agatha, Oracle housekeeping, nuzabbix"
+      }
+    },
+    {
+      "id": "perto-009",
+      "ref": "Agatha, me ajuda com uma coisa",
+      "full": "Agatha, me ajuda com uma coisa?",
+      "segments": 1,
+      "pauses_ms": [],
+      "early": {
+        "3": "Agatha, me ajuda com uma coisa?",
+        "5": "Agatha, me ajuda com uma coisa?",
+        "6": "Agatha, me ajuda com uma coisa?",
+        "8": "Agatha, me ajuda com uma coisa?"
+      }
+    },
+    {
+      "id": "perto-010",
+      "ref": "Agatha, guarda que a reunião é amanhã",
+      "full": "Agatha, guarda que a reunião amanhã.",
+      "segments": 1,
+      "pauses_ms": [
+        32,
+        128
+      ],
+      "early": {
+        "3": "Agatha, guarda que a reunião amanhã.",
+        "5": "Agatha, guarda que a reunião amanhã.",
+        "6": "Agatha, guarda que a reunião amanhã.",
+        "8": "Agatha, guarda que a reunião amanhã."
+      }
+    },
+    {
+      "id": "perto-011",
+      "ref": "Agatha, esquece isso",
+      "full": "Agatha, Esquerce Use",
+      "segments": 1,
+      "pauses_ms": [],
+      "early": {
+        "3": "Agatha, esquesse os...",
+        "5": "Agatha, Esquise Use",
+        "6": "Agatha, Esquerce Use",
+        "8": "Agatha, Esquerce Use"
+      }
+    },
+    {
+      "id": "perto-012",
+      "ref": "Agatha, para",
+      "full": "Agatha, para!",
+      "segments": 1,
+      "pauses_ms": [
+        128
+      ],
+      "early": {
+        "3": "Agatha, Para",
+        "5": "Agatha, para!",
+        "6": "Agatha, para!",
+        "8": "Agatha, para!"
+      }
+    },
+    {
+      "id": "perto-013",
+      "ref": "Agatha, chega",
+      "full": "Agatha, Shaker",
+      "segments": 1,
+      "pauses_ms": [
+        96
+      ],
+      "early": {
+        "3": "Agatha, Shaga",
+        "5": "Agatha, Shaker",
+        "6": "Agatha, Shag",
+        "8": "Agatha, shaker"
+      }
+    },
+    {
+      "id": "perto-014",
+      "ref": "Agatha, espera",
+      "full": "Agatha, espero",
+      "segments": 1,
+      "pauses_ms": [],
+      "early": {
+        "3": "Agatha, espero",
+        "5": "Agatha, espero.",
+        "6": "Agatha, espero",
+        "8": "Agatha, espero."
+      }
+    },
+    {
+      "id": "perto-015",
+      "ref": "Agatha, cancela",
+      "full": "Agatha Cancela",
+      "segments": 1,
+      "pauses_ms": [
+        96
+      ],
+      "early": {
+        "3": "Agatha Cancela",
+        "5": "Agatha Cancela",
+        "6": "Agatha Cancela",
+        "8": "Agatha Cancela"
+      }
+    },
+    {
+      "id": "perto-016",
+      "ref": "Ei, Agatha",
+      "full": "e agatha.",
+      "segments": 1,
+      "pauses_ms": [],
+      "early": {
+        "3": "e agatha.",
+        "5": "e agatha.",
+        "6": "e agatha.",
+        "8": "e agatha."
+      }
+    },
+    {
+      "id": "perto-017",
+      "ref": "Oi, Agatha, tudo bem?",
+      "full": "Oi, Agatha, tudo bem?",
+      "segments": 1,
+      "pauses_ms": [
+        96
+      ],
+      "early": {
+        "3": "Oi, Agatha, tudo bem?",
+        "5": "Oi, Agatha, tudo bem?",
+        "6": "Oi, Agatha, tudo bem?",
+        "8": "Oi, Agatha, tudo bem?"
+      }
+    },
+    {
+      "id": "perto-018",
+      "ref": "Bom dia, Agatha",
+      "full": "Podre, agatha.",
+      "segments": 1,
+      "pauses_ms": [],
+      "early": {
+        "3": "Podre, agatha",
+        "5": "Podre, agatha",
+        "6": "Podre, agatha",
+        "8": "Podre, agatha."
+      }
+    },
+    {
+      "id": "perto-019",
+      "ref": "Obrigado, Agatha",
+      "full": "Obrigado, Agatha.",
+      "segments": 1,
+      "pauses_ms": [],
+      "early": {
+        "3": "Obrigado, Agatha.",
+        "5": "Obrigado, Agatha.",
+        "6": "Obrigado, Agatha.",
+        "8": "Obrigado, Agatha."
+      }
+    },
+    {
+      "id": "perto-020",
+      "ref": "Certo, Agatha. E o host do banco?",
+      "full": "Agatha e o roxo do banco.",
+      "segments": 1,
+      "pauses_ms": [
+        160
+      ],
+      "early": {
+        "3": "Agatha e o roxo do banco.",
+        "5": "Agatha e o roxo do banco.",
+        "6": "Agatha e o roxo do banco.",
+        "8": "Agatha e o roxo do banco."
+      }
+    },
+    {
+      "id": "perto-021",
+      "ref": "Agatha",
+      "full": "Agatha",
+      "segments": 1,
+      "pauses_ms": [],
+      "early": {
+        "3": "Agatha",
+        "5": "Agatha",
+        "6": "Agatha",
+        "8": "Agatha"
+      }
+    },
+    {
+      "id": "perto-022",
+      "ref": "Agatha?",
+      "full": "Agatha",
+      "segments": 1,
+      "pauses_ms": [],
+      "early": {
+        "3": "Agatha",
+        "5": "Agatha",
+        "6": "Agatha",
+        "8": "Agatha"
+      }
+    },
+    {
+      "id": "perto-023",
+      "ref": "Agatha, que horas são?",
+      "full": "Agatha, que horas são?",
+      "segments": 1,
+      "pauses_ms": [],
+      "early": {
+        "3": "Agatha, que horas são?",
+        "5": "Agatha, que horas são?",
+        "6": "Agatha, que horas são?",
+        "8": "Agatha, que horas são?"
+      }
+    },
+    {
+      "id": "perto-024",
+      "ref": "Agatha, tem algum problema no Zabbix?",
+      "full": "Agatha, tem algum problema do Zabbix?",
+      "segments": 1,
+      "pauses_ms": [],
+      "early": {
+        "3": "Agatha, tem algum problema do Zabbix?",
+        "5": "Agatha, tem algum problema do Zabbix?",
+        "6": "Agatha, tem algum problema do Zabbix?",
+        "8": "Agatha, tem algum problema do Zabbix?"
+      }
+    },
+    {
+      "id": "perto-025",
+      "ref": "Agatha, como está a tablespace USERS?",
+      "full": "Agatha, com Tablespace Users",
+      "segments": 1,
+      "pauses_ms": [],
+      "early": {
+        "3": "Agatha, contacto a Tablespace Users",
+        "5": "Agatha, contacta Bspacieusers",
+        "6": "Agatha, com Tablespace Users",
+        "8": "Agatha, com Tablespace Users"
+      }
+    },
+    {
+      "id": "perto-026",
+      "ref": "Agatha, quantas sessões tem no Oracle?",
+      "full": "Agatha, quantas questões tem no Oracle?",
+      "segments": 1,
+      "pauses_ms": [],
+      "early": {
+        "3": "Agatha, quantas questões tem no Oracle?",
+        "5": "Agatha, quantas questões tem no Oracle?",
+        "6": "Agatha, quantas questões tem no Oracle?",
+        "8": "Agatha, quantas questões tem no Oracle?"
+      }
+    },
+    {
+      "id": "perto-027",
+      "ref": "Agatha, quanto é quinze por cento de duzentos?",
+      "full": "Agatha, quanto é 15% de 200?",
+      "segments": 1,
+      "pauses_ms": [
+        64
+      ],
+      "early": {
+        "3": "Agatha, quanto é 15% de 200?",
+        "5": "Agatha, quanto é 15% de 200?",
+        "6": "Agatha, quanto é 15% de 200?",
+        "8": "Agatha, quanto é 15% de 200?"
+      }
+    },
+    {
+      "id": "perto-028",
+      "ref": "Agatha, o que é housekeeping no Zabbix?",
+      "full": "Agatha, Oracle, housekeeping, nuzabbix.",
+      "segments": 1,
+      "pauses_ms": [],
+      "early": {
+        "3": "Agatha, Oracle, housekeeping, nuzabbix.",
+        "5": "Agatha, Oracle, housekeeping, nuzabbix.",
+        "6": "Agatha, Oracle, housekeeping, nuzabbix.",
+        "8": "Agatha, Oracle, housekeeping, nuzabbix."
+      }
+    },
+    {
+      "id": "perto-029",
+      "ref": "Agatha, me ajuda com uma coisa",
+      "full": "Agatha, me ajudou com uma coisa?",
+      "segments": 1,
+      "pauses_ms": [],
+      "early": {
+        "3": "Agatha, me ajudou com uma coisa?",
+        "5": "Agatha, me ajudou com uma coisa?",
+        "6": "Agatha, me ajudou com uma coisa?",
+        "8": "Agatha, me ajudou com uma coisa?"
+      }
+    },
+    {
+      "id": "perto-030",
+      "ref": "Agatha, guarda que a reunião é amanhã",
+      "full": "Agatha, guarda para reunião Guarda que honra, honra, honra, honra",
+      "segments": 2,
+      "pauses_ms": [
+        32
+      ],
+      "early": {
+        "3": "Agatha, guarda para reunião. Guarda que honra, honra, honra, honra",
+        "5": "Agatha, guarda para reunião. Guarda que honra, honra, honra, honra",
+        "6": "Agatha, guarda para reunião. Guarda que honra, honra, honra, honra, honra",
+        "8": "Agatha, guarda para reunião. Guarda que honra, honra, honra, honra."
+      }
+    },
+    {
+      "id": "perto-031",
+      "ref": "Agatha, esquece isso",
+      "full": "Agatha, esquece isso?",
+      "segments": 1,
+      "pauses_ms": [],
+      "early": {
+        "3": "Agatha, esquece-os.",
+        "5": "Agatha, esquece isso?",
+        "6": "Agatha, esquece isso?",
+        "8": "Agatha, esquece-os"
+      }
+    },
+    {
+      "id": "perto-032",
+      "ref": "Agatha, para",
+      "full": "Agatha, para.",
+      "segments": 1,
+      "pauses_ms": [
+        64
+      ],
+      "early": {
+        "3": "Agatha, para.",
+        "5": "Agatha, para.",
+        "6": "Agatha, para.",
+        "8": "Agatha, para."
+      }
+    },
+    {
+      "id": "perto-033",
+      "ref": "Agatha, chega",
+      "full": "Agatha, shigu",
+      "segments": 1,
+      "pauses_ms": [],
+      "early": {
+        "3": "Agatha, shigu",
+        "5": "Agatha, shigu",
+        "6": "Agatha, shigu",
+        "8": "Agatha, shigu"
+      }
+    },
+    {
+      "id": "perto-034",
+      "ref": "Agatha, espera",
+      "full": "Agatha, espera.",
+      "segments": 1,
+      "pauses_ms": [
+        32
+      ],
+      "early": {
+        "3": "Agatha, espera.",
+        "5": "Agatha, espera.",
+        "6": "Agatha, espera.",
+        "8": "Agatha, espera."
+      }
+    },
+    {
+      "id": "perto-035",
+      "ref": "Agatha, cancela",
+      "full": "Agatha cancela",
+      "segments": 1,
+      "pauses_ms": [],
+      "early": {
+        "3": "Agatha cancela",
+        "5": "Agatha cancela",
+        "6": "Agatha cancela",
+        "8": "Agatha cancela"
+      }
+    },
+    {
+      "id": "perto-036",
+      "ref": "Ei, Agatha",
+      "full": "e agatha",
+      "segments": 1,
+      "pauses_ms": [],
+      "early": {
+        "3": "e agatha",
+        "5": "e agatha",
+        "6": "e agatha",
+        "8": "e agatha"
+      }
+    },
+    {
+      "id": "perto-037",
+      "ref": "Oi, Agatha, tudo bem?",
+      "full": "Oi, Agatha, tudo bem?",
+      "segments": 1,
+      "pauses_ms": [],
+      "early": {
+        "3": "Oi, Agatha, tudo bem?",
+        "5": "Oi, Agatha, tudo bem?",
+        "6": "Oi, Agatha, tudo bem?",
+        "8": "Oi, Agatha, tudo bem?"
+      }
+    },
+    {
+      "id": "perto-038",
+      "ref": "Bom dia, Agatha",
+      "full": "Bom dia, Agatha.",
+      "segments": 1,
+      "pauses_ms": [],
+      "early": {
+        "3": "Bom dia, Agatha.",
+        "5": "Bom dia, Agatha.",
+        "6": "Bom dia, Agatha.",
+        "8": "Bom dia, Agatha."
+      }
+    },
+    {
+      "id": "perto-039",
+      "ref": "Obrigado, Agatha",
+      "full": "Obrigado, Agatha.",
+      "segments": 1,
+      "pauses_ms": [],
+      "early": {
+        "3": "Obrigado, Agatha.",
+        "5": "Obrigado, Agatha.",
+        "6": "Obrigado, Agatha.",
+        "8": "Obrigado, Agatha."
+      }
+    },
+    {
+      "id": "perto-040",
+      "ref": "Certo, Agatha. E o host do banco?",
+      "full": "Agatha e o roxo do banco",
+      "segments": 1,
+      "pauses_ms": [],
+      "early": {
+        "3": "Agatha e o roxo do banco.",
+        "5": "Agatha e o roxo do banco",
+        "6": "Agatha e o roxo do banco",
+        "8": "Agatha e o roxo do banco."
+      }
+    },
+    {
+      "id": "variado-001",
+      "ref": "Agatha",
+      "full": "",
+      "segments": 0,
+      "pauses_ms": [],
+      "early": {
+        "3": "",
+        "5": "",
+        "6": "",
+        "8": ""
+      }
+    },
+    {
+      "id": "variado-002",
+      "ref": "Agatha, que horas são?",
+      "full": "Agatha, que horas são?",
+      "segments": 1,
+      "pauses_ms": [],
+      "early": {
+        "3": "Agatha, que horas são?",
+        "5": "Agatha, que horas são?",
+        "6": "Agatha, que horas são?",
+        "8": "Agatha, que horas são?"
+      }
+    },
+    {
+      "id": "variado-003",
+      "ref": "Agatha, tá aí?",
+      "full": "Agatha, Tai",
+      "segments": 1,
+      "pauses_ms": [
+        96
+      ],
+      "early": {
+        "3": "Agatha, Tai",
+        "5": "Agatha, Tai",
+        "6": "Agatha, Tai",
+        "8": "Agatha, Tai"
+      }
+    },
+    {
+      "id": "variado-004",
+      "ref": "Agatha, tem problema no Zabbix?",
+      "full": "Agatha, tem problema nos Zabbix?",
+      "segments": 1,
+      "pauses_ms": [],
+      "early": {
+        "3": "Agatha, tem problema nos Zabbix?",
+        "5": "Agatha, tem problema nos Zabbix?",
+        "6": "Agatha, tem problema nos Zabbix?",
+        "8": "Agatha, tem problema nos Zabbix?"
+      }
+    },
+    {
+      "id": "variado-005",
+      "ref": "Agatha, para",
+      "full": "Agatha para.",
+      "segments": 1,
+      "pauses_ms": [],
+      "early": {
+        "3": "Agatha para.",
+        "5": "Agatha para.",
+        "6": "Agatha para",
+        "8": "Agatha para."
+      }
+    },
+    {
+      "id": "variado-006",
+      "ref": "Agatha",
+      "full": "Agatha",
+      "segments": 1,
+      "pauses_ms": [],
+      "early": {
+        "3": "Agatha",
+        "5": "Agatha",
+        "6": "Agatha",
+        "8": "Agatha"
+      }
+    },
+    {
+      "id": "variado-007",
+      "ref": "Agatha!",
+      "full": "Agatha",
+      "segments": 1,
+      "pauses_ms": [],
+      "early": {
+        "3": "Agatha.",
+        "5": "Agatha",
+        "6": "Agatha",
+        "8": "Agatha"
+      }
+    },
+    {
+      "id": "variado-008",
+      "ref": "Agatha, para!",
+      "full": "Agatha, para!",
+      "segments": 1,
+      "pauses_ms": [],
+      "early": {
+        "3": "Agatha, para!",
+        "5": "Agatha, para!",
+        "6": "Agatha, para!",
+        "8": "Agatha, para!"
+      }
+    },
+    {
+      "id": "variado-009",
+      "ref": "Agatha, chega!",
+      "full": "Agatha, chega!",
+      "segments": 1,
+      "pauses_ms": [
+        96
+      ],
+      "early": {
+        "3": "Agatha, chega.",
+        "5": "Agatha, chega.",
+        "6": "Agatha, chega",
+        "8": "Agatha, chega."
+      }
+    },
+    {
+      "id": "variado-010",
+      "ref": "Agatha, e aí?",
+      "full": "Agatha, e aí?",
+      "segments": 1,
+      "pauses_ms": [],
+      "early": {
+        "3": "Agatha, e aí?",
+        "5": "Agatha, e aí?",
+        "6": "Agatha, e aí?",
+        "8": "Agatha, e aí?"
+      }
+    },
+    {
+      "id": "variado-011",
+      "ref": "Agatha",
+      "full": "Agatha",
+      "segments": 1,
+      "pauses_ms": [],
+      "early": {
+        "3": "Agatha",
+        "5": "Agatha",
+        "6": "Agatha",
+        "8": "Agatha"
+      }
+    },
+    {
+      "id": "variado-012",
+      "ref": "Agatha, me escuta",
+      "full": "Agatha ",
+      "segments": 2,
+      "pauses_ms": [],
+      "early": {
+        "3": "Agatha ",
+        "5": "Agatha RMAN",
+        "6": "Agatha ",
+        "8": "Agatha "
+      }
+    },
+    {
+      "id": "variado-013",
+      "ref": "Agatha",
+      "full": "Agatha",
+      "segments": 1,
+      "pauses_ms": [],
+      "early": {
+        "3": "Agatha",
+        "5": "Agatha",
+        "6": "Agatha",
+        "8": "Agatha"
+      }
+    },
+    {
+      "id": "variado-014",
+      "ref": "Agatha, que horas são?",
+      "full": "Agatha, que horas são?",
+      "segments": 1,
+      "pauses_ms": [],
+      "early": {
+        "3": "Agatha, que horas são?",
+        "5": "Agatha, que horas são?",
+        "6": "Agatha, que horas são?",
+        "8": "Agatha, que horas são?"
+      }
+    },
+    {
+      "id": "variado-015",
+      "ref": "Agatha, tá aí?",
+      "full": "Agatha, Taií",
+      "segments": 1,
+      "pauses_ms": [],
+      "early": {
+        "3": "Agatha, Tai",
+        "5": "Agatha, Tai",
+        "6": "Agatha, Tai",
+        "8": "Agatha, Tai"
+      }
+    },
+    {
+      "id": "variado-016",
+      "ref": "Agatha, tem problema no Zabbix?",
+      "full": "Agatha, tem problema no Zabbix?",
+      "segments": 1,
+      "pauses_ms": [],
+      "early": {
+        "3": "Agatha, tem problema no Zabbix?",
+        "5": "Agatha, tem problema nos Zabbix?",
+        "6": "Agatha, tem problema nos Zabbix?",
+        "8": "Agatha, tem problema nos Zabbix?"
+      }
+    },
+    {
+      "id": "variado-017",
+      "ref": "Agatha, para",
+      "full": "Agatha, Padre",
+      "segments": 1,
+      "pauses_ms": [],
+      "early": {
+        "3": "Agatha, Pad",
+        "5": "Agatha, Pad",
+        "6": "Agatha, Pad",
+        "8": "Agatha, Padre"
+      }
+    },
+    {
+      "id": "variado-018",
+      "ref": "Agatha",
+      "full": "Agatha",
+      "segments": 1,
+      "pauses_ms": [
+        32
+      ],
+      "early": {
+        "3": "Agatha",
+        "5": "Agatha",
+        "6": "Agatha",
+        "8": "Agatha"
+      }
+    },
+    {
+      "id": "variado-019",
+      "ref": "Agatha!",
+      "full": "Agatha",
+      "segments": 1,
+      "pauses_ms": [],
+      "early": {
+        "3": "Agatha",
+        "5": "Agatha",
+        "6": "Agatha",
+        "8": "Agatha"
+      }
+    },
+    {
+      "id": "variado-020",
+      "ref": "Agatha, para!",
+      "full": "Agatha para",
+      "segments": 1,
+      "pauses_ms": [],
+      "early": {
+        "3": "Agatha para.",
+        "5": "Agatha para",
+        "6": "Agatha para.",
+        "8": "Agatha para"
+      }
+    },
+    {
+      "id": "variado-021",
+      "ref": "Agatha, chega!",
+      "full": "Agatha, SIG",
+      "segments": 1,
+      "pauses_ms": [],
+      "early": {
+        "3": "Agatha, SIG",
+        "5": "Agatha, SIG",
+        "6": "Agatha, SIG",
+        "8": "Agatha, SIG"
+      }
+    },
+    {
+      "id": "variado-022",
+      "ref": "Agatha, e aí?",
+      "full": "Agatha, Iai",
+      "segments": 1,
+      "pauses_ms": [],
+      "early": {
+        "3": "Agatha, Iai",
+        "5": "Agatha, Iai",
+        "6": "Agatha, Iai",
+        "8": "Agatha, eu e..."
+      }
+    },
+    {
+      "id": "variado-023",
+      "ref": "Agatha",
+      "full": "Agatha",
+      "segments": 1,
+      "pauses_ms": [],
+      "early": {
+        "3": "Agatha",
+        "5": "Agatha",
+        "6": "Agatha",
+        "8": "Agatha"
+      }
+    },
+    {
+      "id": "variado-024",
+      "ref": "Agatha, me escuta",
+      "full": "Agatha, me escuta.",
+      "segments": 1,
+      "pauses_ms": [],
+      "early": {
+        "3": "Agatha, me escuta.",
+        "5": "Agatha, me escuta.",
+        "6": "Agatha, me escuta.",
+        "8": "Agatha, me escuta."
+      }
+    }
+  ]
+}
