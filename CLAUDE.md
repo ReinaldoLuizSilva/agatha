@@ -219,7 +219,7 @@ agatha/
       Melhorar aos poucos (não bloqueiam): varredura do AEC (só com as caixas do notebook); gravador mantendo o
       stream aberto (só para gravar outra rodada); falsos disparos em ruído sem fala; "Fato guardado. Já estava
       na memória." (frase contraditória ao guardar um fato repetido).
-- [ ] Fase 10: integração com a internet — **em andamento** (escopo aprovado em 21/10).
+- [x] Fase 10: integração com a internet (fechada em 22/10; escopo aprovado em 21/10; ADR-022 a ADR-025).
       Ordem: 0) enxugar o prompt (2354 tokens; meta ~2000 sem piorar tools_bench nem precision_bench com e sem
       histórico); 1) clima (Open-Meteo, sem chave); 2) notícias por RSS (G1, Folha e Tecnoblog); 3) busca na web
       com SearXNG no agatha-srv, restrita a documentação oficial para dúvida técnica. Cada uma com casos no
@@ -283,12 +283,20 @@ agatha/
       "10051 para a interface web" errado (trecho sem a porta); 1º som 1,1–1,2 s com busca; RMAN sem busca;
       barge-in 0 à toa. Corrigido: "housekeeping" escolhe a documentação do Zabbix (o STT trocou "do Zabbix"
       por "dos apps" e a busca aberta não achou nada).
-      **RETOMAR DAQUI (próxima sessão):**
-      1. Os 3 itens da Fase 10 estão no ar e testados (clima, notícias, busca). Falta o Reinaldo aprovar o
-         fechamento da Fase 10 e combinar a próxima fase.
-      2. Acompanhar no uso, sem pressa: limites dos buscadores (`podman logs agatha-search`); trecho de busca
-         sem a resposta (ela completa de memória: "10051 para a interface web"); "Firebird" e outras perguntas de
-         TI fora do glossário; barge-in com as caixas do notebook (AEC fraco, 2 disparos à toa em 22/10);
-         "alerta no banco Zabbix" puxando o Oracle; conhecimento geral depois de histórico (Copa de 2002);
-         "Brasileirão compromissos em atraso" lido como atraso de jogos.
-      Para o Reinaldo: aprovar o fechamento da Fase 10 e escolher a próxima fase.
+      Pontos para acompanhar no uso (sem pressa): limites dos buscadores (`podman logs agatha-search`); "Firebird" e
+      outras perguntas de TI fora do glossário; barge-in com as caixas do notebook (AEC fraco, 2 disparos à toa em
+      22/10); "alerta no banco Zabbix" puxando o Oracle; conhecimento geral depois de histórico (Copa de 2002);
+      "Brasileirão compromissos em atraso" lido como atraso de jogos.
+- [ ] Fase 11: latência de perguntas longas e qualidade da busca — **em andamento** (escopo aprovado em 22/10).
+      1) **transcrição parcial** durante a fala: transcrever o que já foi dito enquanto ele fala, para no fim só
+         faltar o pedaço final (perguntas longas: 1º som 2,3–2,9 s; STT 1,0–1,4 s). Medir antes (WER e tempo,
+         com as gravações dele) e não piorar o jargão; benchmarks de STT na GPU com o pod parado.
+      2) **trechos melhores na busca**: ler a página dos resultados e entregar o pedaço relevante, não só o resumo
+         do buscador (22/10: "10051 para a interface web", PostgreSQL 17 genérico). Medir acerto e tempo.
+         **No ar (22/10, ADR-026)**: baixa as páginas dos 3 resultados em paralelo (prazo de 1,5 s cada) e
+         entrega ~300 caracteres em volta do assunto; página que falha fica com o resumo.
+         `bench/search_bench.py` (14 perguntas, SearXNG temporário na 8889): resposta no resultado 5 → 9/14,
+         resposta certa da Agatha 4 → 8/14; busca p50 0,48 → 1,45 s (máx 2,0). `AGATHA_BUSCA_PAGINAS=0` desliga.
+         Falta: teste no Windows (porta padrão do Zabbix, PostgreSQL 17; ver se a espera depois da frase de
+         espera incomoda).
+      **RETOMAR DAQUI (próxima sessão):** teste no Windows da busca com páginas; depois o item 1 (pod parado).

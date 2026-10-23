@@ -28,6 +28,7 @@ agatha: "Só um momento. A tablespace DADOS_APP está com 85.2% de uso."       (
   do Tecnoblog, por seção ou tema). Todas somente leitura, com usuários de menor privilégio.
 - **Busca na documentação oficial** a pedido ("pesquisa na documentação do Zabbix..."), com um
   SearXNG próprio dentro do pod: Oracle, Zabbix, Podman, Kubernetes, PostgreSQL, nuvens e outros.
+  Ela lê as páginas dos resultados e responde com o trecho relevante, não só com o resumo do buscador.
 - **Fala natural de números, horas e siglas**: "62,5" vira "sessenta e dois vírgula cinco", "18h22"
   vira "dezoito e vinte e dois", "CPU" vira "cê pê u".
 
@@ -130,6 +131,7 @@ consequências:
 | [023](docs/adr/0023-historico-compacto-de-ferramentas.md) | resultado grande de ferramenta vira marcador no histórico |
 | [024](docs/adr/0024-internet-noticias.md) | internet, parte 2: notícias pelos feeds RSS do G1, da Folha e do Tecnoblog |
 | [025](docs/adr/0025-busca-na-documentacao.md) | internet, parte 3: busca na documentação oficial a pedido, com SearXNG no pod |
+| [026](docs/adr/0026-trecho-da-pagina-na-busca.md) | busca: trecho da página em vez do resumo do buscador |
 
 ## Qualidade e operação
 

@@ -5,6 +5,8 @@
 - **Fase:** 10 (integração com a internet; escopo aprovado em 21/10)
 - **Complementa:** [ADR-022](0022-internet-clima.md), [ADR-024](0024-internet-noticias.md) e
   [ADR-013](0013-systemd-quadlet.md) (pod no systemd do usuário)
+- **Complementado por:** [ADR-026](0026-trecho-da-pagina-na-busca.md) (trecho da página no lugar do
+  resumo do buscador)
 
 ## Contexto
 
