@@ -8,6 +8,9 @@ Cada conexão é uma `Session` com dois estados (ADR-006):
 Se a transcrição parecer cortada no meio (`looks_incomplete`), ela é segurada por
 `continuation_ms`: se a pessoa voltar a falar, as partes são juntadas numa pergunta só.
 
+Transcrição antecipada (ADR-027): com `early_ms` de silêncio a frase já vai para o STT; se ela fechar
+nesse silêncio, o texto fica pronto ~300 ms mais cedo; se a pessoa voltar a falar, ele é descartado.
+
 Wake word (ADR-008): só responde a falas que chamam "Agatha" pelo nome, ou que começam dentro do
 "modo conversa" (alguns segundos depois de cada resposta).
 
@@ -48,7 +51,7 @@ from .tools.zabbix import ZabbixClient, zabbix_tools
 from .text import looks_incomplete
 from .turnlog import TurnLog
 from .wake import from_name, interruption_kind, is_addressed, is_idle_stop
-from .vad import Segmenter, SileroVAD, SpeechEnd, SpeechStart
+from .vad import Segmenter, SileroVAD, SpeechEnd, SpeechPause, SpeechStart
 
 log = logging.getLogger(__name__)
 
@@ -180,6 +183,8 @@ class Session:
         self._barge: dict | None = None  # barge-in em confirmação: {"response", "played_ms"}
         self._barge_timer: asyncio.TimerHandle | None = None
         self._transcribing: set[int] = set()  # frases no STT agora
+        # transcrição antecipada da última pausa: (frase, quando foi pedida, tarefa)
+        self._early: tuple[int, float, asyncio.Task] | None = None
         self._confirm_segments: set[int] = set()  # frases que começaram durante a confirmação atual
         self._dropped: set[int] = set()  # frases de uma confirmação que acabou em "resume"
 
@@ -225,6 +230,11 @@ class Session:
             self.segmenter.discard(len(samples))  # half-duplex: conta a posição, mas não ouve
             return
         for event in self.segmenter.feed(samples):
+            if isinstance(event, SpeechPause):  # interno: não vai ao cliente
+                task = self._spawn(self.server.transcribe(event.audio))
+                task.add_done_callback(lambda t: t.cancelled() or t.exception())  # descartada: sem aviso de exceção
+                self._early = (event.segment, time.monotonic(), task)
+                continue
             await self._send(protocol.vad_event(event))
             if isinstance(event, SpeechStart):
                 log.debug("[%s] #%d início da fala (%d ms)", self.id, event.segment, event.audio_ms)
@@ -237,12 +247,25 @@ class Session:
             elif isinstance(event, SpeechEnd):
                 self._speaking = False
                 self._transcribing.add(event.segment)
-                self._spawn(self._transcribe(event))
+                early, self._early = self._early, None
+                # vale se é desta frase e ela fechou no mesmo silêncio (a pausa seguinte substituiria esta)
+                if early and (early[0] != event.segment or event.reason != "silence"):
+                    early = None
+                self._spawn(self._transcribe(event, early))
 
-    async def _transcribe(self, event: SpeechEnd) -> None:
+    async def _transcribe(self, event: SpeechEnd, early: tuple[int, float, asyncio.Task] | None = None) -> None:
         submitted = time.monotonic()
         try:
-            started, text, finished = await self.server.transcribe(event.audio)
+            if early:
+                _, submitted, task = early
+                try:
+                    started, text, finished = await task
+                except Exception:
+                    log.exception("[%s] #%d falha na transcrição antecipada; transcrevendo de novo", self.id, event.segment)
+                    early, submitted = None, time.monotonic()
+                    started, text, finished = await self.server.transcribe(event.audio)
+            else:
+                started, text, finished = await self.server.transcribe(event.audio)
         except Exception:
             # Uma falha no STT (ex.: falta de VRAM) não pode sumir em silêncio nem derrubar a sessão:
             # registra e trata a fala como vazia.
@@ -257,11 +280,12 @@ class Session:
             "queue_ms": round((started - submitted) * 1000),
             "stt_ms": round((finished - started) * 1000),
             "total_ms": round((finished - event.last_speech_at) * 1000),
+            "early": early is not None,
         }
         log.info(
-            "[%s] #%d %r | fala %.1f s · endpoint %d ms · stt %d ms · total %d ms",
+            "[%s] #%d %r | fala %.1f s · endpoint %d ms · stt %d ms%s · total %d ms",
             self.id, event.segment, text, event.speech_ms / 1000,
-            timings["endpoint_ms"], timings["stt_ms"], timings["total_ms"],
+            timings["endpoint_ms"], timings["stt_ms"], " (antecipado)" if early else "", timings["total_ms"],
         )
         addressed = self._addressed(event, text)
         idle_stop = (addressed and self.state == self.LISTENING and self._held is None

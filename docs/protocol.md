@@ -142,7 +142,9 @@ Com ela calada, um comando de parar ("Agatha, para", "chega"; não "esquece", qu
 vem com `"command": "stop"` e **não gera resposta**: em geral é o fim de um barge-in que o
 detector do cliente perdeu.
 
-Os tempos são os mesmos da v1 (`total_ms` vai do último bloco com fala até o texto pronto). Se o
+Os tempos são os mesmos da v1 (`total_ms` vai do último bloco com fala até o texto pronto). Com a
+transcrição antecipada (ADR-027) vem também `"early": true`: o STT começou com `early_ms` de silêncio,
+antes do fim confirmado, e `total_ms` pode ficar menor que `endpoint_ms`. Se o
 texto não estiver vazio e `addressed` for `true`, o servidor **inicia uma resposta** e passa a
 ignorar o microfone. Texto vazio não gera resposta.
 

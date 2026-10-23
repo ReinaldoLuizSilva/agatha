@@ -88,13 +88,14 @@ def utterance() -> list[bytes]:
 
 def with_server(scenario, transcript: str = "olá agatha", hello_timeout: float = 5.0, grace: float = 15.0,
                 transcriber=None, continuation_ms: int = 300, conversation_s: float = 10.0, turn_log=None,
-                conversation=None, barge_confirm_s: float = 5.0):
+                conversation=None, barge_confirm_s: float = 5.0, early_ms: int | None = None):
     """Sobe o servidor numa porta livre, roda o cenário do cliente e devolve o resultado."""
     FakeConversation.heard = []
     FakeConversation.interrupted = []
     config = dataclasses.replace(
         CONFIG,
-        vad=dataclasses.replace(CONFIG.vad, continuation_ms=continuation_ms),
+        vad=dataclasses.replace(CONFIG.vad, continuation_ms=continuation_ms,
+                                early_ms=CONFIG.vad.early_ms if early_ms is None else early_ms),
         wake=dataclasses.replace(CONFIG.wake, conversation_s=conversation_s),
     )
 
@@ -423,9 +424,59 @@ def test_falha_no_stt_nao_derruba_a_sessao():
         rest = await recv_until(ws, "response_end")
         return first[-1], rest
 
-    failed, rest = with_server(scenario, transcriber=FailingTranscriber())
+    failed, rest = with_server(scenario, transcriber=FailingTranscriber(), early_ms=0)
     assert failed["text"] == ""
     assert FakeConversation.heard == ["agatha, tudo bem?"]
+
+
+def test_falha_na_transcricao_antecipada_transcreve_de_novo():
+    async def scenario(ws):
+        await start(ws)
+        await send_all(ws, utterance())
+        return (await recv_until(ws, "transcript"))[-1]
+
+    transcript = with_server(scenario, transcriber=FailingTranscriber())
+    assert transcript["text"] == "agatha, tudo bem?"
+    assert transcript["timings"]["early"] is False
+
+
+class CountingTranscriber:
+    """Devolve um texto por chamada ("fala 1", "fala 2"...) e guarda o tamanho do áudio de cada uma."""
+
+    def __init__(self):
+        self.sizes: list[int] = []
+
+    def transcribe(self, audio: np.ndarray) -> str:
+        self.sizes.append(len(audio))
+        return f"agatha, fala {len(self.sizes)}"
+
+
+def test_transcricao_antecipada_e_usada_no_fim_da_fala():
+    stt = CountingTranscriber()
+
+    async def scenario(ws):
+        await start(ws)
+        await send_all(ws, utterance())
+        return (await recv_until(ws, "transcript"))[-1]
+
+    transcript = with_server(scenario, transcriber=stt)
+    assert stt.sizes == [(5 + 20 + 6) * FRAME_SAMPLES]  # 1 transcrição só: pre-roll + fala + 192 ms
+    assert transcript["text"] == "agatha, fala 1"
+    assert transcript["timings"]["early"] is True
+
+
+def test_pausa_no_meio_da_fala_descarta_a_antecipacao():
+    stt = CountingTranscriber()
+    frames = [pcm(1, a) for a, n in ((0, 5), (1000, 10), (0, 8), (1000, 10), (0, 20)) for _ in range(n)]
+
+    async def scenario(ws):
+        await start(ws)
+        await send_all(ws, frames)
+        return (await recv_until(ws, "transcript"))[-1]
+
+    transcript = with_server(scenario, transcriber=stt)
+    assert len(stt.sizes) == 2 and transcript["text"] == "agatha, fala 2"  # a 1ª (na pausa) foi descartada
+    assert stt.sizes[1] == (5 + 10 + 8 + 10 + 6) * FRAME_SAMPLES
 
 
 def test_registro_de_turnos(tmp_path):

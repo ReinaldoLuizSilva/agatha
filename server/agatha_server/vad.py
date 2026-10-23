@@ -61,6 +61,10 @@ class VADConfig:
     # Se a transcrição parecer incompleta (termina em "e", "de", vírgula...), espera esse tempo
     # por uma continuação antes de responder, e junta as partes (0 desliga).
     continuation_ms: int = 700
+    # Transcrição antecipada (Fase 11, ADR-027): com esse silêncio a frase já vai para o STT (`SpeechPause`);
+    # se o silêncio chegar a min_silence_ms, o texto está pronto mais cedo; se a fala voltar, é descartado.
+    # 0 desliga. Medido em 104 gravações dele (bench/stt_early_bench.py): mesmo WER, ~1 descarte a cada 10 falas.
+    early_ms: int = 192
 
     @property
     def neg_threshold(self) -> float:
@@ -72,6 +76,16 @@ class VADConfig:
 class SpeechStart:
     segment: int
     audio_ms: int  # início real da fala no fluxo da sessão
+
+
+@dataclass(frozen=True)
+class SpeechPause:
+    """A frase confirmada está em silêncio há `early_ms`: pode ser o fim. Uso interno do servidor (não vai
+    ao cliente). Se a frase fechar nesse silêncio, o `SpeechEnd` vem depois; se a fala voltar, um novo
+    `SpeechPause` substitui este."""
+
+    segment: int
+    audio: np.ndarray  # float32, pre-roll + fala + o silêncio até aqui
 
 
 @dataclass(frozen=True)
@@ -117,6 +131,8 @@ class Segmenter:
         self._pre_roll: deque[np.ndarray] = deque(maxlen=config.pre_roll_ms // FRAME_MS)
         self._silence_limit = -(-config.min_silence_ms // FRAME_MS)  # arredonda para cima
         self._max_frames = int(config.max_segment_s * 1000) // FRAME_MS
+        early = -(-config.early_ms // FRAME_MS)
+        self._early_frames = early if 0 < early < self._silence_limit else 0
         self._in_speech = False
 
     def discard(self, n_samples: int) -> None:
@@ -136,19 +152,19 @@ class Segmenter:
     def _ms(self, frame_index: int) -> int:
         return (self._offset_samples + frame_index * FRAME_SAMPLES) * 1000 // SAMPLE_RATE
 
-    def feed(self, samples: np.ndarray) -> list[SpeechStart | SpeechEnd]:
+    def feed(self, samples: np.ndarray) -> list[SpeechStart | SpeechPause | SpeechEnd]:
         """Processa áudio float32 mono 16 kHz e devolve os eventos gerados."""
         data = np.concatenate([self._pending, samples.astype(np.float32, copy=False)])
         usable = len(data) - len(data) % FRAME_SAMPLES
         self._pending = data[usable:]
-        events: list[SpeechStart | SpeechEnd] = []
+        events: list[SpeechStart | SpeechPause | SpeechEnd] = []
         for start in range(0, usable, FRAME_SAMPLES):
             event = self._process_frame(data[start : start + FRAME_SAMPLES])
             if event is not None:
                 events.append(event)
         return events
 
-    def _process_frame(self, frame: np.ndarray) -> SpeechStart | SpeechEnd | None:
+    def _process_frame(self, frame: np.ndarray) -> SpeechStart | SpeechPause | SpeechEnd | None:
         prob = self._vad(frame)
         index = self._frame_index
         self._frame_index += 1
@@ -177,6 +193,8 @@ class Segmenter:
 
         if self._silence >= self._silence_limit:
             return self._close("silence", index, now)
+        if self._early_frames and self._confirmed and self._silence == self._early_frames:
+            return SpeechPause(self._segment_count, np.concatenate(self._frames))
         if self._confirmed and index - self._start_index + 1 >= self._max_frames:
             return self._close("max_length", index, now)
         return None

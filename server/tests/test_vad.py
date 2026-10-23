@@ -11,6 +11,7 @@ from agatha_server.vad import (
     Segmenter,
     SileroVAD,
     SpeechEnd,
+    SpeechPause,
     SpeechStart,
     VADConfig,
 )
@@ -39,13 +40,14 @@ class FakeClock:
         return self.t
 
 
-def run(probs: list[float], config: VADConfig = VADConfig(), chunk: int = FRAME_SAMPLES):
+def run(probs: list[float], config: VADConfig = VADConfig(), chunk: int = FRAME_SAMPLES, pauses: bool = False):
+    """Eventos do Segmenter; os `SpeechPause` (transcrição antecipada) só com `pauses=True`."""
     seg = Segmenter(config, ScriptedVAD(probs), clock=FakeClock())
     audio = np.zeros(len(probs) * FRAME_SAMPLES, dtype=np.float32)
     events = []
     for i in range(0, len(audio), chunk):
         events += seg.feed(audio[i : i + chunk])
-    return events
+    return events if pauses else [e for e in events if not isinstance(e, SpeechPause)]
 
 
 def test_frase_simples():
@@ -110,6 +112,33 @@ def test_corte_por_tamanho_maximo():
 def test_speech_end_ms():
     events = run([0.0] * 10 + [0.9] * 20 + [0.0] * 20)
     assert events[1].speech_end_ms == (10 + 20) * FRAME_MS
+
+
+def test_pausa_antecipa_a_transcricao():
+    # 192 ms = 6 blocos de silêncio: SpeechPause com o áudio até ali; o SpeechEnd vem aos 16
+    events = run([0.0] * 10 + [0.9] * 20 + [0.0] * 20, pauses=True)
+    assert [type(e) for e in events] == [SpeechStart, SpeechPause, SpeechEnd]
+    pause, end = events[1], events[2]
+    assert pause.segment == end.segment == 1
+    assert len(pause.audio) == (9 + 20 + 6) * FRAME_SAMPLES
+    assert np.array_equal(pause.audio, end.audio[: len(pause.audio)])
+
+
+def test_pausa_no_meio_da_fala_gera_outra_antecipacao():
+    # pausa de 8 blocos (256 ms): antecipa, a fala volta, antecipa de novo antes do fim
+    events = run([0.9] * 10 + [0.0] * 8 + [0.9] * 10 + [0.0] * 20, pauses=True)
+    assert [type(e) for e in events] == [SpeechStart, SpeechPause, SpeechPause, SpeechEnd]
+    assert len(events[2].audio) == (10 + 8 + 10 + 6) * FRAME_SAMPLES
+
+
+def test_sem_antecipacao():
+    for early_ms in (0, 500, 1000):  # desligada, ou não antes do fim da frase
+        events = run([0.9] * 10 + [0.0] * 20, VADConfig(early_ms=early_ms), pauses=True)
+        assert [type(e) for e in events] == [SpeechStart, SpeechEnd]
+
+
+def test_estalo_curto_nao_antecipa():
+    assert run([0.0] * 5 + [0.9] * 3 + [0.0] * 20, pauses=True) == []
 
 
 def test_discard_e_reset_avancam_a_posicao():
