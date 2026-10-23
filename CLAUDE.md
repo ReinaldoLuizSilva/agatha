@@ -302,4 +302,12 @@ agatha/
          do postgresql.org levam 0,65–1,5 s do pod e estouraram o prazo). "Procure **uma** documentação"
          não buscava (STT trocou o "na") → corrigido. Busca 1,1–2,4 s; LLM 1º token 4,1–5,3 s: ~2,5–3,5 s de
          silêncio depois da frase de espera; o Reinaldo disse que não incomoda (23/10). **Item 2 fechado.**
-      **RETOMAR DAQUI (próxima sessão):** item 1 (transcrição parcial; benchmarks de STT com o pod parado).
+      1) **virou transcrição antecipada (23/10, ADR-027), no ar.** O registro de turnos (398 falas) mostrou
+         Whisper quase fixo (362 ms em 0–2 s de fala, 440 ms em 4–7 s: o encoder processa sempre 30 s), então
+         transcrever por partes ganharia ≤ ~80 ms. O que pesava eram os ~510 ms de espera do fim da fala: agora
+         o STT começa com 192 ms de silêncio (`SpeechPause` no Segmenter; se ele volta a falar, descarta).
+         `bench/stt_early_bench.py` (104 gravações dele, CPU, sem parar o pod): WER 26,6 → 26,4%, jargão
+         147 → 146/173, ~1 descarte em 10 falas. Teste de fumaça: fim da fala → texto 910 → ~556 ms, 1º áudio
+         p50 1,98 → 1,76 s. `AGATHA_VAD_EARLY_MS=0` desliga; `"early": true` nos tempos do `transcript`.
+         Falta: teste no Windows (perguntas curtas e longas, com pausas no meio).
+      **RETOMAR DAQUI (próxima sessão):** teste no Windows da transcrição antecipada; se ok, fechar a Fase 11.

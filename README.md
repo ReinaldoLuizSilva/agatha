@@ -132,6 +132,7 @@ consequências:
 | [024](docs/adr/0024-internet-noticias.md) | internet, parte 2: notícias pelos feeds RSS do G1, da Folha e do Tecnoblog |
 | [025](docs/adr/0025-busca-na-documentacao.md) | internet, parte 3: busca na documentação oficial a pedido, com SearXNG no pod |
 | [026](docs/adr/0026-trecho-da-pagina-na-busca.md) | busca: trecho da página em vez do resumo do buscador |
+| [027](docs/adr/0027-transcricao-antecipada.md) | transcrição antecipada: o STT começa com 192 ms de silêncio, ~320 ms a menos em toda pergunta |
 
 ## Qualidade e operação
 
