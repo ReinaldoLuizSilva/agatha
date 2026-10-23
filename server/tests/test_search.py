@@ -5,15 +5,19 @@ import asyncio
 import httpx
 import pytest
 
-from agatha_server.tools.search import SearchClient, SearchError, pick, search_request, site_for
+from agatha_server.tools.search import SearchClient, SearchError, passage, pick, search_request, site_for
 
 
 def result(url, content="Trecho da documentação.", title="Página"):
     return {"url": url, "title": title, "content": content}
 
 
-def tool(api):
-    return SearchClient(transport=httpx.MockTransport(api))
+def no_pages(request):
+    return httpx.Response(404)
+
+
+def tool(api, pages=no_pages):
+    return SearchClient(transport=httpx.MockTransport(api), pages_transport=httpx.MockTransport(pages))
 
 
 def ask(client, consulta):
@@ -101,3 +105,43 @@ def test_fala_sem_pedido_de_busca():
                  "Agatha consegue me explicar para que serve o RMAN?", "Novidades do Tecnoblog",
                  "Procura um filme de ação pra mim.", "Quais as novidades da pesquisa?"]:
         assert search_request(text) is None, text
+
+
+LISTENER_PAGE = """<html><head><script>var x = "1521 no script";</script></head><body>
+<nav><a href="/">Home</a> port menu</nav>
+<h2>Configuring Oracle Net Listener During Installation</h2>
+<p>Oracle Universal Installer launches Oracle Net Configuration Assistant during software installation.</p>
+<h2>About the Default Listener</h2>
+<p>By default, the listener is configured with the name LISTENER and listens on the following TCP/IP protocol address:</p>
+<pre><code>(ADDRESS=(PROTOCOL=tcp)(HOST=host_name)(PORT=1521))</code></pre>
+<p>The listener forwards client requests to supported services.</p>
+<footer>Copyright Oracle port default</footer></body></html>"""
+
+
+def test_trecho_da_pagina_em_volta_do_assunto():
+    text = passage(LISTENER_PAGE, "Oracle listener porta padrão", "By default, the listener is configured with the name LISTENER")
+    assert "(PORT=1521)" in text and "By default, the listener" in text
+    assert "no script" not in text and "Home" not in text and "Copyright" not in text
+
+
+def test_pagina_sem_os_termos_da_consulta():
+    assert passage("<p>Nada a ver com o assunto.</p>", "zabbix housekeeping") is None
+    assert passage("", "zabbix housekeeping") is None
+
+
+def test_resultado_usa_o_trecho_da_pagina_e_o_resumo_quando_a_pagina_falha():
+    def api(request):
+        return httpx.Response(200, json={"results": [
+            result("https://docs.oracle.com/en/database/23/netag/listener.html", "By default, the listener is configured",
+                   "Configuring Oracle Net Listener"),
+            result("https://docs.oracle.com/en/database/23/netag/other.html", "Resumo do buscador.", "Outra"),
+        ]})
+
+    def pages(request):
+        if request.url.path.endswith("listener.html"):
+            return httpx.Response(200, text=LISTENER_PAGE, headers={"Content-Type": "text/html"})
+        raise httpx.ConnectTimeout("lenta")
+
+    found = ask(tool(api, pages), "Oracle listener porta padrão")["resultados"]
+    assert found[0].startswith("docs.oracle.com, Configuring Oracle Net Listener: ") and "(PORT=1521)" in found[0]
+    assert found[1] == "docs.oracle.com, Outra: Resumo do buscador"
