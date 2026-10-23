@@ -38,8 +38,10 @@ que pesa é outra coisa: **os ~510 ms de silêncio** que o VAD espera para confi
    antecipação, que em geral já está pronto. Se ele voltou a falar, a pausa seguinte gera outra
    antecipação e a anterior é descartada. Corte por tamanho máximo não usa a antecipação. Se a
    antecipação falhar, transcreve de novo o áudio inteiro.
-3. O fim da fala continua em 500 ms: a resposta, a continuação de frase cortada (`continuation_ms`)
-   e o barge-in não mudam. Só o texto fica pronto ~320 ms mais cedo.
+3. O fim da fala continua em 500 ms e o barge-in não muda. Só o texto fica pronto ~320 ms mais cedo.
+   A espera por continuação de frase cortada (`continuation_ms`) conta a partir do texto pronto: ela
+   passou de 700 para 1000 ms, para a janela continuar em ~1,6 s depois do fim da fala (veja o teste
+   no Windows).
 4. `AGATHA_VAD_EARLY_MS` ajusta o valor (0 desliga). O `transcript` traz `"early": true` nos tempos,
    e o `server.log` traz "(antecipado)".
 
@@ -66,6 +68,17 @@ até K ms de silêncio contra o texto com o áudio até o fim confirmado.
 - O ganho vem de o Whisper (~400 ms) começar aos 192 ms em vez dos 512: o texto fica pronto por
   volta dos 600 ms em vez dos ~910 ms. Com 96 ms ele estaria pronto antes do fim confirmado, e o ganho
   extra (~100 ms) custaria 3 vezes mais descartes.
+
+### Teste no Windows (23/10, headset, 12 falas)
+
+- As 12 falas usaram a antecipação. Do fim da fala ao texto pronto: 517–648 ms (antes ~910 ms).
+  1º som 1,49–2,30 s (curtas: 1,49–2,14 s); as perguntas longas de duas frases ("a tablespace USERS
+  está cheia? E quais sessões estão bloqueadas?") saíram inteiras, com 645–648 ms até o texto.
+- Barge-in: "Agatha para" parou a resposta (disparo 453 ms depois do começo da fala), 0 à toa.
+- **Regressão encontrada:** "Agatha, qual é a..." (hesitação) foi segurada como incompleta, mas a
+  janela de continuação conta a partir do texto pronto. Com o texto ~320 ms mais cedo, ela caiu de
+  ~1,6 s para ~1,25 s depois do fim da fala, e a continuação chegou tarde (resposta "não entendi").
+  Corrigido: `continuation_ms` 700 → 1000.
 
 ### Alternativas consideradas
 

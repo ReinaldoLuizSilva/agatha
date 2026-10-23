@@ -309,5 +309,8 @@ agatha/
          `bench/stt_early_bench.py` (104 gravações dele, CPU, sem parar o pod): WER 26,6 → 26,4%, jargão
          147 → 146/173, ~1 descarte em 10 falas. Teste de fumaça: fim da fala → texto 910 → ~556 ms, 1º áudio
          p50 1,98 → 1,76 s. `AGATHA_VAD_EARLY_MS=0` desliga; `"early": true` nos tempos do `transcript`.
-         Falta: teste no Windows (perguntas curtas e longas, com pausas no meio).
-      **RETOMAR DAQUI (próxima sessão):** teste no Windows da transcrição antecipada; se ok, fechar a Fase 11.
+         Teste no Windows (23/10, 12 falas): todas antecipadas, fim da fala → texto 517–648 ms, 1º som curtas
+         1,49–2,14 s, longas de 2 frases inteiras; barge-in ok. Regressão: a janela de continuação (frase
+         "qual é a...") conta do texto pronto e encolheu ~320 ms → `continuation_ms` 700 → 1000 (no ar).
+         Falta: repetir a hesitação ("Agatha, qual é... a porta padrão do listener?") no Windows.
+      **RETOMAR DAQUI (próxima sessão):** confirmar a hesitação no Windows; se ok, fechar a Fase 11.
