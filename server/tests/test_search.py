@@ -92,6 +92,9 @@ def test_pedido_de_busca_na_fala():
         "Zabbix como funciona o housekeeping"
     assert search_request("Procura na documentação do Oracle o comando para ativar o archivelog.") == \
         "Oracle o comando para ativar o archivelog"
+    assert search_request("Procure uma documentação como ativar o modo archive log") == \
+        "como ativar o modo archive log"
+    assert search_request("Procura a documentação do Podman sobre quadlet") == "Podman sobre quadlet"
     assert search_request("O que mudou no Zabbix 7.0?") == "O que mudou no Zabbix 7.0"
     assert search_request("Agatha, você pode pesquisar como configurar o DNSOption no Podman?") == \
         "como configurar o DNSOption no Podman"

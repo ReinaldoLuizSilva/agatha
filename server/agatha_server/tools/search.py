@@ -317,7 +317,8 @@ class SearchClient:
 # Datafolha"); "o que mudou" e "novidades" só com número de versão ("o que mudou no Zabbix 7.0").
 _SEARCH_VERB = re.compile(r"(?<![\w-])(?<!a )(?<!uma )(?<!na )(?<!da )(?<!essa )(?<!nessa )(?<!dessa )(?<!pela )"
                           r"pesquis(?:a|e|ar|ando)\b", re.IGNORECASE)
-_WHERE = r"(?:n[ao]s?|pel[ao]) (?:documenta[çc][ãa]o(?: oficial)?|internet|web)"
+# "uma"/"a": o STT às vezes troca o "na" ("Procure uma documentação como ativar...", 23/10)
+_WHERE = r"(?:n[ao]s?|pel[ao]|uma|a) (?:documenta[çc][ãa]o(?: oficial)?|internet|web)"
 _FETCH = re.compile(r"\b(?:procur|busc|olh)(?:a|e|ar|que)\b.*\b" + _WHERE + r"|\b" + _WHERE
                     + r".*\b(?:procur|busc|olh)(?:a|e|ar|que)\b|\bdocumenta[çc][ãa]o\b.*\b(?:diz|fala)\b",
                     re.IGNORECASE)
