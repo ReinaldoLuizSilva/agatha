@@ -1,0 +1,257 @@
+{
+  "date": "2026-10-22T21:51:10",
+  "rows": [
+    {
+      "query": "Zabbix agent porta padrão",
+      "snippet_ok": false,
+      "result_ok": false,
+      "search_s": 0.5432387520013435,
+      "result_chars": 782,
+      "result": {
+        "consulta": "Zabbix agent porta padrão",
+        "resultados": [
+          "zabbix.com, 5 Zabbix agent (Windows): Os parâmetros suportados pelo arquivo de configuração do agent Zabbix para Windows (zabbix_agentd.conf) estão listados nesta seção. Os parâmetros são listados sem informações adicionais",
+          "zabbix.com, - #1 Agente Zabbix: Especificamente para o Linux: O Zabbix Agent precisa ter acesso de leitura ao sistema de arquivos /proc. Existem patches de kernel em www.grsecurity.org para limitar os privilégios",
+          "zabbix.com, 2 Agent - Zabbix: Zabbix agent is deployed on a monitoring target to actively monitor local resources and applications (hard drives, memory, processor statistics, etc.). The agent gathers operational information locally and reports data to Zabbix server for further…"
+        ]
+      },
+      "answer": "A porta padrão do Zabbix Agent é 10050, mas a documentação que eu tenho não detalha isso diretamente.",
+      "answer_ok": true,
+      "answer_first_chunk_s": 2.0740875880001113
+    },
+    {
+      "query": "Zabbix server porta padrão do trapper",
+      "snippet_ok": false,
+      "result_ok": false,
+      "search_s": 0.4522441200024332,
+      "result_chars": 823,
+      "result": {
+        "consulta": "Zabbix server porta padrão do trapper",
+        "resultados": [
+          "zabbix.com, 6 Zabbix trapper: O envio de dados para o Zabbix server ou proxy é possível usando a ferramenta Zabbix sender ou o protocolo do Zabbix sender. O envio de dados para o Zabbix server também é possível usando o método de API history.push",
+          "zabbix.com, 1 Configurando um host - Zabbix: Número da porta TCP. O valor padrão para interfaces do tipo Zabbix Agent é 10050. Selecione a interface padrão para as consultas. Campo opcional de texto livre para descrições adicionais. Selecione este checkbox para ativar a monitoração do host",
+          "zabbix.com, 1 servidor Zabbix: Os parâmetros compatíveis com o arquivo de configuração do Zabbix server (zabbix_server.conf) estão listados nesta seção. Os parâmetros são listados sem informações adicionais"
+        ]
+      },
+      "answer": "A documentação indica que a porta padrão para o Zabbix Agent é 10050.",
+      "answer_ok": false,
+      "answer_first_chunk_s": 2.617069514999457
+    },
+    {
+      "query": "PostgreSQL porta padrão",
+      "snippet_ok": true,
+      "result_ok": true,
+      "search_s": 0.49966552700061584,
+      "result_chars": 895,
+      "result": {
+        "consulta": "PostgreSQL porta padrão",
+        "resultados": [
+          "postgresql.org, PostgreSQL: Documentation: 18: 19.3. Connections and ...: The TCP port the server listens on; 5432 by default. Note that the same port number is used for all IP addresses the server listens on. This parameter can only be set at server start. Determines the maximum number of concurrent connections to the…",
+          "postgresql.org, PostgreSQL: Documentation: 18: postgres: By default postgres starts in the foreground and prints log messages to the standard error stream. In practical applications postgres should be started as a background process, perhaps at boot time",
+          "postgresql.org, PostgreSQL: Documentation: View the manual. You can view the manual for an older version or download a PDF of a manual from the below table. Looking for documentation for an older, unsupported, version? Check the archive of older manuals"
+        ]
+      },
+      "answer": "A porta padrão do PostgreSQL é a 5432.",
+      "answer_ok": true,
+      "answer_first_chunk_s": 1.8442993460012076
+    },
+    {
+      "query": "Oracle listener porta padrão",
+      "snippet_ok": false,
+      "result_ok": false,
+      "search_s": 0.507381235001958,
+      "result_chars": 824,
+      "result": {
+        "consulta": "Oracle listener porta padrão",
+        "resultados": [
+          "docs.oracle.com, Configuring and Administering Oracle Net Listener: Service registration allows processes, such as an Oracle database, to identify their available services to the listener, which then acts as a port mapper for those services",
+          "docs.oracle.com, Configuring and Administering Oracle Net Listener: Oracle Net Listener is a separate process that runs on the database server. It receives incoming client connection requests and manages the traffic of these requests to the database server. Find out how to configure the listener to accept client…",
+          "docs.oracle.com, Oracle Database Component Port Numbers and Protocols: This table lists the port numbers and protocols configured for Oracle Database components during a single-instance installation"
+        ]
+      },
+      "answer": "A documentação aponta que o listener gerencia conexões. Não encontrei a porta padrão específica nos trechos.",
+      "answer_ok": false,
+      "answer_first_chunk_s": 1.8072370849986328
+    },
+    {
+      "query": "Oracle como ativar o modo archivelog",
+      "snippet_ok": false,
+      "result_ok": false,
+      "search_s": 0.4472107190013048,
+      "result_chars": 905,
+      "result": {
+        "consulta": "Oracle como ativar o modo archivelog",
+        "resultados": [
+          "docs.oracle.com, Managing Archived Redo Log Files - Oracle Help Center: When you run a database in ARCHIVELOG mode, you enable the archiving of the redo log. The database control file indicates that a group of filled redo log files cannot be reused by LGWR until the group is archived",
+          "docs.oracle.com, Managing Archived Redo Logs - Oracle: When you run a database in ARCHIVELOG mode, you enable the archiving of the online redo log. The database control file indicates that a group of filled online redo log files cannot be used by LGWR until the group is archived",
+          "docs.oracle.com, ARCHIVE LOG - Oracle Help Center: ARCHIVE LOG LIST only applies to the current instance. To START and STOP archiving, use the SQL command ALTER SYSTEM. For more information about using SQL commands, see the Oracle Database SQL Language Reference"
+        ]
+      },
+      "answer": "A documentação diz que você ativa o modo ARCHIVELOG alterando o sistema. Você pode ver mais detalhes no Oracle Help Center.",
+      "answer_ok": false,
+      "answer_first_chunk_s": 2.1523589919997903
+    },
+    {
+      "query": "o que mudou no PostgreSQL 17",
+      "snippet_ok": false,
+      "result_ok": false,
+      "search_s": 0.5628610899984778,
+      "result_chars": 680,
+      "result": {
+        "consulta": "o que mudou no PostgreSQL 17",
+        "resultados": [
+          "postgresql.org, PostgreSQL: Documentation: 17: E.12. Release 17: The above items and other new features of PostgreSQL 17 are explained in more detail in the sections below",
+          "postgresql.org, Release Notes - PostgreSQL: Below is the complete archive of release notes for every version of PostgreSQL",
+          "postgresql.org, PostgreSQL: Documentation: 17: Appendix E. Release Notes: The release notes contain the significant changes in each PostgreSQL release, with major features and migration issues listed at the top. The release notes do not contain changes that affect only a few users or changes that are internal and…"
+        ]
+      },
+      "answer": "Os resultados mostram que há documentação detalhada no postgresql.org. Você gostaria que eu procurasse algo mais específico lá?",
+      "answer_ok": false,
+      "answer_first_chunk_s": 1.899394181000389
+    },
+    {
+      "query": "Oracle tamanho padrão do DB_BLOCK_SIZE",
+      "snippet_ok": true,
+      "result_ok": false,
+      "search_s": 0.44207232800181373,
+      "result_chars": 821,
+      "result": {
+        "consulta": "Oracle tamanho padrão do DB_BLOCK_SIZE",
+        "resultados": [
+          "docs.oracle.com, Oracle Database Database Reference, 21c: Database Reference Oracle® Database Database Reference 21c F31274-30 October 2025 Previous Page Next Page Title and Copyright Information",
+          "docs.oracle.com, DB_BLOCK_SIZE - docs.oracle.com: For Oracle Real Application Clusters (Oracle RAC), this parameter affects the maximum value of the FREELISTS storage parameter for tables and indexes. Oracle uses one database block for each freelist group",
+          "docs.oracle.com, DB_BLOCK_SIZE - Oracle: You must set this parameter for every instance, and multiple instances must have the same value. Set this parameter at the time of database creation. Do not alter it afterward. DB_BLOCK_SIZE specifies (in bytes) the size of Oracle database blocks.…"
+        ]
+      },
+      "answer": "A documentação indica que o DB_BLOCK_SIZE especifica o tamanho do bloco de dados do Oracle em bytes. Parece que é um parâmetro que deve ser definido na criação do banco.",
+      "answer_ok": false,
+      "answer_first_chunk_s": 2.4957155020019854
+    },
+    {
+      "query": "podman quadlet DNSOption",
+      "snippet_ok": true,
+      "result_ok": true,
+      "search_s": 0.4834124549997796,
+      "result_chars": 754,
+      "result": {
+        "consulta": "podman quadlet DNSOption",
+        "resultados": [
+          "docs.podman.io, podman-quadlet — Podman documentation: Podman Quadlets allow users to manage containers, pods, volumes, networks, and images declaratively using systemd unit files. This simplifies container management on Linux systems without requiring full orchestration tools like Kubernetes",
+          "docs.podman.io, podman-systemd.unit — Podman documentation: When a Quadlet unit starts, Podman may need to pull or build container images, which can take significantly longer than systemd’s default 90-second service startup limit",
+          "docs.podman.io, --dns-option=option — Podman documentation: Set custom DNS options. Invalid if using --dns-option with --network that is set to none or container:id"
+        ]
+      },
+      "answer": "A documentação mostra que Quadlets usam arquivos de unidade systemd para gerenciar containers de forma declarativa. Há menção a opções de DNS e limites de tempo de inicialização.",
+      "answer_ok": false,
+      "answer_first_chunk_s": 2.4440086649992736
+    },
+    {
+      "query": "RMAN backup incremental cumulativo e diferencial",
+      "snippet_ok": true,
+      "result_ok": true,
+      "search_s": 0.4736789480011794,
+      "result_chars": 1014,
+      "result": {
+        "consulta": "RMAN backup incremental cumulativo e diferencial",
+        "resultados": [
+          "docs.oracle.com, Backing Up Databases Using RMAN - Oracle: Incremental backups are differential by default. Cumulative backups are preferable to differential backups when recovery time is more important than disk space, because during recovery each differential backup must be applied in succession",
+          "docs.oracle.com, RMAN Backup Concepts - Oracle Help Center: With RMAN, incrementally updated backups use an initial image copy, followed by incremental backups which are eventually merged into the full backup. Therefore, there is always at least one full image copy, a few incremental backups, and some…",
+          "docs.oracle.com, 7 Making Backups with RMAN: Advanced Topics - Oracle: When backing up to disk, it is recommended to create image copies, rather than backup sets. Some features of RMAN backups, such as incrementally updated backups, require the use of image copies. Also, image copy backups are more convenient to use in…"
+        ]
+      },
+      "answer": "Encontrei algumas referências sobre isso. Os backups incrementais são diferenciais por padrão no RMAN. Os cumulativos são mais indicados quando o tempo de recuperação é prioridade.",
+      "answer_ok": true,
+      "answer_first_chunk_s": 1.6519935819997045
+    },
+    {
+      "query": "kubectl rollout restart",
+      "snippet_ok": false,
+      "result_ok": false,
+      "search_s": 0.4419417409990274,
+      "result_chars": 904,
+      "result": {
+        "consulta": "kubectl rollout restart",
+        "resultados": [
+          "kubernetes.io, kubectl rollout restart - Kubernetes: Synopsis Restart a resource. Resource rollout will be restarted. ... Examples ... Options ... Parent Options Inherited ... See Also kubectl rollout - Manage the rollout of a resource",
+          "kubernetes.io, Command line tool (kubectl) - Kubernetes: This overview covers kubectl syntax, describes the command operations, and provides common examples. For details about each command, including all the supported flags and subcommands, see the kubectl reference documentation. For an overview, see The…",
+          "kubernetes.io, kubectl reference - Kubernetes: kubectl rollout restart — Restart a resource kubectl rollout resume — Resume a paused resource kubectl rollout status — Show the status of the rollout kubectl rollout undo — Undo a previous rollout kubectl run Run a particular image on the cluster…"
+        ]
+      },
+      "answer": "O comando kubectl rollout restart reinicia um recurso. Ele força um novo ciclo de implantação do recurso selecionado.",
+      "answer_ok": false,
+      "answer_first_chunk_s": 1.649793189997581
+    },
+    {
+      "query": "systemd MemorySwapMax",
+      "snippet_ok": true,
+      "result_ok": true,
+      "search_s": 0.3914110299992899,
+      "result_chars": 795,
+      "result": {
+        "consulta": "systemd MemorySwapMax",
+        "resultados": [
+          "freedesktop.org, systemd.resource-control - freedesktop.org: Added in version 231. MemorySwapMax=bytes, StartupMemorySwapMax=bytes ¶ These settings control the memory controller in the unified hierarchy. Specify the absolute limit on swap usage of the executed processes in this unit. Takes a swap size in bytes",
+          "freedesktop.org, systemd.swap - freedesktop.org: A unit configuration file whose name ends in \".swap \" encodes information about a swap device or file for memory paging controlled and supervised by systemd",
+          "freedesktop.org, org.freedesktop.systemd1: When systemd detects it is running on a system with a certain problem, it will set an appropriate taint flag. Taints may be used to lower the chance of bogus bug reports"
+        ]
+      },
+      "answer": "Encontrei alguns resultados. Um deles fala sobre MemorySwapMax ser um limite de uso de swap em bytes. Outros falam sobre arquivos de swap e taints do systemd.",
+      "answer_ok": false,
+      "answer_first_chunk_s": 1.455540007998934
+    },
+    {
+      "query": "Zabbix proxy modo ativo e passivo parâmetro",
+      "snippet_ok": false,
+      "result_ok": false,
+      "search_s": 0.540527489996748,
+      "result_chars": 808,
+      "result": {
+        "consulta": "Zabbix proxy modo ativo e passivo parâmetro",
+        "resultados": [
+          "zabbix.com, 1 Proxies - Zabbix: O proxy requer apenas uma conexão TCP com o Zabbix server. Dessa forma, é mais fácil contornar um firewall, pois você precisa configurar apenas uma regra de firewall. O Zabbix proxy deve usar um banco de dados separado. Apontá-lo para o banco de…",
+          "zabbix.com, 2 Zabbix proxy: Os parâmetros compatíveis com o arquivo de configuração do Zabbix proxy (zabbix_proxy.conf) estão listados nesta seção. Os parâmetros são listados sem informações adicionais",
+          "zabbix.com, Parâmetros de configuração: Zabbix proxy: Os parâmetros de configuração permitem personalizar o comportamento do Zabbix proxy. Especifique os valores dos parâmetros no arquivo de configuração do proxy do Zabbix (zabbix_proxy.conf)"
+        ]
+      },
+      "answer": "Encontrei alguns trechos. Um deles fala sobre como o proxy se conecta ao servidor, e outro lista os parâmetros do arquivo de configuração do proxy.",
+      "answer_ok": false,
+      "answer_first_chunk_s": 1.7400003789989569
+    },
+    {
+      "query": "docker restart policy unless-stopped",
+      "snippet_ok": false,
+      "result_ok": true,
+      "search_s": 0.48345481700016535,
+      "result_chars": 888,
+      "result": {
+        "consulta": "docker restart policy unless-stopped",
+        "resultados": [
+          "docs.docker.com, Start containers automatically | Docker Docs: To configure the restart policy for a container, use the --restart flag when using the docker run command. The value of the --restart flag can be any of the following: Don't automatically restart the container. (Default) Restart the container if it…",
+          "docs.docker.com, Docker Documentation: - If you manually stop a container, the restart policy is ignored until the Docker daemon restarts or the container is manually restarted. This prevents a restart loop",
+          "docs.docker.com, docker container restart: The default timeout can be specified using the --stop-timeout option when creating the container. If no default is configured for the container, the Daemon determines the default, and is 10 seconds for Linux containers, and 30 seconds for Windows…"
+        ]
+      },
+      "answer": "A política unless-stopped faz o contêiner reiniciar automaticamente, exceto se você o parar manualmente. Geralmente, é usada para garantir que serviços voláteis voltem a rodar após reinicializações do sistema.",
+      "answer_ok": true,
+      "answer_first_chunk_s": 1.945858199000213
+    },
+    {
+      "query": "Zabbix housekeeping período de histórico",
+      "snippet_ok": false,
+      "result_ok": false,
+      "search_s": 0.43403550299990457,
+      "result_chars": 762,
+      "result": {
+        "consulta": "Zabbix housekeeping período de histórico",
+        "resultados": [
+          "zabbix.com, 3 Housekeeping - Zabbix: The Administration > Housekeeping section lets you configure Zabbix internal housekeeping that automatically removes outdated or user-deleted data from the database",
+          "zabbix.com, Histórico e tendências - Zabbix: Histórico e tendências são as duas formas de armazenar dados coletados no Zabbix. Enquanto o histórico mantém cada valor coletado, as tendências mantêm informações médias por hora e, portanto, consomem menos recursos",
+          "zabbix.com, Limpeza de dados - Zabbix: A seção Administration > Housekeeping permite configurar a limpeza interna do Zabbix, que remove automaticamente dados desatualizados ou excluídos pelo usuário do banco de dados"
+        ]
+      },
+      "answer": "A documentação diz que a seção Housekeeping permite configurar a remoção automática de dados desatualizados do banco. O histórico armazena cada valor, e as tendências armazenam médias por hora.",
+      "answer_ok": false,
+      "answer_first_chunk_s": 2.3973960589974013
+    }
+  ]
+}
