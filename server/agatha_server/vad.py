@@ -59,8 +59,9 @@ class VADConfig:
     min_speech_ms: int = 250
     max_segment_s: float = 25.0
     # Se a transcrição parecer incompleta (termina em "e", "de", vírgula...), espera esse tempo
-    # por uma continuação antes de responder, e junta as partes (0 desliga).
-    continuation_ms: int = 700
+    # por uma continuação antes de responder, e junta as partes (0 desliga). Conta do texto pronto: com a
+    # transcrição antecipada ele fica pronto ~320 ms antes, e 700 → 1000 mantém a janela de antes (ADR-027).
+    continuation_ms: int = 1000
     # Transcrição antecipada (Fase 11, ADR-027): com esse silêncio a frase já vai para o STT (`SpeechPause`);
     # se o silêncio chegar a min_silence_ms, o texto está pronto mais cedo; se a fala voltar, é descartado.
     # 0 desliga. Medido em 104 gravações dele (bench/stt_early_bench.py): mesmo WER, ~1 descarte a cada 10 falas.

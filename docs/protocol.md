@@ -81,7 +81,7 @@ Antes do `ready`, o servidor rejeita qualquer áudio.
     "pre_roll_ms": 300,
     "min_speech_ms": 250,
     "max_segment_s": 25,
-    "continuation_ms": 700
+    "continuation_ms": 1000
   }
 }
 ```
