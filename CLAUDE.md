@@ -287,7 +287,8 @@ agatha/
       outras perguntas de TI fora do glossário; barge-in com as caixas do notebook (AEC fraco, 2 disparos à toa em
       22/10); "alerta no banco Zabbix" puxando o Oracle; conhecimento geral depois de histórico (Copa de 2002);
       "Brasileirão compromissos em atraso" lido como atraso de jogos.
-- [ ] Fase 11: latência de perguntas longas e qualidade da busca — **em andamento** (escopo aprovado em 22/10).
+- [x] Fase 11: latência de perguntas longas e qualidade da busca (fechada em 24/10; escopo aprovado em 22/10;
+      ADR-026, ADR-027).
       1) **transcrição parcial** durante a fala: transcrever o que já foi dito enquanto ele fala, para no fim só
          faltar o pedaço final (perguntas longas: 1º som 2,3–2,9 s; STT 1,0–1,4 s). Medir antes (WER e tempo,
          com as gravações dele) e não piorar o jargão; benchmarks de STT na GPU com o pod parado.
@@ -312,5 +313,9 @@ agatha/
          Teste no Windows (23/10, 12 falas): todas antecipadas, fim da fala → texto 517–648 ms, 1º som curtas
          1,49–2,14 s, longas de 2 frases inteiras; barge-in ok. Regressão: a janela de continuação (frase
          "qual é a...") conta do texto pronto e encolheu ~320 ms → `continuation_ms` 700 → 1000 (no ar).
-         Falta: repetir a hesitação ("Agatha, qual é... a porta padrão do listener?") no Windows.
-      **RETOMAR DAQUI (próxima sessão):** confirmar a hesitação no Windows; se ok, fechar a Fase 11.
+         2º teste (24/10, 7 falas): todas antecipadas, texto 522–648 ms, 1º som 1,33–2,07 s; hesitações curtas
+         ("qual é a... porta do listener", "como está... o tempo") chegaram inteiras numa frase só.
+      Para acompanhar no uso: a pausa longa (> 500 ms) no meio da frase com a janela de continuação de 1000 ms
+      não foi exercitada no teste real (decisão do Reinaldo: fechar assim); "Agatha, Corea"/"Ok, eu brego" (STT,
+      24/10, sem explicação); 1ª busca do dia ~3,5 s (DNS frio).
+      **RETOMAR DAQUI (próxima sessão):** Fase 11 fechada; o Reinaldo escolhe a próxima fase.

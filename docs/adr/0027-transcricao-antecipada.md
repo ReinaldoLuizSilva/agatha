@@ -80,6 +80,15 @@ até K ms de silêncio contra o texto com o áudio até o fim confirmado.
   ~1,6 s para ~1,25 s depois do fim da fala, e a continuação chegou tarde (resposta "não entendi").
   Corrigido: `continuation_ms` 700 → 1000.
 
+### 2º teste no Windows (24/10, headset, 7 falas)
+
+- Todas antecipadas; do fim da fala ao texto 522–612 ms; 1º som 1,33–2,07 s (754 ms com a frase de
+  espera da busca).
+- Hesitações curtas ("Agatha, qual é a... porta do listener do Oracle?", "como está... o tempo hoje?")
+  ficaram abaixo de 500 ms e chegaram inteiras numa frase só (4,2 s e 3,3 s de fala). A pausa longa,
+  que quebra a frase e usa a janela de continuação de 1000 ms, não aconteceu no teste: fica para
+  acompanhar no uso.
+
 ### Alternativas consideradas
 
 | alternativa | por que não |
